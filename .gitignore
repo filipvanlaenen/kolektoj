@@ -1,0 +1,15 @@
+kolektoj.geany
+buildNumber.properties
+.classpath
+dependency-reduced-pom.xml
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+pom.xml.next
+pom.xml.releaseBackup
+pom.xml.tag
+pom.xml.versionsBackup
+.project
+release.properties
+.settings/
+target/
+
