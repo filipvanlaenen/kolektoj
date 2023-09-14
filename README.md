@@ -1,4 +1,4 @@
-# Kolektoj -- Yet Another Java Collections Framework
+# Kolektoj — Yet Another Java Collections Framework
 
 The aim of this project is to provide a clean Java collections
 framework.
@@ -23,7 +23,11 @@ framework.
 ## Collection Properties
 
 The following collection properties have been identified:
-* Order
-* Uniqueness
-* Null
-* Modifiability
+
+* Order: whether the elements in the collection have an order or not.
+* Uniqueness: whether the collection can contain the same element more
+  than once or not.
+* Null: whether `null` is allowed as an element of the collection or
+  not.
+* Modifiability: whether the content of the collection can be modified
+  or not, and if it can be modified, whether it's thread-safe or not.
