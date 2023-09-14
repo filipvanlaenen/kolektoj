@@ -13,3 +13,4 @@ release.properties
 .settings/
 target/
 
+/bin/
