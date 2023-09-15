@@ -34,4 +34,4 @@ The following collection properties have been identified:
 
 ## Overview
 
-![Overview](Overiew.png)
+![Overview](Overview.png)
