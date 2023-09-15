@@ -1,7 +1,6 @@
 package net.filipvanlaenen.kolektoj;
 
-import java.util.HashSet;
-import java.util.Set;
+import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 
 /**
  * Interface defining the signature for all collections.
@@ -10,43 +9,24 @@ import java.util.Set;
  */
 public interface Collection<E> {
     /**
-     * Default implementation of the collection interface.
+     * Returns a new empty collection.
      *
      * @param <E> The element type.
+     * @return A new empty collection.
      */
-    final class DefaultCollection<E> implements Collection<E> {
-        /**
-         * A set with the elements.
-         */
-        private final Set<E> elements = new HashSet<E>();
-
-        @Override
-        public boolean contains(final E element) {
-            return elements.contains(element);
-        }
-
-        @Override
-        public E get() throws IndexOutOfBoundsException {
-            if (isEmpty()) {
-                throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
-            } else {
-                return elements.iterator().next();
-            }
-        }
-
-        @Override
-        public int size() {
-            return elements.size();
-        }
+    static <E> Collection<E> empty() {
+        return new ArrayCollection<E>();
     }
 
     /**
-     * Returns a new empty collection.
+     * Returns a new collection with the specified elements.
      *
-     * @return A new empty collection.
+     * @param <E>      The element type.
+     * @param elements The elements for the new collection.
+     * @return A new collection with the specified elements.
      */
-    static Collection empty() {
-        return new DefaultCollection();
+    static <E> Collection<E> of(final E... elements) {
+        return new ArrayCollection<E>(elements);
     }
 
     /**

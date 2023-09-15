@@ -11,8 +11,9 @@ public interface ModifiableCollection<E> extends Collection<E> {
      *
      * @param element The element to be added to the collection.
      * @return True if the size of the collection increased after adding the element.
+     * @throws IllegalArgumentException Thrown if the element is rejected by the collection's constraints.
      */
-    boolean add(E element);
+    boolean add(E element) throws IllegalArgumentException;
 
     /**
      * Removes an element from this collection if it is present.
