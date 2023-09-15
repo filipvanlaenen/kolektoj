@@ -16,7 +16,7 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
      * @throws IllegalArgumentException  Thrown if the element is rejected by the collection's constraints.
      * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
      */
-    boolean add(int index, E element) throws IllegalArgumentException, IndexOutOfBoundsException;
+    boolean addAt(int index, E element) throws IllegalArgumentException, IndexOutOfBoundsException;
 
     /**
      * Removes an element from this collection at a given position.
@@ -25,5 +25,5 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
      * @return The element that was removed.
      * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
      */
-    E remove(int index) throws IndexOutOfBoundsException;
+    E removeAt(int index) throws IndexOutOfBoundsException;
 }

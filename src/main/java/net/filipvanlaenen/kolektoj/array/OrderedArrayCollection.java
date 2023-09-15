@@ -9,7 +9,7 @@ import net.filipvanlaenen.kolektoj.OrderedCollection;
  *
  * @param <E> The element type.
  */
-public final class ArrayOrderedCollection<E> implements OrderedCollection<E> {
+public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
     /**
      * An array with the elements.
      */
@@ -20,7 +20,7 @@ public final class ArrayOrderedCollection<E> implements OrderedCollection<E> {
      *
      * @param elements The elements of the collection.
      */
-    public ArrayOrderedCollection(final E... elements) {
+    public OrderedArrayCollection(final E... elements) {
         this.elements = (E[]) Arrays.copyOf(elements, elements.length, Object[].class);
     }
 
@@ -44,7 +44,7 @@ public final class ArrayOrderedCollection<E> implements OrderedCollection<E> {
     }
 
     @Override
-    public E get(final int index) throws IndexOutOfBoundsException {
+    public E getAt(final int index) throws IndexOutOfBoundsException {
         if (index >= elements.length) {
             throw new IndexOutOfBoundsException(
                     "Cannot return an element at a position beyond the size of the collection.");

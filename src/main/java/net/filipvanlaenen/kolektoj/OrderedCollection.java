@@ -13,5 +13,5 @@ public interface OrderedCollection<E> extends Collection<E> {
      * @return The element from the collection at the given position.
      * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
      */
-    E get(int index) throws IndexOutOfBoundsException;
+    E getAt(int index) throws IndexOutOfBoundsException;
 }
