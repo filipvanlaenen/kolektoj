@@ -31,3 +31,7 @@ The following collection properties have been identified:
   not.
 * Modifiability: whether the content of the collection can be modified
   or not, and if it can be modified, whether it's thread-safe or not.
+
+## Overview
+
+![Overview](Overiew.png)
