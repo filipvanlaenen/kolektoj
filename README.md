@@ -52,7 +52,7 @@ interface map to Kolektoj methods.
 
 | JDK 17 Method                             | Kolektoj Class             | Kolektoj Method             |
 |-------------------------------------------|----------------------------|-----------------------------|
-| boolean add(E element)                    | ModifiableCollection&lt;E> | boolean add(E element)      |
+| boolean add(E e)                          | ModifiableCollection&lt;E> | boolean add(E element)      |
 | boolean addAll(Collection&lt;? extends E> c) | | |
 | void clear() | | |
 | boolean contains(Object o)                | Collection&lt;E>           | boolean contains(E element) |
