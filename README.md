@@ -44,34 +44,34 @@ for JDK 17.
 
 ### JDK 17 Interfaces
 
-#### java.util.Collection<E>
+#### java.util.Collection&lt;E>
 
 The table below shows how the methods defined on the
-[java.util.Collection<E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html)
+[java.util.Collection&lt;E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html)
 interface map to Kolektoj methods.
 
 | JDK 17 Method                             | Kolektoj Class       | Kolektoj Method             |
 |-------------------------------------------|----------------------|-----------------------------|
 | boolean add(E element)                    | ModifiableCollection | boolean add(E element)      |
-| boolean addAll(Collection<? extends E> c) | | |
+| boolean addAll(Collection&lt;? extends E> c) | | |
 | void clear() | | |
 | boolean contains(Object o)                | Collection           | boolean contains(E element) |
-| boolean containsAll(Collection<?> c) | | |
+| boolean containsAll(Collection&lt;?> c) | | |
 | boolean equals(Object o) | | |
 | int hashCode() | | |
 | boolean isEmpty()                         | Collection           | default boolean isEmpty()   |
-| Iterator<E> iterator() | | |
-| default Stream<E> parallelStream() | | |
+| Iterator&lt;E> iterator() | | |
+| default Stream&lt;E> parallelStream() | | |
 | boolean remove(Object o)                  | ModifiableCollection | boolean remove(E element)   |
-| boolean removeAll(Collection<?> c) | | |
-| default boolean removeIf(Predicate<? super E> filter) | | |
-| boolean retainAll(Collection<?> c) | | |
+| boolean removeAll(Collection&lt;?> c) | | |
+| default boolean removeIf(Predicate&lt;? super E> filter) | | |
+| boolean retainAll(Collection&lt;?> c) | | |
 | int size()                                | Collection           | int size()                  |
-| default Spliterator<E> spliterator() | | |
-| default Stream<E> stream() | | |
+| default Spliterator&lt;E> spliterator() | | |
+| default Stream&lt;E> stream() | | |
 | Object[] toArray() | | |
-| default <T> T[] toArray(IntFunction<T[]> generator) | | |
-| <T> T[] toArray(T[] a) | | |
+| default &lt;T> T[] toArray(IntFunction&lt;T[]> generator) | | |
+| &lt;T> T[] toArray(T[] a) | | |
 
 
 #### Other
