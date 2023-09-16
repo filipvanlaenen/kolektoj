@@ -50,23 +50,23 @@ The table below shows how the methods defined on the
 [java.util.Collection&lt;E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html)
 interface map to Kolektoj methods.
 
-| JDK 17 Method                             | Kolektoj Class       | Kolektoj Method             |
-|-------------------------------------------|----------------------|-----------------------------|
-| boolean add(E element)                    | ModifiableCollection | boolean add(E element)      |
+| JDK 17 Method                             | Kolektoj Class             | Kolektoj Method             |
+|-------------------------------------------|----------------------------|-----------------------------|
+| boolean add(E element)                    | ModifiableCollection&lt;E> | boolean add(E element)      |
 | boolean addAll(Collection&lt;? extends E> c) | | |
 | void clear() | | |
-| boolean contains(Object o)                | Collection           | boolean contains(E element) |
+| boolean contains(Object o)                | Collection&lt;E>           | boolean contains(E element) |
 | boolean containsAll(Collection&lt;?> c) | | |
 | boolean equals(Object o) | | |
 | int hashCode() | | |
-| boolean isEmpty()                         | Collection           | default boolean isEmpty()   |
+| boolean isEmpty()                         | Collection&lt;E>           | default boolean isEmpty()   |
 | Iterator&lt;E> iterator() | | |
 | default Stream&lt;E> parallelStream() | | |
-| boolean remove(Object o)                  | ModifiableCollection | boolean remove(E element)   |
+| boolean remove(Object o)                  | ModifiableCollection&lt;E> | boolean remove(E element)   |
 | boolean removeAll(Collection&lt;?> c) | | |
 | default boolean removeIf(Predicate&lt;? super E> filter) | | |
 | boolean retainAll(Collection&lt;?> c) | | |
-| int size()                                | Collection           | int size()                  |
+| int size()                                | Collection&lt;E>           | int size()                  |
 | default Spliterator&lt;E> spliterator() | | |
 | default Stream&lt;E> stream() | | |
 | Object[] toArray() | | |
