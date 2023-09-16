@@ -6,8 +6,8 @@ The aim of this project is to provide a clean Java collections framework.
 * [Collection Properties](#collection-properties)
 * [Overview](#overview)
 * [Comparison with the Java Platform Collections Framework](#comparison-with-the-java-platform-collections-framework)
-  * [Interfaces](#interfaces)
-  * [Classes](#classes)
+  * [JDK 17 Interfaces](#jdk-17-interfaces)
+  * [JDK 17 Classes](#jdk-17-classes)
 
 ## Design Principles
 
@@ -38,11 +38,46 @@ The following collection properties have been identified:
 
 ## Comparison with the Java Platform Collections Framework
 
-### Interfaces
+The comparison below is based on the Java Platform
+[Collections Framework Overview](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/doc-files/coll-overview.html)
+for JDK 17.
+
+### JDK 17 Interfaces
+
+#### java.util.Collection<E>
+
+The table below shows how the methods defined on the
+[java.util.Collection<E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html)
+interface map to Kolektoj methods.
+
+| JDK 17 Method                             | Kolektoj Class       | Kolektoj Method             |
+|-------------------------------------------|----------------------|-----------------------------|
+| boolean add(E element)                    | ModifiableCollection | boolean add(E element)      |
+| boolean addAll(Collection<? extends E> c) | | |
+| void clear() | | |
+| boolean contains(Object o)                | Collection           | boolean contains(E element) |
+| boolean containsAll(Collection<?> c) | | |
+| boolean equals(Object o) | | |
+| int hashCode() | | |
+| boolean isEmpty()                         | Collection           | default boolean isEmpty()   |
+| Iterator<E> iterator() | | |
+| default Stream<E> parallelStream() | | |
+| boolean remove(Object o)                  | ModifiableCollection | boolean remove(E element)   |
+| boolean removeAll(Collection<?> c) | | |
+| default boolean removeIf(Predicate<? super E> filter) | | |
+| boolean retainAll(Collection<?> c) | | |
+| int size()                                | Collection           | int size()                  |
+| default Spliterator<E> spliterator() | | |
+| default Stream<E> stream() | | |
+| Object[] toArray() | | |
+| default <T> T[] toArray(IntFunction<T[]> generator) | | |
+| <T> T[] toArray(T[] a) | | |
+
+
+#### Other
 
 * java.util.concurrent.BlockingDeque
 * java.util.concurrent.BlockingQueue
-* java.util.Collection
 * java.util.concurrent.ConcurrentMap
 * java.util.concurrent.ConcurrentNavigableMap
 * java.util.Deque
@@ -56,7 +91,7 @@ The following collection properties have been identified:
 * java.util.SortedSet
 * java.util.concurrent.TransferQueue
 
-### Classes
+### JDK 17 Classes
 
 * AbstractCollection
 * AbstractList
