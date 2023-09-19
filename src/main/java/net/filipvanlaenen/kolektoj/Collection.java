@@ -1,5 +1,6 @@
 package net.filipvanlaenen.kolektoj;
 
+import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.IntFunction;
 import java.util.stream.Stream;
@@ -12,7 +13,7 @@ import net.filipvanlaenen.kolektoj.array.ArrayCollection;
  *
  * @param <E> The element type.
  */
-public interface Collection<E> {
+public interface Collection<E> extends Iterable<E> {
     /**
      * Returns a new empty collection.
      *
@@ -58,6 +59,9 @@ public interface Collection<E> {
     default boolean isEmpty() {
         return size() == 0;
     }
+
+    @Override
+    Iterator<E> iterator();
 
     /**
      * Returns the number of elements in the collection.

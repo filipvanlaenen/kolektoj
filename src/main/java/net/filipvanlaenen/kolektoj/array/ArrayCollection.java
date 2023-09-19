@@ -1,5 +1,6 @@
 package net.filipvanlaenen.kolektoj.array;
 
+import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.IntFunction;
 
@@ -42,6 +43,11 @@ public final class ArrayCollection<E> implements Collection<E> {
         } else {
             return elements[0];
         }
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new ArrayIterator<E>(elements);
     }
 
     @Override

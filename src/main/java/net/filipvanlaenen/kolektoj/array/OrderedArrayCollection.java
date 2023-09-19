@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj.array;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.IntFunction;
 
@@ -53,6 +54,11 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
         } else {
             return elements[index];
         }
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new ArrayIterator<E>(elements);
     }
 
     @Override

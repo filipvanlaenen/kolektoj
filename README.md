@@ -60,7 +60,7 @@ interface map to Kolektoj methods.
 | boolean equals(Object o)                                  |                            |                                            |
 | int hashCode()                                            |                            |                                            |
 | boolean isEmpty()                                         | Collection&lt;E>           | default boolean isEmpty()                  |
-| Iterator&lt;E> iterator()                                 |                            |                                            |
+| Iterator&lt;E> iterator()                                 | Collection&lt;E>           | Iterator&lt;E> iterator()                  |
 | default Stream&lt;E> parallelStream()                     |                            |                                            |
 | boolean remove(Object o)                                  | ModifiableCollection&lt;E> | boolean remove(E element)                  |
 | boolean removeAll(Collection&lt;?> c)                     |                            |                                            |
