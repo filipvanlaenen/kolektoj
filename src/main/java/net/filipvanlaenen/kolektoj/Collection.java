@@ -1,5 +1,10 @@
 package net.filipvanlaenen.kolektoj;
 
+import java.util.Spliterator;
+import java.util.function.IntFunction;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 
 /**
@@ -60,4 +65,28 @@ public interface Collection<E> {
      * @return The number of elements in the collection.
      */
     int size();
+
+    /**
+     * Returns a spliterator over the elements in this collection.
+     *
+     * @return A spliterator over the elements in this collection.
+     */
+    Spliterator<E> spliterator();
+
+    /**
+     * Returns a stream over the elements in this collection.
+     *
+     * @return A stream over the elements in this collection.
+     */
+    default Stream<E> stream() {
+        return StreamSupport.stream(spliterator(), false);
+    }
+
+    /**
+     * Returns the content of this collection as an array.
+     *
+     * @param generator A function that can produce an array for the element type of a given length.
+     * @return An array containing the elements of this collection.
+     */
+    E[] toArray(IntFunction<E[]> generator);
 }
