@@ -6,7 +6,7 @@ import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 
-public class ModifiableArrayCollection<E> implements ModifiableCollection<E> {
+public final class ModifiableArrayCollection<E> implements ModifiableCollection<E> {
     /**
      * An array with the elements.
      */
@@ -24,7 +24,7 @@ public class ModifiableArrayCollection<E> implements ModifiableCollection<E> {
     }
 
     @Override
-    public boolean add(E element) {
+    public boolean add(final E element) {
         if (size >= elements.length) {
             extendElements(1);
         }
@@ -33,7 +33,7 @@ public class ModifiableArrayCollection<E> implements ModifiableCollection<E> {
     }
 
     @Override
-    public boolean contains(E element) {
+    public boolean contains(final E element) {
         for (E e : elements) {
             if (e.equals(element)) {
                 return true;
@@ -42,7 +42,7 @@ public class ModifiableArrayCollection<E> implements ModifiableCollection<E> {
         return false;
     }
 
-    private void extendElements(int i) {
+    private void extendElements(final int i) {
         Class<E[]> clazz = (Class<E[]>) elements.getClass();
         E[] newElements = (E[]) Array.newInstance(clazz.getComponentType(), size + i);
         System.arraycopy(elements, 0, newElements, 0, size);
@@ -64,7 +64,7 @@ public class ModifiableArrayCollection<E> implements ModifiableCollection<E> {
     }
 
     @Override
-    public boolean remove(E element) {
+    public boolean remove(final E element) {
         // TODO Auto-generated method stub
         return false;
     }

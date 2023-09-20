@@ -6,7 +6,7 @@ import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 
-public class ModifiableOrderedArrayCollection<E> implements ModifiableOrderedCollection<E> {
+public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrderedCollection<E> {
     /**
      * An array with the elements.
      */
@@ -24,7 +24,7 @@ public class ModifiableOrderedArrayCollection<E> implements ModifiableOrderedCol
     }
 
     @Override
-    public boolean add(E element) {
+    public boolean add(final E element) {
         if (size >= elements.length) {
             extendElements(1);
         }
@@ -33,13 +33,13 @@ public class ModifiableOrderedArrayCollection<E> implements ModifiableOrderedCol
     }
 
     @Override
-    public boolean addAt(int index, E element) throws IllegalArgumentException, IndexOutOfBoundsException {
+    public boolean addAt(final int index, final E element) throws IllegalArgumentException, IndexOutOfBoundsException {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean contains(E element) {
+    public boolean contains(final E element) {
         for (E e : elements) {
             if (e.equals(element)) {
                 return true;
@@ -48,7 +48,7 @@ public class ModifiableOrderedArrayCollection<E> implements ModifiableOrderedCol
         return false;
     }
 
-    private void extendElements(int i) {
+    private void extendElements(final int i) {
         Class<E[]> clazz = (Class<E[]>) elements.getClass();
         E[] newElements = (E[]) Array.newInstance(clazz.getComponentType(), size + i);
         System.arraycopy(elements, 0, newElements, 0, size);
@@ -65,7 +65,7 @@ public class ModifiableOrderedArrayCollection<E> implements ModifiableOrderedCol
     }
 
     @Override
-    public E getAt(int index) throws IndexOutOfBoundsException {
+    public E getAt(final int index) throws IndexOutOfBoundsException {
         if (index >= elements.length) {
             throw new IndexOutOfBoundsException(
                     "Cannot return an element at a position beyond the size of the collection.");
@@ -86,7 +86,7 @@ public class ModifiableOrderedArrayCollection<E> implements ModifiableOrderedCol
     }
 
     @Override
-    public E removeAt(int index) throws IndexOutOfBoundsException {
+    public E removeAt(final int index) throws IndexOutOfBoundsException {
         // TODO Auto-generated method stub
         return null;
     }
