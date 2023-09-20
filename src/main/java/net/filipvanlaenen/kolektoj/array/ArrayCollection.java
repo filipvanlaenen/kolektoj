@@ -1,9 +1,7 @@
 package net.filipvanlaenen.kolektoj.array;
 
-import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Spliterator;
-import java.util.function.IntFunction;
 
 import net.filipvanlaenen.kolektoj.Collection;
 

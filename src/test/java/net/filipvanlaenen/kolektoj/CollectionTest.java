@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import net.filipvanlaenen.kolektoj.Collection;
-
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.Collection} class.
  */
