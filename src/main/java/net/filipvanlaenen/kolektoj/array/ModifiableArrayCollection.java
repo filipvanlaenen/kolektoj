@@ -6,11 +6,23 @@ import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 
+/**
+ * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableCollection} interface.
+ *
+ * @param <E> The element type.
+ */
 public final class ModifiableArrayCollection<E> implements ModifiableCollection<E> {
+    /**
+     * The stride for resizing the elements array.
+     */
+    private static final int STRIDE = 5;
     /**
      * An array with the elements.
      */
     private E[] elements;
+    /**
+     * The size of the collection.
+     */
     private int size;
 
     /**
@@ -25,10 +37,10 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
 
     @Override
     public boolean add(final E element) {
-        if (size >= elements.length) {
-            extendElements(1);
+        if (size == elements.length) {
+            resizeTo(elements.length + STRIDE);
         }
-        size++;
+        elements[size++] = element;
         return true;
     }
 
@@ -42,11 +54,15 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
         return false;
     }
 
-    private void extendElements(final int i) {
+    /**
+     * Creates a new element type array with a given length.
+     *
+     * @param length The length of the array.
+     * @return An array of the given length with the element type.
+     */
+    private E[] createNewArray(final int length) {
         Class<E[]> clazz = (Class<E[]>) elements.getClass();
-        E[] newElements = (E[]) Array.newInstance(clazz.getComponentType(), size + i);
-        System.arraycopy(elements, 0, newElements, 0, size);
-        elements = newElements;
+        return (E[]) Array.newInstance(clazz.getComponentType(), length);
     }
 
     @Override
@@ -65,8 +81,28 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
 
     @Override
     public boolean remove(final E element) {
-        // TODO Auto-generated method stub
+        for (int i = 0; i < size; i++) {
+            if (elements[i].equals(element)) {
+                elements[i] = elements[size - 1];
+                size--;
+                if (size < elements.length - STRIDE) {
+                    resizeTo(size);
+                }
+                return true;
+            }
+        }
         return false;
+    }
+
+    /**
+     * Resizes the array to the new length. It is assumed that the new length is not less than the current size.
+     *
+     * @param newLength The new length for the array.
+     */
+    private void resizeTo(final int newLength) {
+        E[] newElements = createNewArray(newLength);
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = newElements;
     }
 
     @Override
@@ -81,8 +117,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
 
     @Override
     public E[] toArray() {
-        Class<E[]> clazz = (Class<E[]>) elements.getClass();
-        E[] result = (E[]) Array.newInstance(clazz.getComponentType(), size);
+        E[] result = createNewArray(size);
         System.arraycopy(elements, 0, result, 0, size);
         return result;
     }
