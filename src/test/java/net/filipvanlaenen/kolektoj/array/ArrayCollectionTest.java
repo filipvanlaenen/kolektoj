@@ -62,8 +62,9 @@ public class ArrayCollectionTest {
      */
     @Test
     public void getShouldThrowExceptionWhenCalledOnAnEmptyCollection() {
-        assertThrows(IndexOutOfBoundsException.class, () -> new ArrayCollection<Integer>().get(),
-                "Cannot return an element from an empty collection.");
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> new ArrayCollection<Integer>().get());
+        assertEquals("Cannot return an element from an empty collection.", exception.getMessage());
     }
 
     /**
