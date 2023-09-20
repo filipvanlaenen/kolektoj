@@ -1,9 +1,7 @@
 package net.filipvanlaenen.kolektoj.array;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Spliterator;
-import java.util.function.IntFunction;
 
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 
@@ -24,7 +22,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
      * @param elements The elements of the collection.
      */
     public OrderedArrayCollection(final E... elements) {
-        this.elements = (E[]) Arrays.copyOf(elements, elements.length, Object[].class);
+        this.elements = elements.clone();
     }
 
     @Override
@@ -71,12 +69,8 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
         return new ArraySpliterator<E>(elements, Spliterator.ORDERED);
     }
 
+    @Override
     public E[] toArray() {
         return elements.clone();
-    }
-
-    @Override
-    public E[] toArray(final IntFunction<E[]> generator) {
-        return toArray();
     }
 }

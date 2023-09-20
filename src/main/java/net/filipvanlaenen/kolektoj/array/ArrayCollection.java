@@ -1,5 +1,6 @@
 package net.filipvanlaenen.kolektoj.array;
 
+import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.IntFunction;
@@ -55,17 +56,13 @@ public final class ArrayCollection<E> implements Collection<E> {
         return elements.length;
     }
 
-    public E[] toArray() {
-        return elements.clone();
-    }
-
     @Override
     public Spliterator<E> spliterator() {
         return new ArraySpliterator<E>(elements, 0);
     }
 
     @Override
-    public E[] toArray(final IntFunction<E[]> generator) {
-        return toArray();
+    public E[] toArray() {
+        return elements.clone();
     }
 }

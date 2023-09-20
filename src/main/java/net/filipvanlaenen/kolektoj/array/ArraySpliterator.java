@@ -1,6 +1,6 @@
 package net.filipvanlaenen.kolektoj.array;
 
-import java.util.Arrays;
+import java.lang.reflect.Array;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
@@ -15,7 +15,10 @@ final class ArraySpliterator<E> implements Spliterator<E> {
     }
 
     private ArraySpliterator(final E[] elements, final int from, final int to, final int characteristics) {
-        this.elements = Arrays.copyOfRange(elements, from, to);
+        int size = to - from;
+        Class<E[]> clazz = (Class<E[]>) elements.getClass();
+        this.elements = (E[]) Array.newInstance(clazz.getComponentType(), size);
+        System.arraycopy(elements, from, this.elements, 0, size);
         this.characteristics = characteristics;
     }
 

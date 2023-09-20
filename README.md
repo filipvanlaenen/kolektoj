@@ -69,9 +69,9 @@ interface map to Kolektoj methods.
 | int size()                                                | Collection&lt;E>           | int size()                                 |
 | default Spliterator&lt;E> spliterator()                   | Collection&lt;E>           | Spliterator&lt;E> spliterator()            |
 | default Stream&lt;E> stream()                             | Collection&lt;E>           | default Stream&lt;E> stream()              |
-| Object[] toArray()                                        |                            |                                            |
-| default &lt;T> T[] toArray(IntFunction&lt;T[]> generator) | Collection&lt;E>           | E[] toArray(IntFunction&lt;E[]> generator) |
-| &lt;T> T[] toArray(T[] a)                                 |                            |                                            |
+| Object[] toArray()                                        | Collection&lt;E>           | E[] toArray()                              |
+| default &lt;T> T[] toArray(IntFunction&lt;T[]> generator) | Collection&lt;E>           | E[] toArray()                              |
+| &lt;T> T[] toArray(T[] a)                                 | Collection&lt;E>           | E[] toArray()                              |
 
 
 #### Other

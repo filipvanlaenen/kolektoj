@@ -89,8 +89,7 @@ public interface Collection<E> extends Iterable<E> {
     /**
      * Returns the content of this collection as an array.
      *
-     * @param generator A function that can produce an array for the element type of a given length.
      * @return An array containing the elements of this collection.
      */
-    E[] toArray(IntFunction<E[]> generator);
+    E[] toArray();
 }
