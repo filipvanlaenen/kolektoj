@@ -2,7 +2,6 @@ package net.filipvanlaenen.kolektoj;
 
 import java.util.Iterator;
 import java.util.Spliterator;
-import java.util.function.IntFunction;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 

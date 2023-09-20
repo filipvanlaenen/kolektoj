@@ -1,5 +1,6 @@
 package net.filipvanlaenen.kolektoj.array;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,5 +26,13 @@ public class CollectionTest {
     @Test
     public void isEmptyShouldReturnFalseForACollectionContainingAnElement() {
         assertFalse(Collection.of(1).isEmpty());
+    }
+
+    /**
+     * Verifies that the collection produces a stream that reduces to the correct sum.
+     */
+    @Test
+    public void streamShouldProduceAStreamThatReducesToTheCorrectSum() {
+        assertEquals(6, Collection.of(1, 2, 3).stream().reduce(0, Integer::sum));
     }
 }
