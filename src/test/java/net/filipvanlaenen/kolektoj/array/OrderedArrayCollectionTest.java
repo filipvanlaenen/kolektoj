@@ -6,9 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
+
+import net.filipvanlaenen.kolektoj.Collection;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.OrderedArrayCollection} class.
@@ -18,6 +21,26 @@ public class OrderedArrayCollectionTest {
      * The magic number three.
      */
     private static final int THREE = 3;
+    /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
+     * The magic number five.
+     */
+    private static final int FIVE = 5;
+    /**
+     * The magic number six.
+     */
+    private static final int SIX = 6;
+    /**
+     * An array containing the numbers 1, 2 and 3.
+     */
+    private static final Integer[] ARRAY123 = new Integer[] {1, 2, THREE};
+    /**
+     * An array containing the numbers from 1 to 6.
+     */
+    private static final Integer[] ARRAY123456 = new Integer[] {1, 2, THREE, FOUR, FIVE, SIX};
     /**
      * Ordered array collection with the integers 1, 2 and 3.
      */
@@ -91,7 +114,7 @@ public class OrderedArrayCollectionTest {
      */
     @Test
     public void toArrayShouldProduceAnArrayWithTheElementsOfTheCollection() {
-        assertArrayEquals(new Integer[] {1, 2, THREE}, COLLECTION123.toArray());
+        assertArrayEquals(ARRAY123, COLLECTION123.toArray());
     }
 
     /**
@@ -113,5 +136,23 @@ public class OrderedArrayCollectionTest {
     @Test
     public void streamShouldProduceAStreamThatCollectsToTheCorrectString() {
         assertEquals("1,2,3", COLLECTION123.stream().map(Object::toString).collect(Collectors.joining(",")));
+    }
+
+    /**
+     * Verifies that the collection constructed using another ordered collection produces the correct array.
+     */
+    @Test
+    public void constructorUsingOrderedCollectionShouldProduceTheCorrectArray() {
+        assertArrayEquals(ARRAY123, new OrderedArrayCollection<Integer>(COLLECTION123).toArray());
+    }
+
+    /**
+     * Verifies that the collection constructed using another collection and the natural comparator produces the correct
+     * array.
+     */
+    @Test
+    public void constructorUsingCollectionAndNaturalOrderComparatorShouldProduceTheCorrectArray() {
+        assertArrayEquals(ARRAY123456, new OrderedArrayCollection<Integer>(Collection.of(1, FIVE, SIX, 2, FOUR, THREE),
+                Comparator.naturalOrder()).toArray());
     }
 }

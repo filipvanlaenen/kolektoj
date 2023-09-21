@@ -11,6 +11,15 @@ import org.junit.jupiter.api.Test;
  */
 public class CollectionTest {
     /**
+     * The magic number three.
+     */
+    private static final int THREE = 3;
+    /**
+     * The magic number six.
+     */
+    private static final int SIX = 6;
+
+    /**
      * Verifies that an empty collection is empty.
      */
     @Test
@@ -31,6 +40,6 @@ public class CollectionTest {
      */
     @Test
     public void streamShouldProduceAStreamThatReducesToTheCorrectSum() {
-        assertEquals(6, Collection.of(1, 2, 3).stream().reduce(0, Integer::sum));
+        assertEquals(SIX, Collection.of(1, 2, THREE).stream().reduce(0, Integer::sum));
     }
 }
