@@ -95,6 +95,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
         E pivot = array[last];
         int index = (first - 1);
         for (int j = first; j < last; j++) {
+            // EQMU: Changing the conditional boundary below produces an equivalent mutant.
             if (comparator.compare(array[j], pivot) <= 0) {
                 swap(array, ++index, j);
             }
@@ -112,6 +113,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
      * @param last       The index of the last element in the array that should be sorted.
      */
     private void quicksort(final E[] array, final Comparator<E> comparator, final int first, final int last) {
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (first < last) {
             int pivotIndex = partition(array, comparator, first, last);
             quicksort(array, comparator, first, pivotIndex - 1);
