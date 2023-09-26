@@ -93,7 +93,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
      */
     private int partition(final E[] array, final Comparator<E> comparator, final int first, final int last) {
         E pivot = array[last];
-        int index = (first - 1);
+        int index = first - 1;
         for (int j = first; j < last; j++) {
             // EQMU: Changing the conditional boundary below produces an equivalent mutant.
             if (comparator.compare(array[j], pivot) <= 0) {
