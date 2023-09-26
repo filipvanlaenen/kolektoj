@@ -46,7 +46,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public boolean addAt(final int index, final E element) throws IllegalArgumentException, IndexOutOfBoundsException {
-        // TODO Auto-generated method stub
+        // TODO: Auto-generated method stub
         return false;
     }
 
@@ -97,13 +97,13 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public boolean remove(final E element) {
-        // TODO Auto-generated method stub
+        // TODO: Auto-generated method stub
         return false;
     }
 
     @Override
     public E removeAt(final int index) throws IndexOutOfBoundsException {
-        // TODO Auto-generated method stub
+        // TODO: Auto-generated method stub
         return null;
     }
 
