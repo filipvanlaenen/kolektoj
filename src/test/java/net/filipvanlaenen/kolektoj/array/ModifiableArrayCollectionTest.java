@@ -132,9 +132,9 @@ public class ModifiableArrayCollectionTest {
      */
     @Test
     public void emptyCollectionShouldContainAnElementAfterHavingItAdded() {
-        ModifiableCollection<Integer> collection = new ModifiableArrayCollection<Integer>();
-        collection.add(1);
-        assertTrue(collection.contains(1));
+        ModifiableCollection<Integer> collection = createNewCollection();
+        collection.add(SIX);
+        assertTrue(collection.contains(SIX));
     }
 
     /**

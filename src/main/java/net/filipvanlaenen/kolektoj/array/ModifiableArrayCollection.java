@@ -85,7 +85,11 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
             if (elements[i].equals(element)) {
                 elements[i] = elements[size - 1];
                 size--;
+                // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+                // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
+                // EQMU: Negating the conditional below produces an equivalent mutant.
                 if (size < elements.length - STRIDE) {
+                    // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
                     resizeTo(size);
                 }
                 return true;
