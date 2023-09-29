@@ -45,9 +45,21 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     }
 
     @Override
-    public boolean addAt(final int index, final E element) throws IllegalArgumentException, IndexOutOfBoundsException {
-        // TODO: Auto-generated method stub
-        return false;
+    public boolean addAt(final int index, final E element) throws IndexOutOfBoundsException {
+        if (index >= elements.length) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot add an element at a position beyond the size of the collection.");
+        } else {
+            if (size == elements.length) {
+                resizeTo(elements.length + STRIDE);
+            }
+            for (int i = index; i < size; i++) {
+                elements[i + 1] = elements[i];
+            }
+            size++;
+            elements[index] = element;
+            return true;
+        }
     }
 
     @Override
@@ -97,24 +109,35 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public boolean remove(final E element) {
-        // TODO: Auto-generated method stub
+        for (int i = 0; i < size; i++) {
+            if (elements[i].equals(element)) {
+                removeAt(i);
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public E removeAt(final int index) throws IndexOutOfBoundsException {
-        // TODO: Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public Spliterator<E> spliterator() {
-        return new ArraySpliterator<E>(toArray(), Spliterator.ORDERED);
+        if (index >= elements.length) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot remove an element at a position beyond the size of the collection.");
+        } else {
+            E result = elements[index];
+            for (int i = index + 1; i < size; i++) {
+                elements[i - 1] = elements[i];
+            }
+            size--;
+            // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+            // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
+            // EQMU: Negating the conditional below produces an equivalent mutant.
+            if (size < elements.length - STRIDE) {
+                // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
+                resizeTo(size);
+            }
+            return result;
+        }
     }
 
     /**
@@ -126,6 +149,16 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         E[] newElements = createNewArray(newLength);
         System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public Spliterator<E> spliterator() {
+        return new ArraySpliterator<E>(toArray(), Spliterator.ORDERED);
     }
 
     @Override

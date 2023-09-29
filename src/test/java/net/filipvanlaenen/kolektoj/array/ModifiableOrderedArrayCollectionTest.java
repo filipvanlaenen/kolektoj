@@ -7,12 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 
 /**
- * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection} class.
+ * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection} class.
  */
-public class ModifiableArrayCollectionTest {
+public class ModifiableOrderedArrayCollectionTest {
     /**
      * The magic number three.
      */
@@ -24,15 +24,15 @@ public class ModifiableArrayCollectionTest {
     /**
      * Collection with the integers 1, 2 and 3.
      */
-    private static final ModifiableCollection<Integer> COLLECTION123 = createNewCollection();
+    private static final ModifiableOrderedCollection<Integer> COLLECTION123 = createNewCollection();
 
     /**
      * Creates a new collection to run the unit tests on.
      *
      * @return A new collection to run the unit tests on.
      */
-    private static ModifiableArrayCollection<Integer> createNewCollection() {
-        return new ModifiableArrayCollection<Integer>(1, 2, THREE);
+    private static ModifiableOrderedArrayCollection<Integer> createNewCollection() {
+        return new ModifiableOrderedArrayCollection<Integer>(1, 2, THREE);
     }
 
     /**
@@ -73,8 +73,8 @@ public class ModifiableArrayCollectionTest {
      */
     @Test
     public void getShouldThrowExceptionWhenCalledOnAnEmptyCollection() {
-        IndexOutOfBoundsException exception =
-                assertThrows(IndexOutOfBoundsException.class, () -> new ModifiableArrayCollection<Integer>().get());
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class,
+                () -> new ModifiableOrderedArrayCollection<Integer>().get());
         assertEquals("Cannot return an element from an empty collection.", exception.getMessage());
     }
 
@@ -83,7 +83,7 @@ public class ModifiableArrayCollectionTest {
      */
     @Test
     public void toArrayShouldProduceAnArrayWithTheElementsOfTheCollection() {
-        ModifiableCollection<Integer> collection = new ModifiableArrayCollection<Integer>(1, 2);
+        ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>(1, 2);
         Integer[] actual = collection.toArray();
         assertTrue(actual.length == 2 && (actual[0] == 1 || actual[1] == 1) && (actual[0] == 2 || actual[1] == 2));
     }
@@ -114,7 +114,7 @@ public class ModifiableArrayCollectionTest {
      */
     @Test
     public void addOnAnEmptyCollectionShouldReturnTrue() {
-        assertTrue(new ModifiableArrayCollection<Integer>().add(1));
+        assertTrue(new ModifiableOrderedArrayCollection<Integer>().add(1));
     }
 
     /**
@@ -122,7 +122,7 @@ public class ModifiableArrayCollectionTest {
      */
     @Test
     public void sizeShouldBeOneAfterAddingAnElementToAnEmptyCollection() {
-        ModifiableCollection<Integer> collection = new ModifiableArrayCollection<Integer>();
+        ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>();
         collection.add(1);
         assertEquals(1, collection.size());
     }
@@ -132,7 +132,7 @@ public class ModifiableArrayCollectionTest {
      */
     @Test
     public void emptyCollectionShouldContainAnElementAfterHavingItAdded() {
-        ModifiableCollection<Integer> collection = createNewCollection();
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
         collection.add(SIX);
         assertTrue(collection.contains(SIX));
     }
@@ -158,7 +158,7 @@ public class ModifiableArrayCollectionTest {
      */
     @Test
     public void sizeShouldBeDecreasedByOneWhenAnElementIsRemoved() {
-        ModifiableCollection<Integer> collection = createNewCollection();
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
         collection.remove(1);
         assertEquals(2, collection.size());
     }
@@ -168,7 +168,7 @@ public class ModifiableArrayCollectionTest {
      */
     @Test
     public void collectionShouldNotContainAnElementAfterItHasBeenRemoved() {
-        ModifiableCollection<Integer> collection = createNewCollection();
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
         collection.remove(1);
         assertFalse(collection.contains(1));
     }
