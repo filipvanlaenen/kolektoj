@@ -46,15 +46,15 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public boolean addAt(final int index, final E element) throws IndexOutOfBoundsException {
-        if (index >= elements.length) {
+        if (index > elements.length) {
             throw new IndexOutOfBoundsException(
                     "Cannot add an element at a position beyond the size of the collection.");
         } else {
             if (size == elements.length) {
                 resizeTo(elements.length + STRIDE);
             }
-            for (int i = index; i < size; i++) {
-                elements[i + 1] = elements[i];
+            for (int i = size; i > index; i--) {
+                elements[i] = elements[i - 1];
             }
             size++;
             elements[index] = element;

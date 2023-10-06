@@ -138,6 +138,68 @@ public class ModifiableOrderedArrayCollectionTest {
     }
 
     /**
+     * Verifies that trying to add an element at an index beyond the size of the collection throws
+     * IndexOutOfBoundsException.
+     */
+    @Test
+    public void addAtShouldThrowExceptionWhenCalledBeyondCollectionSize() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> COLLECTION123.addAt(SIX, 0));
+        assertEquals("Cannot add an element at a position beyond the size of the collection.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that adding an element at position 0 to an empty collection returns true.
+     */
+    @Test
+    public void addAtZeroOnAnEmptyCollectionShouldReturnTrue() {
+        assertTrue(new ModifiableOrderedArrayCollection<Integer>().addAt(0, 1));
+    }
+
+    /**
+     * Verifies that after adding an element at position 0 to an empty collection, the element is at position 0.
+     */
+    @Test
+    public void addAtZeroOnAnEmptyCollectionShouldPutAnElementAtPositionZero() {
+        ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>();
+        collection.addAt(0, 1);
+        assertEquals(1, collection.getAt(0));
+    }
+
+    /**
+     * Verifies that after adding an element at a position to a collection, the elements after the position have been
+     * moved up.
+     */
+    @Test
+    public void addAtOneOnACollectionShouldMoveElementsOnePositionHigher() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        collection.addAt(1, 0);
+        assertEquals(2, collection.getAt(2));
+    }
+
+    /**
+     * Verifies that adding beyond the stride doesn't lead to an exception.
+     */
+    @Test
+    public void addAtManyTimesShouldNotProduceAnException() {
+        ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>();
+        for (int i = 0; i < SIX; i++) {
+            collection.addAt(0, i);
+        }
+        assertEquals(0, collection.getAt(SIX - 1));
+    }
+
+    /**
+     * Verifies that after adding an element at position 0 to an empty collection, the collection has size 1.
+     */
+    @Test
+    public void addAtZeroOnAnEmptyCollectionShouldIncreaseCollectionSizeToOne() {
+        ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>();
+        collection.addAt(0, 1);
+        assertEquals(1, collection.size());
+    }
+
+    /**
      * Verifies that after adding an element to an empty collection, the size is increased to one.
      */
     @Test
@@ -171,6 +233,26 @@ public class ModifiableOrderedArrayCollectionTest {
     @Test
     public void removeShouldReturnTrueForAnElementInTheCollection() {
         assertTrue(createNewCollection().remove(1));
+    }
+
+    /**
+     * Verifies that trying to remove an element at an index beyond the size of the collection throws
+     * IndexOutOfBoundsException.
+     */
+    @Test
+    public void removeAtShouldThrowExceptionWhenCalledBeyondCollectionSize() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> COLLECTION123.removeAt(THREE));
+        assertEquals("Cannot remove an element at a position beyond the size of the collection.",
+                exception.getMessage());
+    }
+
+    /**
+     * Verifies that removeAt returns the element being removed.
+     */
+    @Test
+    public void removeAtShouldReturnTheElementThatIsRemoved() {
+        assertEquals(2, createNewCollection().removeAt(1));
     }
 
     /**
