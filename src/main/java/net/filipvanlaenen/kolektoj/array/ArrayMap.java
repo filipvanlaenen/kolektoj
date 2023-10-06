@@ -14,7 +14,11 @@ import net.filipvanlaenen.kolektoj.ModifiableCollection;
  * @param <K> The key type.
  * @param <V> The value type.
  */
-public class ArrayMap<K, V> implements Map<K, V> {
+public final class ArrayMap<K, V> implements Map<K, V> {
+    /**
+     * The ratio by which the number of entries should be multiplied to construct the hashed array.
+     */
+    private static final int HASHING_RATIO = 3;
     /**
      * An array with the entries.
      */
@@ -23,12 +27,23 @@ public class ArrayMap<K, V> implements Map<K, V> {
      * A hashed array with the entries.
      */
     private final Entry<K, V>[] hashedEntries;
+    /**
+     * A collection with the keys, initialized lazily.
+     */
     private Collection<K> keys;
+    /**
+     * A collection with the values, initialized lazily.
+     */
     private Collection<V> values;
 
+    /**
+     * Constructor taking the entries as its parameter.
+     *
+     * @param entries The entries for the map.
+     */
     public ArrayMap(final Entry<K, V>... entries) {
         this.entries = entries.clone();
-        int hashedArraySize = entries.length * 3;
+        int hashedArraySize = entries.length * HASHING_RATIO;
         Entry<K, V>[] hashedArray = createNewArray(hashedArraySize);
         for (Entry<K, V> entry : entries) {
             int i = entry.key().hashCode() % hashedArraySize;
@@ -42,16 +57,16 @@ public class ArrayMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean contains(final Entry<K, V> entry) {
-        return findFirstEntryIndex(entry) != -1;
+        return findFirstIndexForEntry(entry) != -1;
     }
 
     @Override
     public boolean containsKey(final K key) {
-        return findFirstKeyIndex(key) != -1;
+        return findFirstIndexForKey(key) != -1;
     }
 
     @Override
-    public boolean containsValue(V value) {
+    public boolean containsValue(final V value) {
         for (Entry<K, V> entry : entries) {
             V v = entry.value();
             if (v == null && value == null || v != null && v.equals(value)) {
@@ -86,7 +101,13 @@ public class ArrayMap<K, V> implements Map<K, V> {
         return new ArrayIterator<Entry<K, V>>(entries);
     }
 
-    private int findFirstEntryIndex(final Entry<K, V> entry) {
+    /**
+     * Finds the index for the first occurrence of the entry.
+     *
+     * @param entry The entry.
+     * @return Returns the index for the first occurrence of the entry, or -1 if no such entry is present.
+     */
+    private int findFirstIndexForEntry(final Entry<K, V> entry) {
         int hashedEntriesSize = hashedEntries.length;
         int index = entry.key().hashCode() % hashedEntriesSize;
         while (hashedEntries[index] != null) {
@@ -98,7 +119,13 @@ public class ArrayMap<K, V> implements Map<K, V> {
         return -1;
     }
 
-    private int findFirstKeyIndex(final K key) {
+    /**
+     * Finds the index for the first occurrence of an entry with the key.
+     *
+     * @param key The key.
+     * @return Returns the index for the first occurrence of an entry with the key, or -1 if no such entry is present.
+     */
+    private int findFirstIndexForKey(final K key) {
         int hashedEntriesSize = hashedEntries.length;
         int index = key.hashCode() % hashedEntriesSize;
         while (hashedEntries[index] != null) {
@@ -113,7 +140,7 @@ public class ArrayMap<K, V> implements Map<K, V> {
 
     @Override
     public V get(final K key) throws IllegalArgumentException {
-        int index = findFirstKeyIndex(key);
+        int index = findFirstIndexForKey(key);
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
