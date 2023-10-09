@@ -8,6 +8,7 @@ The aim of this project is to provide a clean Java collections framework.
 * [Comparison with the Java Platform Collections Framework](#comparison-with-the-java-platform-collections-framework)
   * [JDK 17 Interfaces](#jdk-17-interfaces)
   * [JDK 17 Classes](#jdk-17-classes)
+* [Projects Using Kolektoj](#projects-using-kolektoj)
 
 ## Design Principles
 
@@ -124,3 +125,8 @@ interface map to Kolektoj methods.
 * TransferQueue
 * TreeMap
 * TreeSet
+
+## Projects Using Kolektoj
+
+The following projects use Kolektoj:
+* [ASAPOP](https://github.com/filipvanlaenen/asapop)
