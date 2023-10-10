@@ -24,6 +24,10 @@ public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
      */
     private static final int MINIMAL_HASHING_RATIO = 2;
     /**
+     * The maximal ratio between the size of the map and the size of the hashed array.
+     */
+    private static final int MAXIMAL_HASHING_RATIO = 4;
+    /**
      * The stride for resizing the elements array.
      */
     private static final int STRIDE = 5;
@@ -216,11 +220,33 @@ public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public V remove(final K key) throws IllegalArgumentException {
-        // TODO: Find the entry and remove it from entries, hashedEntries, keys and values.
-        // TODO: If needed, shrink entries and hashedEntries.
-        // TODO: If needed, rehash hashedEntries so that the findFirstIndex methods continue to work, i.e. rehash if the
-        // next entry in the hashed array isn't null.
-        return null;
+        int index = findFirstIndexForKey(key);
+        if (index == -1) {
+            throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
+        }
+        Entry<K, V> entry = hashedEntries[index];
+        V value = entry.value();
+        for (int i = 0; i < size; i++) {
+            if (entries[i].equals(entry)) {
+                entries[i] = entries[size - 1];
+                size--;
+                break;
+            }
+        }
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
+        // EQMU: Negating the conditional below produces an equivalent mutant.
+        if (size < entries.length - STRIDE) {
+            // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
+            resizeEntriesTo(size);
+        }
+        hashedEntries[index] = null;
+        if (hashedEntries[index + 1 % hashedEntriesSize] != null || size * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
+            resizeHashedEntriesTo(size * HASHING_RATIO);
+        }
+        keys.remove(key);
+        values.remove(value);
+        return value;
     }
 
     /**
