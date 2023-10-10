@@ -71,13 +71,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean containsValue(final V value) {
-        for (Entry<K, V> entry : entries) {
-            V v = entry.value();
-            if (v == null && value == null || v != null && v.equals(value)) {
-                return true;
-            }
-        }
-        return false;
+        return getValues().contains(value);
     }
 
     /**
