@@ -12,7 +12,7 @@ import net.filipvanlaenen.kolektoj.array.ArrayCollection;
  *
  * @param <E> The element type.
  */
-public interface Collection<E> extends Iterable<E> {
+public interface Collection<E> extends Cloneable, Iterable<E> {
     /**
      * Returns a new empty collection.
      *

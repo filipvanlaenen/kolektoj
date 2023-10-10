@@ -50,7 +50,8 @@ public final class ArrayMap<K, V> implements Map<K, V> {
         hashedEntriesSize = entries.length * HASHING_RATIO;
         Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
         for (Entry<K, V> entry : entries) {
-            int i = entry.key().hashCode() % hashedEntriesSize;
+            K key = entry.key();
+            int i = key == null ? 0 : key.hashCode() % hashedEntriesSize;
             while (hashedArray[i] != null) {
                 i = (i + 1) % hashedEntriesSize;
             }
@@ -123,7 +124,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
      * @return Returns the index for the first occurrence of an entry with the key, or -1 if no such entry is present.
      */
     private int findFirstIndexForKey(final K key) {
-        int index = key.hashCode() % hashedEntriesSize;
+        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
         while (hashedEntries[index] != null) {
             K k = hashedEntries[index].key();
             if (k == null && key == null || k != null && k.equals(key)) {

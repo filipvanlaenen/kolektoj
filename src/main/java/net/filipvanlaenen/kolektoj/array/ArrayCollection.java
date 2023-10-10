@@ -28,7 +28,7 @@ public final class ArrayCollection<E> implements Collection<E> {
     @Override
     public boolean contains(final E element) {
         for (E e : elements) {
-            if (e.equals(element)) {
+            if (e == null && element == null || e != null && e.equals(element)) {
                 return true;
             }
         }

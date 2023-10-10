@@ -203,14 +203,12 @@ public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public Collection<K> getKeys() {
-        // TODO: return keys.clone() instead
-        return new ArrayCollection<K>(keys.toArray());
+        return Collection.of(keys.toArray());
     }
 
     @Override
     public Collection<V> getValues() {
-        // TODO: return values.clone() instead
-        return new ArrayCollection<V>(values.toArray());
+        return Collection.of(values.toArray());
     }
 
     @Override
