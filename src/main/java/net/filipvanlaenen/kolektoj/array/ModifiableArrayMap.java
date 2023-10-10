@@ -293,4 +293,27 @@ public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
         System.arraycopy(entries, 0, result, 0, size);
         return result;
     }
+
+    @Override
+    public V update(K key, V value) throws IllegalArgumentException {
+        int index = findFirstIndexForKey(key);
+        if (index == -1) {
+            throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
+        }
+        Entry<K, V> oldEntry = hashedEntries[index];
+        V oldValue = oldEntry.value();
+        if (value != oldValue) {
+            Entry<K, V> newEntry = new Entry<K, V>(key, value);
+            for (int i = 0; i < size; i++) {
+                if (entries[i] == oldEntry) {
+                    entries[i] = newEntry;
+                    break;
+                }
+            }
+            hashedEntries[index] = newEntry;
+            values.remove(oldValue);
+            values.add(value);
+        }
+        return oldValue;
+    }
 }
