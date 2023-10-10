@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.Collection} interface.
@@ -23,6 +24,15 @@ public final class ArrayCollection<E> implements Collection<E> {
      */
     public ArrayCollection(final E... elements) {
         this.elements = elements.clone();
+    }
+
+    /**
+     * Constructs a collection from another collection, with the same elements.
+     *
+     * @param source The collection to create a new collection from.
+     */
+    public ArrayCollection(final Collection<E> source) {
+        elements = source.toArray();
     }
 
     @Override

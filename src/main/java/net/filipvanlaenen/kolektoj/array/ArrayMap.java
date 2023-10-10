@@ -158,7 +158,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
         if (result.isEmpty()) {
             throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
         }
-        return Collection.of(result.toArray());
+        return result;
     }
 
     @Override
@@ -168,7 +168,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
             for (Entry<K, V> entry : entries) {
                 result.add(entry.key());
             }
-            keys = Collection.of(result.toArray());
+            keys = new ArrayCollection<K>(result);
         }
         return keys;
     }
@@ -180,7 +180,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
             for (Entry<K, V> entry : entries) {
                 result.add(entry.value());
             }
-            values = Collection.of(result.toArray());
+            values = new ArrayCollection<V>(result);
         }
         return values;
     }

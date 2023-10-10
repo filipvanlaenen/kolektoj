@@ -63,9 +63,10 @@ public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
      */
     public ModifiableArrayMap(final Entry<K, V>... entries) {
         this.entries = entries.clone();
+        size = entries.length;
         keys = new ModifiableArrayCollection<K>();
         values = new ModifiableArrayCollection<V>();
-        hashedEntriesSize = entries.length * HASHING_RATIO;
+        hashedEntriesSize = entries.length * HASHING_RATIO + 1;
         Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
         for (Entry<K, V> entry : entries) {
             keys.add(entry.key());
@@ -198,17 +199,17 @@ public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
         if (result.isEmpty()) {
             throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
         }
-        return Collection.of(result.toArray());
+        return result;
     }
 
     @Override
     public Collection<K> getKeys() {
-        return Collection.of(keys.toArray());
+        return new ArrayCollection<K>(keys);
     }
 
     @Override
     public Collection<V> getValues() {
-        return Collection.of(values.toArray());
+        return new ArrayCollection<V>(values);
     }
 
     @Override
@@ -240,7 +241,7 @@ public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
         }
         hashedEntries[index] = null;
         if (hashedEntries[index + 1 % hashedEntriesSize] != null || size * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
-            resizeHashedEntriesTo(size * HASHING_RATIO);
+            resizeHashedEntriesTo(size * HASHING_RATIO + 1);
         }
         keys.remove(key);
         values.remove(value);
@@ -268,7 +269,8 @@ public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
         hashedEntriesSize = newLength;
         Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
         for (Entry<K, V> entry : entries) {
-            int i = entry.key().hashCode() % hashedEntriesSize;
+            K key = entry.key();
+            int i = key == null ? 0 : key.hashCode() % hashedEntriesSize;
             while (hashedArray[i] != null) {
                 i = (i + 1) % hashedEntriesSize;
             }

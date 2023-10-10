@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.array.ModifiableArrayMap;
 
 /**
  * Interface defining the signature for all modifiable maps.
@@ -9,6 +10,16 @@ import net.filipvanlaenen.kolektoj.Map.Entry;
  * @param <V> The value type.
  */
 public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
+    /**
+     * Returns a new empty map.
+     *
+     * @param <E> The element type.
+     * @return A new empty map.
+     */
+    static <K, V> ModifiableMap<K, V> empty() {
+        return new ModifiableArrayMap<K, V>();
+    }
+
     /**
      * Adds an entry to this map with the given key and value, and returns whether it increased the size of the map.
      *
