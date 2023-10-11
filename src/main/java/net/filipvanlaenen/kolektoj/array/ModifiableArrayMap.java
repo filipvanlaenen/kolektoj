@@ -66,12 +66,13 @@ public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
         size = entries.length;
         keys = new ModifiableArrayCollection<K>();
         values = new ModifiableArrayCollection<V>();
-        hashedEntriesSize = entries.length * HASHING_RATIO + 1;
+        hashedEntriesSize = entries.length * HASHING_RATIO;
         Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
         for (Entry<K, V> entry : entries) {
-            keys.add(entry.key());
+            K key = entry.key();
+            keys.add(key);
             values.add(entry.value());
-            int i = entry.key().hashCode() % hashedEntriesSize;
+            int i = key == null ? 0 : key.hashCode() % hashedEntriesSize;
             while (hashedArray[i] != null) {
                 i = (i + 1) % hashedEntriesSize;
             }
@@ -156,7 +157,7 @@ public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
      * @return Returns the index for the first occurrence of an entry with the key, or -1 if no such entry is present.
      */
     private int findFirstIndexForKey(final K key) {
-        int index = key.hashCode() % hashedEntriesSize;
+        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
         while (hashedEntries[index] != null) {
             K k = hashedEntries[index].key();
             if (k == null && key == null || k != null && k.equals(key)) {
@@ -241,7 +242,7 @@ public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
         }
         hashedEntries[index] = null;
         if (hashedEntries[index + 1 % hashedEntriesSize] != null || size * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
-            resizeHashedEntriesTo(size * HASHING_RATIO + 1);
+            resizeHashedEntriesTo(size * HASHING_RATIO);
         }
         keys.remove(key);
         values.remove(value);

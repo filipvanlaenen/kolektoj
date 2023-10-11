@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 
 /**
@@ -29,8 +30,8 @@ public class ArrayMapTest {
     /**
      * Map with the integers 1, 2 and 3 mapped to their words.
      */
-    private static final ArrayMap<Integer, String> MAP123 = new ArrayMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
-    private static final ArrayMap<Integer, String> MAP123NULL =
+    private static final Map<Integer, String> MAP123 = new ArrayMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
+    private static final Map<Integer, String> MAP123NULL =
             new ArrayMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
 
     /**
