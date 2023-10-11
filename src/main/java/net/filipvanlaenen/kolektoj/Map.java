@@ -2,6 +2,7 @@ package net.filipvanlaenen.kolektoj;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.hash.HashMap;
+import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 
 /**
  * Interface defining the signature for all maps.
@@ -42,6 +43,20 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
      */
     static <K, V> Map<K, V> of(final Entry<K, V>... entries) {
         return new HashMap<K, V>(entries);
+    }
+
+    static <K, V> Map<K, V> of(final K key, final V value) {
+        return new HashMap<K, V>(new Entry<K, V>(key, value));
+    }
+
+    static <K, V> Map<K, V> of(final K key1, final V value1, final K key2, final V value2) {
+        return new HashMap<K, V>(new Entry<K, V>(key1, value1), new Entry<K, V>(key2, value2));
+    }
+
+    static <K, V> Map<K, V> of(final K key1, final V value1, final K key2, final V value2, final K key3,
+            final V value3) {
+        return new HashMap<K, V>(new Entry<K, V>(key1, value1), new Entry<K, V>(key2, value2),
+                new Entry<K, V>(key3, value3));
     }
 
     /**

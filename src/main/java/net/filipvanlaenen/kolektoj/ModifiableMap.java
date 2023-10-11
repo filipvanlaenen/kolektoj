@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 
 /**
@@ -11,13 +12,40 @@ import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
  */
 public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
     /**
-     * Returns a new empty map.
+     * Returns a new empty modifiable map.
      *
-     * @param <E> The element type.
+     * @param <K> The key type.
+     * @param <V> The value type.
      * @return A new empty map.
      */
     static <K, V> ModifiableMap<K, V> empty() {
         return new ModifiableHashMap<K, V>();
+    }
+
+    /**
+     * Returns a new modifiable map with the specified entries.
+     *
+     * @param <K>     The key type.
+     * @param <V>     The value type.
+     * @param entries The entries for the new modifiable map.
+     * @return A new modifiable map with the specified entries.
+     */
+    static <K, V> ModifiableMap<K, V> of(final Entry<K, V>... entries) {
+        return new ModifiableHashMap<K, V>(entries);
+    }
+
+    static <K, V> ModifiableMap<K, V> of(final K key, final V value) {
+        return new ModifiableHashMap<K, V>(new Entry<K, V>(key, value));
+    }
+
+    static <K, V> ModifiableMap<K, V> of(final K key1, final V value1, final K key2, final V value2) {
+        return new ModifiableHashMap<K, V>(new Entry<K, V>(key1, value1), new Entry<K, V>(key2, value2));
+    }
+
+    static <K, V> ModifiableMap<K, V> of(final K key1, final V value1, final K key2, final V value2, final K key3,
+            final V value3) {
+        return new ModifiableHashMap<K, V>(new Entry<K, V>(key1, value1), new Entry<K, V>(key2, value2),
+                new Entry<K, V>(key3, value3));
     }
 
     /**
