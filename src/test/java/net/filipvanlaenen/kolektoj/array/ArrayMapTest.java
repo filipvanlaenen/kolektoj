@@ -167,8 +167,7 @@ public class ArrayMapTest {
      */
     @Test
     public void getAllShouldReturnManyValuesForKey() {
-        ArrayMap<Integer, String> map =
-                new ArrayMap<Integer, String>(ENTRY1, new Entry<Integer, String>(1, "two"), ENTRY3);
+        Map<Integer, String> map = new ArrayMap<Integer, String>(ENTRY1, new Entry<Integer, String>(1, "two"), ENTRY3);
         Collection<String> actual = map.getAll(1);
         assertEquals(2, actual.size());
         assertTrue(actual.contains("one"));
@@ -204,8 +203,7 @@ public class ArrayMapTest {
      */
     @Test
     public void toArrayShouldProduceAnArrayWithTheEntriesOfTheMap() {
-
-        ArrayMap<Integer, String> map = new ArrayMap<Integer, String>(ENTRY1, ENTRY2);
+        Map<Integer, String> map = new ArrayMap<Integer, String>(ENTRY1, ENTRY2);
         Entry<Integer, String>[] actual = map.toArray();
         assertTrue(actual.length == 2 && (actual[0] == ENTRY1 || actual[1] == ENTRY1)
                 && (actual[0] == ENTRY2 || actual[1] == ENTRY2));
