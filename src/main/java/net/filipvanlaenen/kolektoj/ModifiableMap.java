@@ -1,7 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
-import net.filipvanlaenen.kolektoj.array.ModifiableArrayMap;
+import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 
 /**
  * Interface defining the signature for all modifiable maps.
@@ -17,7 +17,7 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
      * @return A new empty map.
      */
     static <K, V> ModifiableMap<K, V> empty() {
-        return new ModifiableArrayMap<K, V>();
+        return new ModifiableHashMap<K, V>();
     }
 
     /**

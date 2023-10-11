@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  *
  * @param <E> The element type.
  */
-final class ArraySpliterator<E> implements Spliterator<E> {
+public final class ArraySpliterator<E> implements Spliterator<E> {
     /**
      * The characteristics of the spliterator.
      */
@@ -31,7 +31,7 @@ final class ArraySpliterator<E> implements Spliterator<E> {
      * @param elements                  The elements for the spliterator.
      * @param additionalCharacteristics The characteristics for the spliterator in addition to SIZED and SUBSIZED.
      */
-    ArraySpliterator(final E[] elements, final int additionalCharacteristics) {
+    public ArraySpliterator(final E[] elements, final int additionalCharacteristics) {
         this.elements = elements.clone();
         this.characteristics = SIZED | SUBSIZED | additionalCharacteristics;
     }

@@ -1,4 +1,4 @@
-package net.filipvanlaenen.kolektoj.array;
+package net.filipvanlaenen.kolektoj.hash;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;
@@ -7,14 +7,17 @@ import java.util.Spliterator;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.array.ArrayCollection;
+import net.filipvanlaenen.kolektoj.array.ArrayIterator;
+import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 
 /**
- * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.Map} interface.
+ * A hash backed implementation of the {@link net.filipvanlaenen.kolektoj.Map} interface.
  *
  * @param <K> The key type.
  * @param <V> The value type.
  */
-public final class ArrayMap<K, V> implements Map<K, V> {
+public final class HashMap<K, V> implements Map<K, V> {
     /**
      * The ratio by which the number of entries should be multiplied to construct the hashed array.
      */
@@ -45,7 +48,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
      *
      * @param entries The entries for the map.
      */
-    public ArrayMap(final Entry<K, V>... entries) {
+    public HashMap(final Entry<K, V>... entries) {
         this.entries = entries.clone();
         hashedEntriesSize = entries.length * HASHING_RATIO;
         Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);

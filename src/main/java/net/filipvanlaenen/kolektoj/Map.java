@@ -1,7 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
-import net.filipvanlaenen.kolektoj.array.ArrayMap;
+import net.filipvanlaenen.kolektoj.hash.HashMap;
 
 /**
  * Interface defining the signature for all maps.
@@ -29,7 +29,7 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
      * @return A new empty map.
      */
     static <K, V> Map<K, V> empty() {
-        return new ArrayMap<K, V>();
+        return new HashMap<K, V>();
     }
 
     /**
@@ -41,7 +41,7 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
      * @return A new map with the specified entries.
      */
     static <K, V> Map<K, V> of(final Entry<K, V>... entries) {
-        return new ArrayMap<K, V>(entries);
+        return new HashMap<K, V>(entries);
     }
 
     /**

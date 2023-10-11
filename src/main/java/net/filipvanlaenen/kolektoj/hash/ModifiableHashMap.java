@@ -1,4 +1,4 @@
-package net.filipvanlaenen.kolektoj.array;
+package net.filipvanlaenen.kolektoj.hash;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;
@@ -7,14 +7,18 @@ import java.util.Spliterator;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
+import net.filipvanlaenen.kolektoj.array.ArrayCollection;
+import net.filipvanlaenen.kolektoj.array.ArrayIterator;
+import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
+import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
 /**
- * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableMap} interface.
+ * A hash backed implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableMap} interface.
  *
  * @param <K> The key type.
  * @param <V> The value type.
  */
-public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
+public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     /**
      * The ratio by which the number of entries should be multiplied to construct the hashed array.
      */
@@ -61,7 +65,7 @@ public final class ModifiableArrayMap<K, V> implements ModifiableMap<K, V> {
      *
      * @param entries The entries for the map.
      */
-    public ModifiableArrayMap(final Entry<K, V>... entries) {
+    public ModifiableHashMap(final Entry<K, V>... entries) {
         this.entries = entries.clone();
         size = entries.length;
         keys = new ModifiableArrayCollection<K>();

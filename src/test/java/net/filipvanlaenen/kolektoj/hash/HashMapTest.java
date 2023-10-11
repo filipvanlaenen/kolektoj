@@ -1,4 +1,4 @@
-package net.filipvanlaenen.kolektoj.array;
+package net.filipvanlaenen.kolektoj.hash;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -12,9 +12,9 @@ import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 
 /**
- * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.ArrayMap} class.
+ * Unit tests on the {@link net.filipvanlaenen.kolektoj.hash.HashMap} class.
  */
-public class ArrayMapTest {
+public class HashMapTest {
     /**
      * The magic number three.
      */
@@ -30,9 +30,9 @@ public class ArrayMapTest {
     /**
      * Map with the integers 1, 2 and 3 mapped to their words.
      */
-    private static final Map<Integer, String> MAP123 = new ArrayMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
+    private static final Map<Integer, String> MAP123 = new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
     private static final Map<Integer, String> MAP123NULL =
-            new ArrayMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
+            new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
 
     /**
      * Verifies that the correct length is returned for a map with three entries.
@@ -112,7 +112,7 @@ public class ArrayMapTest {
     @Test
     public void getShouldThrowExceptionWhenCalledOnAnEmptyMap() {
         IndexOutOfBoundsException exception =
-                assertThrows(IndexOutOfBoundsException.class, () -> new ArrayMap<Integer, String>().get());
+                assertThrows(IndexOutOfBoundsException.class, () -> new HashMap<Integer, String>().get());
         assertEquals("Cannot return an entry from an empty map.", exception.getMessage());
     }
 
@@ -167,7 +167,7 @@ public class ArrayMapTest {
      */
     @Test
     public void getAllShouldReturnManyValuesForKey() {
-        Map<Integer, String> map = new ArrayMap<Integer, String>(ENTRY1, new Entry<Integer, String>(1, "two"), ENTRY3);
+        Map<Integer, String> map = new HashMap<Integer, String>(ENTRY1, new Entry<Integer, String>(1, "two"), ENTRY3);
         Collection<String> actual = map.getAll(1);
         assertEquals(2, actual.size());
         assertTrue(actual.contains("one"));
@@ -191,7 +191,7 @@ public class ArrayMapTest {
      */
     @Test
     public void getValuesShouldReturnAllKeys() {
-        Collection<String> actual = new ArrayMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3).getValues();
+        Collection<String> actual = new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3).getValues();
         assertEquals(3, actual.size());
         assertTrue(actual.contains("one"));
         assertTrue(actual.contains("two"));
@@ -203,7 +203,7 @@ public class ArrayMapTest {
      */
     @Test
     public void toArrayShouldProduceAnArrayWithTheEntriesOfTheMap() {
-        Map<Integer, String> map = new ArrayMap<Integer, String>(ENTRY1, ENTRY2);
+        Map<Integer, String> map = new HashMap<Integer, String>(ENTRY1, ENTRY2);
         Entry<Integer, String>[] actual = map.toArray();
         assertTrue(actual.length == 2 && (actual[0] == ENTRY1 || actual[1] == ENTRY1)
                 && (actual[0] == ENTRY2 || actual[1] == ENTRY2));

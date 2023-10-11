@@ -1,4 +1,4 @@
-package net.filipvanlaenen.kolektoj.array;
+package net.filipvanlaenen.kolektoj.hash;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -8,14 +8,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.hash.HashMap;
+import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 
 /**
- * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.ModifiableArrayMap} class.
+ * Unit tests on the {@link net.filipvanlaenen.kolektoj.hash.ModifiableHashMap} class.
  */
-public class ModifiableArrayMapTest {
+public class ModifiableHashMapTest {
     /**
      * The magic number three.
      */
@@ -32,9 +34,9 @@ public class ModifiableArrayMapTest {
      * Map with the integers 1, 2 and 3 mapped to their words.
      */
     private static final ModifiableMap<Integer, String> MAP123 =
-            new ModifiableArrayMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
+            new ModifiableHashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
     private static final Map<Integer, String> MAP123NULL =
-            new ArrayMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
+            new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
 
     /**
      * Verifies that the correct length is returned for a map with three entries.
@@ -114,7 +116,7 @@ public class ModifiableArrayMapTest {
     @Test
     public void getShouldThrowExceptionWhenCalledOnAnEmptyMap() {
         IndexOutOfBoundsException exception =
-                assertThrows(IndexOutOfBoundsException.class, () -> new ModifiableArrayMap<Integer, String>().get());
+                assertThrows(IndexOutOfBoundsException.class, () -> new ModifiableHashMap<Integer, String>().get());
         assertEquals("Cannot return an entry from an empty map.", exception.getMessage());
     }
 
@@ -170,7 +172,7 @@ public class ModifiableArrayMapTest {
     @Test
     public void getAllShouldReturnManyValuesForKey() {
         ModifiableMap<Integer, String> map =
-                new ModifiableArrayMap<Integer, String>(ENTRY1, new Entry<Integer, String>(1, "two"), ENTRY3);
+                new ModifiableHashMap<Integer, String>(ENTRY1, new Entry<Integer, String>(1, "two"), ENTRY3);
         Collection<String> actual = map.getAll(1);
         assertEquals(2, actual.size());
         assertTrue(actual.contains("one"));
@@ -194,7 +196,7 @@ public class ModifiableArrayMapTest {
      */
     @Test
     public void getValuesShouldReturnAllKeys() {
-        Collection<String> actual = new ModifiableArrayMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3).getValues();
+        Collection<String> actual = new ModifiableHashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3).getValues();
         assertEquals(3, actual.size());
         assertTrue(actual.contains("one"));
         assertTrue(actual.contains("two"));
@@ -207,7 +209,7 @@ public class ModifiableArrayMapTest {
     @Test
     public void toArrayShouldProduceAnArrayWithTheEntriesOfTheMap() {
 
-        ModifiableMap<Integer, String> map = new ModifiableArrayMap<Integer, String>(ENTRY1, ENTRY2);
+        ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>(ENTRY1, ENTRY2);
         Entry<Integer, String>[] actual = map.toArray();
         assertTrue(actual.length == 2 && (actual[0] == ENTRY1 || actual[1] == ENTRY1)
                 && (actual[0] == ENTRY2 || actual[1] == ENTRY2));

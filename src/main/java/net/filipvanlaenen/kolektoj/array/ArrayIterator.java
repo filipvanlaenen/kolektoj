@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
  *
  * @param <E> The element type.
  */
-class ArrayIterator<E> implements Iterator<E> {
+public class ArrayIterator<E> implements Iterator<E> {
     /**
      * An array with the elements.
      */
@@ -23,7 +23,7 @@ class ArrayIterator<E> implements Iterator<E> {
      *
      * @param elements An array with the elements to iterate over.
      */
-    ArrayIterator(final E[] elements) {
+    public ArrayIterator(final E[] elements) {
         this.elements = elements.clone();
     }
 
