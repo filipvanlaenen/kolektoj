@@ -1,7 +1,6 @@
 package net.filipvanlaenen.kolektoj;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
-import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 
 /**
@@ -58,6 +57,14 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
     boolean add(K key, V value);
 
     /**
+     * Adds the entries of a map to this map, and returns whether it increased the size of the map.
+     *
+     * @param map The map from which entries should be added.
+     * @return True if the size of the map increased after adding the entries from the map.
+     */
+    boolean addAll(Map<? extends K, ? extends V> map);
+
+    /**
      * Adds an entry to this map with the given key and value if the key isn't already present, otherwise updates the
      * key with the given value. If the key was previously mapped to a value, the value is returned, and null otherwise.
      * 
@@ -65,12 +72,23 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
      * @param value The value.
      * @return The value if the key was previously mapped to a value, or null otherwise.
      */
-    default V put(K key, V value) {
+    default V put(final K key, final V value) {
         if (containsKey(key)) {
             return update(key, value);
         } else {
             add(key, value);
             return null;
+        }
+    }
+
+    /**
+     * Puts the entries of a map into this map .
+     * 
+     * @param map The map from which entries should be put into this map.
+     */
+    default void putAll(final Map<? extends K, ? extends V> map) {
+        for (Entry<? extends K, ? extends V> entry : map) {
+            put(entry.key(), entry.value());
         }
     }
 

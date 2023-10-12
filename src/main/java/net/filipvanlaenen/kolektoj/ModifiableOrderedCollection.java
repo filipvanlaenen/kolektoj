@@ -41,6 +41,16 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
     boolean addAt(int index, E element) throws IndexOutOfBoundsException;
 
     /**
+     * Adds elements from an ordered collection to this collection at a given position and returns whether it increased
+     * the size of the collection.
+     *
+     * @param index      The position where the elements from the collection should be added.
+     * @param collection A collection from which to add elements.
+     * @return True if the size of the collection increased after adding the elements of the collection.
+     */
+    boolean addAllAt(int index, Collection<? extends E> collection) throws IndexOutOfBoundsException;
+
+    /**
      * Removes an element from this collection at a given position.
      *
      * @param index The position of the element that should be removed.

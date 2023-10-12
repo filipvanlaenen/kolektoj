@@ -38,6 +38,14 @@ public interface ModifiableCollection<E> extends Collection<E> {
     boolean add(E element);
 
     /**
+     * Adds elements from a collection to this collection and returns whether it increased the size of the collection.
+     *
+     * @param collection A collection from which to add elements.
+     * @return True if the size of the collection increased after adding the elements of the collection.
+     */
+    boolean addAll(Collection<? extends E> collection);
+
+    /**
      * Removes an element from this collection if it is present.
      *
      * @param element The element to be removed from the collection.

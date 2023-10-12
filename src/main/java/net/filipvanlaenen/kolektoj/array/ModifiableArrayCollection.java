@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Spliterator;
 
+import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 
 /**
@@ -41,6 +42,17 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
             resizeTo(elements.length + STRIDE);
         }
         elements[size++] = element;
+        return true;
+    }
+
+    @Override
+    public boolean addAll(final Collection<? extends E> collection) {
+        int numberOfNewElements = collection.size();
+        if (size + numberOfNewElements > elements.length) {
+            resizeTo(size + numberOfNewElements + STRIDE);
+        }
+        System.arraycopy(collection.toArray(), 0, elements, size, numberOfNewElements);
+        size += numberOfNewElements;
         return true;
     }
 

@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Spliterator;
 
+import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 
 /**
@@ -45,6 +46,34 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     }
 
     @Override
+    public boolean addAll(final Collection<? extends E> collection) {
+        int numberOfNewElements = collection.size();
+        if (size + numberOfNewElements > elements.length) {
+            resizeTo(size + numberOfNewElements + STRIDE);
+        }
+        System.arraycopy(collection.toArray(), 0, elements, size, numberOfNewElements);
+        size += numberOfNewElements;
+        return true;
+    }
+
+    @Override
+    public boolean addAllAt(final int index, final Collection<? extends E> collection) {
+        if (index > elements.length) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot add the elements of another collection at a position beyond the size of the collection.");
+        } else {
+            int numberOfNewElements = collection.size();
+            if (size + numberOfNewElements > elements.length) {
+                resizeTo(size + numberOfNewElements + STRIDE);
+            }
+            System.arraycopy(elements, index, elements, index + numberOfNewElements, size - index);
+            System.arraycopy(collection.toArray(), 0, elements, index, numberOfNewElements);
+            size += numberOfNewElements;
+            return true;
+        }
+    }
+
+    @Override
     public boolean addAt(final int index, final E element) throws IndexOutOfBoundsException {
         if (index > elements.length) {
             throw new IndexOutOfBoundsException(
@@ -53,11 +82,9 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
             if (size == elements.length) {
                 resizeTo(elements.length + STRIDE);
             }
-            for (int i = size; i > index; i--) {
-                elements[i] = elements[i - 1];
-            }
-            size++;
+            System.arraycopy(elements, index, elements, index + 1, size - index);
             elements[index] = element;
+            size++;
             return true;
         }
     }
@@ -126,9 +153,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
                     "Cannot remove an element at a position beyond the size of the collection.");
         } else {
             E result = elements[index];
-            for (int i = index + 1; i < size; i++) {
-                elements[i - 1] = elements[i];
-            }
+            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
             size--;
             // EQMU: Changing the conditional boundary below produces an equivalent mutant.
             // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.

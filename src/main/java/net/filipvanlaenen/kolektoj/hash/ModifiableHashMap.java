@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
@@ -95,13 +96,41 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         if (size * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
             resizeHashedEntriesTo(size * HASHING_RATIO);
         }
-        int i = key.hashCode() % hashedEntriesSize;
+        int i = key == null ? 0 : key.hashCode() % hashedEntriesSize;
         while (hashedEntries[i] != null) {
             i = (i + 1) % hashedEntriesSize;
         }
         hashedEntries[i] = entry;
         keys.add(key);
         values.add(value);
+        return true;
+    }
+
+    @Override
+    public boolean addAll(final Map<? extends K, ? extends V> map) {
+        int numberOfNewEntries = map.size();
+        if (size + numberOfNewEntries > entries.length) {
+            resizeEntriesTo(entries.length + numberOfNewEntries + STRIDE);
+        }
+        if ((size + numberOfNewEntries) * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
+            resizeHashedEntriesTo((size + numberOfNewEntries) * HASHING_RATIO);
+        }
+        int i = 0;
+        for (Entry<? extends K, ? extends V> entry : map) {
+            K key = entry.key();
+            V value = entry.value();
+            Entry<K, V> newEntry = new Entry<K, V>(key, value);
+            entries[size + i] = newEntry;
+            int j = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+            while (hashedEntries[i] != null) {
+                j = (j + 1) % hashedEntriesSize;
+            }
+            hashedEntries[j] = newEntry;
+            keys.add(key);
+            values.add(value);
+            i++;
+        }
+        size += numberOfNewEntries;
         return true;
     }
 
