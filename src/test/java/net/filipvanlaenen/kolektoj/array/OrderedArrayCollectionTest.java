@@ -41,6 +41,11 @@ public class OrderedArrayCollectionTest {
      * Ordered array collection with the integers 1, 2 and 3.
      */
     private static final OrderedArrayCollection<Integer> COLLECTION123 = new OrderedArrayCollection<Integer>(1, 2, 3);
+    /**
+     * Ordered array collection with the integers 1, 2, 3 and null.
+     */
+    private static final OrderedArrayCollection<Integer> COLLECTION123NULL =
+            new OrderedArrayCollection<Integer>(1, 2, 3, null);
 
     /**
      * Verifies that the correct length is returned for a collection with three elements.
@@ -59,11 +64,27 @@ public class OrderedArrayCollectionTest {
     }
 
     /**
+     * Verifies that contains returns true for null if it's in the collection.
+     */
+    @Test
+    public void containsShouldReturnTrueForNullIfInTheCollection() {
+        assertTrue(COLLECTION123NULL.contains(null));
+    }
+
+    /**
      * Verifies that contains returns false for an element not in the collection.
      */
     @Test
     public void containsShouldReturnFalseForAnElementNotInTheCollection() {
         assertFalse(COLLECTION123.contains(0));
+    }
+
+    /**
+     * Verifies that contains returns false for null if it isn't in the collection.
+     */
+    @Test
+    public void containsShouldReturnFalseForNullIfNotInTheTheCollection() {
+        assertFalse(COLLECTION123.contains(null));
     }
 
     /**
