@@ -144,7 +144,11 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
      * @return Returns the index for the first occurrence of the entry, or -1 if no such entry is present.
      */
     private int findFirstIndexForEntry(final Entry<K, V> entry) {
-        int index = entry.key().hashCode() % hashedEntriesSize;
+        if (hashedEntriesSize == 0) {
+            return -1;
+        }
+        K key = entry.key();
+        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
         while (hashedEntries[index] != null) {
             if (hashedEntries[index].equals(entry)) {
                 return index;
@@ -161,6 +165,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
      * @return Returns the index for the first occurrence of an entry with the key, or -1 if no such entry is present.
      */
     private int findFirstIndexForKey(final K key) {
+        if (hashedEntriesSize == 0) {
+            return -1;
+        }
         int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
         while (hashedEntries[index] != null) {
             K k = hashedEntries[index].key();
@@ -273,13 +280,14 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     private void resizeHashedEntriesTo(final int newLength) {
         hashedEntriesSize = newLength;
         Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
-        for (Entry<K, V> entry : entries) {
+        for (int i = 0; i < size; i++) {
+            Entry<K, V> entry = entries[i];
             K key = entry.key();
-            int i = key == null ? 0 : key.hashCode() % hashedEntriesSize;
-            while (hashedArray[i] != null) {
-                i = (i + 1) % hashedEntriesSize;
+            int j = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+            while (hashedArray[j] != null) {
+                j = (j + 1) % hashedEntriesSize;
             }
-            hashedArray[i] = entry;
+            hashedArray[j] = entry;
         }
         this.hashedEntries = hashedArray;
     }

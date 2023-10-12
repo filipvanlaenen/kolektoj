@@ -110,7 +110,11 @@ public final class HashMap<K, V> implements Map<K, V> {
      * @return Returns the index for the first occurrence of the entry, or -1 if no such entry is present.
      */
     private int findFirstIndexForEntry(final Entry<K, V> entry) {
-        int index = entry.key().hashCode() % hashedEntriesSize;
+        if (hashedEntriesSize == 0) {
+            return -1;
+        }
+        K key = entry.key();
+        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
         while (hashedEntries[index] != null) {
             if (hashedEntries[index].equals(entry)) {
                 return index;
@@ -127,6 +131,9 @@ public final class HashMap<K, V> implements Map<K, V> {
      * @return Returns the index for the first occurrence of an entry with the key, or -1 if no such entry is present.
      */
     private int findFirstIndexForKey(final K key) {
+        if (hashedEntriesSize == 0) {
+            return -1;
+        }
         int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
         while (hashedEntries[index] != null) {
             K k = hashedEntries[index].key();

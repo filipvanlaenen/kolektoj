@@ -8,6 +8,7 @@ The aim of this project is to provide a clean Java collections framework.
 * [Comparison with the Java Platform Collections Framework](#comparison-with-the-java-platform-collections-framework)
   * [JDK 17 Interfaces](#jdk-17-interfaces)
   * [JDK 17 Classes](#jdk-17-classes)
+* [Getting Started](#getting-started)
 * [Projects Using Kolektoj](#projects-using-kolektoj)
 
 ## Design Principles
@@ -126,7 +127,35 @@ interface map to Kolektoj methods.
 * TreeMap
 * TreeSet
 
+## Getting Started
+
+First of all, you need to obtain a copy of the source code, complile it and install it locally. Run the following
+commands to do this:
+
+```
+git clone git@github.com:filipvanlaenen/kolektoj.git
+cd kolektoj
+mvn clean install
+```
+
+*Note: If requested by enough people, this library can be deployed to a central Maven repository
+([Issue #1](https://github.com/filipvanlaenen/kolektoj/issues/1)).*
+
+If everything works well, you'll be able to use the Kolektoj library in another Java project by adding the following
+dependency in the project's POM file:
+
+```xml
+  <dependency>
+    <groupId>net.filipvanlaenen</groupId>
+    <artifactId>kolektoj</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </dependency>
+```
+
+Be sure to update to the appropriate version number.
+
 ## Projects Using Kolektoj
 
 The following projects use Kolektoj:
 * [ASAPOP](https://github.com/filipvanlaenen/asapop)
+* [BLTXMLEPJ](https://github.com/filipvanlaenen/bltxmlepj)
