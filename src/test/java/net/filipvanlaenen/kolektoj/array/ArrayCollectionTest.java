@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.kolektoj.Collection;
+
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.ArrayCollection} class.
  */
@@ -22,7 +24,11 @@ public class ArrayCollectionTest {
     /**
      * Collection with the integers 1, 2 and 3.
      */
-    private static final ArrayCollection<Integer> COLLECTION123 = new ArrayCollection<Integer>(1, 2, 3);
+    private static final Collection<Integer> COLLECTION123 = new ArrayCollection<Integer>(1, 2, 3);
+    /**
+     * Collection with the integers 1, 2, 3 and null.
+     */
+    private static final Collection<Integer> COLLECTION123NULL = new ArrayCollection<Integer>(1, 2, 3, null);
 
     /**
      * Verifies that the correct length is returned for a collection with three elements.
@@ -41,11 +47,27 @@ public class ArrayCollectionTest {
     }
 
     /**
+     * Verifies that contains returns true for null if it's in the collection.
+     */
+    @Test
+    public void containsShouldReturnTrueForNullIfInTheCollection() {
+        assertTrue(COLLECTION123NULL.contains(null));
+    }
+
+    /**
      * Verifies that contains returns false for an element not in the collection.
      */
     @Test
     public void containsShouldReturnFalseForAnElementNotInTheCollection() {
         assertFalse(COLLECTION123.contains(0));
+    }
+
+    /**
+     * Verifies that contains returns false for null if it isn't in the collection.
+     */
+    @Test
+    public void containsShouldReturnFalseForNullIfNotInTheTheCollection() {
+        assertFalse(COLLECTION123.contains(null));
     }
 
     /**

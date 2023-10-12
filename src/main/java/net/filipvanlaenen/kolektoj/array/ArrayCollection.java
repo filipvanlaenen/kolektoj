@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
-import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.Collection} interface.
