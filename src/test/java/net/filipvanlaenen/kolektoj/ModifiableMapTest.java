@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 
 /**
- * Unit tests on the {@link net.filipvanlaenen.kolektoj.Map} class.
+ * Unit tests on the {@link net.filipvanlaenen.kolektoj.ModifiableMap} class.
  */
-public class MapTest {
+public class ModifiableMapTest {
     /**
      * The magic number three.
      */
@@ -22,7 +22,7 @@ public class MapTest {
      */
     @Test
     public void isEmptyShouldReturnTrueForAnEmptyMap() {
-        assertTrue(Map.empty().isEmpty());
+        assertTrue(ModifiableMap.empty().isEmpty());
     }
 
     /**
@@ -30,7 +30,7 @@ public class MapTest {
      */
     @Test
     public void isEmptyShouldReturnFalseForAMapContainingAnElement() {
-        assertFalse(Map.of(new Entry<Integer, Integer>(1, 1)).isEmpty());
+        assertFalse(ModifiableMap.of(new Entry<Integer, Integer>(1, 1)).isEmpty());
     }
 
     /**
@@ -38,7 +38,7 @@ public class MapTest {
      */
     @Test
     public void ofShouldConstructAMapContainingAnEntryWithTheKeyAndValue() {
-        Map<Integer, String> actual = Map.of(1, "one");
+        ModifiableMap<Integer, String> actual = ModifiableMap.of(1, "one");
         assertEquals(1, actual.size());
         assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
     }
@@ -48,7 +48,7 @@ public class MapTest {
      */
     @Test
     public void ofShouldConstructAMapContainingTwoEntriesWithTheKeysAndValues() {
-        Map<Integer, String> actual = Map.of(1, "one", 2, "two");
+        ModifiableMap<Integer, String> actual = ModifiableMap.of(1, "one", 2, "two");
         assertEquals(2, actual.size());
         assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
         assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));
@@ -59,7 +59,7 @@ public class MapTest {
      */
     @Test
     public void ofShouldConstructAMapContainingThreeEntriesWithTheKeysAndValues() {
-        Map<Integer, String> actual = Map.of(1, "one", 2, "two", THREE, "three");
+        ModifiableMap<Integer, String> actual = ModifiableMap.of(1, "one", 2, "two", THREE, "three");
         assertEquals(THREE, actual.size());
         assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
         assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));

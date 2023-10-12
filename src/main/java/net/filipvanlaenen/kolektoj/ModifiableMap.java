@@ -33,14 +33,47 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
         return new ModifiableHashMap<K, V>(entries);
     }
 
+    /**
+     * Returns a new modifiable map containing an entry with the key and the value.
+     *
+     * @param <K>   The key type.
+     * @param <V>   The value type.
+     * @param key   The key for the entry.
+     * @param value The value for the entry.
+     * @return A new modifiable map containing an entry with the key and the value.
+     */
     static <K, V> ModifiableMap<K, V> of(final K key, final V value) {
         return new ModifiableHashMap<K, V>(new Entry<K, V>(key, value));
     }
 
+    /**
+     * Returns a new modifiable map containing two entries using the provided keys and values.
+     *
+     * @param <K>    The key type.
+     * @param <V>    The value type.
+     * @param key1   The first key for the entry.
+     * @param value1 The first value for the entry.
+     * @param key2   The second key for the entry.
+     * @param value2 The second value for the entry.
+     * @return A new modifiable map containing two entries using the provided keys and values.
+     */
     static <K, V> ModifiableMap<K, V> of(final K key1, final V value1, final K key2, final V value2) {
         return new ModifiableHashMap<K, V>(new Entry<K, V>(key1, value1), new Entry<K, V>(key2, value2));
     }
 
+    /**
+     * Returns a new modifiable map containing three entries using the provided keys and values.
+     *
+     * @param <K>    The key type.
+     * @param <V>    The value type.
+     * @param key1   The first key for the entry.
+     * @param value1 The first value for the entry.
+     * @param key2   The second key for the entry.
+     * @param value2 The second value for the entry.
+     * @param key3   The third key for the entry.
+     * @param value3 The third value for the entry.
+     * @return A new modifiable map containing three entries using the provided keys and values.
+     */
     static <K, V> ModifiableMap<K, V> of(final K key1, final V value1, final K key2, final V value2, final K key3,
             final V value3) {
         return new ModifiableHashMap<K, V>(new Entry<K, V>(key1, value1), new Entry<K, V>(key2, value2),
@@ -67,7 +100,7 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
     /**
      * Adds an entry to this map with the given key and value if the key isn't already present, otherwise updates the
      * key with the given value. If the key was previously mapped to a value, the value is returned, and null otherwise.
-     * 
+     *
      * @param key   The key.
      * @param value The value.
      * @return The value if the key was previously mapped to a value, or null otherwise.
@@ -83,7 +116,7 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
 
     /**
      * Puts the entries of a map into this map .
-     * 
+     *
      * @param map The map from which entries should be put into this map.
      */
     default void putAll(final Map<? extends K, ? extends V> map) {
@@ -105,7 +138,7 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
     /**
      * Updates the key with the given value, and returns the vale that was previously mapped to the key. Throws an
      * exception if the map doesn't contain an entry with the key.
-     * 
+     *
      * @param key   The key.
      * @param value The value.
      * @return The value the key was mapped to previously.
