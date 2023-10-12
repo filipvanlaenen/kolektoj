@@ -51,7 +51,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
     @Override
     public boolean contains(final E element) {
         for (E e : elements) {
-            if (e.equals(element)) {
+            if (e == null && element == null || e != null && e.equals(element)) {
                 return true;
             }
         }

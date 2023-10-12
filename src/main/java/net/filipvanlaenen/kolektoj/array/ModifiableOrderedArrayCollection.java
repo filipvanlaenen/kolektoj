@@ -64,8 +64,9 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public boolean contains(final E element) {
-        for (E e : elements) {
-            if (e.equals(element)) {
+        for (int i = 0; i < size; i++) {
+            E e = elements[i];
+            if (e == null && element == null || e != null && e.equals(element)) {
                 return true;
             }
         }
