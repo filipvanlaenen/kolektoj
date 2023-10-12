@@ -100,6 +100,7 @@
   <dia:layer name="Background" visible="true" connectable="true"/>
   <dia:layer name="Background" visible="true" connectable="true"/>
   <dia:layer name="Background" visible="true" connectable="true"/>
+  <dia:layer name="Background" visible="true" connectable="true"/>
   <dia:layer name="Background" visible="true" connectable="true" active="true">
     <dia:object type="UML - Class" version="0" id="O0">
       <dia:attribute name="obj_pos">
@@ -409,7 +410,7 @@
         </dia:composite>
         <dia:composite type="umloperation">
           <dia:attribute name="name">
-            <dia:string>#stream()#</dia:string>
+            <dia:string>#stream#</dia:string>
           </dia:attribute>
           <dia:attribute name="stereotype">
             <dia:string>##</dia:string>
@@ -2016,15 +2017,15 @@
         <dia:point val="26.1229,9"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="26.0729,8.08;43.8685,13.8967"/>
+        <dia:rectangle val="26.0729,8.08;43.8686,13.8967"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="26.1229,9"/>
-        <dia:point val="43.8185,9"/>
-        <dia:point val="43.8185,13.8467"/>
+        <dia:point val="43.8186,9"/>
+        <dia:point val="43.8186,13.8467"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="0"/>
@@ -2514,17 +2515,17 @@
     </dia:object>
     <dia:object type="UML - Generalization" version="1" id="O14">
       <dia:attribute name="obj_pos">
-        <dia:point val="43.8185,22.1467"/>
+        <dia:point val="43.8186,22.1467"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="42.9685,22.0967;44.6685,28.05"/>
+        <dia:rectangle val="42.9686,22.0967;44.6686,28.05"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="43.8185,22.1467"/>
-        <dia:point val="43.8185,25.4734"/>
+        <dia:point val="43.8186,22.1467"/>
+        <dia:point val="43.8186,25.4734"/>
         <dia:point val="43.8185,25.4734"/>
         <dia:point val="43.8185,28"/>
       </dia:attribute>
