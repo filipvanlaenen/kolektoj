@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 
 /**
@@ -52,11 +53,27 @@ public class ModifiableArrayCollectionTest {
     }
 
     /**
+     * Verifies that contains returns true for null if it's in the collection.
+     */
+    @Test
+    public void containsShouldReturnTrueForNullIfInTheCollection() {
+        assertTrue(new ModifiableArrayCollection<Integer>(1, 2, THREE, null).contains(null));
+    }
+
+    /**
      * Verifies that contains returns false for an element not in the collection.
      */
     @Test
     public void containsShouldReturnFalseForAnElementNotInTheCollection() {
         assertFalse(COLLECTION123.contains(0));
+    }
+
+    /**
+     * Verifies that contains returns false for null if it isn't in the collection.
+     */
+    @Test
+    public void containsShouldReturnFalseForNullIfNotInTheTheCollection() {
+        assertFalse(COLLECTION123.contains(null));
     }
 
     /**
@@ -134,6 +151,37 @@ public class ModifiableArrayCollectionTest {
     public void emptyCollectionShouldContainAnElementAfterHavingItAdded() {
         ModifiableCollection<Integer> collection = createNewCollection();
         collection.add(SIX);
+        assertTrue(collection.contains(SIX));
+    }
+
+    /**
+     * Verifies that adding the elements of a collection to an empty collection returns true.
+     */
+    @Test
+    public void addAllOnAnEmptyCollectionShouldReturnTrue() {
+        assertTrue(new ModifiableArrayCollection<Integer>().addAll(Collection.of(1, 2)));
+    }
+
+    /**
+     * Verifies that after adding the elements of a collection to an empty collection, the size is increased to by the
+     * size of the added collection.
+     */
+    @Test
+    public void sizeShouldBeThreeAfterAddingCollectionWithThreeElementsToAnEmptyCollection() {
+        ModifiableCollection<Integer> collection = new ModifiableArrayCollection<Integer>();
+        collection.addAll(Collection.of(1, 2, THREE));
+        assertEquals(THREE, collection.size());
+    }
+
+    /**
+     * Verifies that after adding the elements of a collection to an empty collection, the collection contains the
+     * elements added.
+     */
+    @Test
+    public void emptyCollectionShouldContainElementsAfterHavingItAddedAll() {
+        ModifiableCollection<Integer> collection = createNewCollection();
+        collection.addAll(Collection.of(0, SIX));
+        assertTrue(collection.contains(0));
         assertTrue(collection.contains(SIX));
     }
 
