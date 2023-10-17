@@ -23,6 +23,10 @@ public class ModifiableArrayCollectionTest {
      */
     private static final int SIX = 6;
     /**
+     * The magic number fifteen.
+     */
+    private static final int FIFTEEN = 15;
+    /**
      * Collection with the integers 1, 2 and 3.
      */
     private static final ModifiableCollection<Integer> COLLECTION123 = createNewCollection();
@@ -132,6 +136,18 @@ public class ModifiableArrayCollectionTest {
     @Test
     public void addOnAnEmptyCollectionShouldReturnTrue() {
         assertTrue(new ModifiableArrayCollection<Integer>().add(1));
+    }
+
+    /**
+     * Verifies that adding beyond the stride doesn't lead to an exception.
+     */
+    @Test
+    public void addManyTimesShouldNotProduceAnException() {
+        ModifiableCollection<Integer> collection = new ModifiableArrayCollection<Integer>();
+        for (int i = 0; i < SIX; i++) {
+            collection.add(i);
+        }
+        assertEquals(FIFTEEN, collection.stream().reduce(0, Integer::sum));
     }
 
     /**
