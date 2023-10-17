@@ -156,7 +156,7 @@ public final class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public Collection<V> getAll(final K key) throws IllegalArgumentException {
-        int index = key.hashCode() % hashedEntriesSize;
+        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
         ModifiableCollection<V> result = ModifiableCollection.empty();
         while (hashedEntries[index] != null) {
             K k = hashedEntries[index].key();

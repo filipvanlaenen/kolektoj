@@ -23,14 +23,33 @@ public class HashMapTest {
      * The magic number six.
      */
     private static final int SIX = 6;
+    /**
+     * An entry with key null and value null.
+     */
     private static final Entry<Integer, String> ENTRY_NULL = new Entry<Integer, String>(null, null);
+    /**
+     * An entry with key 1 and value one.
+     */
     private static final Entry<Integer, String> ENTRY1 = new Entry<Integer, String>(1, "one");
+    /**
+     * An entry with key 2 and value two.
+     */
     private static final Entry<Integer, String> ENTRY2 = new Entry<Integer, String>(2, "two");
+    /**
+     * An entry with key 3 and value three.
+     */
     private static final Entry<Integer, String> ENTRY3 = new Entry<Integer, String>(3, "three");
+    /**
+     * An empty map.
+     */
+    private static final Map<Integer, String> EMPTY = new HashMap<Integer, String>();
     /**
      * Map with the integers 1, 2 and 3 mapped to their words.
      */
     private static final Map<Integer, String> MAP123 = new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
+    /**
+     * Map with the integers 1, 2 and 3 mapped to their words, and null to null.
+     */
     private static final Map<Integer, String> MAP123NULL =
             new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
 
@@ -40,6 +59,14 @@ public class HashMapTest {
     @Test
     public void sizeShouldReturnThreeForAMapOfThreeEntries() {
         assertEquals(THREE, MAP123.size());
+    }
+
+    /**
+     * Verifies that contains returns false for a empty map.
+     */
+    @Test
+    public void containsShouldReturnFalseForAnEmptyMap() {
+        assertFalse(EMPTY.contains(ENTRY1));
     }
 
     /**
@@ -56,6 +83,14 @@ public class HashMapTest {
     @Test
     public void containsShouldReturnFalseForAnEntryNotInTheMap() {
         assertFalse(MAP123.contains(new Entry<Integer, String>(0, "zero")));
+    }
+
+    /**
+     * Verifies that containsKey returns false for a empty map.
+     */
+    @Test
+    public void containsKeyShouldReturnFalseForAnEmptyMap() {
+        assertFalse(EMPTY.containsKey(1));
     }
 
     /**
@@ -162,6 +197,16 @@ public class HashMapTest {
     }
 
     /**
+     * Verifies that when you try to use getAll with key null, a collection with the value for null is returned.
+     */
+    @Test
+    public void getAllShouldReturnSingleValueForNull() {
+        Collection<String> actual = MAP123NULL.getAll(null);
+        assertEquals(1, actual.size());
+        assertTrue(actual.contains(null));
+    }
+
+    /**
      * Verifies that when you try to use getAll with a key in the map that has multiple values, a collection with the
      * values is returned.
      */
@@ -180,10 +225,10 @@ public class HashMapTest {
     @Test
     public void getKeysShouldReturnAllKeys() {
         Collection<Integer> actual = MAP123.getKeys();
-        assertEquals(3, actual.size());
+        assertEquals(THREE, actual.size());
         assertTrue(actual.contains(1));
         assertTrue(actual.contains(2));
-        assertTrue(actual.contains(3));
+        assertTrue(actual.contains(THREE));
     }
 
     /**
@@ -192,7 +237,7 @@ public class HashMapTest {
     @Test
     public void getValuesShouldReturnAllKeys() {
         Collection<String> actual = new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3).getValues();
-        assertEquals(3, actual.size());
+        assertEquals(THREE, actual.size());
         assertTrue(actual.contains("one"));
         assertTrue(actual.contains("two"));
         assertTrue(actual.contains("three"));
