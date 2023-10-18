@@ -65,7 +65,18 @@ public final class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean contains(final Entry<K, V> entry) {
-        return findFirstIndexForEntry(entry) != -1;
+        if (hashedEntriesSize == 0) {
+            return false;
+        }
+        K key = entry.key();
+        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+        while (hashedEntries[index] != null) {
+            if (hashedEntries[index].equals(entry)) {
+                return true;
+            }
+            index = (index + 1) % hashedEntriesSize;
+        }
+        return false;
     }
 
     @Override
@@ -101,27 +112,6 @@ public final class HashMap<K, V> implements Map<K, V> {
     @Override
     public Iterator<Entry<K, V>> iterator() {
         return new ArrayIterator<Entry<K, V>>(entries);
-    }
-
-    /**
-     * Finds the index for the first occurrence of the entry.
-     *
-     * @param entry The entry.
-     * @return Returns the index for the first occurrence of the entry, or -1 if no such entry is present.
-     */
-    private int findFirstIndexForEntry(final Entry<K, V> entry) {
-        if (hashedEntriesSize == 0) {
-            return -1;
-        }
-        K key = entry.key();
-        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
-        while (hashedEntries[index] != null) {
-            if (hashedEntries[index].equals(entry)) {
-                return index;
-            }
-            index = (index + 1) % hashedEntriesSize;
-        }
-        return -1;
     }
 
     /**

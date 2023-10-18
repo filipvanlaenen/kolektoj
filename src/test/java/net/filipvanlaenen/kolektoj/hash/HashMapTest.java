@@ -54,6 +54,21 @@ public class HashMapTest {
             new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
 
     /**
+     * Class with colliding hash codes.
+     */
+    private final class KeyWithCollidingHash {
+        @Override
+        public boolean equals(final Object other) {
+            return this == other;
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+    }
+
+    /**
      * Verifies that the correct length is returned for a map with three entries.
      */
     @Test
@@ -86,6 +101,23 @@ public class HashMapTest {
     }
 
     /**
+     * Verifies that contains returns the correct result, both true for presence and false for absence, when the hash
+     * code for the keys collides.
+     */
+    @Test
+    public void containsReturnsCorrectResultForCollidingKeyHashCodes() {
+        Entry<KeyWithCollidingHash, Integer>[] entries = new Entry[SIX];
+        for (int i = 0; i < entries.length; i++) {
+            entries[i] = new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(), i);
+        }
+        Map<KeyWithCollidingHash, Integer> map = new HashMap<KeyWithCollidingHash, Integer>(entries);
+        for (Entry<KeyWithCollidingHash, Integer> entry : entries) {
+            assertTrue(map.contains(entry));
+        }
+        assertFalse(map.contains(new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(), -1)));
+    }
+
+    /**
      * Verifies that containsKey returns false for a empty map.
      */
     @Test
@@ -115,6 +147,43 @@ public class HashMapTest {
     @Test
     public void containsKeyShouldReturnFalseForNullIfNotInTheMap() {
         assertFalse(MAP123.containsKey(null));
+    }
+
+    /**
+     * Verifies that containsKey returns the correct result, both true for presence and false for absence, when the hash
+     * code for the keys collides.
+     */
+    @Test
+    public void containsKeyReturnsCorrectResultForCollidingKeyHashCodes() {
+        Entry<KeyWithCollidingHash, Integer>[] entries = new Entry[SIX];
+        for (int i = 0; i < entries.length; i++) {
+            entries[i] = new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(), i);
+        }
+        Map<KeyWithCollidingHash, Integer> map = new HashMap<KeyWithCollidingHash, Integer>(entries);
+        for (Entry<KeyWithCollidingHash, Integer> entry : entries) {
+            assertTrue(map.containsKey(entry.key()));
+        }
+        assertFalse(map.containsKey(new KeyWithCollidingHash()));
+        assertFalse(map.containsKey(null));
+    }
+
+    /**
+     * Verifies that containsKey returns the correct result, both true for presence and false for absence, when the hash
+     * code for the keys collides and contains null.
+     */
+    @Test
+    public void containsKeyReturnsCorrectResultForCollidingKeyHashCodesWithNull() {
+        Entry<KeyWithCollidingHash, Integer>[] entries = new Entry[SIX];
+        for (int i = 0; i < entries.length - 1; i++) {
+            entries[i] = new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(), i);
+        }
+        entries[entries.length - 1] = new Entry<KeyWithCollidingHash, Integer>(null, -1);
+        Map<KeyWithCollidingHash, Integer> map = new HashMap<KeyWithCollidingHash, Integer>(entries);
+        for (Entry<KeyWithCollidingHash, Integer> entry : entries) {
+            assertTrue(map.containsKey(entry.key()));
+        }
+        assertFalse(map.containsKey(new KeyWithCollidingHash()));
+        assertTrue(map.containsKey(null));
     }
 
     /**
@@ -220,11 +289,13 @@ public class HashMapTest {
     }
 
     /**
-     * Verifies that getKeys returns all the keys.
+     * Verifies that getKeys returns all the keys. The unit test creates a new map to ensure that the lazy
+     * initialization hasn't been executed yet.
      */
     @Test
     public void getKeysShouldReturnAllKeys() {
-        Collection<Integer> actual = MAP123.getKeys();
+        Map<Integer, String> map = new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
+        Collection<Integer> actual = map.getKeys();
         assertEquals(THREE, actual.size());
         assertTrue(actual.contains(1));
         assertTrue(actual.contains(2));
