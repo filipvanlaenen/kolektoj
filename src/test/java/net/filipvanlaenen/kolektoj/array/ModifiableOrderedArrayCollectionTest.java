@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection} class.
@@ -17,6 +19,10 @@ public class ModifiableOrderedArrayCollectionTest {
      * The magic number three.
      */
     private static final int THREE = 3;
+    /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
     /**
      * The magic number six.
      */
@@ -52,11 +58,27 @@ public class ModifiableOrderedArrayCollectionTest {
     }
 
     /**
+     * Verifies that contains returns true for null if it's in the collection.
+     */
+    @Test
+    public void containsShouldReturnTrueForNullIfInTheCollection() {
+        assertTrue(new ModifiableOrderedArrayCollection<Integer>(1, 2, THREE, null).contains(null));
+    }
+
+    /**
      * Verifies that contains returns false for an element not in the collection.
      */
     @Test
     public void containsShouldReturnFalseForAnElementNotInTheCollection() {
         assertFalse(COLLECTION123.contains(0));
+    }
+
+    /**
+     * Verifies that contains returns false for null if it isn't in the collection.
+     */
+    @Test
+    public void containsShouldReturnFalseForNullIfNotInTheTheCollection() {
+        assertFalse(COLLECTION123.contains(null));
     }
 
     /**
@@ -178,6 +200,17 @@ public class ModifiableOrderedArrayCollectionTest {
     }
 
     /**
+     * Verifies that after adding an element at the last position to a collection, the new element is in the last
+     * position.
+     */
+    @Test
+    public void addAtLastPositionOnACollectionShouldPlaceElementAtLastPosition() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        collection.addAt(THREE, 0);
+        assertEquals(0, collection.getAt(THREE));
+    }
+
+    /**
      * Verifies that adding beyond the stride doesn't lead to an exception.
      */
     @Test
@@ -217,6 +250,107 @@ public class ModifiableOrderedArrayCollectionTest {
         ModifiableOrderedCollection<Integer> collection = createNewCollection();
         collection.add(SIX);
         assertTrue(collection.contains(SIX));
+    }
+
+    /**
+     * Verifies that adding the elements of a collection to an empty collection returns true.
+     */
+    @Test
+    public void addAllOnAnEmptyCollectionShouldReturnTrue() {
+        assertTrue(new ModifiableOrderedArrayCollection<Integer>().addAll(Collection.of(1, 2)));
+    }
+
+    /**
+     * Verifies that adding the elements of a collection to an empty collection at the first position returns true.
+     */
+    @Test
+    public void addAllAtOnAnEmptyCollectionShouldReturnTrue() {
+        assertTrue(new ModifiableOrderedArrayCollection<Integer>().addAllAt(0, Collection.of(1, 2)));
+    }
+
+    /**
+     * Verifies that trying to add a collectiont at an index beyond the size of the collection throws
+     * IndexOutOfBoundsException.
+     */
+    @Test
+    public void addAllAtShouldThrowExceptionWhenCalledBeyondCollectionSize() {
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class,
+                () -> new ModifiableOrderedArrayCollection<Integer>().addAllAt(1, Collection.of(1, 2)));
+        assertEquals("Cannot add the elements of another collection at a position beyond the size of the collection.",
+                exception.getMessage());
+    }
+
+    /**
+     * Verifies that after adding the elements of a collection to an empty collection, the size is increased to by the
+     * size of the added collection.
+     */
+    @Test
+    public void sizeShouldBeThreeAfterAddingCollectionWithThreeElementsToAnEmptyCollection() {
+        ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>();
+        collection.addAll(Collection.of(1, 2, THREE));
+        assertEquals(THREE, collection.size());
+    }
+
+    /**
+     * Verifies that after adding the elements of a collection to an empty collection at the first position, the size is
+     * increased to by the size of the added collection.
+     */
+    @Test
+    public void sizeShouldBeThreeAfterAddingCollectionWithThreeElementsToAnEmptyCollectionAtFirstPosition() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        collection.addAllAt(THREE, createNewCollection());
+        assertEquals(SIX, collection.size());
+    }
+
+    /**
+     * Verifies that after adding the elements of a collection to a collection, the collection contains the elements
+     * added.
+     */
+    @Test
+    public void collectionShouldContainElementsAfterHavingItAddedAll() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        collection.addAll(Collection.of(0, SIX));
+        assertTrue(collection.contains(0));
+        assertTrue(collection.contains(SIX));
+    }
+
+    /**
+     * Verifies that after adding the elements of a collection to a collection at a position, the collection contains
+     * the elements added.
+     */
+    @Test
+    public void collectionShouldContainElementsAfterHavingItAddedAllAtAPosition() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        collection.addAllAt(1, Collection.of(0, SIX));
+        assertTrue(collection.contains(0));
+        assertTrue(collection.contains(SIX));
+    }
+
+    /**
+     * Verifies that after adding the elements of an ordered collection to a collection, the collection contains the
+     * elements added in the same order.
+     */
+    @Test
+    public void collectionShouldContainElementsInSameOrderedAfterHavingItAddedAll() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        collection.addAll(OrderedCollection.of(0, SIX));
+        assertEquals(1, collection.getAt(0));
+        assertEquals(0, collection.getAt(THREE));
+        assertEquals(SIX, collection.getAt(FOUR));
+    }
+
+    /**
+     * Verifies that after adding the elements of an ordered collection to a collection at a position, the collection
+     * contains the elements added in the same order.
+     */
+    @Test
+    public void collectionShouldContainElementsInSameOrderedAfterHavingItAddedAllAtAPosition() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        collection.addAllAt(1, OrderedCollection.of(0, SIX));
+        assertEquals(1, collection.getAt(0));
+        assertEquals(0, collection.getAt(1));
+        assertEquals(SIX, collection.getAt(2));
+        assertEquals(2, collection.getAt(THREE));
     }
 
     /**
@@ -273,5 +407,15 @@ public class ModifiableOrderedArrayCollectionTest {
         ModifiableOrderedCollection<Integer> collection = createNewCollection();
         collection.remove(1);
         assertFalse(collection.contains(1));
+    }
+
+    /**
+     * Verifies that when a collection is cleared, it becomes empty.
+     */
+    @Test
+    public void clearShouldMakeCollectionEmpty() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        collection.clear();
+        assertTrue(collection.isEmpty());
     }
 }

@@ -48,6 +48,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     @Override
     public boolean addAll(final Collection<? extends E> collection) {
         int numberOfNewElements = collection.size();
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (size + numberOfNewElements > elements.length) {
             resizeTo(size + numberOfNewElements + STRIDE);
         }
@@ -63,6 +64,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
                     "Cannot add the elements of another collection at a position beyond the size of the collection.");
         } else {
             int numberOfNewElements = collection.size();
+            // EQMU: Changing the conditional boundary below produces an equivalent mutant.
             if (size + numberOfNewElements > elements.length) {
                 resizeTo(size + numberOfNewElements + STRIDE);
             }

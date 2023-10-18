@@ -179,8 +179,8 @@ public class ModifiableArrayCollectionTest {
     }
 
     /**
-     * Verifies that after adding the elements of a collection to an empty collection, the size is increased to by the
-     * size of the added collection.
+     * Verifies that after adding the elements of a collection to a collection, the size is increased to by the size of
+     * the added collection.
      */
     @Test
     public void sizeShouldBeThreeAfterAddingCollectionWithThreeElementsToAnEmptyCollection() {
@@ -190,11 +190,11 @@ public class ModifiableArrayCollectionTest {
     }
 
     /**
-     * Verifies that after adding the elements of a collection to an empty collection, the collection contains the
-     * elements added.
+     * Verifies that after adding the elements of a collection to a collection, the collection contains the elements
+     * added.
      */
     @Test
-    public void emptyCollectionShouldContainElementsAfterHavingItAddedAll() {
+    public void collectionShouldContainElementsAfterHavingItAddedAll() {
         ModifiableCollection<Integer> collection = createNewCollection();
         collection.addAll(Collection.of(0, SIX));
         assertTrue(collection.contains(0));
