@@ -84,6 +84,28 @@ public final class HashMap<K, V> implements Map<K, V> {
     }
 
     @Override
+    public boolean containsAll(Collection<?> collection) {
+        if (collection.size() > size()) {
+            return false;
+        }
+        boolean[] matches = new boolean[entries.length];
+        for (Object element : collection) {
+            for (int i = 0; i < entries.length; i++) {
+                if (!matches[i] && (element == null && entries[i] == null || entries[i].equals(element))) {
+                    matches[i] = true;
+                    break;
+                }
+            }
+        }
+        for (boolean match : matches) {
+            if (!match) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public boolean containsKey(final K key) {
         return findFirstIndexForKey(key) != -1;
     }

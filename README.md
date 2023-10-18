@@ -58,7 +58,7 @@ interface map to Kolektoj methods.
 | boolean addAll(Collection&lt;? extends E> c)              | ModifiableCollection&lt;E> | boolean addAll(Collection&lt;? extends E> collection) |
 | void clear()                                              | ModifiableCollection&lt;E> | void clear()                                          |
 | boolean contains(Object o)                                | Collection&lt;E>           | boolean contains(E element)                           |
-| boolean containsAll(Collection&lt;?> c)                   |                            |                                                       |
+| boolean containsAll(Collection&lt;?> c)                   | Collection&lt;E>           | boolean containsAll(Collection&lt;?> c)               |
 | boolean equals(Object o)                                  |                            |                                                       |
 | int hashCode()                                            |                            |                                                       |
 | boolean isEmpty()                                         | Collection&lt;E>           | default boolean isEmpty()                             |

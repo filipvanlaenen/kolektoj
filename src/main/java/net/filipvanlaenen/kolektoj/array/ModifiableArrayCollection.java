@@ -79,6 +79,28 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
         return false;
     }
 
+    @Override
+    public boolean containsAll(final Collection<?> collection) {
+        if (collection.size() > size) {
+            return false;
+        }
+        boolean[] matches = new boolean[size];
+        for (Object element : collection) {
+            for (int i = 0; i < size; i++) {
+                if (!matches[i] && (element == null && elements[i] == null || elements[i].equals(element))) {
+                    matches[i] = true;
+                    break;
+                }
+            }
+        }
+        for (boolean match : matches) {
+            if (!match) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Creates a new element type array with a given length.
      *

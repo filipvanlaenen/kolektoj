@@ -43,6 +43,28 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
     boolean contains(E element);
 
     /**
+     * Returns whether this collection contains all the elements of the provided collection, with the same number of
+     * occurrences.
+     *
+     * @param collection The collection to compare elements against.
+     * @return True if all of the elements in the provided collection are present in this collection with the same
+     *         number of occurrences.
+     */
+    boolean containsAll(Collection<?> collection);
+
+    /**
+     * Returns whether this collection contains the same elements as the provided collection with the same number of
+     * occurrences.
+     *
+     * @param collection The collection to compare elements against.
+     * @return True if the provided collection contains the same elements as this collection with the same number of
+     *         occurrences.
+     */
+    default boolean containsSame(final Collection<?> collection) {
+        return size() == collection.size() && containsAll(collection);
+    }
+
+    /**
      * Returns an element from the collection. Throws an exception if the collection is empty.
      *
      * @return An element from the collection.

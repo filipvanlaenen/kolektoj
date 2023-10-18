@@ -59,6 +59,28 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
     }
 
     @Override
+    public boolean containsAll(final Collection<?> collection) {
+        if (collection.size() > size()) {
+            return false;
+        }
+        boolean[] matches = new boolean[elements.length];
+        for (Object element : collection) {
+            for (int i = 0; i < elements.length; i++) {
+                if (!matches[i] && (element == null && elements[i] == null || elements[i].equals(element))) {
+                    matches[i] = true;
+                    break;
+                }
+            }
+        }
+        for (boolean match : matches) {
+            if (!match) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public E get() throws IndexOutOfBoundsException {
         if (elements.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
