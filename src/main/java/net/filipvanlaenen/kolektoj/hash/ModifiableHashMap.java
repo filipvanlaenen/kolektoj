@@ -65,8 +65,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
      * Constructor taking the entries as its parameter.
      *
      * @param entries The entries for the map.
+     * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
-    public ModifiableHashMap(final Entry<K, V>... entries) {
+    public ModifiableHashMap(final Entry<K, V>... entries) throws IllegalArgumentException {
         this.entries = entries.clone();
         size = entries.length;
         keys = new ModifiableArrayCollection<K>();
@@ -74,6 +75,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         hashedEntriesSize = entries.length * HASHING_RATIO;
         Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
         for (Entry<K, V> entry : entries) {
+            if (entry == null) {
+                throw new IllegalArgumentException("Map entries can't be null.");
+            }
             K key = entry.key();
             keys.add(key);
             values.add(entry.value());

@@ -47,12 +47,16 @@ public final class HashMap<K, V> implements Map<K, V> {
      * Constructor taking the entries as its parameter.
      *
      * @param entries The entries for the map.
+     * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
-    public HashMap(final Entry<K, V>... entries) {
+    public HashMap(final Entry<K, V>... entries) throws IllegalArgumentException {
         this.entries = entries.clone();
         hashedEntriesSize = entries.length * HASHING_RATIO;
         Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
         for (Entry<K, V> entry : entries) {
+            if (entry == null) {
+                throw new IllegalArgumentException("Map entries can't be null.");
+            }
             K key = entry.key();
             int i = key == null ? 0 : key.hashCode() % hashedEntriesSize;
             while (hashedArray[i] != null) {
