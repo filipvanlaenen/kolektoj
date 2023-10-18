@@ -46,6 +46,11 @@ public interface ModifiableCollection<E> extends Collection<E> {
     boolean addAll(Collection<? extends E> collection);
 
     /**
+     * Removes all elements from the collection.
+     */
+    void clear();
+
+    /**
      * Removes an element from this collection if it is present.
      *
      * @param element The element to be removed from the collection.

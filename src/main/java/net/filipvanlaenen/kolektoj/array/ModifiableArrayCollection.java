@@ -58,6 +58,17 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
     }
 
     @Override
+    public void clear() {
+        size = 0;
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        // EQMU: Negating the conditional below produces an equivalent mutant.
+        if (elements.length > STRIDE) {
+            // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
+            resizeTo(STRIDE);
+        }
+    }
+
+    @Override
     public boolean contains(final E element) {
         for (int i = 0; i < size; i++) {
             E e = elements[i];

@@ -236,4 +236,14 @@ public class ModifiableArrayCollectionTest {
         collection.remove(1);
         assertFalse(collection.contains(1));
     }
+
+    /**
+     * Verifies that when a collection is cleared, it becomes empty.
+     */
+    @Test
+    public void clearShouldMakeCollectionEmpty() {
+        ModifiableCollection<Integer> collection = createNewCollection();
+        collection.clear();
+        assertTrue(collection.isEmpty());
+    }
 }
