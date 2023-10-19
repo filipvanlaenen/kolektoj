@@ -161,7 +161,7 @@ public class ModifiableArrayCollectionTest {
     }
 
     /**
-     * Verifies that after adding an element to an empty collection, the collection contains the element added.
+     * Verifies that after adding an element to a collection, the collection contains the element added.
      */
     @Test
     public void emptyCollectionShouldContainAnElementAfterHavingItAdded() {

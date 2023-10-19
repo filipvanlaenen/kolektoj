@@ -2,16 +2,15 @@ package net.filipvanlaenen.kolektoj.hash;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import net.filipvanlaenen.kolektoj.Map.Entry;
-import net.filipvanlaenen.kolektoj.hash.HashMap;
-import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 
 /**
@@ -26,17 +25,55 @@ public class ModifiableHashMapTest {
      * The magic number six.
      */
     private static final int SIX = 6;
+    /**
+     * An entry with key null and value null.
+     */
     private static final Entry<Integer, String> ENTRY_NULL = new Entry<Integer, String>(null, null);
+    /**
+     * An entry with key 1 and value one.
+     */
     private static final Entry<Integer, String> ENTRY1 = new Entry<Integer, String>(1, "one");
+    /**
+     * An entry with key 2 and value two.
+     */
     private static final Entry<Integer, String> ENTRY2 = new Entry<Integer, String>(2, "two");
+    /**
+     * An entry with key 3 and value three.
+     */
     private static final Entry<Integer, String> ENTRY3 = new Entry<Integer, String>(3, "three");
     /**
      * Map with the integers 1, 2 and 3 mapped to their words.
      */
-    private static final ModifiableMap<Integer, String> MAP123 =
-            new ModifiableHashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
+    private static final ModifiableMap<Integer, String> MAP123 = createNewMap();
+    /**
+     * Map with the integers 1, 2 and 3 mapped to their words, and null to null.
+     */
     private static final Map<Integer, String> MAP123NULL =
             new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
+
+    /**
+     * Class with colliding hash codes.
+     */
+    private final class KeyWithCollidingHash {
+        @Override
+        public boolean equals(final Object other) {
+            return this == other;
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+    }
+
+    /**
+     * Creates a new map for unit testing.
+     *
+     * @return A new map for unit testing.
+     */
+    private static ModifiableMap<Integer, String> createNewMap() {
+        return new ModifiableHashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
+    }
 
     /**
      * Verifies that the correct length is returned for a map with three entries.
@@ -185,10 +222,10 @@ public class ModifiableHashMapTest {
     @Test
     public void getKeysShouldReturnAllKeys() {
         Collection<Integer> actual = MAP123.getKeys();
-        assertEquals(3, actual.size());
+        assertEquals(THREE, actual.size());
         assertTrue(actual.contains(1));
         assertTrue(actual.contains(2));
-        assertTrue(actual.contains(3));
+        assertTrue(actual.contains(THREE));
     }
 
     /**
@@ -197,7 +234,7 @@ public class ModifiableHashMapTest {
     @Test
     public void getValuesShouldReturnAllKeys() {
         Collection<String> actual = new ModifiableHashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3).getValues();
-        assertEquals(3, actual.size());
+        assertEquals(THREE, actual.size());
         assertTrue(actual.contains("one"));
         assertTrue(actual.contains("two"));
         assertTrue(actual.contains("three"));
@@ -236,4 +273,105 @@ public class ModifiableHashMapTest {
         assertEquals(SIX, sum);
     }
 
+    /**
+     * Verifies that adding an element to an empty map returns true.
+     */
+    @Test
+    public void addOnAnEmptyMapShouldReturnTrue() {
+        assertTrue(new ModifiableHashMap<Integer, Integer>().add(1, 1));
+    }
+
+    /**
+     * Verifies that after adding an entry to an empty map, the size is increased to one.
+     */
+    @Test
+    public void sizeShouldBeOneAfterAddingAnEntryToAnEmptyMap() {
+        ModifiableMap<Integer, Integer> map = new ModifiableHashMap<Integer, Integer>();
+        map.add(1, 1);
+        assertEquals(1, map.size());
+    }
+
+    /**
+     * Verifies that after adding an entry to a map, the map contains the entry added.
+     */
+    @Test
+    public void mapShouldContainAnElementAfterHavingItAdded() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.add(0, "zero");
+        assertTrue(map.contains(new Entry<Integer, String>(0, "zero")));
+    }
+
+    /**
+     * Verifies that after adding an entry to a map, the map contains the key of the entry added.
+     */
+    @Test
+    public void mapShouldContainKeyAfterHavingItAdded() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.add(0, "zero");
+        assertTrue(map.containsKey(0));
+    }
+
+    /**
+     * Verifies that after adding an entry to a map, the map contains the null key of the entry added.
+     */
+    @Test
+    public void mapShouldContainNullKeyAfterHavingItAdded() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.add(null, "zero");
+        assertTrue(map.containsKey(null));
+    }
+
+    /**
+     * Verifies that after adding an entry to a map, the map contains the value of the entry added.
+     */
+    @Test
+    public void mapShouldContainValueAfterHavingItAdded() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.add(0, "zero");
+        assertTrue(map.containsValue("zero"));
+    }
+
+    /**
+     * Verifies that after adding an entry to a map, the map contains the null value of the entry added.
+     */
+    @Test
+    public void mapShouldContainNullValueAfterHavingItAdded() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.add(0, null);
+        assertTrue(map.containsValue(null));
+    }
+
+    /**
+     * Verifies that after adding an entry to a map, the map contains the value for the key added.
+     */
+    @Test
+    public void mapShouldContainValueForKeyAfterHavingItAdded() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.add(0, "zero");
+        assertEquals("zero", map.get(0));
+    }
+
+    /**
+     * Verifies that after adding an entry to a map, the map contains the null value for the null key added.
+     */
+    @Test
+    public void mapShouldContainNullValueForNullKeyAfterHavingItAdded() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.add(null, null);
+        assertNull(map.get(null));
+    }
+
+    /**
+     * Verifying that adding keys with colleding hash values still returns the correct values for a key.
+     */
+    @Test
+    public void mapShouldContainValueForKeysWithCollidingHashValuesAfterHavingItAdded() {
+        ModifiableMap<KeyWithCollidingHash, Integer> map = new ModifiableHashMap<KeyWithCollidingHash, Integer>();
+        KeyWithCollidingHash key1 = new KeyWithCollidingHash();
+        KeyWithCollidingHash key2 = new KeyWithCollidingHash();
+        map.add(key1, 1);
+        map.add(key2, 2);
+        assertEquals(1, map.get(key1));
+        assertEquals(2, map.get(key2));
+    }
 }

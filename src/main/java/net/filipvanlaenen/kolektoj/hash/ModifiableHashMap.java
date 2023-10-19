@@ -97,6 +97,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             resizeEntriesTo(entries.length + STRIDE);
         }
         entries[size++] = entry;
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (size * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
             resizeHashedEntriesTo(size * HASHING_RATIO);
         }
@@ -139,12 +140,37 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     }
 
     @Override
-    public boolean contains(final Entry<K, V> entry) {
-        return findFirstIndexForEntry(entry) != -1;
+    public void clear() {
+        size = 0;
+        if (STRIDE < entries.length) {
+            resizeEntriesTo(STRIDE);
+        }
+        for (int i = 0; i < hashedEntries.length; i++) {
+            hashedEntries[i] = null;
+        }
+        resizeHashedEntriesTo(entries.length * HASHING_RATIO);
+        keys.clear();
+        values.clear();
     }
 
     @Override
-    public boolean containsAll(Collection<?> collection) {
+    public boolean contains(final Entry<K, V> entry) {
+        if (hashedEntriesSize == 0) {
+            return false;
+        }
+        K key = entry.key();
+        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+        while (hashedEntries[index] != null) {
+            if (hashedEntries[index].equals(entry)) {
+                return true;
+            }
+            index = (index + 1) % hashedEntriesSize;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean containsAll(final Collection<?> collection) {
         if (collection.size() > size) {
             return false;
         }
@@ -190,27 +216,6 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     private Entry<K, V>[] createNewArray(final int length) {
         Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) entries.getClass();
         return (Entry<K, V>[]) Array.newInstance(clazz.getComponentType(), length);
-    }
-
-    /**
-     * Finds the index for the first occurrence of the entry.
-     *
-     * @param entry The entry.
-     * @return Returns the index for the first occurrence of the entry, or -1 if no such entry is present.
-     */
-    private int findFirstIndexForEntry(final Entry<K, V> entry) {
-        if (hashedEntriesSize == 0) {
-            return -1;
-        }
-        K key = entry.key();
-        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
-        while (hashedEntries[index] != null) {
-            if (hashedEntries[index].equals(entry)) {
-                return index;
-            }
-            index = (index + 1) % hashedEntriesSize;
-        }
-        return -1;
     }
 
     /**
@@ -304,10 +309,11 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         // EQMU: Negating the conditional below produces an equivalent mutant.
         if (size < entries.length - STRIDE) {
             // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
-            resizeEntriesTo(size);
+            resizeEntriesTo(size + STRIDE);
         }
         hashedEntries[index] = null;
-        if (hashedEntries[index + 1 % hashedEntriesSize] != null || size * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
+        if (hashedEntries[(index + 1) % hashedEntriesSize] != null
+                || size * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
             resizeHashedEntriesTo(size * HASHING_RATIO);
         }
         keys.remove(key);
@@ -365,7 +371,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     }
 
     @Override
-    public V update(K key, V value) throws IllegalArgumentException {
+    public V update(final K key, final V value) throws IllegalArgumentException {
         int index = findFirstIndexForKey(key);
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");

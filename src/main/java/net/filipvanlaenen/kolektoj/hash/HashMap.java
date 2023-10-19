@@ -84,7 +84,7 @@ public final class HashMap<K, V> implements Map<K, V> {
     }
 
     @Override
-    public boolean containsAll(Collection<?> collection) {
+    public boolean containsAll(final Collection<?> collection) {
         if (collection.size() > size()) {
             return false;
         }

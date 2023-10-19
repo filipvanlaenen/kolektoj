@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
  *
  * @param <E> The element type.
  */
-public class ArrayIterator<E> implements Iterator<E> {
+public final class ArrayIterator<E> implements Iterator<E> {
     /**
      * An array with the elements.
      */

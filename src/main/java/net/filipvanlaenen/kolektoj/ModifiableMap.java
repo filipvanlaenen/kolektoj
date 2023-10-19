@@ -98,6 +98,11 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
     boolean addAll(Map<? extends K, ? extends V> map);
 
     /**
+     * Removes all entries from the map.
+     */
+    void clear();
+
+    /**
      * Adds an entry to this map with the given key and value if the key isn't already present, otherwise updates the
      * key with the given value. If the key was previously mapped to a value, the value is returned, and null otherwise.
      *
