@@ -57,4 +57,23 @@ public interface ModifiableCollection<E> extends Collection<E> {
      * @return True if the element was present in the collection.
      */
     boolean remove(E element);
+
+    /**
+     * Removes all elements from a collection from this collection and returns whether it decreased the size of the
+     * collection.
+     *
+     * @param collection A collection with elements to be removed from this collection.
+     * @return True if the size of the collection decreased after removing the elements of the collection.
+     */
+    boolean removeAll(Collection<? extends E> collection);
+
+    /**
+     * Retains elements from a collection in this collection and removes all other, and returns whether it decreased the
+     * size of the collection.
+     *
+     * @param collection A collection with elements to retain in this collection.
+     * @return True if the size of the collection decreased after retaining only the elements from the provided
+     *         collection.
+     */
+    boolean retainAll(Collection<? extends E> collection);
 }

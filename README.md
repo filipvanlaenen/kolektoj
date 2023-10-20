@@ -52,29 +52,28 @@ The table below shows how the methods defined on the
 [java.util.Collection&lt;E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html)
 interface map to Kolektoj methods.
 
-| JDK 17 Method                                             | Kolektoj Class             | Kolektoj Method                                       |
-|-----------------------------------------------------------|----------------------------|-------------------------------------------------------|
-| boolean add(E e)                                          | ModifiableCollection&lt;E> | boolean add(E element)                                |
-| boolean addAll(Collection&lt;? extends E> c)              | ModifiableCollection&lt;E> | boolean addAll(Collection&lt;? extends E> collection) |
-| void clear()                                              | ModifiableCollection&lt;E> | void clear()                                          |
-| boolean contains(Object o)                                | Collection&lt;E>           | boolean contains(E element)                           |
-| boolean containsAll(Collection&lt;?> c)                   | Collection&lt;E>           | boolean containsAll(Collection&lt;?> c)               |
-| boolean equals(Object o)                                  |                            |                                                       |
-| int hashCode()                                            |                            |                                                       |
-| boolean isEmpty()                                         | Collection&lt;E>           | default boolean isEmpty()                             |
-| Iterator&lt;E> iterator()                                 | Collection&lt;E>           | Iterator&lt;E> iterator()                             |
-| default Stream&lt;E> parallelStream()                     |                            |                                                       |
-| boolean remove(Object o)                                  | ModifiableCollection&lt;E> | boolean remove(E element)                             |
-| boolean removeAll(Collection&lt;?> c)                     |                            |                                                       |
-| default boolean removeIf(Predicate&lt;? super E> filter)  |                            |                                                       |
-| boolean retainAll(Collection&lt;?> c)                     |                            |                                                       |
-| int size()                                                | Collection&lt;E>           | int size()                                            |
-| default Spliterator&lt;E> spliterator()                   | Collection&lt;E>           | Spliterator&lt;E> spliterator()                       |
-| default Stream&lt;E> stream()                             | Collection&lt;E>           | default Stream&lt;E> stream()                         |
-| Object[] toArray()                                        | Collection&lt;E>           | E[] toArray()                                         |
-| default &lt;T> T[] toArray(IntFunction&lt;T[]> generator) | Collection&lt;E>           | E[] toArray()                                         |
-| &lt;T> T[] toArray(T[] a)                                 | Collection&lt;E>           | E[] toArray()                                         |
-
+| JDK 17 Method                                             | Kolektoj Class             | Kolektoj Method                                          |
+|-----------------------------------------------------------|----------------------------|----------------------------------------------------------|
+| boolean add(E e)                                          | ModifiableCollection&lt;E> | boolean add(E element)                                   |
+| boolean addAll(Collection&lt;? extends E> c)              | ModifiableCollection&lt;E> | boolean addAll(Collection&lt;? extends E> collection)    |
+| void clear()                                              | ModifiableCollection&lt;E> | void clear()                                             |
+| boolean contains(Object o)                                | Collection&lt;E>           | boolean contains(E element)                              |
+| boolean containsAll(Collection&lt;?> c)                   | Collection&lt;E>           | boolean containsAll(Collection&lt;?> c)                  |
+| boolean equals(Object o)                                  |                            |                                                          |
+| int hashCode()                                            |                            |                                                          |
+| boolean isEmpty()                                         | Collection&lt;E>           | default boolean isEmpty()                                |
+| Iterator&lt;E> iterator()                                 | Collection&lt;E>           | Iterator&lt;E> iterator()                                |
+| default Stream&lt;E> parallelStream()                     |                            |                                                          |
+| boolean remove(Object o)                                  | ModifiableCollection&lt;E> | boolean remove(E element)                                |
+| boolean removeAll(Collection&lt;?> c)                     | ModifiableCollection&lt;E> | boolean removeAll(Collection&lt;? extends E> collection) |
+| default boolean removeIf(Predicate&lt;? super E> filter)  |                            |                                                          |
+| boolean retainAll(Collection&lt;?> c)                     | ModifiableCollection&lt;E> | boolean retainAll(Collection&lt;? extends E> collection) |
+| int size()                                                | Collection&lt;E>           | int size()                                               |
+| default Spliterator&lt;E> spliterator()                   | Collection&lt;E>           | Spliterator&lt;E> spliterator()                          |
+| default Stream&lt;E> stream()                             | Collection&lt;E>           | default Stream&lt;E> stream()                            |
+| Object[] toArray()                                        | Collection&lt;E>           | E[] toArray()                                            |
+| default &lt;T> T[] toArray(IntFunction&lt;T[]> generator) | Collection&lt;E>           | E[] toArray()                                            |
+| &lt;T> T[] toArray(T[] a)                                 | Collection&lt;E>           | E[] toArray()                                            |
 
 #### Other
 

@@ -145,6 +145,29 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
         return false;
     }
 
+    @Override
+    public boolean removeAll(final Collection<? extends E> collection) {
+        boolean result = false;
+        for (E element : collection) {
+            for (int i = 0; i < size; i++) {
+                if (elements[i] == null && element == null || elements[i].equals(element)) {
+                    elements[i] = elements[size - 1];
+                    size--;
+                    result = true;
+                    break;
+                }
+            }
+        }
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
+        // EQMU: Negating the conditional below produces an equivalent mutant.
+        if (size < elements.length - STRIDE) {
+            // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
+            resizeTo(size);
+        }
+        return result;
+    }
+
     /**
      * Resizes the array to the new length. It is assumed that the new length is not less than the current size.
      *
@@ -154,6 +177,39 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
         E[] newElements = createNewArray(newLength);
         System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
+    }
+
+    @Override
+    public boolean retainAll(final Collection<? extends E> collection) {
+        boolean[] retain = new boolean[size];
+        for (E element : collection) {
+            for (int i = 0; i < size; i++) {
+                if (!retain[i] && (elements[i] == null && element == null || elements[i].equals(element))) {
+                    retain[i] = true;
+                    break;
+                }
+            }
+        }
+        int i = 0;
+        boolean result = false;
+        while (i < size) {
+            if (retain[i]) {
+                i++;
+            } else {
+                elements[i] = elements[size - 1];
+                retain[i] = retain[size - 1];
+                size--;
+                result = true;
+            }
+        }
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
+        // EQMU: Negating the conditional below produces an equivalent mutant.
+        if (size < elements.length - STRIDE) {
+            // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
+            resizeTo(size);
+        }
+        return result;
     }
 
     @Override

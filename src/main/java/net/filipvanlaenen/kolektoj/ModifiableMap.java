@@ -141,6 +141,23 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
     V remove(K key) throws IllegalArgumentException;
 
     /**
+     * Removes the entries of a map from this map, and returns whether it decreased the size of the map.
+     *
+     * @param map The map with entries to be removed from this map.
+     * @return True if the size of the map decreased after removing the entries from the map.
+     */
+    boolean removeAll(Map<? extends K, ? extends V> map);
+
+    /**
+     * Retains the entries of a map in this map, while removing all other, and returns whether it decreased the size of
+     * the map.
+     *
+     * @param map The map with entries te be retained in this map.
+     * @return True if the size of the map decreased after removing the entries not present in the provided map.
+     */
+    boolean retainAll(Map<? extends K, ? extends V> map);
+
+    /**
      * Updates the key with the given value, and returns the vale that was previously mapped to the key. Throws an
      * exception if the map doesn't contain an entry with the key.
      *

@@ -155,18 +155,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public boolean contains(final Entry<K, V> entry) {
-        if (hashedEntriesSize == 0) {
-            return false;
-        }
-        K key = entry.key();
-        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
-        while (hashedEntries[index] != null) {
-            if (hashedEntries[index].equals(entry)) {
-                return true;
-            }
-            index = (index + 1) % hashedEntriesSize;
-        }
-        return false;
+        return findFirstIndexForEntry(entry) != -1;
     }
 
     @Override
@@ -216,6 +205,27 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     private Entry<K, V>[] createNewArray(final int length) {
         Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) entries.getClass();
         return (Entry<K, V>[]) Array.newInstance(clazz.getComponentType(), length);
+    }
+
+    /**
+     * Finds the index for the first occurrence of an entry.
+     *
+     * @param entry The entry.
+     * @return Returns the index for the first occurrence of an entry, or -1 if no such entry is present.
+     */
+    private int findFirstIndexForEntry(final Entry<? extends K, ? extends V> entry) {
+        if (hashedEntriesSize == 0) {
+            return -1;
+        }
+        K key = entry.key();
+        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+        while (hashedEntries[index] != null) {
+            if (hashedEntries[index].equals(entry)) {
+                return index;
+            }
+            index = (index + 1) % hashedEntriesSize;
+        }
+        return -1;
     }
 
     /**
@@ -321,6 +331,43 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         return value;
     }
 
+    @Override
+    public boolean removeAll(final Map<? extends K, ? extends V> map) {
+        boolean result = false;
+        for (Entry<? extends K, ? extends V> e : map) {
+            int index = findFirstIndexForEntry(e);
+            if (index == -1) {
+                break;
+            }
+            Entry<K, V> entry = hashedEntries[index];
+            for (int i = 0; i < size; i++) {
+                if (entries[i].equals(entry)) {
+                    entries[i] = entries[size - 1];
+                    size--;
+                    break;
+                }
+            }
+            hashedEntries[index] = null;
+            if (hashedEntries[(index + 1) % hashedEntriesSize] != null) {
+                resizeHashedEntriesTo(size * HASHING_RATIO);
+            }
+            keys.remove(entry.key());
+            values.remove(entry.value());
+            result = true;
+        }
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
+        // EQMU: Negating the conditional below produces an equivalent mutant.
+        if (size < entries.length - STRIDE) {
+            // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
+            resizeEntriesTo(size + STRIDE);
+        }
+        if (size * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
+            resizeHashedEntriesTo(size * HASHING_RATIO);
+        }
+        return result;
+    }
+
     /**
      * Resizes the entries array to the new length. It is assumed that the new length is not less than the current size.
      *
@@ -351,6 +398,55 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             hashedArray[j] = entry;
         }
         this.hashedEntries = hashedArray;
+    }
+
+    @Override
+    public boolean retainAll(final Map<? extends K, ? extends V> map) {
+        boolean[] retain = new boolean[size];
+        for (Entry<? extends K, ? extends V> entry : map) {
+            for (int i = 0; i < size; i++) {
+                if (!retain[i] && (entries[i] == null && entry == null || entries[i].equals(entry))) {
+                    retain[i] = true;
+                    break;
+                }
+            }
+        }
+        int i = 0;
+        boolean result = false;
+        while (i < size) {
+            if (retain[i]) {
+                i++;
+            } else {
+                Entry<K, V> entry = entries[i];
+                int index = findFirstIndexForEntry(entry);
+                for (int j = 0; j < size; j++) {
+                    if (entries[j].equals(entry)) {
+                        entries[j] = entries[size - 1];
+                        size--;
+                        break;
+                    }
+                }
+                hashedEntries[index] = null;
+                if (hashedEntries[(index + 1) % hashedEntriesSize] != null) {
+                    resizeHashedEntriesTo(size * HASHING_RATIO);
+                }
+                keys.remove(entry.key());
+                values.remove(entry.value());
+                retain[i] = retain[size - 1];
+                result = true;
+            }
+        }
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
+        // EQMU: Negating the conditional below produces an equivalent mutant.
+        if (size < entries.length - STRIDE) {
+            // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
+            resizeEntriesTo(size + STRIDE);
+        }
+        if (size * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
+            resizeHashedEntriesTo(size * HASHING_RATIO);
+        }
+        return result;
     }
 
     @Override
