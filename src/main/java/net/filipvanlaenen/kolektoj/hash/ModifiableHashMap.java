@@ -68,6 +68,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
     public ModifiableHashMap(final Entry<K, V>... entries) throws IllegalArgumentException {
+        if (entries == null) {
+            throw new IllegalArgumentException("Map entries can't be null.");
+        }
         this.entries = entries.clone();
         size = entries.length;
         keys = new ModifiableArrayCollection<K>();
@@ -113,10 +116,15 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public boolean addAll(final Map<? extends K, ? extends V> map) {
+        if (map.isEmpty()) {
+            return false;
+        }
         int numberOfNewEntries = map.size();
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (size + numberOfNewEntries > entries.length) {
             resizeEntriesTo(entries.length + numberOfNewEntries + STRIDE);
         }
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if ((size + numberOfNewEntries) * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
             resizeHashedEntriesTo((size + numberOfNewEntries) * HASHING_RATIO);
         }

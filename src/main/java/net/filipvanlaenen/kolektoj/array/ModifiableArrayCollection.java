@@ -47,6 +47,9 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
 
     @Override
     public boolean addAll(final Collection<? extends E> collection) {
+        if (collection.isEmpty()) {
+            return false;
+        }
         int numberOfNewElements = collection.size();
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (size + numberOfNewElements > elements.length) {
