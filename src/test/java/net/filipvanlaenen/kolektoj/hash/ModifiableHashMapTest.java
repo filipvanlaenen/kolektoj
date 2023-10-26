@@ -22,6 +22,10 @@ public class ModifiableHashMapTest {
      */
     private static final int THREE = 3;
     /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
      * The magic number six.
      */
     private static final int SIX = 6;
@@ -42,6 +46,10 @@ public class ModifiableHashMapTest {
      */
     private static final Entry<Integer, String> ENTRY3 = new Entry<Integer, String>(3, "three");
     /**
+     * An entry with key 4 and value four.
+     */
+    private static final Entry<Integer, String> ENTRY4 = new Entry<Integer, String>(4, "four");
+    /**
      * Map with the integers 1, 2 and 3 mapped to their words.
      */
     private static final ModifiableMap<Integer, String> MAP123 = createNewMap();
@@ -50,6 +58,10 @@ public class ModifiableHashMapTest {
      */
     private static final Map<Integer, String> MAP123NULL =
             new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
+    /**
+     * Map with the integer 4 mapped to its word.
+     */
+    private static final Map<Integer, String> MAP4 = new HashMap<Integer, String>(ENTRY4);
 
     /**
      * Class with colliding hash codes.
@@ -400,6 +412,24 @@ public class ModifiableHashMapTest {
      */
     @Test
     public void addAllWithEmptyMapShouldReturnFalse() {
-        assertFalse(MAP123.addAll(new HashMap<Integer, String>()));
+        assertFalse(createNewMap().addAll(new HashMap<Integer, String>()));
+    }
+
+    /**
+     * Verifies that adding a map of size one returns true.
+     */
+    @Test
+    public void addAllWithMapWithOneEntryReturnsTrue() {
+        assertTrue(createNewMap().addAll(MAP4));
+    }
+
+    /**
+     * Verifies that adding a map of size one increases the size of the map.
+     */
+    @Test
+    public void addAllWithMapWithOneEntryIncreasesTheSizeByOne() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.addAll(MAP4);
+        assertEquals(FOUR, map.size());
     }
 }
