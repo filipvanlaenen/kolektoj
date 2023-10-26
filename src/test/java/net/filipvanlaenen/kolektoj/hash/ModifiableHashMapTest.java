@@ -76,6 +76,26 @@ public class ModifiableHashMapTest {
     }
 
     /**
+     * Verifies that trying to pass null as an argument to the constructor throws IllegalArgumentException.
+     */
+    @Test
+    public void constructorShouldThrowExceptionIfNullIsPassedAsAnArgument() {
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> new ModifiableHashMap<Integer, String>(null));
+        assertEquals("Map entries can't be null.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that trying to pass null as one of many arguments to the constructor throws IllegalArgumentException.
+     */
+    @Test
+    public void constructorShouldThrowExceptionIfNullIsPassedAsOneOfTheArguments() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> new ModifiableHashMap<Integer, String>(ENTRY1, null));
+        assertEquals("Map entries can't be null.", exception.getMessage());
+    }
+
+    /**
      * Verifies that the correct length is returned for a map with three entries.
      */
     @Test
@@ -362,7 +382,7 @@ public class ModifiableHashMapTest {
     }
 
     /**
-     * Verifying that adding keys with colleding hash values still returns the correct values for a key.
+     * Verifies that adding keys with colleding hash values still returns the correct values for a key.
      */
     @Test
     public void mapShouldContainValueForKeysWithCollidingHashValuesAfterHavingItAdded() {
@@ -373,5 +393,13 @@ public class ModifiableHashMapTest {
         map.add(key2, 2);
         assertEquals(1, map.get(key1));
         assertEquals(2, map.get(key2));
+    }
+
+    /**
+     * Verifies that adding an empty map returns false.
+     */
+    @Test
+    public void addAllWithEmptyMapShouldReturnFalse() {
+        assertFalse(MAP123.addAll(new HashMap<Integer, String>()));
     }
 }
