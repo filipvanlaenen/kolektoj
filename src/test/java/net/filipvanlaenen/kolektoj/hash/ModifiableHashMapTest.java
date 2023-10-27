@@ -394,7 +394,7 @@ public class ModifiableHashMapTest {
     }
 
     /**
-     * Verifies that adding keys with colleding hash values still returns the correct values for a key.
+     * Verifies that adding keys with colliding hash values still returns the correct values for a key.
      */
     @Test
     public void mapShouldContainValueForKeysWithCollidingHashValuesAfterHavingItAdded() {
@@ -431,5 +431,75 @@ public class ModifiableHashMapTest {
         ModifiableMap<Integer, String> map = createNewMap();
         map.addAll(MAP4);
         assertEquals(FOUR, map.size());
+    }
+
+    /**
+     * Verifies that adding a map with a large map returns true. This tests that resizing works as intended.
+     */
+    @Test
+    public void addAllWithLargeMapReturnsTrue() {
+        ModifiableMap<Integer, String> map1 = new ModifiableHashMap<Integer, String>();
+        ModifiableMap<Integer, String> map2 = new ModifiableHashMap<Integer, String>();
+        for (int i = 0; i < SIX; i++) {
+            map1.add(i, "1");
+            map2.add(i, "2");
+        }
+        assertTrue(map1.addAll(map2));
+    }
+
+    /**
+     * Verifies that adding a map with an entry with a null key adds the entry with the null key.
+     */
+    @Test
+    public void addAllWithMapWithNullKeyAddsTheNullKey() {
+        ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>();
+        map.addAll(MAP123NULL);
+        assertNull(map.get(null));
+    }
+
+    /**
+     * Verifies that adding a map with keys with colliding hash values returns the correct values for a key.
+     */
+    @Test
+    public void mapShouldContainValueForKeysWithCollidingHashValuesAfterHavingItAddedAsAMap() {
+        ModifiableMap<KeyWithCollidingHash, Integer> map1 = new ModifiableHashMap<KeyWithCollidingHash, Integer>();
+        ModifiableMap<KeyWithCollidingHash, Integer> map2 = new ModifiableHashMap<KeyWithCollidingHash, Integer>();
+        KeyWithCollidingHash key1 = new KeyWithCollidingHash();
+        KeyWithCollidingHash key2 = new KeyWithCollidingHash();
+        map2.add(key1, 1);
+        map2.add(key2, 2);
+        map1.addAll(map2);
+        assertEquals(1, map1.get(key1));
+        assertEquals(2, map1.get(key2));
+    }
+
+    /**
+     * Verifies that clearing a map sets the size to zero.
+     */
+    @Test
+    public void clearShouldSetMapToBeEmpty() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.clear();
+        assertTrue(map.isEmpty());
+    }
+
+    /**
+     * Verifies that keys are removed from the map when it's cleared.
+     */
+    @Test
+    public void clearShouldRemoveKeys() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.clear();
+        assertTrue(map.getKeys().isEmpty());
+    }
+
+    /**
+     * Verifies that values are removed from the map when it's cleared.
+     */
+    @Test
+    public void clearShouldRemoveValues() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.clear();
+        assertTrue(map.getValues().isEmpty());
     }
 }

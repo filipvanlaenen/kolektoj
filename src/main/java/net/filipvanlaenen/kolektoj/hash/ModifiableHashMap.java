@@ -135,7 +135,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             Entry<K, V> newEntry = new Entry<K, V>(key, value);
             entries[size + i] = newEntry;
             int j = key == null ? 0 : key.hashCode() % hashedEntriesSize;
-            while (hashedEntries[i] != null) {
+            while (hashedEntries[j] != null) {
                 j = (j + 1) % hashedEntriesSize;
             }
             hashedEntries[j] = newEntry;
@@ -150,12 +150,17 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     @Override
     public void clear() {
         size = 0;
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        // EQMU: Negating the conditional below produces an equivalent mutant.
         if (STRIDE < entries.length) {
+            // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
             resizeEntriesTo(STRIDE);
         }
         for (int i = 0; i < hashedEntries.length; i++) {
             hashedEntries[i] = null;
         }
+        // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
+        // EQMU: Replacing integer multiplication with division below produces an equivalent mutant.
         resizeHashedEntriesTo(entries.length * HASHING_RATIO);
         keys.clear();
         values.clear();
@@ -195,13 +200,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public boolean containsValue(final V value) {
-        for (Entry<K, V> entry : entries) {
-            V v = entry.value();
-            if (v == null && value == null || v != null && v.equals(value)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(value);
     }
 
     /**
@@ -277,8 +276,8 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public Collection<V> getAll(final K key) throws IllegalArgumentException {
-        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
         ModifiableCollection<V> result = ModifiableCollection.empty();
+        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
         while (hashedEntries[index] != null) {
             K k = hashedEntries[index].key();
             if (k == null && key == null || k != null && k.equals(key)) {
@@ -304,7 +303,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public Iterator<Entry<K, V>> iterator() {
-        return new ArrayIterator<Entry<K, V>>(entries);
+        return new ArrayIterator<Entry<K, V>>(toArray());
     }
 
     @Override
