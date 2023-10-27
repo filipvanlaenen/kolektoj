@@ -156,10 +156,6 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
             resizeEntriesTo(STRIDE);
         }
-        for (int i = 0; i < hashedEntries.length; i++) {
-            hashedEntries[i] = null;
-        }
-        // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
         // EQMU: Replacing integer multiplication with division below produces an equivalent mutant.
         resizeHashedEntriesTo(entries.length * HASHING_RATIO);
         keys.clear();
