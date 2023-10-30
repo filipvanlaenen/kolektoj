@@ -13,6 +13,10 @@ import net.filipvanlaenen.kolektoj.array.ArrayCollection;
  * @param <E> The element type.
  */
 public interface Collection<E> extends Cloneable, Iterable<E> {
+    public enum ElementCardinality {
+        DISTINCT_ELEMENTS, DUPLICATE_ELEMENTS
+    }
+
     /**
      * Returns a new empty collection.
      *

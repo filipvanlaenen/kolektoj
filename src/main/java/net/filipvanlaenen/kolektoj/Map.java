@@ -10,6 +10,10 @@ import net.filipvanlaenen.kolektoj.hash.HashMap;
  * @param <V> The value type.
  */
 public interface Map<K, V> extends Collection<Entry<K, V>> {
+    public enum KeyAndValueCardinality {
+        DISTINCT_KEYS, DUPLICATE_KEYS_WITH_DISTINCT_VALUES, DUPLICATE_KEYS_WITH_DUPLICATE_VALUES
+    }
+
     /**
      * An entry in a map.
      *
