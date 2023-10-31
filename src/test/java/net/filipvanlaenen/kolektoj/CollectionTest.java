@@ -51,4 +51,36 @@ public class CollectionTest {
     public void streamShouldProduceAStreamThatReducesToTheCorrectSum() {
         assertEquals(SIX, Collection.of(1, 2, THREE).stream().reduce(0, Integer::sum));
     }
+
+    /**
+     * Verifies that containsSame returns false when two collections have different sizes.
+     */
+    @Test
+    public void containsSameReturnsFalseWhenTwoCollectionsHaveDifferentSizes() {
+        Collection<Integer> collection1 = Collection.of(1);
+        Collection<Integer> collection2 = Collection.of(1, 2);
+        assertFalse(collection1.containsSame(collection2));
+        assertFalse(collection2.containsSame(collection1));
+    }
+
+    /**
+     * Verifies that containsSame returns false when two collections have the same size but different elements.
+     */
+    @Test
+    public void containsSameReturnsFalseWhenTwoCollectionsHaveSameSizeButDifferentElements() {
+        Collection<Integer> collection1 = Collection.of(1, 2);
+        Collection<Integer> collection2 = Collection.of(2, THREE);
+        assertFalse(collection1.containsSame(collection2));
+        assertFalse(collection2.containsSame(collection1));
+    }
+
+    /**
+     * Verifies that containsSame returns two when two collections have the same size and elements.
+     */
+    @Test
+    public void containsSameReturnsTrueWhenTwoCollectionsHaveSameSizeAndElements() {
+        Collection<Integer> collection1 = Collection.of(1, 2);
+        Collection<Integer> collection2 = Collection.of(1, 2);
+        assertTrue(collection1.containsSame(collection2));
+    }
 }
