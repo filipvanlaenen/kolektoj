@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj.array;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 
 import java.util.Iterator;
 import java.util.Spliterator;
@@ -29,21 +30,29 @@ public final class ArrayCollection<E> implements Collection<E> {
      */
     public ArrayCollection(final Collection<E> source) {
         elementCardinality = source.getElementCardinality();
+        // TODO: Issue #14: Remove duplicate elements if DISTINCT_ELEMENTS requested.
         elements = source.toArray();
     }
 
     /**
-     * Constructs a collection with the given elements.
+     * Constructs a collection with the given elements. The element cardinality is defaulted to
+     * <code>DUPLICATE_ELEMENTS</code>.
      *
      * @param elements The elements of the collection.
      */
     public ArrayCollection(final E... elements) {
-        elementCardinality = DUPLICATE_ELEMENTS;
-        this.elements = elements.clone();
+        this(DUPLICATE_ELEMENTS, elements);
     }
 
+    /**
+     * Constructs a collection with the given elements and element cardinality.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param elements           The elements of the collection.
+     */
     public ArrayCollection(final ElementCardinality elementCardinality, final E... elements) {
         this.elementCardinality = elementCardinality;
+        // TODO: Issue #14: Remove duplicate elements if DISTINCT_ELEMENTS requested.
         this.elements = elements.clone();
     }
 
@@ -105,7 +114,7 @@ public final class ArrayCollection<E> implements Collection<E> {
 
     @Override
     public Spliterator<E> spliterator() {
-        return new ArraySpliterator<E>(elements, 0);
+        return new ArraySpliterator<E>(elements, elementCardinality == DISTINCT_ELEMENTS ? Spliterator.DISTINCT : 0);
     }
 
     @Override
