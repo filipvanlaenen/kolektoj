@@ -6,6 +6,7 @@ import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
+import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
 /**
  * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.OrderedCollection} interface.
@@ -97,6 +98,12 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
         } else {
             return elements[index];
         }
+    }
+
+    @Override
+    public ElementCardinality getElementCardinality() {
+        // TODO: Auto-generated method stub
+        return null;
     }
 
     @Override

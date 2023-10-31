@@ -7,6 +7,7 @@ import java.util.Spliterator;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
@@ -185,6 +186,12 @@ public final class HashMap<K, V> implements Map<K, V> {
             throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
         }
         return result;
+    }
+
+    @Override
+    public ElementCardinality getElementCardinality() {
+        // TODO: Auto-generated method stub
+        return null;
     }
 
     @Override

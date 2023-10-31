@@ -13,8 +13,18 @@ import net.filipvanlaenen.kolektoj.array.ArrayCollection;
  * @param <E> The element type.
  */
 public interface Collection<E> extends Cloneable, Iterable<E> {
-    public enum ElementCardinality {
-        DISTINCT_ELEMENTS, DUPLICATE_ELEMENTS
+    /**
+     * Enumeration listing the options for the element cardinality in collections.
+     */
+    enum ElementCardinality {
+        /**
+         * Only distinct elements allowed.
+         */
+        DISTINCT_ELEMENTS,
+        /**
+         * Duplicate elements allowed.
+         */
+        DUPLICATE_ELEMENTS
     }
 
     /**
@@ -36,6 +46,18 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
      */
     static <E> Collection<E> of(final E... elements) {
         return new ArrayCollection<E>(elements);
+    }
+
+    /**
+     * Returns a new collection with the specified element cardinality and the elements.
+     *
+     * @param <E>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param elements           The elements for the new collection.
+     * @return A new collection with the specified element cardinality and the elements.
+     */
+    static <E> Collection<E> of(final ElementCardinality elementCardinality, final E... elements) {
+        return new ArrayCollection<E>(elementCardinality, elements);
     }
 
     /**
@@ -75,6 +97,13 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
      * @throws IndexOutOfBoundsException Thrown if the collection is empty.
      */
     E get() throws IndexOutOfBoundsException;
+
+    /**
+     * Returns the element cardinality of the collection.
+     *
+     * @return The element cardinality.
+     */
+    ElementCardinality getElementCardinality();
 
     /**
      * Returns whether the collection is empty or not.

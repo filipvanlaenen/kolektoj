@@ -1,5 +1,7 @@
 package net.filipvanlaenen.kolektoj.array;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
+
 import java.util.Iterator;
 import java.util.Spliterator;
 
@@ -12,18 +14,13 @@ import net.filipvanlaenen.kolektoj.Collection;
  */
 public final class ArrayCollection<E> implements Collection<E> {
     /**
+     * The element cardinality.
+     */
+    private final ElementCardinality elementCardinality;
+    /**
      * An array with the elements.
      */
     private final E[] elements;
-
-    /**
-     * Constructs a collection with the given elements.
-     *
-     * @param elements The elements of the collection.
-     */
-    public ArrayCollection(final E... elements) {
-        this.elements = elements.clone();
-    }
 
     /**
      * Constructs a collection from another collection, with the same elements.
@@ -31,7 +28,23 @@ public final class ArrayCollection<E> implements Collection<E> {
      * @param source The collection to create a new collection from.
      */
     public ArrayCollection(final Collection<E> source) {
+        elementCardinality = source.getElementCardinality();
         elements = source.toArray();
+    }
+
+    /**
+     * Constructs a collection with the given elements.
+     *
+     * @param elements The elements of the collection.
+     */
+    public ArrayCollection(final E... elements) {
+        elementCardinality = DUPLICATE_ELEMENTS;
+        this.elements = elements.clone();
+    }
+
+    public ArrayCollection(final ElementCardinality elementCardinality, final E... elements) {
+        this.elementCardinality = elementCardinality;
+        this.elements = elements.clone();
     }
 
     @Override
@@ -73,6 +86,11 @@ public final class ArrayCollection<E> implements Collection<E> {
         } else {
             return elements[0];
         }
+    }
+
+    @Override
+    public ElementCardinality getElementCardinality() {
+        return elementCardinality;
     }
 
     @Override

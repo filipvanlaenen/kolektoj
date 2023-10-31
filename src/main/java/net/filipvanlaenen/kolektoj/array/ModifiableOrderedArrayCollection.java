@@ -6,6 +6,7 @@ import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
+import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
 /**
  * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableOrderedCollection} interface.
@@ -169,6 +170,12 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         } else {
             return elements[index];
         }
+    }
+
+    @Override
+    public ElementCardinality getElementCardinality() {
+        // TODO: Auto-generated method stub
+        return null;
     }
 
     @Override
