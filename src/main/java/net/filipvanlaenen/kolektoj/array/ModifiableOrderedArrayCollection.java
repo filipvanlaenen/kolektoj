@@ -199,7 +199,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         boolean result = false;
         for (E element : collection) {
             for (int i = 0; i < size; i++) {
-                if (elements[i] == null && element == null || elements[i].equals(element)) {
+                if (elements[i] == null && element == null || elements[i] != null && elements[i].equals(element)) {
                     System.arraycopy(elements, i + 1, elements, i, size - i - 1);
                     size--;
                     result = true;

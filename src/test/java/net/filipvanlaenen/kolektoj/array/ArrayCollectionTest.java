@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Spliterator;
+
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
+
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
@@ -118,5 +123,63 @@ public class ArrayCollectionTest {
             sum += i;
         }
         assertEquals(SIX, sum);
+    }
+
+    /**
+     * Verifies that duplicate elements are removed if a collection with distinct elements is constructed.
+     */
+    @Test
+    public void constructorShouldRemoveDuplicateElementsFromDistinctCollection() {
+        Collection<Integer> collection = new ArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, 2, THREE, 2, THREE);
+        assertEquals(THREE, collection.size());
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
+        assertTrue(collection.contains(THREE));
+    }
+
+    /**
+     * Verifies that duplicate null elements are removed if a collection with distinct elements is constructed.
+     */
+    @Test
+    public void constructorShouldRemoveDuplicateNullElementsFromDistinctCollection() {
+        Collection<Integer> collection = new ArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, null, null, 2, null);
+        assertEquals(THREE, collection.size());
+        assertTrue(collection.contains(null));
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
+    }
+
+    /**
+     * Verifies that by default, a collection can contain duplicate elements.
+     */
+    @Test
+    public void constructorShouldSetElementCardinalityToDuplicateByDefault() {
+        assertEquals(DUPLICATE_ELEMENTS, new ArrayCollection<Integer>().getElementCardinality());
+    }
+
+    /**
+     * Verifies that when distinct elements are requested, the element cardinality is set to distinct elements.
+     */
+    @Test
+    public void constructorShouldSetElementCardinalityToDistinctElementsWhenSpecified() {
+        assertEquals(DISTINCT_ELEMENTS, new ArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).getElementCardinality());
+    }
+
+    /**
+     * Verifies that the spliterator has the distinct flag not set for collections with duplicate elements.
+     */
+    @Test
+    public void spliteratorShouldNotSetDistinctFlagForCollectionWithDuplicateElements() {
+        assertFalse(new ArrayCollection<Integer>(DUPLICATE_ELEMENTS, 1).spliterator()
+                .hasCharacteristics(Spliterator.DISTINCT));
+    }
+
+    /**
+     * Verifies that the spliterator has the distinct flag set for collections with distinct elements.
+     */
+    @Test
+    public void spliteratorShouldSetDistinctFlagForCollectionWithDistinctElements() {
+        assertTrue(new ArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).spliterator()
+                .hasCharacteristics(Spliterator.DISTINCT));
     }
 }

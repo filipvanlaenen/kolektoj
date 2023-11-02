@@ -3,6 +3,7 @@ package net.filipvanlaenen.kolektoj.array;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 
+import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Spliterator;
 
@@ -24,13 +25,12 @@ public final class ArrayCollection<E> implements Collection<E> {
     private final E[] elements;
 
     /**
-     * Constructs a collection from another collection, with the same elements.
+     * Constructs a collection from another collection, with the same elements and the same element cardinality.
      *
      * @param source The collection to create a new collection from.
      */
     public ArrayCollection(final Collection<E> source) {
         elementCardinality = source.getElementCardinality();
-        // TODO: Issue #14: Remove duplicate elements if DISTINCT_ELEMENTS requested.
         elements = source.toArray();
     }
 
@@ -52,8 +52,42 @@ public final class ArrayCollection<E> implements Collection<E> {
      */
     public ArrayCollection(final ElementCardinality elementCardinality, final E... elements) {
         this.elementCardinality = elementCardinality;
-        // TODO: Issue #14: Remove duplicate elements if DISTINCT_ELEMENTS requested.
-        this.elements = elements.clone();
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            this.elements = cloneDistinctElements(elements);
+        } else {
+            this.elements = elements.clone();
+        }
+    }
+
+    /**
+     * Returns a clone of an array, but only with distinct elements.
+     *
+     * @param source The array to clone.
+     * @return A new array containing only distinct elements from the source array.
+     */
+    private E[] cloneDistinctElements(final E[] source) {
+        int originalLength = source.length;
+        int resultLength = originalLength;
+        boolean[] duplicate = new boolean[originalLength];
+        for (int i = 0; i < originalLength; i++) {
+            if (!duplicate[i]) {
+                for (int j = i + 1; j < originalLength; j++) {
+                    if (source[i] == null && source[j] == null || source[i] != null && source[i].equals(source[j])) {
+                        duplicate[j] = true;
+                        resultLength--;
+                    }
+                }
+            }
+        }
+        Class<E[]> clazz = (Class<E[]>) source.getClass();
+        E[] result = (E[]) Array.newInstance(clazz.getComponentType(), resultLength);
+        for (int i = 0, j = 0; j < resultLength; i++, j++) {
+            while (duplicate[i]) {
+                i++;
+            }
+            result[j] = source[i];
+        }
+        return result;
     }
 
     @Override
