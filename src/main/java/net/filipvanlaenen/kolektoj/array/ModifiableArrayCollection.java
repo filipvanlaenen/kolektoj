@@ -1,12 +1,15 @@
 package net.filipvanlaenen.kolektoj.array;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
+
 import java.lang.reflect.Array;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
-import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
 /**
  * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableCollection} interface.
@@ -19,6 +22,10 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
      */
     private static final int STRIDE = 5;
     /**
+     * The element cardinality.
+     */
+    private final ElementCardinality elementCardinality;
+    /**
      * An array with the elements.
      */
     private E[] elements;
@@ -28,13 +35,28 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
     private int size;
 
     /**
-     * Constructs a collection with the given elements.
+     * Constructs a modifiable array collection with the given elements.
      *
-     * @param elements The elements of the collection.
+     * @param elements The elements of the modifiable array collection.
      */
     public ModifiableArrayCollection(final E... elements) {
-        this.elements = elements.clone();
-        size = elements.length;
+        this(DUPLICATE_ELEMENTS, elements);
+    }
+
+    /**
+     * Constructs a modifiable array collection with the given elements and element cardinality.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param elements           The elements of the modifiable array collection.
+     */
+    public ModifiableArrayCollection(final ElementCardinality elementCardinality, final E... elements) {
+        this.elementCardinality = elementCardinality;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            this.elements = ArrayUtilities.cloneDistinctElements(elements);
+        } else {
+            this.elements = elements.clone();
+        }
+        size = this.elements.length;
     }
 
     @Override
@@ -76,7 +98,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
     public boolean contains(final E element) {
         for (int i = 0; i < size; i++) {
             E e = elements[i];
-            if (e == null && element == null || e != null && e.equals(element)) {
+            if (Objects.equals(e, element)) {
                 return true;
             }
         }
@@ -91,7 +113,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
         boolean[] matches = new boolean[size];
         for (Object element : collection) {
             for (int i = 0; i < size; i++) {
-                if (!matches[i] && (element == null && elements[i] == null || elements[i].equals(element))) {
+                if (!matches[i] && Objects.equals(element, elements[i])) {
                     matches[i] = true;
                     break;
                 }
@@ -127,8 +149,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
 
     @Override
     public ElementCardinality getElementCardinality() {
-        // TODO: Auto-generated method stub
-        return null;
+        return elementCardinality;
     }
 
     @Override
@@ -160,7 +181,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
         boolean result = false;
         for (E element : collection) {
             for (int i = 0; i < size; i++) {
-                if (elements[i] == null && element == null || elements[i].equals(element)) {
+                if (Objects.equals(element, elements[i])) {
                     elements[i] = elements[size - 1];
                     size--;
                     result = true;
@@ -194,7 +215,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
         boolean[] retain = new boolean[size];
         for (E element : collection) {
             for (int i = 0; i < size; i++) {
-                if (!retain[i] && (elements[i] == null && element == null || elements[i].equals(element))) {
+                if (!retain[i] && Objects.equals(element, elements[i])) {
                     retain[i] = true;
                     break;
                 }

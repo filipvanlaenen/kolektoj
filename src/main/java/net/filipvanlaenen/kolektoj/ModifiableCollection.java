@@ -1,5 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
+import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
+import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
 /**
@@ -27,6 +29,18 @@ public interface ModifiableCollection<E> extends Collection<E> {
      */
     static <E> ModifiableCollection<E> of(final E... elements) {
         return new ModifiableArrayCollection<E>(elements);
+    }
+    
+    /**
+     * Returns a new modifiable collection with the specified element cardinality and the elements.
+     *
+     * @param <E>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param elements           The elements for the new collection.
+     * @return A new modifiable collection with the specified element cardinality and the elements.
+     */
+    static <E> ModifiableCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
+        return new ModifiableArrayCollection<E>(elementCardinality, elements);
     }
 
     /**
