@@ -182,4 +182,28 @@ public class ArrayCollectionTest {
         assertTrue(new ArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).spliterator()
                 .hasCharacteristics(Spliterator.DISTINCT));
     }
+
+    /**
+     * Verifies that containsAll returns false is the other collection is larger.
+     */
+    @Test
+    public void containsAllShouldReturnFalseIfTheOtherCollectionIsLarger() {
+        assertFalse(COLLECTION123.containsAll(COLLECTION123NULL));
+    }
+
+    /**
+     * Verifies that containsAll returns true if a collection is compared to itself.
+     */
+    @Test
+    public void containsAllShouldReturnTrueWhenComparedToItself() {
+        assertTrue(COLLECTION123.containsAll(COLLECTION123));
+    }
+
+    /**
+     * Verifies that containsAll returns false if a collection contains another element.
+     */
+    @Test
+    public void containsAllShouldReturnFalseWhenComparedToCollectionWithAnotherElement() {
+        assertFalse(COLLECTION123.containsAll(new ArrayCollection<Integer>(0, 1, 2)));
+    }
 }
