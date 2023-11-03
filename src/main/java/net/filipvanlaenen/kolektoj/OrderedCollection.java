@@ -30,6 +30,18 @@ public interface OrderedCollection<E> extends Collection<E> {
     }
 
     /**
+     * Returns a new ordered collection with the specified element cardinality and the elements.
+     *
+     * @param <E>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param elements           The elements for the new ordered collection.
+     * @return A new ordered collection with the specified element cardinality and the elements.
+     */
+    static <E> Collection<E> of(final ElementCardinality elementCardinality, final E... elements) {
+        return new OrderedArrayCollection<E>(elementCardinality, elements);
+    }
+
+    /**
      * Returns the element from the collection at the given position.
      *
      * @param index The position of the element that should be returned.

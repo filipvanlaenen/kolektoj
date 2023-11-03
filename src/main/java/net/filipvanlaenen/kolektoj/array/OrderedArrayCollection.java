@@ -1,5 +1,8 @@
 package net.filipvanlaenen.kolektoj.array;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
+
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Spliterator;
@@ -15,27 +18,13 @@ import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
  */
 public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
     /**
+     * The element cardinality.
+     */
+    private final ElementCardinality elementCardinality;
+    /**
      * An array with the elements.
      */
     private final E[] elements;
-
-    /**
-     * Constructs an ordered collection with the given elements.
-     *
-     * @param elements The elements of the collection.
-     */
-    public OrderedArrayCollection(final E... elements) {
-        this.elements = elements.clone();
-    }
-
-    /**
-     * Constructs an ordered collection from another ordered collection, with the elements in the same order.
-     *
-     * @param source The ordered collection to create a new ordered collection from.
-     */
-    public OrderedArrayCollection(final OrderedCollection<E> source) {
-        elements = source.toArray();
-    }
 
     /**
      * Constructs an ordered collection from another collection, with the elements sorted using the given comparator.
@@ -44,9 +33,44 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
      * @param comparator The comparator by which to sort the elements.
      */
     public OrderedArrayCollection(final Collection<E> source, final Comparator<E> comparator) {
+        elementCardinality = source.getElementCardinality();
         E[] array = source.toArray();
         quicksort(array, comparator, 0, array.length - 1);
         elements = array;
+    }
+
+    /**
+     * Constructs an ordered collection with the given elements. The element cardinality is defaulted to
+     * <code>DUPLICATE_ELEMENTS</code>.
+     *
+     * @param elements The elements of the collection.
+     */
+    public OrderedArrayCollection(final E... elements) {
+        this(DUPLICATE_ELEMENTS, elements);
+    }
+
+    /**
+     * Constructs an ordered collection with the given elements and element cardinality.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param elements           The elements of the collection.
+     */
+    public OrderedArrayCollection(final ElementCardinality elementCardinality, final E... elements) {
+        this.elementCardinality = elementCardinality;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            this.elements = ArrayUtilities.cloneDistinctElements(elements);
+        } else {
+            this.elements = elements.clone();
+        }
+    }
+
+    /**
+     * Constructs an ordered collection from another ordered collection, with the elements in the same order.
+     *
+     * @param source The ordered collection to create a new ordered collection from.
+     */
+    public OrderedArrayCollection(final OrderedCollection<E> source) {
+        this(source.getElementCardinality(), source.toArray());
     }
 
     @Override
@@ -102,8 +126,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
 
     @Override
     public ElementCardinality getElementCardinality() {
-        // TODO: Auto-generated method stub
-        return null;
+        return elementCardinality;
     }
 
     @Override

@@ -16,7 +16,7 @@ final class ArrayUtilities {
     }
 
     /**
-     * Returns a clone of an array, but only with distinct elements.
+     * Returns a clone of an array, but only with distinct elements. The ordered of the elements is preserved.
      *
      * @param <E>    The element type.
      * @param source The array to clone.
