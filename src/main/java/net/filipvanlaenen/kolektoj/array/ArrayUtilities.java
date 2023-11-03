@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj.array;
 
 import java.lang.reflect.Array;
+import java.util.Comparator;
 import java.util.Objects;
 
 import net.filipvanlaenen.kolektoj.Collection;
@@ -97,5 +98,76 @@ final class ArrayUtilities {
             }
         }
         return true;
+    }
+
+    /**
+     * Partitions an array for the Quicksort algorithm using the given comparator.
+     *
+     * @param <E>        The element type.
+     * @param array      The array to partition.
+     * @param comparator The comparator to use.
+     * @param first      The index of the first element in the array that should be partitioned.
+     * @param last       The index of the last element in the array that should be partitioned.
+     * @return The index of the pivot element.
+     */
+    private static <E> int partition(final E[] array, final Comparator<E> comparator, final int first, final int last) {
+        E pivot = array[last];
+        int index = first - 1;
+        for (int j = first; j < last; j++) {
+            // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+            if (comparator.compare(array[j], pivot) <= 0) {
+                swap(array, ++index, j);
+            }
+        }
+        swap(array, index + 1, last);
+        return index + 1;
+    }
+
+    /**
+     * Returns an array based on the elements of an array using the given comparator according to the Quicksort
+     * algorithm.
+     *
+     * @param <E>        The element type.
+     * @param source     The array to sort.
+     * @param comparator The comparator to use.
+     * @return The array sorted using the comparator.
+     */
+    static <E> E[] quicksort(final E[] source, final Comparator<E> comparator) {
+        E[] result = source.clone();
+        quicksort(result, comparator, 0, result.length - 1);
+        return result;
+    }
+
+    /**
+     * Sorts an array using the given comparator according to the Quicksort algorithm.
+     *
+     * @param <E>        The element type.
+     * @param array      The array to sort.
+     * @param comparator The comparator to use.
+     * @param first      The index of the first element in the array that should be sorted.
+     * @param last       The index of the last element in the array that should be sorted.
+     */
+    private static <E> void quicksort(final E[] array, final Comparator<E> comparator, final int first,
+            final int last) {
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        if (first < last) {
+            int pivotIndex = partition(array, comparator, first, last);
+            quicksort(array, comparator, first, pivotIndex - 1);
+            quicksort(array, comparator, pivotIndex + 1, last);
+        }
+    }
+
+    /**
+     * Swaps two elements in an array.
+     *
+     * @param <E>   The element type.
+     * @param array The array.
+     * @param i     The index of the first element.
+     * @param j     The index of the second element.
+     */
+    private static <E> void swap(final E[] array, final int i, final int j) {
+        E value = array[i];
+        array[i] = array[j];
+        array[j] = value;
     }
 }

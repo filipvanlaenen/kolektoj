@@ -1,9 +1,10 @@
 package net.filipvanlaenen.kolektoj.array;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Comparator;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +18,22 @@ public class ArrayUtilitiesTest {
      * The magic number three.
      */
     private static final int THREE = 3;
+    /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
+     * The magic number five.
+     */
+    private static final int FIVE = 5;
+    /**
+     * The magic number six.
+     */
+    private static final int SIX = 6;
+    /**
+     * An array containing the numbers from 1 to 6.
+     */
+    private static final Integer[] ARRAY123456 = new Integer[] {1, 2, THREE, FOUR, FIVE, SIX};
     /**
      * Collection with the integers 1, 2 and 3.
      */
@@ -113,5 +130,15 @@ public class ArrayUtilitiesTest {
     @Test
     public void containsAllShouldReturnFalseWhenComparedToCollectionWithAnotherElement() {
         assertFalse(COLLECTION123.containsAll(new ArrayCollection<Integer>(0, 1, 2)));
+    }
+
+    /**
+     * Verifies that quicksport sorts correctly. The method is tested through the constructor with comparator in the
+     * OrderedArrayCollection class.
+     */
+    @Test
+    public void constructorUsingCollectionAndNaturalOrderComparatorShouldProduceTheCorrectArray() {
+        assertArrayEquals(ARRAY123456, new OrderedArrayCollection<Integer>(Collection.of(1, FIVE, SIX, 2, FOUR, THREE),
+                Comparator.naturalOrder()).toArray());
     }
 }

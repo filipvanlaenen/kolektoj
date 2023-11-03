@@ -1,12 +1,15 @@
 package net.filipvanlaenen.kolektoj.array;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
+
 import java.lang.reflect.Array;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
-import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
 /**
  * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableOrderedCollection} interface.
@@ -19,6 +22,10 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
      */
     private static final int STRIDE = 5;
     /**
+     * The element cardinality.
+     */
+    private final ElementCardinality elementCardinality;
+    /**
      * An array with the elements.
      */
     private E[] elements;
@@ -28,13 +35,40 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     private int size;
 
     /**
-     * Constructs a collection with the given elements.
+     * Constructs a modifiable ordered array collection from another collection, with the elements sorted using the
+     * given comparator.
      *
-     * @param elements The elements of the collection.
+     * @param source     The collection to create a new ordered collection from.
+     * @param comparator The comparator by which to sort the elements.
+     */
+    public ModifiableOrderedArrayCollection(final Collection<E> source, final Comparator<E> comparator) {
+        elementCardinality = source.getElementCardinality();
+        elements = ArrayUtilities.quicksort(source.toArray(), comparator);
+    }
+
+    /**
+     * Constructs a modifiable ordered array collection with the given elements.
+     *
+     * @param elements The elements of the modifiable array collection.
      */
     public ModifiableOrderedArrayCollection(final E... elements) {
-        this.elements = elements.clone();
-        size = elements.length;
+        this(DUPLICATE_ELEMENTS, elements);
+    }
+
+    /**
+     * Constructs a modifiable ordered array collection with the given elements and element cardinality.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param elements           The elements of the modifiable ordered array collection.
+     */
+    public ModifiableOrderedArrayCollection(final ElementCardinality elementCardinality, final E... elements) {
+        this.elementCardinality = elementCardinality;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            this.elements = ArrayUtilities.cloneDistinctElements(elements);
+        } else {
+            this.elements = elements.clone();
+        }
+        size = this.elements.length;
     }
 
     @Override
@@ -174,8 +208,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public ElementCardinality getElementCardinality() {
-        // TODO: Auto-generated method stub
-        return null;
+        return elementCardinality;
     }
 
     @Override

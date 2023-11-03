@@ -30,6 +30,18 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
     }
 
     /**
+     * Returns a new modifiable ordered collection with the specified element cardinality and the elements.
+     *
+     * @param <E>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param elements           The elements for the new modifiable ordered collection.
+     * @return A new modifiable ordered collection with the specified element cardinality and the elements.
+     */
+    static <E> ModifiableCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
+        return new ModifiableOrderedArrayCollection<E>(elementCardinality, elements);
+    }
+
+    /**
      * Adds an element to this collection at a given position and returns whether it increased the size of the
      * collection.
      *
