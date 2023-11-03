@@ -35,6 +35,16 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
     private int size;
 
     /**
+     * Constructs a modifiable array collection from another collection, with the same elements and the same element
+     * cardinality.
+     *
+     * @param source The collection to create a new collection from.
+     */
+    public ModifiableArrayCollection(final Collection<E> source) {
+        this(source.getElementCardinality(), source.toArray());
+    }
+
+    /**
      * Constructs a modifiable array collection with the given elements.
      *
      * @param elements The elements of the modifiable array collection.
@@ -61,6 +71,9 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
 
     @Override
     public boolean add(final E element) {
+        if (elementCardinality == DISTINCT_ELEMENTS && contains(element)) {
+            return false;
+        }
         if (size == elements.length) {
             resizeTo(elements.length + STRIDE);
         }
@@ -73,14 +86,23 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
         if (collection.isEmpty()) {
             return false;
         }
+        int originalSize = size;
         int numberOfNewElements = collection.size();
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (size + numberOfNewElements > elements.length) {
             resizeTo(size + numberOfNewElements + STRIDE);
         }
-        System.arraycopy(collection.toArray(), 0, elements, size, numberOfNewElements);
-        size += numberOfNewElements;
-        return true;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            for (E element : collection) {
+                if (!contains(element)) {
+                    elements[size++] = element;
+                }
+            }
+        } else {
+            System.arraycopy(collection.toArray(), 0, elements, size, numberOfNewElements);
+            size += numberOfNewElements;
+        }
+        return size != originalSize;
     }
 
     @Override
@@ -250,7 +272,9 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
 
     @Override
     public Spliterator<E> spliterator() {
-        return new ArraySpliterator<E>(toArray(), Spliterator.ORDERED);
+        int characteristics =
+                Spliterator.ORDERED | (elementCardinality == DISTINCT_ELEMENTS ? Spliterator.DISTINCT : 0);
+        return new ArraySpliterator<E>(toArray(), characteristics);
     }
 
     @Override

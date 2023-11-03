@@ -8,9 +8,16 @@ import java.util.Objects;
  */
 final class ArrayUtilities {
     /**
+     * Private constructor to avoid instantiation of this utility class.
+     */
+    private ArrayUtilities() {
+    }
+
+    /**
      * Returns a clone of an array, but only with distinct elements.
      *
      * @param source The array to clone.
+     * @param <E>    The element type.
      * @return A new array containing only distinct elements from the source array.
      */
     static <E> E[] cloneDistinctElements(final E[] source) {

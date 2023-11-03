@@ -1,9 +1,13 @@
 package net.filipvanlaenen.kolektoj.array;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Spliterator;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +23,10 @@ public class ModifiableArrayCollectionTest {
      */
     private static final int THREE = 3;
     /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
      * The magic number six.
      */
     private static final int SIX = 6;
@@ -27,9 +35,18 @@ public class ModifiableArrayCollectionTest {
      */
     private static final int FIFTEEN = 15;
     /**
+     * Collection with the integers 1 and 2.
+     */
+    private static final ModifiableCollection<Integer> COLLECTION12 = new ModifiableArrayCollection<Integer>(1, 2);
+    /**
      * Collection with the integers 1, 2 and 3.
      */
     private static final ModifiableCollection<Integer> COLLECTION123 = createNewCollection();
+    /**
+     * Collection with the integers 1, 2, 3 and null.
+     */
+    private static final ModifiableCollection<Integer> COLLECTION123NULL =
+            new ModifiableArrayCollection<Integer>(1, 2, 3, null);
 
     /**
      * Creates a new collection to run the unit tests on.
@@ -61,7 +78,7 @@ public class ModifiableArrayCollectionTest {
      */
     @Test
     public void containsShouldReturnTrueForNullIfInTheCollection() {
-        assertTrue(new ModifiableArrayCollection<Integer>(1, 2, THREE, null).contains(null));
+        assertTrue(COLLECTION123NULL.contains(null));
     }
 
     /**
@@ -104,8 +121,7 @@ public class ModifiableArrayCollectionTest {
      */
     @Test
     public void toArrayShouldProduceAnArrayWithTheElementsOfTheCollection() {
-        ModifiableCollection<Integer> collection = new ModifiableArrayCollection<Integer>(1, 2);
-        Integer[] actual = collection.toArray();
+        Integer[] actual = COLLECTION12.toArray();
         assertTrue(actual.length == 2 && (actual[0] == 1 || actual[1] == 1) && (actual[0] == 2 || actual[1] == 2));
     }
 
@@ -136,6 +152,24 @@ public class ModifiableArrayCollectionTest {
     @Test
     public void addOnAnEmptyCollectionShouldReturnTrue() {
         assertTrue(new ModifiableArrayCollection<Integer>().add(1));
+    }
+
+    /**
+     * Verifies that adding a duplicate element to a collection with distinct elements returns false.
+     */
+    @Test
+    public void addDuplicateElementOnCollectionWithDistinctElementsShouldReturnFalse() {
+        ModifiableCollection<Integer> collection = new ModifiableArrayCollection<Integer>(DISTINCT_ELEMENTS, 1);
+        assertFalse(collection.add(1));
+    }
+
+    /**
+     * Verifies that adding a new element to a collection with distinct elements returns true.
+     */
+    @Test
+    public void addNewElementOnCollectionWithDistinctElementsShouldReturnTrue() {
+        ModifiableCollection<Integer> collection = new ModifiableArrayCollection<Integer>(DISTINCT_ELEMENTS, 1);
+        assertTrue(collection.add(2));
     }
 
     /**
@@ -175,7 +209,48 @@ public class ModifiableArrayCollectionTest {
      */
     @Test
     public void addAllOnAnEmptyCollectionShouldReturnTrue() {
-        assertTrue(new ModifiableArrayCollection<Integer>().addAll(Collection.of(1, 2)));
+        assertTrue(new ModifiableArrayCollection<Integer>().addAll(COLLECTION12));
+    }
+
+    /**
+     * Verifies that adding an empty collection returns false.
+     */
+    @Test
+    public void addAllWithEmptyCollectionShouldReturnFalse() {
+        assertFalse(new ModifiableArrayCollection<Integer>().addAll(new ModifiableArrayCollection<Integer>()));
+    }
+
+    /**
+     * Verifies that adding duplicate elements to a collection with distinct elements returns false.
+     */
+    @Test
+    public void addAllOfDuplicateElementsToCollectionWithDistinctElementsShouldReturnFalse() {
+        ModifiableCollection<Integer> collection =
+                new ModifiableArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, THREE);
+        assertFalse(collection.addAll(COLLECTION123));
+    }
+
+    /**
+     * Verifies that adding a collection with duplicate and new elements to a collection with distinct elements returns
+     * true.
+     */
+    @Test
+    public void addAllOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldReturnTrue() {
+        ModifiableCollection<Integer> collection =
+                new ModifiableArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, THREE);
+        assertTrue(collection.addAll(COLLECTION123NULL));
+    }
+
+    /**
+     * Verifies that adding a collection with duplicate and new elements to a collection with distinct elements
+     * increases the size correctly.
+     */
+    @Test
+    public void addAllOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldIncreaseSizeCorrectly() {
+        ModifiableCollection<Integer> collection =
+                new ModifiableArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, THREE);
+        collection.addAll(COLLECTION123NULL);
+        assertEquals(FOUR, collection.size());
     }
 
     /**
@@ -185,7 +260,7 @@ public class ModifiableArrayCollectionTest {
     @Test
     public void sizeShouldBeThreeAfterAddingCollectionWithThreeElementsToAnEmptyCollection() {
         ModifiableCollection<Integer> collection = new ModifiableArrayCollection<Integer>();
-        collection.addAll(Collection.of(1, 2, THREE));
+        collection.addAll(COLLECTION123);
         assertEquals(THREE, collection.size());
     }
 
@@ -245,5 +320,95 @@ public class ModifiableArrayCollectionTest {
         ModifiableCollection<Integer> collection = createNewCollection();
         collection.clear();
         assertTrue(collection.isEmpty());
+    }
+
+    /**
+     * Verifies that duplicate elements are removed if a collection with distinct elements is constructed.
+     */
+    @Test
+    public void constructorShouldRemoveDuplicateElementsFromDistinctCollection() {
+        ModifiableCollection<Integer> collection =
+                new ModifiableArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, 2, THREE, 2, THREE);
+        assertEquals(THREE, collection.size());
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
+        assertTrue(collection.contains(THREE));
+    }
+
+    /**
+     * Verifies that by default, a collection can contain duplicate elements.
+     */
+    @Test
+    public void constructorShouldSetElementCardinalityToDuplicateByDefault() {
+        assertEquals(DUPLICATE_ELEMENTS, new ModifiableArrayCollection<Integer>().getElementCardinality());
+    }
+
+    /**
+     * Verifies that when distinct elements are requested, the element cardinality is set to distinct elements.
+     */
+    @Test
+    public void constructorShouldSetElementCardinalityToDistinctElementsWhenSpecified() {
+        assertEquals(DISTINCT_ELEMENTS,
+                new ModifiableArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).getElementCardinality());
+    }
+
+    /**
+     * Verifies that containsAll returns false is the other collection is larger.
+     */
+    @Test
+    public void containsAllShouldReturnFalseIfTheOtherCollectionIsLarger() {
+        assertFalse(COLLECTION123.containsAll(COLLECTION123NULL));
+    }
+
+    /**
+     * Verifies that containsAll returns true if a collection is compared to itself.
+     */
+    @Test
+    public void containsAllShouldReturnTrueWhenComparedToItself() {
+        assertTrue(COLLECTION123.containsAll(COLLECTION123));
+    }
+
+    /**
+     * Verifies that containsAll returns false if a collection contains another element.
+     */
+    @Test
+    public void containsAllShouldReturnFalseWhenComparedToCollectionWithAnotherElement() {
+        assertFalse(COLLECTION123.containsAll(new ArrayCollection<Integer>(0, 1, 2)));
+    }
+
+    /**
+     * Verifies that the spliterator has the ordered flag set for collections with distinct elements.
+     */
+    @Test
+    public void spliteratorShouldSetOrderedFlagForCollectionWithDistinctElements() {
+        assertTrue(new ModifiableArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).spliterator()
+                .hasCharacteristics(Spliterator.ORDERED));
+    }
+
+    /**
+     * Verifies that the spliterator has the ordered flag set for collections with duplicate elements.
+     */
+    @Test
+    public void spliteratorShouldSetOrderedFlagForCollectionWithDuplicateElements() {
+        assertTrue(new ModifiableArrayCollection<Integer>(DUPLICATE_ELEMENTS, 1).spliterator()
+                .hasCharacteristics(Spliterator.ORDERED));
+    }
+
+    /**
+     * Verifies that the spliterator has the distinct flag not set for collections with duplicate elements.
+     */
+    @Test
+    public void spliteratorShouldNotSetDistinctFlagForCollectionWithDuplicateElements() {
+        assertFalse(new ModifiableArrayCollection<Integer>(DUPLICATE_ELEMENTS, 1).spliterator()
+                .hasCharacteristics(Spliterator.DISTINCT));
+    }
+
+    /**
+     * Verifies that the spliterator has the distinct flag set for collections with distinct elements.
+     */
+    @Test
+    public void spliteratorShouldSetDistinctFlagForCollectionWithDistinctElements() {
+        assertTrue(new ModifiableArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).spliterator()
+                .hasCharacteristics(Spliterator.DISTINCT));
     }
 }

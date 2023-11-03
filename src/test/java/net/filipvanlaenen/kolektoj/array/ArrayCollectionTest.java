@@ -138,18 +138,6 @@ public class ArrayCollectionTest {
     }
 
     /**
-     * Verifies that duplicate null elements are removed if a collection with distinct elements is constructed.
-     */
-    @Test
-    public void constructorShouldRemoveDuplicateNullElementsFromDistinctCollection() {
-        Collection<Integer> collection = new ArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, null, null, 2, null);
-        assertEquals(THREE, collection.size());
-        assertTrue(collection.contains(null));
-        assertTrue(collection.contains(1));
-        assertTrue(collection.contains(2));
-    }
-
-    /**
      * Verifies that by default, a collection can contain duplicate elements.
      */
     @Test

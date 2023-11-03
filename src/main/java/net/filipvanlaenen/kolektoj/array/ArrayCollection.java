@@ -30,8 +30,7 @@ public final class ArrayCollection<E> implements Collection<E> {
      * @param source The collection to create a new collection from.
      */
     public ArrayCollection(final Collection<E> source) {
-        elementCardinality = source.getElementCardinality();
-        elements = source.toArray();
+        this(source.getElementCardinality(), source.toArray());
     }
 
     /**
