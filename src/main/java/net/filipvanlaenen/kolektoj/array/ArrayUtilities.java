@@ -48,6 +48,26 @@ final class ArrayUtilities {
     }
 
     /**
+     * Returns true if the first <code>size</code> elements of the <code>source</code> array contain an element equal to
+     * the <code>element</code>.
+     *
+     * @param <E>      The element type.
+     * @param elements The array that should contain the elements.
+     * @param size     The number of elements to check in the source array.
+     * @param element  The element.
+     * @return True if the first <code>size</code> elements of the <code>source</code> array contain an elements equal
+     *         to the <code>element</code>, and false otherwise.
+     */
+    static <E> boolean contains(final E[] elements, final int size, final E element) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(element, elements[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns true if the first <code>size</code> elements of the <code>source</code> array contain all the elements of
      * the <code>collection</code>.
      *

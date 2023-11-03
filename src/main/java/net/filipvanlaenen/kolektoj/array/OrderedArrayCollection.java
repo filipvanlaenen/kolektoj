@@ -9,7 +9,6 @@ import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
-import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
 /**
  * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.OrderedCollection} interface.
@@ -35,6 +34,9 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
     public OrderedArrayCollection(final Collection<E> source, final Comparator<E> comparator) {
         elementCardinality = source.getElementCardinality();
         E[] array = source.toArray();
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            array = ArrayUtilities.cloneDistinctElements(array);
+        }
         quicksort(array, comparator, 0, array.length - 1);
         elements = array;
     }
@@ -75,34 +77,12 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
 
     @Override
     public boolean contains(final E element) {
-        for (E e : elements) {
-            if (e == null && element == null || e != null && e.equals(element)) {
-                return true;
-            }
-        }
-        return false;
+        return ArrayUtilities.contains(elements, elements.length, element);
     }
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        if (collection.size() > size()) {
-            return false;
-        }
-        boolean[] matches = new boolean[elements.length];
-        for (Object element : collection) {
-            for (int i = 0; i < elements.length; i++) {
-                if (!matches[i] && (element == null && elements[i] == null || elements[i].equals(element))) {
-                    matches[i] = true;
-                    break;
-                }
-            }
-        }
-        for (boolean match : matches) {
-            if (!match) {
-                return false;
-            }
-        }
-        return true;
+        return ArrayUtilities.containsAll(elements, elements.length, collection);
     }
 
     @Override
@@ -180,7 +160,9 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
 
     @Override
     public Spliterator<E> spliterator() {
-        return new ArraySpliterator<E>(elements, Spliterator.ORDERED);
+        int characteristics =
+                Spliterator.ORDERED | (elementCardinality == DISTINCT_ELEMENTS ? Spliterator.DISTINCT : 0);
+        return new ArraySpliterator<E>(elements, characteristics);
     }
 
     /**

@@ -369,24 +369,6 @@ public class ModifiableArrayCollectionTest {
     }
 
     /**
-     * Verifies that the spliterator has the ordered flag set for collections with distinct elements.
-     */
-    @Test
-    public void spliteratorShouldSetOrderedFlagForCollectionWithDistinctElements() {
-        assertTrue(new ModifiableArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).spliterator()
-                .hasCharacteristics(Spliterator.ORDERED));
-    }
-
-    /**
-     * Verifies that the spliterator has the ordered flag set for collections with duplicate elements.
-     */
-    @Test
-    public void spliteratorShouldSetOrderedFlagForCollectionWithDuplicateElements() {
-        assertTrue(new ModifiableArrayCollection<Integer>(DUPLICATE_ELEMENTS, 1).spliterator()
-                .hasCharacteristics(Spliterator.ORDERED));
-    }
-
-    /**
      * Verifies that the spliterator has the distinct flag not set for collections with duplicate elements.
      */
     @Test

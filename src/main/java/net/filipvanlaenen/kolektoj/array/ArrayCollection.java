@@ -4,7 +4,6 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
@@ -60,12 +59,7 @@ public final class ArrayCollection<E> implements Collection<E> {
 
     @Override
     public boolean contains(final E element) {
-        for (E e : elements) {
-            if (Objects.equals(e, element)) {
-                return true;
-            }
-        }
-        return false;
+        return ArrayUtilities.contains(elements, elements.length, element);
     }
 
     @Override

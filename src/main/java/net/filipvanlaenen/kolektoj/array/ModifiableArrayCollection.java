@@ -118,18 +118,12 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
 
     @Override
     public boolean contains(final E element) {
-        for (int i = 0; i < size; i++) {
-            E e = elements[i];
-            if (Objects.equals(e, element)) {
-                return true;
-            }
-        }
-        return false;
+        return ArrayUtilities.contains(elements, size, element);
     }
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        return ArrayUtilities.containsAll(this.elements, size, collection);
+        return ArrayUtilities.containsAll(elements, size, collection);
     }
 
     /**
@@ -255,9 +249,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
 
     @Override
     public Spliterator<E> spliterator() {
-        int characteristics =
-                Spliterator.ORDERED | (elementCardinality == DISTINCT_ELEMENTS ? Spliterator.DISTINCT : 0);
-        return new ArraySpliterator<E>(toArray(), characteristics);
+        return new ArraySpliterator<E>(toArray(), elementCardinality == DISTINCT_ELEMENTS ? Spliterator.DISTINCT : 0);
     }
 
     @Override
