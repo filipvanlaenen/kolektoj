@@ -1,5 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,5 +25,13 @@ public class OrderedCollectionTest {
     @Test
     public void isEmptyShouldReturnFalseForACollectionContainingAnElement() {
         assertFalse(OrderedCollection.of(1).isEmpty());
+    }
+
+    /**
+     * Verifies that an ordered collection with a specific element cardinality receives that element cardinality.
+     */
+    @Test
+    public void ofWithElementCardinalityShouldReturnACollectionWithTheElementCardinality() {
+        assertEquals(DISTINCT_ELEMENTS, OrderedCollection.of(DISTINCT_ELEMENTS, 1).getElementCardinality());
     }
 }
