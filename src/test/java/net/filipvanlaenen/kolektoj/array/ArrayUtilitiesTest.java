@@ -53,6 +53,42 @@ public class ArrayUtilitiesTest {
     }
 
     /**
+     * Verifies that contains returns true for an element in the collection. The method is tested through the contains
+     * method in the ArrayCollection class.
+     */
+    @Test
+    public void containsShouldReturnTrueForAnElementInTheCollection() {
+        assertTrue(COLLECTION123.contains(1));
+    }
+
+    /**
+     * Verifies that contains returns true for null if it's in the collection. The method is tested through the contains
+     * method in the ArrayCollection class.
+     */
+    @Test
+    public void containsShouldReturnTrueForNullIfInTheCollection() {
+        assertTrue(COLLECTION123NULL.contains(null));
+    }
+
+    /**
+     * Verifies that contains returns false for an element not in the collection. The method is tested through the
+     * contains method in the ArrayCollection class.
+     */
+    @Test
+    public void containsShouldReturnFalseForAnElementNotInTheCollection() {
+        assertFalse(COLLECTION123.contains(0));
+    }
+
+    /**
+     * Verifies that contains returns false for null if it isn't in the collection. The method is tested through the
+     * contains method in the ArrayCollection class.
+     */
+    @Test
+    public void containsShouldReturnFalseForNullIfNotInTheTheCollection() {
+        assertFalse(COLLECTION123.contains(null));
+    }
+
+    /**
      * Verifies that containsAll returns false is the other collection is larger. The method is tested through the
      * containsAll method in the ArrayCollection class.
      */

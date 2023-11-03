@@ -74,27 +74,11 @@ public class ModifiableArrayCollectionTest {
     }
 
     /**
-     * Verifies that contains returns true for null if it's in the collection.
-     */
-    @Test
-    public void containsShouldReturnTrueForNullIfInTheCollection() {
-        assertTrue(COLLECTION123NULL.contains(null));
-    }
-
-    /**
      * Verifies that contains returns false for an element not in the collection.
      */
     @Test
     public void containsShouldReturnFalseForAnElementNotInTheCollection() {
         assertFalse(COLLECTION123.contains(0));
-    }
-
-    /**
-     * Verifies that contains returns false for null if it isn't in the collection.
-     */
-    @Test
-    public void containsShouldReturnFalseForNullIfNotInTheTheCollection() {
-        assertFalse(COLLECTION123.contains(null));
     }
 
     /**
