@@ -73,6 +73,9 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public boolean add(final E element) {
+        if (elementCardinality == DISTINCT_ELEMENTS && contains(element)) {
+            return false;
+        }
         if (size == elements.length) {
             resizeTo(elements.length + STRIDE);
         }
@@ -85,6 +88,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         if (collection.isEmpty()) {
             return false;
         }
+        // TODO: Element cardinality
         int numberOfNewElements = collection.size();
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (size + numberOfNewElements > elements.length) {
@@ -104,6 +108,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
             if (collection.isEmpty()) {
                 return false;
             }
+            // TODO: Element cardinality
             int numberOfNewElements = collection.size();
             // EQMU: Changing the conditional boundary below produces an equivalent mutant.
             if (size + numberOfNewElements > elements.length) {
@@ -122,6 +127,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
             throw new IndexOutOfBoundsException(
                     "Cannot add an element at a position beyond the size of the collection.");
         } else {
+            // TODO: Element cardinality
             if (size == elements.length) {
                 resizeTo(elements.length + STRIDE);
             }
@@ -145,35 +151,12 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public boolean contains(final E element) {
-        for (int i = 0; i < size; i++) {
-            E e = elements[i];
-            if (e == null && element == null || e != null && e.equals(element)) {
-                return true;
-            }
-        }
-        return false;
+        return ArrayUtilities.contains(elements, size, element);
     }
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        if (collection.size() > size) {
-            return false;
-        }
-        boolean[] matches = new boolean[size];
-        for (Object element : collection) {
-            for (int i = 0; i < size; i++) {
-                if (!matches[i] && (element == null && elements[i] == null || elements[i].equals(element))) {
-                    matches[i] = true;
-                    break;
-                }
-            }
-        }
-        for (boolean match : matches) {
-            if (!match) {
-                return false;
-            }
-        }
-        return true;
+        return ArrayUtilities.containsAll(elements, size, collection);
     }
 
     /**
@@ -321,7 +304,9 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public Spliterator<E> spliterator() {
-        return new ArraySpliterator<E>(toArray(), Spliterator.ORDERED);
+        int characteristics =
+                Spliterator.ORDERED | (elementCardinality == DISTINCT_ELEMENTS ? Spliterator.DISTINCT : 0);
+        return new ArraySpliterator<E>(toArray(), characteristics);
     }
 
     @Override
