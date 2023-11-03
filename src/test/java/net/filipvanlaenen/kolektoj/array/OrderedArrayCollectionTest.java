@@ -2,12 +2,17 @@ package net.filipvanlaenen.kolektoj.array;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
+
 import java.util.Comparator;
+import java.util.Spliterator;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.OrderedArrayCollection} class.
@@ -40,7 +45,12 @@ public class OrderedArrayCollectionTest {
     /**
      * Ordered array collection with the integers 1, 2 and 3.
      */
-    private static final OrderedArrayCollection<Integer> COLLECTION123 = new OrderedArrayCollection<Integer>(1, 2, 3);
+    private static final OrderedCollection<Integer> COLLECTION123 = new OrderedArrayCollection<Integer>(1, 2, 3);
+    /**
+     * Ordered array collection with the integers 1, 2, 3 and null.
+     */
+    private static final OrderedCollection<Integer> COLLECTION123NULL =
+            new OrderedArrayCollection<Integer>(1, 2, 3, null);
 
     /**
      * Verifies that the correct length is returned for a collection with three elements.
@@ -64,6 +74,22 @@ public class OrderedArrayCollectionTest {
     @Test
     public void containsShouldReturnFalseForAnElementNotInTheCollection() {
         assertFalse(COLLECTION123.contains(0));
+    }
+
+    /**
+     * Verifies that containsAll returns false is the other collection is larger.
+     */
+    @Test
+    public void containsAllShouldReturnFalseIfTheOtherCollectionIsLarger() {
+        assertFalse(COLLECTION123.containsAll(COLLECTION123NULL));
+    }
+
+    /**
+     * Verifies that containsAll returns true if a collection is compared to itself.
+     */
+    @Test
+    public void containsAllShouldReturnTrueWhenComparedToItself() {
+        assertTrue(COLLECTION123.containsAll(COLLECTION123));
     }
 
     /**
@@ -126,6 +152,32 @@ public class OrderedArrayCollectionTest {
     }
 
     /**
+     * Verifies that the spliterator has the ordered flag set.
+     */
+    @Test
+    public void spliteratorShouldSetOrderedFlag() {
+        assertTrue(COLLECTION123.spliterator().hasCharacteristics(Spliterator.ORDERED));
+    }
+
+    /**
+     * Verifies that the spliterator has the distinct flag not set for collections with duplicate elements.
+     */
+    @Test
+    public void spliteratorShouldNotSetDistinctFlagForCollectionWithDuplicateElements() {
+        assertFalse(new OrderedArrayCollection<Integer>(DUPLICATE_ELEMENTS, 1).spliterator()
+                .hasCharacteristics(Spliterator.DISTINCT));
+    }
+
+    /**
+     * Verifies that the spliterator has the distinct flag set for collections with distinct elements.
+     */
+    @Test
+    public void spliteratorShouldSetDistinctFlagForCollectionWithDistinctElements() {
+        assertTrue(new OrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).spliterator()
+                .hasCharacteristics(Spliterator.DISTINCT));
+    }
+
+    /**
      * Verifies that the collection produces a stream that collects to the correct string, thus verifying that the
      * spliterator is created correctly.
      */
@@ -150,5 +202,28 @@ public class OrderedArrayCollectionTest {
     public void constructorUsingCollectionAndNaturalOrderComparatorShouldProduceTheCorrectArray() {
         assertArrayEquals(ARRAY123456, new OrderedArrayCollection<Integer>(Collection.of(1, FIVE, SIX, 2, FOUR, THREE),
                 Comparator.naturalOrder()).toArray());
+    }
+
+    /**
+     * Verifies that the constructor using a comparator transfers the element cardinality correctly.
+     */
+    @Test
+    public void constructorUsingCollectionAndNaturalOrderComparatorShouldTransferElementCardinality() {
+        assertEquals(DISTINCT_ELEMENTS,
+                new OrderedArrayCollection<Integer>(Collection.of(DISTINCT_ELEMENTS, 1, FIVE, SIX, 2, FOUR, THREE),
+                        Comparator.naturalOrder()).getElementCardinality());
+    }
+
+    /**
+     * Verifies that duplicate elements are removed if a collection with distinct elements is constructed.
+     */
+    @Test
+    public void constructorShouldRemoveDuplicateElementsFromDistinctCollection() {
+        OrderedCollection<Integer> collection =
+                new OrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, 2, THREE, 2, THREE);
+        assertEquals(THREE, collection.size());
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
+        assertTrue(collection.contains(THREE));
     }
 }

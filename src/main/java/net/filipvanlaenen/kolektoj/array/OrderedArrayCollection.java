@@ -34,9 +34,6 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
     public OrderedArrayCollection(final Collection<E> source, final Comparator<E> comparator) {
         elementCardinality = source.getElementCardinality();
         E[] array = source.toArray();
-        if (elementCardinality == DISTINCT_ELEMENTS) {
-            array = ArrayUtilities.cloneDistinctElements(array);
-        }
         quicksort(array, comparator, 0, array.length - 1);
         elements = array;
     }
