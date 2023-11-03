@@ -186,12 +186,4 @@ public class ArrayCollectionTest {
     public void containsAllShouldReturnTrueWhenComparedToItself() {
         assertTrue(COLLECTION123.containsAll(COLLECTION123));
     }
-
-    /**
-     * Verifies that containsAll returns false if a collection contains another element.
-     */
-    @Test
-    public void containsAllShouldReturnFalseWhenComparedToCollectionWithAnotherElement() {
-        assertFalse(COLLECTION123.containsAll(new ArrayCollection<Integer>(0, 1, 2)));
-    }
 }

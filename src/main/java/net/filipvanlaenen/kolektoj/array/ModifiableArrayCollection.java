@@ -129,24 +129,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        if (collection.size() > size) {
-            return false;
-        }
-        boolean[] matches = new boolean[size];
-        for (Object element : collection) {
-            for (int i = 0; i < size; i++) {
-                if (!matches[i] && Objects.equals(element, elements[i])) {
-                    matches[i] = true;
-                    break;
-                }
-            }
-        }
-        for (boolean match : matches) {
-            if (!match) {
-                return false;
-            }
-        }
-        return true;
+        return ArrayUtilities.containsAll(this.elements, size, collection);
     }
 
     /**

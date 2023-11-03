@@ -70,24 +70,7 @@ public final class ArrayCollection<E> implements Collection<E> {
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        if (collection.size() > size()) {
-            return false;
-        }
-        boolean[] matches = new boolean[elements.length];
-        for (Object element : collection) {
-            for (int i = 0; i < elements.length; i++) {
-                if (!matches[i] && Objects.equals(element, elements[i])) {
-                    matches[i] = true;
-                    break;
-                }
-            }
-        }
-        for (boolean match : matches) {
-            if (!match) {
-                return false;
-            }
-        }
-        return true;
+        return ArrayUtilities.containsAll(this.elements, elements.length, collection);
     }
 
     @Override

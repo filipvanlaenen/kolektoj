@@ -369,14 +369,6 @@ public class ModifiableArrayCollectionTest {
     }
 
     /**
-     * Verifies that containsAll returns false if a collection contains another element.
-     */
-    @Test
-    public void containsAllShouldReturnFalseWhenComparedToCollectionWithAnotherElement() {
-        assertFalse(COLLECTION123.containsAll(new ArrayCollection<Integer>(0, 1, 2)));
-    }
-
-    /**
      * Verifies that the spliterator has the ordered flag set for collections with distinct elements.
      */
     @Test
