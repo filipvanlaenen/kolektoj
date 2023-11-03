@@ -403,4 +403,45 @@ public class ModifiableArrayCollectionTest {
         assertTrue(new ModifiableArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).spliterator()
                 .hasCharacteristics(Spliterator.DISTINCT));
     }
+
+    /**
+     * Verifies that when all elements are removed, a collection is empty.
+     */
+    @Test
+    public void removeAllCollectionWithTheSameElementsShouldMakeCollectionEmpty() {
+        ModifiableCollection<Integer> collection = createNewCollection();
+        collection.removeAll(COLLECTION123);
+        assertTrue(collection.isEmpty());
+    }
+
+    /**
+     * Verifies that when some elements are removed, removeAll returns true.
+     */
+    @Test
+    public void removeAllShouldReturnTrueWhenSomeElementsAreRemoved() {
+        ModifiableCollection<Integer> collection = createNewCollection();
+        assertTrue(collection.removeAll(COLLECTION12));
+    }
+
+    /**
+     * Verifies that when no elements are removed, removeAll returns false.
+     */
+    @Test
+    public void removeAllShouldReturnFalseWhenNoElementsAreRemoved() {
+        ModifiableCollection<Integer> collection = createNewCollection();
+        assertFalse(collection.removeAll(new ModifiableArrayCollection<Integer>(FOUR)));
+    }
+
+    /**
+     * Verifies that not all duplicate elements are removed by removeAll.
+     */
+    @Test
+    public void removeAllShouldNotRemoveDuplicateElements() {
+        ModifiableCollection<Integer> collection =
+                new ModifiableArrayCollection<Integer>(DUPLICATE_ELEMENTS, 0, 1, 1, 2, 2);
+        collection.removeAll(new ModifiableArrayCollection<Integer>(0, 1, 2));
+        assertEquals(2, collection.size());
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
+    }
 }
