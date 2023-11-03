@@ -408,7 +408,7 @@ public class ModifiableArrayCollectionTest {
      * Verifies that when all elements are removed, a collection is empty.
      */
     @Test
-    public void removeAllCollectionWithTheSameElementsShouldMakeCollectionEmpty() {
+    public void removeAllWithTheSameElementsShouldMakeCollectionEmpty() {
         ModifiableCollection<Integer> collection = createNewCollection();
         collection.removeAll(COLLECTION123);
         assertTrue(collection.isEmpty());
@@ -443,5 +443,46 @@ public class ModifiableArrayCollectionTest {
         assertEquals(2, collection.size());
         assertTrue(collection.contains(1));
         assertTrue(collection.contains(2));
+    }
+
+    /**
+     * Verifies that when some elements are removed, retainAll returns true.
+     */
+    @Test
+    public void retainAllShouldReturnTrueWhenSomeElementsAreRemoved() {
+        ModifiableCollection<Integer> collection = createNewCollection();
+        assertTrue(collection.retainAll(COLLECTION12));
+    }
+
+    /**
+     * Verifies that when no elements are removed, retainAll returns false.
+     */
+    @Test
+    public void retainAllShouldReturnFalseWhenNoElementsAreRemoved() {
+        ModifiableCollection<Integer> collection = createNewCollection();
+        assertFalse(collection.retainAll(COLLECTION123));
+    }
+
+    /**
+     * Verifies that when all elements are retained, a collection is empty.
+     */
+    @Test
+    public void retainAllWithTheSameElementsShouldNotRemoveElements() {
+        ModifiableCollection<Integer> collection = createNewCollection();
+        collection.retainAll(COLLECTION123);
+        assertEquals(THREE, collection.size());
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
+        assertTrue(collection.contains(THREE));
+    }
+
+    /**
+     * Verifies that when only absent elements should be retained, retainAll empties the collection.
+     */
+    @Test
+    public void retainAllWithAbsentElementsOnlyClearsTheCollection() {
+        ModifiableCollection<Integer> collection = createNewCollection();
+        collection.retainAll(new ModifiableArrayCollection<Integer>(FOUR));
+        assertTrue(collection.isEmpty());
     }
 }
