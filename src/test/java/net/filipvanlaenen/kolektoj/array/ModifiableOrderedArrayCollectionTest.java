@@ -1,9 +1,8 @@
 package net.filipvanlaenen.kolektoj.array;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -160,6 +159,26 @@ public class ModifiableOrderedArrayCollectionTest {
     }
 
     /**
+     * Verifies that adding a duplicate element to a collection with distinct elements returns false.
+     */
+    @Test
+    public void addDuplicateElementOnCollectionWithDistinctElementsShouldReturnFalse() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1);
+        assertFalse(collection.add(1));
+    }
+
+    /**
+     * Verifies that adding a new element to a collection with distinct elements returns true.
+     */
+    @Test
+    public void addNewElementOnCollectionWithDistinctElementsShouldReturnTrue() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1);
+        assertTrue(collection.add(2));
+    }
+
+    /**
      * Verifies that trying to add an element at an index beyond the size of the collection throws
      * IndexOutOfBoundsException.
      */
@@ -230,6 +249,26 @@ public class ModifiableOrderedArrayCollectionTest {
         ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>();
         collection.addAt(0, 1);
         assertEquals(1, collection.size());
+    }
+
+    /**
+     * Verifies that adding a duplicate element at zero to a collection with distinct elements returns false.
+     */
+    @Test
+    public void addAtZeroDuplicateElementOnCollectionWithDistinctElementsShouldReturnFalse() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1);
+        assertFalse(collection.addAt(0, 1));
+    }
+
+    /**
+     * Verifies that adding a new element at zero to a collection with distinct elements returns true.
+     */
+    @Test
+    public void addAtZeroNewElementOnCollectionWithDistinctElementsShouldReturnTrue() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1);
+        assertTrue(collection.addAt(1, 2));
     }
 
     /**
@@ -417,5 +456,33 @@ public class ModifiableOrderedArrayCollectionTest {
         ModifiableOrderedCollection<Integer> collection = createNewCollection();
         collection.clear();
         assertTrue(collection.isEmpty());
+    }
+
+    /**
+     * Verifies that duplicate elements are removed if a collection with distinct elements is constructed.
+     */
+    @Test
+    public void constructorShouldRemoveDuplicateElementsFromDistinctCollection() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, 2, THREE, 2, THREE);
+        Integer[] expected = new Integer[] {1, 2, THREE};
+        assertArrayEquals(expected, collection.toArray());
+    }
+
+    /**
+     * Verifies that by default, a collection can contain duplicate elements.
+     */
+    @Test
+    public void constructorShouldSetElementCardinalityToDuplicateByDefault() {
+        assertEquals(DUPLICATE_ELEMENTS, new ModifiableOrderedArrayCollection<Integer>().getElementCardinality());
+    }
+
+    /**
+     * Verifies that when distinct elements are requested, the element cardinality is set to distinct elements.
+     */
+    @Test
+    public void constructorShouldSetElementCardinalityToDistinctElementsWhenSpecified() {
+        assertEquals(DISTINCT_ELEMENTS,
+                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).getElementCardinality());
     }
 }

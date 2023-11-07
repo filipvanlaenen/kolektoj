@@ -127,7 +127,9 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
             throw new IndexOutOfBoundsException(
                     "Cannot add an element at a position beyond the size of the collection.");
         } else {
-            // TODO: Element cardinality
+            if (elementCardinality == DISTINCT_ELEMENTS && contains(element)) {
+                return false;
+            }
             if (size == elements.length) {
                 resizeTo(elements.length + STRIDE);
             }
