@@ -554,8 +554,8 @@ public class ModifiableOrderedArrayCollectionTest {
     public void removeAllShouldNotRemoveDuplicateElements() {
         ModifiableOrderedCollection<Integer> collection =
                 new ModifiableOrderedArrayCollection<Integer>(DUPLICATE_ELEMENTS, 0, 1, 1, 2, 2, THREE);
-        collection.removeAll(new ArrayCollection<Integer>(0, 1, 2));
-        assertArrayEquals(new Integer[] {1, 2, THREE}, collection.toArray());
+        collection.removeAll(new ArrayCollection<Integer>(0, 1, 2, 2));
+        assertArrayEquals(new Integer[] {1, THREE}, collection.toArray());
     }
 
     /**
@@ -718,7 +718,18 @@ public class ModifiableOrderedArrayCollectionTest {
     @Test
     public void retainAllWithAbsentElementsOnlyClearsTheCollection() {
         ModifiableOrderedCollection<Integer> collection = createNewCollection();
-        collection.retainAll(new ModifiableOrderedArrayCollection<Integer>(FOUR));
+        collection.retainAll(new ArrayCollection<Integer>(FOUR));
         assertTrue(collection.isEmpty());
+    }
+
+    /**
+     * Verifies that retainAll doesn't retain all duplicate elements.
+     */
+    @Test
+    public void retainAllShouldNotRetainAllDuplicateElements() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DUPLICATE_ELEMENTS, 0, 1, 1, 2, THREE, THREE);
+        collection.retainAll(new ArrayCollection<Integer>(DUPLICATE_ELEMENTS, 0, 1, 2, THREE, THREE));
+        assertArrayEquals(new Integer[] {0, 1, 2, THREE, THREE}, collection.toArray());
     }
 }

@@ -446,7 +446,7 @@ public class ModifiableArrayCollectionTest {
     @Test
     public void retainAllWithAbsentElementsOnlyClearsTheCollection() {
         ModifiableCollection<Integer> collection = createNewCollection();
-        collection.retainAll(new ModifiableArrayCollection<Integer>(FOUR));
+        collection.retainAll(new ArrayCollection<Integer>(FOUR));
         assertTrue(collection.isEmpty());
     }
 }
