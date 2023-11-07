@@ -6,6 +6,7 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICAT
 import java.lang.reflect.Array;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
@@ -248,7 +249,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         boolean result = false;
         for (E element : collection) {
             for (int i = 0; i < size; i++) {
-                if (elements[i] == null && element == null || elements[i] != null && elements[i].equals(element)) {
+                if (Objects.equals(element, elements[i])) {
                     System.arraycopy(elements, i + 1, elements, i, size - i - 1);
                     size--;
                     result = true;
@@ -302,7 +303,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         boolean[] retain = new boolean[size];
         for (E element : collection) {
             for (int i = 0; i < size; i++) {
-                if (!retain[i] && (elements[i] == null && element == null || elements[i].equals(element))) {
+                if (!retain[i] && Objects.equals(element, elements[i])) {
                     retain[i] = true;
                     break;
                 }

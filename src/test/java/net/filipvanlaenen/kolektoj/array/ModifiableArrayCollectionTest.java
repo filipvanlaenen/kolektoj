@@ -393,7 +393,7 @@ public class ModifiableArrayCollectionTest {
     @Test
     public void removeAllShouldReturnFalseWhenNoElementsAreRemoved() {
         ModifiableCollection<Integer> collection = createNewCollection();
-        assertFalse(collection.removeAll(new ModifiableArrayCollection<Integer>(FOUR)));
+        assertFalse(collection.removeAll(new ArrayCollection<Integer>(FOUR)));
     }
 
     /**
@@ -403,7 +403,7 @@ public class ModifiableArrayCollectionTest {
     public void removeAllShouldNotRemoveDuplicateElements() {
         ModifiableCollection<Integer> collection =
                 new ModifiableArrayCollection<Integer>(DUPLICATE_ELEMENTS, 0, 1, 1, 2, 2);
-        collection.removeAll(new ModifiableArrayCollection<Integer>(0, 1, 2));
+        collection.removeAll(new ArrayCollection<Integer>(0, 1, 2));
         assertEquals(2, collection.size());
         assertTrue(collection.contains(1));
         assertTrue(collection.contains(2));

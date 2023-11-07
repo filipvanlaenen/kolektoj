@@ -38,6 +38,11 @@ public class ModifiableOrderedArrayCollectionTest {
      */
     private static final Integer[] ARRAY123456 = new Integer[] {1, 2, THREE, FOUR, FIVE, SIX};
     /**
+     * Collection with the integers 1 and 2.
+     */
+    private static final ModifiableOrderedCollection<Integer> COLLECTION12 =
+            new ModifiableOrderedArrayCollection<Integer>(1, 2);
+    /**
      * Collection with the integers 1, 2 and 3.
      */
     private static final ModifiableOrderedCollection<Integer> COLLECTION123 = createNewCollection();
@@ -94,6 +99,22 @@ public class ModifiableOrderedArrayCollectionTest {
     @Test
     public void containsShouldReturnFalseForNullIfNotInTheTheCollection() {
         assertFalse(COLLECTION123.contains(null));
+    }
+
+    /**
+     * Verifies that containsAll returns false is the other collection is larger.
+     */
+    @Test
+    public void containsAllShouldReturnFalseIfTheOtherCollectionIsLarger() {
+        assertFalse(COLLECTION123.containsAll(COLLECTION123NULL));
+    }
+
+    /**
+     * Verifies that containsAll returns true if a collection is compared to itself.
+     */
+    @Test
+    public void containsAllShouldReturnTrueWhenComparedToItself() {
+        assertTrue(COLLECTION123.containsAll(COLLECTION123));
     }
 
     /**
@@ -509,6 +530,35 @@ public class ModifiableOrderedArrayCollectionTest {
     }
 
     /**
+     * Verifies that when some elements are removed, removeAll returns true.
+     */
+    @Test
+    public void removeAllShouldReturnTrueWhenSomeElementsAreRemoved() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        assertTrue(collection.removeAll(COLLECTION12));
+    }
+
+    /**
+     * Verifies that when no elements are removed, removeAll returns false.
+     */
+    @Test
+    public void removeAllShouldReturnFalseWhenNoElementsAreRemoved() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        assertFalse(collection.removeAll(new ArrayCollection<Integer>(FOUR)));
+    }
+
+    /**
+     * Verifies that not all duplicate elements are removed by removeAll.
+     */
+    @Test
+    public void removeAllShouldNotRemoveDuplicateElements() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DUPLICATE_ELEMENTS, 0, 1, 1, 2, 2, THREE);
+        collection.removeAll(new ArrayCollection<Integer>(0, 1, 2));
+        assertArrayEquals(new Integer[] {1, 2, THREE}, collection.toArray());
+    }
+
+    /**
      * Verifies that trying to remove an element at an index beyond the size of the collection throws
      * IndexOutOfBoundsException.
      */
@@ -632,5 +682,43 @@ public class ModifiableOrderedArrayCollectionTest {
     public void spliteratorShouldSetDistinctFlagForCollectionWithDistinctElements() {
         assertTrue(new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).spliterator()
                 .hasCharacteristics(Spliterator.DISTINCT));
+    }
+
+    /**
+     * Verifies that when some elements are removed, retainAll returns true.
+     */
+    @Test
+    public void retainAllShouldReturnTrueWhenSomeElementsAreRemoved() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        assertTrue(collection.retainAll(COLLECTION12));
+    }
+
+    /**
+     * Verifies that when no elements are removed, retainAll returns false.
+     */
+    @Test
+    public void retainAllShouldReturnFalseWhenNoElementsAreRemoved() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        assertFalse(collection.retainAll(COLLECTION123));
+    }
+
+    /**
+     * Verifies that when all elements are retained, a collection is empty.
+     */
+    @Test
+    public void retainAllWithTheSameElementsShouldNotRemoveElements() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        collection.retainAll(COLLECTION123);
+        assertArrayEquals(new Integer[] {1, 2, THREE}, collection.toArray());
+    }
+
+    /**
+     * Verifies that when only absent elements should be retained, retainAll empties the collection.
+     */
+    @Test
+    public void retainAllWithAbsentElementsOnlyClearsTheCollection() {
+        ModifiableOrderedCollection<Integer> collection = createNewCollection();
+        collection.retainAll(new ModifiableOrderedArrayCollection<Integer>(FOUR));
+        assertTrue(collection.isEmpty());
     }
 }
