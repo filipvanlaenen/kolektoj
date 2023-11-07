@@ -2,12 +2,12 @@ package net.filipvanlaenen.kolektoj.hash;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
-import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
@@ -58,10 +58,9 @@ public final class HashMap<K, V> implements Map<K, V> {
             if (entry == null) {
                 throw new IllegalArgumentException("Map entries can't be null.");
             }
-            K key = entry.key();
-            int i = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+            int i = HashUtilities.hash(entry.key(), hashedEntriesSize);
             while (hashedArray[i] != null) {
-                i = (i + 1) % hashedEntriesSize;
+                i = Math.floorMod(i + 1, hashedEntriesSize);
             }
             hashedArray[i] = entry;
         }
@@ -73,13 +72,12 @@ public final class HashMap<K, V> implements Map<K, V> {
         if (hashedEntriesSize == 0) {
             return false;
         }
-        K key = entry.key();
-        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+        int index = HashUtilities.hash(entry.key(), hashedEntriesSize);
         while (hashedEntries[index] != null) {
             if (hashedEntries[index].equals(entry)) {
                 return true;
             }
-            index = (index + 1) % hashedEntriesSize;
+            index = Math.floorMod(index + 1, hashedEntriesSize);
         }
         return false;
     }
@@ -92,7 +90,7 @@ public final class HashMap<K, V> implements Map<K, V> {
         boolean[] matches = new boolean[entries.length];
         for (Object element : collection) {
             for (int i = 0; i < entries.length; i++) {
-                if (!matches[i] && (element == null && entries[i] == null || entries[i].equals(element))) {
+                if (!matches[i] && Objects.equals(element, entries[i])) {
                     matches[i] = true;
                     break;
                 }
@@ -151,13 +149,13 @@ public final class HashMap<K, V> implements Map<K, V> {
         if (hashedEntriesSize == 0) {
             return -1;
         }
-        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+        int index = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[index] != null) {
             K k = hashedEntries[index].key();
-            if (k == null && key == null || k != null && k.equals(key)) {
+            if (Objects.equals(k, key)) {
                 return index;
             }
-            index = (index + 1) % hashedEntriesSize;
+            index = Math.floorMod(index + 1, hashedEntriesSize);
         }
         return -1;
     }
@@ -173,14 +171,14 @@ public final class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public Collection<V> getAll(final K key) throws IllegalArgumentException {
-        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+        int index = HashUtilities.hash(key, hashedEntriesSize);
         ModifiableCollection<V> result = ModifiableCollection.empty();
         while (hashedEntries[index] != null) {
             K k = hashedEntries[index].key();
-            if (k == null && key == null || k != null && k.equals(key)) {
+            if (Objects.equals(k, key)) {
                 result.add(hashedEntries[index].value());
             }
-            index = (index + 1) % hashedEntriesSize;
+            index = Math.floorMod(index + 1, hashedEntriesSize);
         }
         if (result.isEmpty()) {
             throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");

@@ -2,13 +2,13 @@ package net.filipvanlaenen.kolektoj.hash;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
-import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
@@ -85,9 +85,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             K key = entry.key();
             keys.add(key);
             values.add(entry.value());
-            int i = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+            int i = HashUtilities.hash(key, hashedEntriesSize);
             while (hashedArray[i] != null) {
-                i = (i + 1) % hashedEntriesSize;
+                i = Math.floorMod(i + 1, hashedEntriesSize);
             }
             hashedArray[i] = entry;
         }
@@ -105,9 +105,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         if (size * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
             resizeHashedEntriesTo(size * HASHING_RATIO);
         }
-        int i = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+        int i = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[i] != null) {
-            i = (i + 1) % hashedEntriesSize;
+            i = Math.floorMod(i + 1, hashedEntriesSize);
         }
         hashedEntries[i] = entry;
         keys.add(key);
@@ -135,9 +135,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             V value = entry.value();
             Entry<K, V> newEntry = new Entry<K, V>(key, value);
             entries[size + i] = newEntry;
-            int j = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+            int j = HashUtilities.hash(key, hashedEntriesSize);
             while (hashedEntries[j] != null) {
-                j = (j + 1) % hashedEntriesSize;
+                j = Math.floorMod(j + 1, hashedEntriesSize);
             }
             hashedEntries[j] = newEntry;
             keys.add(key);
@@ -176,7 +176,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         boolean[] matches = new boolean[size];
         for (Object element : collection) {
             for (int i = 0; i < size; i++) {
-                if (!matches[i] && (element == null && entries[i] == null || entries[i].equals(element))) {
+                if (!matches[i] && Objects.equals(element, entries[i])) {
                     matches[i] = true;
                     break;
                 }
@@ -221,13 +221,12 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         if (hashedEntriesSize == 0) {
             return -1;
         }
-        K key = entry.key();
-        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+        int index = HashUtilities.hash(entry.key(), hashedEntriesSize);
         while (hashedEntries[index] != null) {
             if (hashedEntries[index].equals(entry)) {
                 return index;
             }
-            index = (index + 1) % hashedEntriesSize;
+            index = Math.floorMod(index + 1, hashedEntriesSize);
         }
         return -1;
     }
@@ -242,13 +241,13 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         if (hashedEntriesSize == 0) {
             return -1;
         }
-        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+        int index = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[index] != null) {
             K k = hashedEntries[index].key();
-            if (k == null && key == null || k != null && k.equals(key)) {
+            if (Objects.equals(k, key)) {
                 return index;
             }
-            index = (index + 1) % hashedEntriesSize;
+            index = Math.floorMod(index + 1, hashedEntriesSize);
         }
         return -1;
     }
@@ -274,13 +273,13 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     @Override
     public Collection<V> getAll(final K key) throws IllegalArgumentException {
         ModifiableCollection<V> result = ModifiableCollection.empty();
-        int index = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+        int index = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[index] != null) {
             K k = hashedEntries[index].key();
-            if (k == null && key == null || k != null && k.equals(key)) {
+            if (Objects.equals(k, key)) {
                 result.add(hashedEntries[index].value());
             }
-            index = (index + 1) % hashedEntriesSize;
+            index = Math.floorMod(index + 1, hashedEntriesSize);
         }
         if (result.isEmpty()) {
             throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
@@ -332,7 +331,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             resizeEntriesTo(size + STRIDE);
         }
         hashedEntries[index] = null;
-        if (hashedEntries[(index + 1) % hashedEntriesSize] != null
+        if (hashedEntries[Math.floorMod(index + 1, hashedEntriesSize)] != null
                 || size * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
             resizeHashedEntriesTo(size * HASHING_RATIO);
         }
@@ -358,7 +357,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
                 }
             }
             hashedEntries[index] = null;
-            if (hashedEntries[(index + 1) % hashedEntriesSize] != null) {
+            if (hashedEntries[Math.floorMod(index + 1, hashedEntriesSize)] != null) {
                 resizeHashedEntriesTo(size * HASHING_RATIO);
             }
             keys.remove(entry.key());
@@ -400,10 +399,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
         for (int i = 0; i < size; i++) {
             Entry<K, V> entry = entries[i];
-            K key = entry.key();
-            int j = key == null ? 0 : key.hashCode() % hashedEntriesSize;
+            int j = HashUtilities.hash(entry.key(), hashedEntriesSize);
             while (hashedArray[j] != null) {
-                j = (j + 1) % hashedEntriesSize;
+                j = Math.floorMod(j + 1, hashedEntriesSize);
             }
             hashedArray[j] = entry;
         }
@@ -415,7 +413,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         boolean[] retain = new boolean[size];
         for (Entry<? extends K, ? extends V> entry : map) {
             for (int i = 0; i < size; i++) {
-                if (!retain[i] && (entries[i] == null && entry == null || entries[i].equals(entry))) {
+                if (!retain[i] && Objects.equals(entry, entries[i])) {
                     retain[i] = true;
                     break;
                 }
@@ -437,7 +435,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
                     }
                 }
                 hashedEntries[index] = null;
-                if (hashedEntries[(index + 1) % hashedEntriesSize] != null) {
+                if (hashedEntries[Math.floorMod(index + 1, hashedEntriesSize)] != null) {
                     resizeHashedEntriesTo(size * HASHING_RATIO);
                 }
                 keys.remove(entry.key());

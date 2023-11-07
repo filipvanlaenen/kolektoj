@@ -7,7 +7,7 @@ import java.util.Objects;
 import net.filipvanlaenen.kolektoj.Collection;
 
 /**
- * A class with utility methods.
+ * A class with utility methods for array-backed collections.
  */
 final class ArrayUtilities {
     /**
