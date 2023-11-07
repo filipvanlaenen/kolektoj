@@ -117,24 +117,22 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         if (collection.isEmpty()) {
             return false;
         }
-        E[] newElements =
-                elementCardinality == DISTINCT_ELEMENTS ? ArrayUtilities.cloneDistinctElements(collection.toArray())
-                        : collection.toArray();
-        int numberOfNewElements = newElements.length;
+        E[] newElements = collection.toArray();
         if (elementCardinality == DISTINCT_ELEMENTS) {
+            newElements = ArrayUtilities.cloneDistinctElements(newElements);
             boolean[] retain = new boolean[newElements.length];
-            numberOfNewElements = 0;
+            int numberOfDistinctNewElements = 0;
             for (int i = 0; i < retain.length; i++) {
                 if (!contains(newElements[i])) {
                     retain[i] = true;
-                    numberOfNewElements++;
+                    numberOfDistinctNewElements++;
                 }
             }
-            if (numberOfNewElements == 0) {
+            if (numberOfDistinctNewElements == 0) {
                 return false;
             }
-            E[] distinctNewElements = createNewArray(numberOfNewElements);
-            for (int i = 0, j = 0; i < numberOfNewElements; i++, j++) {
+            E[] distinctNewElements = createNewArray(numberOfDistinctNewElements);
+            for (int i = 0, j = 0; i < numberOfDistinctNewElements; i++, j++) {
                 while (!retain[j]) {
                     j++;
                 }
@@ -142,12 +140,13 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
             }
             newElements = distinctNewElements;
         }
+        int numberOfNewElements = newElements.length;
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (size + numberOfNewElements > elements.length) {
             resizeTo(size + numberOfNewElements + STRIDE);
         }
         System.arraycopy(elements, index, elements, index + numberOfNewElements, size - index);
-        System.arraycopy(collection.toArray(), 0, elements, index, numberOfNewElements);
+        System.arraycopy(newElements, 0, elements, index, numberOfNewElements);
         size += numberOfNewElements;
         return true;
 

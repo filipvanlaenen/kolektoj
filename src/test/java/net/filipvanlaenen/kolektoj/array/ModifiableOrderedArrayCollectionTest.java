@@ -2,11 +2,7 @@ package net.filipvanlaenen.kolektoj.array;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Comparator;
 
@@ -324,6 +320,48 @@ public class ModifiableOrderedArrayCollectionTest {
     @Test
     public void addAllAtOnAnEmptyCollectionShouldReturnTrue() {
         assertTrue(new ModifiableOrderedArrayCollection<Integer>().addAllAt(0, Collection.of(1, 2)));
+    }
+
+    /**
+     * Verifies that adding an empty collection at zero returns false.
+     */
+    @Test
+    public void addAllAtWithEmptyCollectionShouldReturnFalse() {
+        assertFalse(new ModifiableOrderedArrayCollection<Integer>().addAllAt(0,
+                new ModifiableOrderedArrayCollection<Integer>()));
+    }
+
+    /**
+     * Verifies that adding duplicate elements at zero to a collection with distinct elements returns false.
+     */
+    @Test
+    public void addAllAtOfDuplicateElementsToCollectionWithDistinctElementsShouldReturnFalse() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, THREE);
+        assertFalse(collection.addAllAt(0, COLLECTION123));
+    }
+
+    /**
+     * Verifies that adding at zero a collection with duplicate and new elements to a collection with distinct elements
+     * returns true.
+     */
+    @Test
+    public void addAllAtOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldReturnTrue() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, THREE);
+        assertTrue(collection.addAllAt(0, COLLECTION123NULL));
+    }
+
+    /**
+     * Verifies that adding a collection at zero with duplicate and new elements to a collection with distinct elements
+     * increases the size correctly.
+     */
+    @Test
+    public void addAllAtOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldIncreaseSizeCorrectly() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, THREE);
+        collection.addAllAt(0, new OrderedArrayCollection<Integer>(FOUR, FOUR, 1, 2, THREE, FIVE));
+        assertArrayEquals(new Integer[] {FOUR, FIVE, 1, 2, THREE}, collection.toArray());
     }
 
     /**
