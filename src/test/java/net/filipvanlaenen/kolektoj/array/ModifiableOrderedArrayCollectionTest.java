@@ -5,6 +5,7 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICAT
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Comparator;
+import java.util.Spliterator;
 
 import org.junit.jupiter.api.Test;
 
@@ -605,5 +606,31 @@ public class ModifiableOrderedArrayCollectionTest {
     public void constructorShouldSetElementCardinalityToDistinctElementsWhenSpecified() {
         assertEquals(DISTINCT_ELEMENTS,
                 new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).getElementCardinality());
+    }
+
+    /**
+     * Verifies that the spliterator has the ordered flag set.
+     */
+    @Test
+    public void spliteratorShouldSetOrderedFlag() {
+        assertTrue(COLLECTION123.spliterator().hasCharacteristics(Spliterator.ORDERED));
+    }
+
+    /**
+     * Verifies that the spliterator has the distinct flag not set for collections with duplicate elements.
+     */
+    @Test
+    public void spliteratorShouldNotSetDistinctFlagForCollectionWithDuplicateElements() {
+        assertFalse(new ModifiableOrderedArrayCollection<Integer>(DUPLICATE_ELEMENTS, 1).spliterator()
+                .hasCharacteristics(Spliterator.DISTINCT));
+    }
+
+    /**
+     * Verifies that the spliterator has the distinct flag set for collections with distinct elements.
+     */
+    @Test
+    public void spliteratorShouldSetDistinctFlagForCollectionWithDistinctElements() {
+        assertTrue(new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1).spliterator()
+                .hasCharacteristics(Spliterator.DISTINCT));
     }
 }

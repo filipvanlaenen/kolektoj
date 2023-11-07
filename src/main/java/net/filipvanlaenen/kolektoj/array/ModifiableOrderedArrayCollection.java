@@ -214,7 +214,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public E getAt(final int index) throws IndexOutOfBoundsException {
-        if (index >= elements.length) {
+        if (index >= size) {
             throw new IndexOutOfBoundsException(
                     "Cannot return an element at a position beyond the size of the collection.");
         } else {
