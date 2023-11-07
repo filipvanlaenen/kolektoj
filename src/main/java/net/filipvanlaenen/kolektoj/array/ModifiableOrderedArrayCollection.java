@@ -44,6 +44,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     public ModifiableOrderedArrayCollection(final Collection<E> source, final Comparator<E> comparator) {
         elementCardinality = source.getElementCardinality();
         elements = ArrayUtilities.quicksort(source.toArray(), comparator);
+        size = elements.length;
     }
 
     /**
@@ -88,15 +89,23 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         if (collection.isEmpty()) {
             return false;
         }
-        // TODO: Element cardinality
+        int originalSize = size;
         int numberOfNewElements = collection.size();
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (size + numberOfNewElements > elements.length) {
             resizeTo(size + numberOfNewElements + STRIDE);
         }
-        System.arraycopy(collection.toArray(), 0, elements, size, numberOfNewElements);
-        size += numberOfNewElements;
-        return true;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            for (E element : collection) {
+                if (!contains(element)) {
+                    elements[size++] = element;
+                }
+            }
+        } else {
+            System.arraycopy(collection.toArray(), 0, elements, size, numberOfNewElements);
+            size += numberOfNewElements;
+        }
+        return size != originalSize;
     }
 
     @Override
@@ -104,21 +113,44 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         if (index > elements.length) {
             throw new IndexOutOfBoundsException(
                     "Cannot add the elements of another collection at a position beyond the size of the collection.");
-        } else {
-            if (collection.isEmpty()) {
+        }
+        if (collection.isEmpty()) {
+            return false;
+        }
+        E[] newElements =
+                elementCardinality == DISTINCT_ELEMENTS ? ArrayUtilities.cloneDistinctElements(collection.toArray())
+                        : collection.toArray();
+        int numberOfNewElements = newElements.length;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            boolean[] retain = new boolean[newElements.length];
+            numberOfNewElements = 0;
+            for (int i = 0; i < retain.length; i++) {
+                if (!contains(newElements[i])) {
+                    retain[i] = true;
+                    numberOfNewElements++;
+                }
+            }
+            if (numberOfNewElements == 0) {
                 return false;
             }
-            // TODO: Element cardinality
-            int numberOfNewElements = collection.size();
-            // EQMU: Changing the conditional boundary below produces an equivalent mutant.
-            if (size + numberOfNewElements > elements.length) {
-                resizeTo(size + numberOfNewElements + STRIDE);
+            E[] distinctNewElements = createNewArray(numberOfNewElements);
+            for (int i = 0, j = 0; i < numberOfNewElements; i++, j++) {
+                while (!retain[j]) {
+                    j++;
+                }
+                distinctNewElements[i] = newElements[j];
             }
-            System.arraycopy(elements, index, elements, index + numberOfNewElements, size - index);
-            System.arraycopy(collection.toArray(), 0, elements, index, numberOfNewElements);
-            size += numberOfNewElements;
-            return true;
+            newElements = distinctNewElements;
         }
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        if (size + numberOfNewElements > elements.length) {
+            resizeTo(size + numberOfNewElements + STRIDE);
+        }
+        System.arraycopy(elements, index, elements, index + numberOfNewElements, size - index);
+        System.arraycopy(collection.toArray(), 0, elements, index, numberOfNewElements);
+        size += numberOfNewElements;
+        return true;
+
     }
 
     @Override

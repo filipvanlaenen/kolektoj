@@ -2,7 +2,13 @@ package net.filipvanlaenen.kolektoj.array;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Comparator;
 
 import org.junit.jupiter.api.Test;
 
@@ -23,13 +29,26 @@ public class ModifiableOrderedArrayCollectionTest {
      */
     private static final int FOUR = 4;
     /**
+     * The magic number five.
+     */
+    private static final int FIVE = 5;
+    /**
      * The magic number six.
      */
     private static final int SIX = 6;
     /**
+     * An array containing the numbers from 1 to 6.
+     */
+    private static final Integer[] ARRAY123456 = new Integer[] {1, 2, THREE, FOUR, FIVE, SIX};
+    /**
      * Collection with the integers 1, 2 and 3.
      */
     private static final ModifiableOrderedCollection<Integer> COLLECTION123 = createNewCollection();
+    /**
+     * Collection with the integers 1, 2, 3 and null.
+     */
+    private static final ModifiableOrderedCollection<Integer> COLLECTION123NULL =
+            new ModifiableOrderedArrayCollection<Integer>(1, 2, 3, null);
 
     /**
      * Creates a new collection to run the unit tests on.
@@ -308,6 +327,48 @@ public class ModifiableOrderedArrayCollectionTest {
     }
 
     /**
+     * Verifies that adding an empty collection returns false.
+     */
+    @Test
+    public void addAllWithEmptyCollectionShouldReturnFalse() {
+        assertFalse(new ModifiableOrderedArrayCollection<Integer>()
+                .addAll(new ModifiableOrderedArrayCollection<Integer>()));
+    }
+
+    /**
+     * Verifies that adding duplicate elements to a collection with distinct elements returns false.
+     */
+    @Test
+    public void addAllOfDuplicateElementsToCollectionWithDistinctElementsShouldReturnFalse() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, THREE);
+        assertFalse(collection.addAll(COLLECTION123));
+    }
+
+    /**
+     * Verifies that adding a collection with duplicate and new elements to a collection with distinct elements returns
+     * true.
+     */
+    @Test
+    public void addAllOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldReturnTrue() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, THREE);
+        assertTrue(collection.addAll(COLLECTION123NULL));
+    }
+
+    /**
+     * Verifies that adding a collection with duplicate and new elements to a collection with distinct elements
+     * increases the size correctly.
+     */
+    @Test
+    public void addAllOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldIncreaseSizeCorrectly() {
+        ModifiableOrderedCollection<Integer> collection =
+                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, THREE);
+        collection.addAll(COLLECTION123NULL);
+        assertEquals(FOUR, collection.size());
+    }
+
+    /**
      * Verifies that trying to add a collectiont at an index beyond the size of the collection throws
      * IndexOutOfBoundsException.
      */
@@ -456,6 +517,28 @@ public class ModifiableOrderedArrayCollectionTest {
         ModifiableOrderedCollection<Integer> collection = createNewCollection();
         collection.clear();
         assertTrue(collection.isEmpty());
+    }
+
+    /**
+     * Verifies that the collection constructed using another collection and the natural comparator produces the correct
+     * array.
+     */
+    @Test
+    public void constructorUsingCollectionAndNaturalOrderComparatorShouldProduceTheCorrectArray() {
+        assertArrayEquals(ARRAY123456,
+                new ModifiableOrderedArrayCollection<Integer>(Collection.of(1, FIVE, SIX, 2, FOUR, THREE),
+                        Comparator.naturalOrder()).toArray());
+    }
+
+    /**
+     * Verifies that the constructor using a comparator transfers the element cardinality correctly.
+     */
+    @Test
+    public void constructorUsingCollectionAndNaturalOrderComparatorShouldTransferElementCardinality() {
+        assertEquals(DISTINCT_ELEMENTS,
+                new ModifiableOrderedArrayCollection<Integer>(
+                        Collection.of(DISTINCT_ELEMENTS, 1, FIVE, SIX, 2, FOUR, THREE), Comparator.naturalOrder())
+                                .getElementCardinality());
     }
 
     /**
