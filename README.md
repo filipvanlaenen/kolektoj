@@ -158,3 +158,4 @@ Be sure to update to the appropriate version number.
 The following projects use Kolektoj:
 * [ASAPOP](https://github.com/filipvanlaenen/asapop)
 * [BLTXMLEPJ](https://github.com/filipvanlaenen/bltxmlepj)
+* [TSVGJ](https://github.com/filipvanlaenen/tsvgj)
