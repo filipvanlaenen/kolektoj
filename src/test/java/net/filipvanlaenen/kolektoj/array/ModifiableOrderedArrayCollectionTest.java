@@ -548,6 +548,26 @@ public class ModifiableOrderedArrayCollectionTest {
     }
 
     /**
+     * Verifies that removeAll can remove the first element.
+     */
+    @Test
+    public void removeAllShouldRemoveFirstElement() {
+        ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>(0, 1, 2);
+        collection.removeAll(new ArrayCollection<Integer>(0));
+        assertArrayEquals(new Integer[] {1, 2}, collection.toArray());
+    }
+
+    /**
+     * Verifies that removeAll can remove the last element.
+     */
+    @Test
+    public void removeAllShouldRemoveLastElement() {
+        ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>(0, 1, 2);
+        collection.removeAll(new ArrayCollection<Integer>(2));
+        assertArrayEquals(new Integer[] {0, 1}, collection.toArray());
+    }
+
+    /**
      * Verifies that not all duplicate elements are removed by removeAll.
      */
     @Test
