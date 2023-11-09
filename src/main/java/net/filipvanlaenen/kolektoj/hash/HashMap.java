@@ -13,6 +13,7 @@ import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
+import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
 /**
  * A hash backed implementation of the {@link net.filipvanlaenen.kolektoj.Map} interface.
@@ -28,7 +29,7 @@ public final class HashMap<K, V> implements Map<K, V> {
     /**
      * An array with the entries.
      */
-    private final Entry<K, V>[] entries;
+    private final Collection<Entry<K, V>> entries;
     /**
      * A hashed array with the entries.
      */
@@ -70,19 +71,23 @@ public final class HashMap<K, V> implements Map<K, V> {
     public HashMap(final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, V>... entries)
             throws IllegalArgumentException {
         this.keyAndValueCardinality = keyAndValueCardinality;
-        this.entries = entries.clone();
         hashedEntriesSize = entries.length * HASHING_RATIO;
-        Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
+        Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) entries.getClass();
+        Entry<K, V>[] hashedArray = (Entry<K, V>[]) Array.newInstance(clazz.getComponentType(), hashedEntriesSize);
+        ModifiableCollection<Entry<K, V>> collection =
+                new ModifiableArrayCollection<Entry<K, V>>(getElementCardinality());
         for (Entry<K, V> entry : entries) {
             if (entry == null) {
                 throw new IllegalArgumentException("Map entries can't be null.");
             }
+            collection.add(entry);
             int i = HashUtilities.hash(entry.key(), hashedEntriesSize);
             while (hashedArray[i] != null) {
                 i = Math.floorMod(i + 1, hashedEntriesSize);
             }
             hashedArray[i] = entry;
         }
+        this.entries = new ArrayCollection<Entry<K, V>>(collection);
         this.hashedEntries = hashedArray;
     }
 
@@ -103,24 +108,7 @@ public final class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        if (collection.size() > size()) {
-            return false;
-        }
-        boolean[] matches = new boolean[entries.length];
-        for (Object element : collection) {
-            for (int i = 0; i < entries.length; i++) {
-                if (!matches[i] && Objects.equals(element, entries[i])) {
-                    matches[i] = true;
-                    break;
-                }
-            }
-        }
-        for (boolean match : matches) {
-            if (!match) {
-                return false;
-            }
-        }
-        return true;
+        return entries.containsAll(collection);
     }
 
     @Override
@@ -133,29 +121,18 @@ public final class HashMap<K, V> implements Map<K, V> {
         return getValues().contains(value);
     }
 
-    /**
-     * Creates a new entry array with a given length.
-     *
-     * @param length The length of the array.
-     * @return An array of the given length with the entry type.
-     */
-    private Entry<K, V>[] createNewArray(final int length) {
-        Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) entries.getClass();
-        return (Entry<K, V>[]) Array.newInstance(clazz.getComponentType(), length);
-    }
-
     @Override
     public Entry<K, V> get() throws IndexOutOfBoundsException {
-        if (entries.length == 0) {
+        if (entries.isEmpty()) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
-            return entries[0];
+            return entries.get();
         }
     }
 
     @Override
     public Iterator<Entry<K, V>> iterator() {
-        return new ArrayIterator<Entry<K, V>>(entries);
+        return entries.iterator();
     }
 
     /**
@@ -236,16 +213,16 @@ public final class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public int size() {
-        return entries.length;
+        return entries.size();
     }
 
     @Override
     public Spliterator<Entry<K, V>> spliterator() {
-        return new ArraySpliterator<Entry<K, V>>(entries, 0);
+        return entries.spliterator();
     }
 
     @Override
     public Entry<K, V>[] toArray() {
-        return entries.clone();
+        return entries.toArray();
     }
 }
