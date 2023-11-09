@@ -1,5 +1,7 @@
 package net.filipvanlaenen.kolektoj.hash;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 
 import java.lang.reflect.Array;
@@ -11,8 +13,6 @@ import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
-import net.filipvanlaenen.kolektoj.array.ArrayIterator;
-import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
 /**
@@ -76,18 +76,34 @@ public final class HashMap<K, V> implements Map<K, V> {
         Entry<K, V>[] hashedArray = (Entry<K, V>[]) Array.newInstance(clazz.getComponentType(), hashedEntriesSize);
         ModifiableCollection<Entry<K, V>> collection =
                 new ModifiableArrayCollection<Entry<K, V>>(getElementCardinality());
+        ModifiableCollection<K> keys = new ModifiableArrayCollection<K>(
+                keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS);
         for (Entry<K, V> entry : entries) {
             if (entry == null) {
                 throw new IllegalArgumentException("Map entries can't be null.");
             }
-            collection.add(entry);
-            int i = HashUtilities.hash(entry.key(), hashedEntriesSize);
-            while (hashedArray[i] != null) {
-                i = Math.floorMod(i + 1, hashedEntriesSize);
+            K key = entry.key();
+            boolean shouldBeAdded = true;
+            switch (keyAndValueCardinality) {
+            case DISTINCT_KEYS:
+                shouldBeAdded = !keys.contains(key);
+                break;
+            case DUPLICATE_KEYS_WITH_DISTINCT_VALUES:
+                shouldBeAdded = !collection.contains(entry);
+                break;
             }
-            hashedArray[i] = entry;
+            if (shouldBeAdded) {
+                collection.add(entry);
+                keys.add(key);
+                int i = HashUtilities.hash(key, hashedEntriesSize);
+                while (hashedArray[i] != null) {
+                    i = Math.floorMod(i + 1, hashedEntriesSize);
+                }
+                hashedArray[i] = entry;
+            }
         }
         this.entries = new ArrayCollection<Entry<K, V>>(collection);
+        this.keys = new ArrayCollection<K>(keys);
         this.hashedEntries = hashedArray;
     }
 
@@ -189,13 +205,6 @@ public final class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public Collection<K> getKeys() {
-        if (keys == null) {
-            ModifiableCollection<K> result = ModifiableCollection.empty();
-            for (Entry<K, V> entry : entries) {
-                result.add(entry.key());
-            }
-            keys = new ArrayCollection<K>(result);
-        }
         return keys;
     }
 
