@@ -288,8 +288,8 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     }
 
     @Override
-    public ElementCardinality getElementCardinality() {
-        // TODO: Auto-generated method stub
+    public KeyAndValueCardinality getKeyAndValueCardinality() {
+        // TODO Auto-generated method stub
         return null;
     }
 

@@ -1,5 +1,8 @@
 package net.filipvanlaenen.kolektoj;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
+
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.hash.HashMap;
 
@@ -10,8 +13,22 @@ import net.filipvanlaenen.kolektoj.hash.HashMap;
  * @param <V> The value type.
  */
 public interface Map<K, V> extends Collection<Entry<K, V>> {
+    /**
+     * Enumeration listing the options for the key and value cardinality in maps.
+     */
     enum KeyAndValueCardinality {
-        DISTINCT_KEYS, DUPLICATE_KEYS_WITH_DISTINCT_VALUES, DUPLICATE_KEYS_WITH_DUPLICATE_VALUES
+        /**
+         * Only distinct keys allowed.
+         */
+        DISTINCT_KEYS,
+        /**
+         * Duplicate keys allowed, but only with distinct values.
+         */
+        DUPLICATE_KEYS_WITH_DISTINCT_VALUES,
+        /**
+         * Duplicate keys with duplicate values allowed.
+         */
+        DUPLICATE_KEYS_WITH_DUPLICATE_VALUES
     }
 
     /**
@@ -46,6 +63,19 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
      */
     static <K, V> Map<K, V> of(final Entry<K, V>... entries) {
         return new HashMap<K, V>(entries);
+    }
+
+    /**
+     * Returns a new map with the specified entries and key and value cardinality.
+     *
+     * @param <K>                    The key type.
+     * @param <V>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param entries                The entries for the new map.
+     * @return A new map with the specified entries.
+     */
+    static <K, V> Map<K, V> of(final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, V>... entries) {
+        return new HashMap<K, V>(keyAndValueCardinality, entries);
     }
 
     /**
@@ -129,6 +159,20 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
      * @throws IllegalArgumentException Thrown if the map doesn't contain entries with the key.
      */
     Collection<V> getAll(K key) throws IllegalArgumentException;
+
+    @Override
+    default ElementCardinality getElementCardinality() {
+        return getKeyAndValueCardinality() == KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES
+                ? DUPLICATE_ELEMENTS
+                : DISTINCT_ELEMENTS;
+    }
+
+    /**
+     * Returns the key and value cardinality of the collection.
+     *
+     * @return The key and value cardinality.
+     */
+    KeyAndValueCardinality getKeyAndValueCardinality();
 
     /**
      * Returns a collection with all the keys present in the map.

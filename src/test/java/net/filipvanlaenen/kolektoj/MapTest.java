@@ -1,12 +1,15 @@
 package net.filipvanlaenen.kolektoj;
 
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.hash.HashMap;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.Map} class.
@@ -64,5 +67,45 @@ public class MapTest {
         assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
         assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));
         assertTrue(actual.contains(new Entry<Integer, String>(THREE, "three")));
+    }
+
+    /**
+     * Verifies that a map constructed with entries and key and value cardinality is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithKeyAndValueCardinalityAndEntriesCorrectly() {
+        Map<Integer, String> map =
+                Map.of(DISTINCT_KEYS, new Entry<Integer, String>(1, "one"), new Entry<Integer, String>(2, "two"));
+        assertEquals(DISTINCT_KEYS, map.getKeyAndValueCardinality());
+        assertEquals(2, map.size());
+    }
+
+    /**
+     * Verifies that the element cardinality for a map with duplicate keys and values is that duplicate elements are
+     * allowed.
+     */
+    @Test
+    public void getElementCardinalityShouldReturnDuplicateElementsForMapWithDuplicateKeysAndValues() {
+        assertEquals(ElementCardinality.DUPLICATE_ELEMENTS,
+                new HashMap<Integer, String>(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES).getElementCardinality());
+    }
+
+    /**
+     * Verifies that the element cardinality for a map with duplicate keys and distinct values is that duplicate
+     * elements are not allowed.
+     */
+    @Test
+    public void getElementCardinalityShouldReturnDistinctElementsForMapWithDuplicateKeysAndDistinctValues() {
+        assertEquals(ElementCardinality.DISTINCT_ELEMENTS,
+                new HashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES).getElementCardinality());
+    }
+
+    /**
+     * Verifies that the element cardinality for a map with distinct keys is that duplicate elements are not allowed.
+     */
+    @Test
+    public void getElementCardinalityShouldReturnDistinctElementsForMapWithDistinctKeys() {
+        assertEquals(ElementCardinality.DISTINCT_ELEMENTS,
+                new HashMap<Integer, String>(DISTINCT_KEYS).getElementCardinality());
     }
 }

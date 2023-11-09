@@ -1,5 +1,7 @@
 package net.filipvanlaenen.kolektoj.hash;
 
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+
 import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Objects;
@@ -36,6 +38,10 @@ public final class HashMap<K, V> implements Map<K, V> {
      */
     private final int hashedEntriesSize;
     /**
+     * The key and value cardinality.
+     */
+    private final KeyAndValueCardinality keyAndValueCardinality;
+    /**
      * A collection with the keys, initialized lazily.
      */
     private Collection<K> keys;
@@ -51,6 +57,19 @@ public final class HashMap<K, V> implements Map<K, V> {
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
     public HashMap(final Entry<K, V>... entries) throws IllegalArgumentException {
+        this(DISTINCT_KEYS, entries);
+    }
+
+    /**
+     * Constructor taking the entries as its parameter.
+     *
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param entries                The entries for the map.
+     * @throws IllegalArgumentException Thrown if one of the entries is null.
+     */
+    public HashMap(final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, V>... entries)
+            throws IllegalArgumentException {
+        this.keyAndValueCardinality = keyAndValueCardinality;
         this.entries = entries.clone();
         hashedEntriesSize = entries.length * HASHING_RATIO;
         Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
@@ -187,9 +206,8 @@ public final class HashMap<K, V> implements Map<K, V> {
     }
 
     @Override
-    public ElementCardinality getElementCardinality() {
-        // TODO: Auto-generated method stub
-        return null;
+    public KeyAndValueCardinality getKeyAndValueCardinality() {
+        return keyAndValueCardinality;
     }
 
     @Override
