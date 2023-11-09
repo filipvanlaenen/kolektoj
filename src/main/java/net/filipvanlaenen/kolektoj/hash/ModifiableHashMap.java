@@ -104,12 +104,13 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (size * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
             resizeHashedEntriesTo(size * HASHING_RATIO);
+        } else {
+            int i = HashUtilities.hash(key, hashedEntriesSize);
+            while (hashedEntries[i] != null) {
+                i = Math.floorMod(i + 1, hashedEntriesSize);
+            }
+            hashedEntries[i] = entry;
         }
-        int i = HashUtilities.hash(key, hashedEntriesSize);
-        while (hashedEntries[i] != null) {
-            i = Math.floorMod(i + 1, hashedEntriesSize);
-        }
-        hashedEntries[i] = entry;
         keys.add(key);
         values.add(value);
         return true;
@@ -275,8 +276,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         ModifiableCollection<V> result = ModifiableCollection.empty();
         int index = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[index] != null) {
-            K k = hashedEntries[index].key();
-            if (Objects.equals(k, key)) {
+            if (Objects.equals(key, hashedEntries[index].key())) {
                 result.add(hashedEntries[index].value());
             }
             index = Math.floorMod(index + 1, hashedEntriesSize);
