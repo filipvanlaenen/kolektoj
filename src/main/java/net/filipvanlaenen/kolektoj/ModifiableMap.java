@@ -81,6 +81,20 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
     }
 
     /**
+     * Returns a new modifiable map with the specified entries and key and value cardinality.
+     *
+     * @param <K>                    The key type.
+     * @param <V>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param entries                The entries for the new map.
+     * @return A new modifiable map with the specified entries.
+     */
+    static <K, V> ModifiableMap<K, V> of(final KeyAndValueCardinality keyAndValueCardinality,
+            final Entry<K, V>... entries) {
+        return new ModifiableHashMap<K, V>(keyAndValueCardinality, entries);
+    }
+
+    /**
      * Adds an entry to this map with the given key and value, and returns whether it increased the size of the map.
      *
      * @param key   The key.

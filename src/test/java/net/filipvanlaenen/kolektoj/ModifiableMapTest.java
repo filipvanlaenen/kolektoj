@@ -1,5 +1,6 @@
 package net.filipvanlaenen.kolektoj;
 
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -65,6 +66,17 @@ public class ModifiableMapTest {
         assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
         assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));
         assertTrue(actual.contains(new Entry<Integer, String>(THREE, "three")));
+    }
+
+    /**
+     * Verifies that a map constructed with entries and key and value cardinality is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithKeyAndValueCardinalityAndEntriesCorrectly() {
+        ModifiableMap<Integer, String> map = ModifiableMap.of(DISTINCT_KEYS, new Entry<Integer, String>(1, "one"),
+                new Entry<Integer, String>(2, "two"));
+        assertEquals(DISTINCT_KEYS, map.getKeyAndValueCardinality());
+        assertEquals(2, map.size());
     }
 
     /**

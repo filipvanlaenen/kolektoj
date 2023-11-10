@@ -62,7 +62,7 @@ public final class HashMap<K, V> implements Map<K, V> {
     }
 
     /**
-     * Constructor taking the entries as its parameter.
+     * Constructor taking the key and value cardinality and the entries as its parameter.
      *
      * @param keyAndValueCardinality The key and value cardinality.
      * @param entries                The entries for the map.

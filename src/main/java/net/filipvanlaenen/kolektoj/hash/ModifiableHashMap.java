@@ -1,5 +1,7 @@
 package net.filipvanlaenen.kolektoj.hash;
 
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+
 import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Objects;
@@ -50,6 +52,10 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
      */
     private int hashedEntriesSize;
     /**
+     * The key and value cardinality.
+     */
+    private final KeyAndValueCardinality keyAndValueCardinality;
+    /**
      * A collection with the keys.
      */
     private ModifiableCollection<K> keys;
@@ -69,9 +75,23 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
     public ModifiableHashMap(final Entry<K, V>... entries) throws IllegalArgumentException {
+        this(DISTINCT_KEYS, entries);
+    }
+
+    /**
+     * Constructor taking the key and value cardinality and the entries as its parameter.
+     *
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param entries                The entries for the map.
+     * @throws IllegalArgumentException Thrown if one of the entries is null.
+     */
+    public ModifiableHashMap(final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, V>... entries)
+            throws IllegalArgumentException {
         if (entries == null) {
             throw new IllegalArgumentException("Map entries can't be null.");
         }
+        this.keyAndValueCardinality = keyAndValueCardinality;
+        // TODO: Implement key and value cardinality.
         this.entries = entries.clone();
         size = entries.length;
         keys = new ModifiableArrayCollection<K>();
@@ -96,6 +116,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public boolean add(final K key, final V value) {
+        // TODO: Implement key and value cardinality.
         Entry<K, V> entry = new Entry<K, V>(key, value);
         if (size == entries.length) {
             resizeEntriesTo(entries.length + STRIDE);
@@ -121,6 +142,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         if (map.isEmpty()) {
             return false;
         }
+        // TODO: Implement key and value cardinality.
         int numberOfNewEntries = map.size();
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (size + numberOfNewEntries > entries.length) {
@@ -273,6 +295,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public Collection<V> getAll(final K key) throws IllegalArgumentException {
+        // TODO: Implement key and value cardinality.
         ModifiableCollection<V> result = ModifiableCollection.empty();
         int index = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[index] != null) {
@@ -289,12 +312,12 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public KeyAndValueCardinality getKeyAndValueCardinality() {
-        // TODO Auto-generated method stub
-        return null;
+        return keyAndValueCardinality;
     }
 
     @Override
     public Collection<K> getKeys() {
+        // TODO: Implement key and value cardinality.
         return new ArrayCollection<K>(keys);
     }
 
@@ -464,6 +487,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public Spliterator<Entry<K, V>> spliterator() {
+        // TODO: Implement key and value cardinality.
         return new ArraySpliterator<Entry<K, V>>(entries, 0);
     }
 
@@ -476,6 +500,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public V update(final K key, final V value) throws IllegalArgumentException {
+        // TODO: Implement key and value cardinality.
         int index = findFirstIndexForKey(key);
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
