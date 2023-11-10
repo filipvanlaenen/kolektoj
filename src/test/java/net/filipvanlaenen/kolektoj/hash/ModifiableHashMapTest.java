@@ -1,5 +1,7 @@
 package net.filipvanlaenen.kolektoj.hash;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -262,6 +264,28 @@ public class ModifiableHashMapTest {
     }
 
     /**
+     * Verifies that the collection returned by getKeys has distinct elements as its cardinality for a map with distinct
+     * keys.
+     */
+    @Test
+    public void getKeysShouldReturnCollectionWithDistinctElementsForMapWithDistinctKeys() {
+        ModifiableMap<Integer, String> map =
+                new ModifiableHashMap<Integer, String>(DISTINCT_KEYS, ENTRY1, ENTRY2, ENTRY3);
+        assertEquals(DISTINCT_ELEMENTS, map.getKeys().getElementCardinality());
+    }
+
+    /**
+     * Verifies that the collection returned by getKeys has duplicate elements as its cardinality for a map with
+     * duplicate keys.
+     */
+    @Test
+    public void getKeysShouldReturnCollectionWithDuplicateElementsForMapWithDuplicateKeys() {
+        ModifiableMap<Integer, String> map =
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
+        assertEquals(DUPLICATE_ELEMENTS, map.getKeys().getElementCardinality());
+    }
+
+    /**
      * Verifies that getValues returns all the values.
      */
     @Test
@@ -312,6 +336,37 @@ public class ModifiableHashMapTest {
     @Test
     public void addOnAnEmptyMapShouldReturnTrue() {
         assertTrue(new ModifiableHashMap<Integer, Integer>().add(1, 1));
+    }
+
+    /**
+     * Verifies that adding an entry with an already present key to a map with distinct keys returns false.
+     */
+    @Test
+    public void addWithDuplicateKeyOnMapWithDistinctKeysShouldReturnFalse() {
+        ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>(DISTINCT_KEYS, ENTRY1);
+        assertFalse(map.add(1, null));
+    }
+
+    /**
+     * Verifies that adding an entry with an already present key and value to a map with duplicate keys with distinct
+     * values returns false.
+     */
+    @Test
+    public void addWithDuplicateKeyAndValueOnMapWithDuplicateKeysAndDistinctValuesShouldReturnFalse() {
+        ModifiableMap<Integer, String> map =
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1);
+        assertFalse(map.add(1, "one"));
+    }
+
+    /**
+     * Verifies that adding with a duplicate key stored the hashed value correctly.
+     */
+    @Test
+    public void addWithDuplicateKeyShouldStoreTheEntryCorrectly() {
+        ModifiableMap<Integer, String> map =
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
+        map.add(1, "bis");
+        assertEquals(2, map.getAll(1).size());
     }
 
     /**
