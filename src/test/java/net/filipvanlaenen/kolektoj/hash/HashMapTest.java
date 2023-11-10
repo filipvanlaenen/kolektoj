@@ -400,4 +400,21 @@ public class HashMapTest {
         assertEquals(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES,
                 new HashMap<Integer, String>(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES).getKeyAndValueCardinality());
     }
+
+    /**
+     * Verifies that containsAll returns true when a map is compared with itself.
+     */
+    @Test
+    public void containsAllShouldReturnTrueWhenAMapIsComparedWithItself() {
+        assertTrue(MAP123.containsAll(MAP123));
+    }
+
+    /**
+     * Verifies that containsAll returns false when a map doesn't contain all the entries of the map is is compared
+     * with.
+     */
+    @Test
+    public void containsAllShouldReturnFalseWhenAMapContainsOtherEntries() {
+        assertFalse(MAP123.containsAll(MAP123NULL));
+    }
 }
