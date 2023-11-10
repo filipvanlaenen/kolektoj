@@ -102,8 +102,13 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public boolean add(final K key, final V value) {
-        // TODO: Implement key and value cardinality.
+        if (keyAndValueCardinality == DISTINCT_KEYS && containsKey(key)) {
+            return false;
+        }
         Entry<K, V> entry = new Entry<K, V>(key, value);
+        if (keyAndValueCardinality == KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES && contains(entry)) {
+            return false;
+        }
         entries.add(entry);
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (entries.size() * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
@@ -125,16 +130,23 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         if (map.isEmpty()) {
             return false;
         }
-        // TODO: Implement key and value cardinality.
         int numberOfNewEntries = map.size();
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if ((entries.size() + numberOfNewEntries) * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
             resizeHashedEntriesTo((entries.size() + numberOfNewEntries) * HASHING_RATIO);
         }
+        boolean result = false;
         for (Entry<? extends K, ? extends V> entry : map) {
             K key = entry.key();
+            if (keyAndValueCardinality == DISTINCT_KEYS && containsKey(key)) {
+                continue;
+            }
             V value = entry.value();
             Entry<K, V> newEntry = new Entry<K, V>(key, value);
+            if (keyAndValueCardinality == KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES
+                    && contains(newEntry)) {
+                continue;
+            }
             entries.add(newEntry);
             int i = HashUtilities.hash(key, hashedEntriesSize);
             while (hashedEntries[i] != null) {
@@ -143,14 +155,15 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             hashedEntries[i] = newEntry;
             keys.add(key);
             values.add(value);
+            result = true;
         }
-        return true;
+        return result;
     }
 
     @Override
     public void clear() {
         entries.clear();
-        resizeHashedEntriesTo(1);
+        resizeHashedEntriesTo(0);
         keys.clear();
         values.clear();
     }
@@ -397,7 +410,6 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public V update(final K key, final V value) throws IllegalArgumentException {
-        // TODO: Implement key and value cardinality.
         int index = findFirstIndexForKey(key);
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");

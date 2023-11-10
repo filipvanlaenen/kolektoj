@@ -443,7 +443,7 @@ public class ModifiableHashMapTest {
         ModifiableMap<Integer, String> map2 = new ModifiableHashMap<Integer, String>();
         for (int i = 0; i < SIX; i++) {
             map1.add(i, "1");
-            map2.add(i, "2");
+            map2.add(SIX + i, "2");
         }
         assertTrue(map1.addAll(map2));
     }
