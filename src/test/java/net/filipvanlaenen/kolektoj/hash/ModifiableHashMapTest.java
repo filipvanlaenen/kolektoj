@@ -1,5 +1,6 @@
 package net.filipvanlaenen.kolektoj.hash;
 
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -240,8 +241,8 @@ public class ModifiableHashMapTest {
      */
     @Test
     public void getAllShouldReturnManyValuesForKey() {
-        ModifiableMap<Integer, String> map =
-                new ModifiableHashMap<Integer, String>(ENTRY1, new Entry<Integer, String>(1, "two"), ENTRY3);
+        ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES,
+                ENTRY1, new Entry<Integer, String>(1, "two"), ENTRY3);
         Collection<String> actual = map.getAll(1);
         assertEquals(2, actual.size());
         assertTrue(actual.contains("one"));

@@ -45,11 +45,11 @@ public final class HashMap<K, V> implements Map<K, V> {
     /**
      * A collection with the keys, initialized lazily.
      */
-    private Collection<K> keys;
+    private final Collection<K> keys;
     /**
      * A collection with the values, initialized lazily.
      */
-    private Collection<V> values;
+    private final Collection<V> values;
 
     /**
      * Constructor taking the entries as its parameter.
@@ -78,26 +78,13 @@ public final class HashMap<K, V> implements Map<K, V> {
                 new ModifiableArrayCollection<Entry<K, V>>(getElementCardinality());
         ModifiableCollection<K> theKeys = new ModifiableArrayCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS);
-        for (Entry<K, V> entry : entries) {
-            if (entry == null) {
-                throw new IllegalArgumentException("Map entries can't be null.");
-            }
-            K key = entry.key();
-            if (keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES
-                    || keyAndValueCardinality == DUPLICATE_KEYS_WITH_DISTINCT_VALUES && !theEntries.contains(entry)
-                    || keyAndValueCardinality == DISTINCT_KEYS && !theKeys.contains(key)) {
-                theEntries.add(entry);
-                theKeys.add(key);
-                int i = HashUtilities.hash(key, hashedEntriesSize);
-                while (theHashedEntries[i] != null) {
-                    i = Math.floorMod(i + 1, hashedEntriesSize);
-                }
-                theHashedEntries[i] = entry;
-            }
-        }
+        ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
+        HashUtilities.populateMapFromEntries(theEntries, theHashedEntries, theKeys, theValues, keyAndValueCardinality,
+                entries);
         this.entries = new ArrayCollection<Entry<K, V>>(theEntries);
-        this.keys = new ArrayCollection<K>(theKeys);
         this.hashedEntries = theHashedEntries;
+        this.keys = new ArrayCollection<K>(theKeys);
+        this.values = new ArrayCollection<V>(theValues);
     }
 
     @Override
@@ -130,20 +117,6 @@ public final class HashMap<K, V> implements Map<K, V> {
         return getValues().contains(value);
     }
 
-    @Override
-    public Entry<K, V> get() throws IndexOutOfBoundsException {
-        if (entries.isEmpty()) {
-            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
-        } else {
-            return entries.get();
-        }
-    }
-
-    @Override
-    public Iterator<Entry<K, V>> iterator() {
-        return entries.iterator();
-    }
-
     /**
      * Finds the index for the first occurrence of an entry with the key.
      *
@@ -163,6 +136,15 @@ public final class HashMap<K, V> implements Map<K, V> {
             index = Math.floorMod(index + 1, hashedEntriesSize);
         }
         return -1;
+    }
+
+    @Override
+    public Entry<K, V> get() throws IndexOutOfBoundsException {
+        if (entries.isEmpty()) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        } else {
+            return entries.get();
+        }
     }
 
     @Override
@@ -205,14 +187,12 @@ public final class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public Collection<V> getValues() {
-        if (values == null) {
-            ModifiableCollection<V> result = ModifiableCollection.empty();
-            for (Entry<K, V> entry : entries) {
-                result.add(entry.value());
-            }
-            values = new ArrayCollection<V>(result);
-        }
         return values;
+    }
+
+    @Override
+    public Iterator<Entry<K, V>> iterator() {
+        return entries.iterator();
     }
 
     @Override

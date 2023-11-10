@@ -1,6 +1,9 @@
 package net.filipvanlaenen.kolektoj.hash;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;
@@ -12,8 +15,6 @@ import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
-import net.filipvanlaenen.kolektoj.array.ArrayIterator;
-import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
 /**
@@ -36,13 +37,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
      */
     private static final int MAXIMAL_HASHING_RATIO = 4;
     /**
-     * The stride for resizing the elements array.
+     * A modifiable collection with the entries.
      */
-    private static final int STRIDE = 5;
-    /**
-     * An array with the entries.
-     */
-    private Entry<K, V>[] entries;
+    private ModifiableCollection<Entry<K, V>> entries;
     /**
      * A hashed array with the entries.
      */
@@ -56,13 +53,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
      */
     private final KeyAndValueCardinality keyAndValueCardinality;
     /**
-     * A collection with the keys.
+     * A modifiable collection with the keys.
      */
     private ModifiableCollection<K> keys;
-    /**
-     * The size of the map.
-     */
-    private int size;
     /**
      * A collection with the values.
      */
@@ -91,40 +84,30 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             throw new IllegalArgumentException("Map entries can't be null.");
         }
         this.keyAndValueCardinality = keyAndValueCardinality;
-        // TODO: Implement key and value cardinality.
-        this.entries = entries.clone();
-        size = entries.length;
-        keys = new ModifiableArrayCollection<K>();
-        values = new ModifiableArrayCollection<V>();
         hashedEntriesSize = entries.length * HASHING_RATIO;
-        Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
-        for (Entry<K, V> entry : entries) {
-            if (entry == null) {
-                throw new IllegalArgumentException("Map entries can't be null.");
-            }
-            K key = entry.key();
-            keys.add(key);
-            values.add(entry.value());
-            int i = HashUtilities.hash(key, hashedEntriesSize);
-            while (hashedArray[i] != null) {
-                i = Math.floorMod(i + 1, hashedEntriesSize);
-            }
-            hashedArray[i] = entry;
-        }
-        this.hashedEntries = hashedArray;
+        Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) entries.getClass();
+        Entry<K, V>[] theHashedEntries = (Entry<K, V>[]) Array.newInstance(clazz.getComponentType(), hashedEntriesSize);
+        ModifiableCollection<Entry<K, V>> theEntries =
+                new ModifiableArrayCollection<Entry<K, V>>(getElementCardinality());
+        ModifiableCollection<K> theKeys = new ModifiableArrayCollection<K>(
+                keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS);
+        ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
+        HashUtilities.populateMapFromEntries(theEntries, theHashedEntries, theKeys, theValues, keyAndValueCardinality,
+                entries);
+        this.entries = theEntries;
+        this.hashedEntries = theHashedEntries;
+        this.keys = theKeys;
+        this.values = theValues;
     }
 
     @Override
     public boolean add(final K key, final V value) {
         // TODO: Implement key and value cardinality.
         Entry<K, V> entry = new Entry<K, V>(key, value);
-        if (size == entries.length) {
-            resizeEntriesTo(entries.length + STRIDE);
-        }
-        entries[size++] = entry;
+        entries.add(entry);
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
-        if (size * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
-            resizeHashedEntriesTo(size * HASHING_RATIO);
+        if (entries.size() * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
+            resizeHashedEntriesTo(entries.size() * HASHING_RATIO);
         } else {
             int i = HashUtilities.hash(key, hashedEntriesSize);
             while (hashedEntries[i] != null) {
@@ -145,43 +128,29 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         // TODO: Implement key and value cardinality.
         int numberOfNewEntries = map.size();
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
-        if (size + numberOfNewEntries > entries.length) {
-            resizeEntriesTo(entries.length + numberOfNewEntries + STRIDE);
+        if ((entries.size() + numberOfNewEntries) * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
+            resizeHashedEntriesTo((entries.size() + numberOfNewEntries) * HASHING_RATIO);
         }
-        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
-        if ((size + numberOfNewEntries) * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
-            resizeHashedEntriesTo((size + numberOfNewEntries) * HASHING_RATIO);
-        }
-        int i = 0;
         for (Entry<? extends K, ? extends V> entry : map) {
             K key = entry.key();
             V value = entry.value();
             Entry<K, V> newEntry = new Entry<K, V>(key, value);
-            entries[size + i] = newEntry;
-            int j = HashUtilities.hash(key, hashedEntriesSize);
-            while (hashedEntries[j] != null) {
-                j = Math.floorMod(j + 1, hashedEntriesSize);
+            entries.add(newEntry);
+            int i = HashUtilities.hash(key, hashedEntriesSize);
+            while (hashedEntries[i] != null) {
+                i = Math.floorMod(i + 1, hashedEntriesSize);
             }
-            hashedEntries[j] = newEntry;
+            hashedEntries[i] = newEntry;
             keys.add(key);
             values.add(value);
-            i++;
         }
-        size += numberOfNewEntries;
         return true;
     }
 
     @Override
     public void clear() {
-        size = 0;
-        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
-        // EQMU: Negating the conditional below produces an equivalent mutant.
-        if (STRIDE < entries.length) {
-            // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
-            resizeEntriesTo(STRIDE);
-        }
-        // EQMU: Replacing integer multiplication with division below produces an equivalent mutant.
-        resizeHashedEntriesTo(entries.length * HASHING_RATIO);
+        entries.clear();
+        resizeHashedEntriesTo(1);
         keys.clear();
         values.clear();
     }
@@ -193,24 +162,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        if (collection.size() > size) {
-            return false;
-        }
-        boolean[] matches = new boolean[size];
-        for (Object element : collection) {
-            for (int i = 0; i < size; i++) {
-                if (!matches[i] && Objects.equals(element, entries[i])) {
-                    matches[i] = true;
-                    break;
-                }
-            }
-        }
-        for (boolean match : matches) {
-            if (!match) {
-                return false;
-            }
-        }
-        return true;
+        return entries.containsAll(collection);
     }
 
     @Override
@@ -230,7 +182,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
      * @return An array of the given length with the entry type.
      */
     private Entry<K, V>[] createNewArray(final int length) {
-        Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) entries.getClass();
+        Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) hashedEntries.getClass();
         return (Entry<K, V>[]) Array.newInstance(clazz.getComponentType(), length);
     }
 
@@ -277,10 +229,10 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public Entry<K, V> get() throws IndexOutOfBoundsException {
-        if (size == 0) {
+        if (entries.isEmpty()) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
-            return entries[0];
+            return entries.get();
         }
     }
 
@@ -295,11 +247,13 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public Collection<V> getAll(final K key) throws IllegalArgumentException {
-        // TODO: Implement key and value cardinality.
-        ModifiableCollection<V> result = ModifiableCollection.empty();
+        ModifiableCollection<V> result = new ModifiableArrayCollection<V>(
+                keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS
+                        : DISTINCT_ELEMENTS);
         int index = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[index] != null) {
-            if (Objects.equals(key, hashedEntries[index].key())) {
+            K k = hashedEntries[index].key();
+            if (Objects.equals(k, key)) {
                 result.add(hashedEntries[index].value());
             }
             index = Math.floorMod(index + 1, hashedEntriesSize);
@@ -317,7 +271,6 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public Collection<K> getKeys() {
-        // TODO: Implement key and value cardinality.
         return new ArrayCollection<K>(keys);
     }
 
@@ -328,7 +281,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public Iterator<Entry<K, V>> iterator() {
-        return new ArrayIterator<Entry<K, V>>(toArray());
+        return entries.iterator();
     }
 
     @Override
@@ -339,24 +292,11 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         }
         Entry<K, V> entry = hashedEntries[index];
         V value = entry.value();
-        for (int i = 0; i < size; i++) {
-            if (entries[i].equals(entry)) {
-                entries[i] = entries[size - 1];
-                size--;
-                break;
-            }
-        }
-        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
-        // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
-        // EQMU: Negating the conditional below produces an equivalent mutant.
-        if (size < entries.length - STRIDE) {
-            // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
-            resizeEntriesTo(size + STRIDE);
-        }
+        entries.remove(entry);
         hashedEntries[index] = null;
         if (hashedEntries[Math.floorMod(index + 1, hashedEntriesSize)] != null
-                || size * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
-            resizeHashedEntriesTo(size * HASHING_RATIO);
+                || entries.size() * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
+            resizeHashedEntriesTo(entries.size() * HASHING_RATIO);
         }
         keys.remove(key);
         values.remove(value);
@@ -372,43 +312,19 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
                 break;
             }
             Entry<K, V> entry = hashedEntries[index];
-            for (int i = 0; i < size; i++) {
-                if (entries[i].equals(entry)) {
-                    entries[i] = entries[size - 1];
-                    size--;
-                    break;
-                }
-            }
+            entries.remove(entry);
             hashedEntries[index] = null;
             if (hashedEntries[Math.floorMod(index + 1, hashedEntriesSize)] != null) {
-                resizeHashedEntriesTo(size * HASHING_RATIO);
+                resizeHashedEntriesTo(entries.size() * HASHING_RATIO);
             }
             keys.remove(entry.key());
             values.remove(entry.value());
             result = true;
         }
-        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
-        // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
-        // EQMU: Negating the conditional below produces an equivalent mutant.
-        if (size < entries.length - STRIDE) {
-            // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
-            resizeEntriesTo(size + STRIDE);
-        }
-        if (size * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
-            resizeHashedEntriesTo(size * HASHING_RATIO);
+        if (entries.size() * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
+            resizeHashedEntriesTo(entries.size() * HASHING_RATIO);
         }
         return result;
-    }
-
-    /**
-     * Resizes the entries array to the new length. It is assumed that the new length is not less than the current size.
-     *
-     * @param newLength The new length for the entries array.
-     */
-    private void resizeEntriesTo(final int newLength) {
-        Entry<K, V>[] newElements = createNewArray(newLength);
-        System.arraycopy(entries, 0, newElements, 0, size);
-        entries = newElements;
     }
 
     /**
@@ -420,8 +336,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     private void resizeHashedEntriesTo(final int newLength) {
         hashedEntriesSize = newLength;
         Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
-        for (int i = 0; i < size; i++) {
-            Entry<K, V> entry = entries[i];
+        for (Entry<K, V> entry : entries) {
             int j = HashUtilities.hash(entry.key(), hashedEntriesSize);
             while (hashedArray[j] != null) {
                 j = Math.floorMod(j + 1, hashedEntriesSize);
@@ -433,46 +348,31 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public boolean retainAll(final Map<? extends K, ? extends V> map) {
+        int size = entries.size();
         boolean[] retain = new boolean[size];
+        Entry<K, V>[] entriesArray = entries.toArray();
         for (Entry<? extends K, ? extends V> entry : map) {
             for (int i = 0; i < size; i++) {
-                if (!retain[i] && Objects.equals(entry, entries[i])) {
+                if (!retain[i] && Objects.equals(entry, entriesArray[i])) {
                     retain[i] = true;
                     break;
                 }
             }
         }
-        int i = 0;
         boolean result = false;
-        while (i < size) {
-            if (retain[i]) {
-                i++;
-            } else {
-                Entry<K, V> entry = entries[i];
+        for (int i = 0; i < size; i++) {
+            if (!retain[i]) {
+                Entry<K, V> entry = entriesArray[i];
                 int index = findFirstIndexForEntry(entry);
-                for (int j = 0; j < size; j++) {
-                    if (entries[j].equals(entry)) {
-                        entries[j] = entries[size - 1];
-                        size--;
-                        break;
-                    }
-                }
+                entries.remove(entry);
                 hashedEntries[index] = null;
                 if (hashedEntries[Math.floorMod(index + 1, hashedEntriesSize)] != null) {
                     resizeHashedEntriesTo(size * HASHING_RATIO);
                 }
                 keys.remove(entry.key());
                 values.remove(entry.value());
-                retain[i] = retain[size - 1];
                 result = true;
             }
-        }
-        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
-        // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
-        // EQMU: Negating the conditional below produces an equivalent mutant.
-        if (size < entries.length - STRIDE) {
-            // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
-            resizeEntriesTo(size + STRIDE);
         }
         if (size * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
             resizeHashedEntriesTo(size * HASHING_RATIO);
@@ -482,20 +382,17 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public int size() {
-        return size;
+        return entries.size();
     }
 
     @Override
     public Spliterator<Entry<K, V>> spliterator() {
-        // TODO: Implement key and value cardinality.
-        return new ArraySpliterator<Entry<K, V>>(entries, 0);
+        return entries.spliterator();
     }
 
     @Override
     public Entry<K, V>[] toArray() {
-        Entry<K, V>[] result = createNewArray(size);
-        System.arraycopy(entries, 0, result, 0, size);
-        return result;
+        return entries.toArray();
     }
 
     @Override
@@ -509,12 +406,8 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         V oldValue = oldEntry.value();
         if (value != oldValue) {
             Entry<K, V> newEntry = new Entry<K, V>(key, value);
-            for (int i = 0; i < size; i++) {
-                if (entries[i] == oldEntry) {
-                    entries[i] = newEntry;
-                    break;
-                }
-            }
+            entries.remove(oldEntry);
+            entries.add(newEntry);
             hashedEntries[index] = newEntry;
             values.remove(oldValue);
             values.add(value);
