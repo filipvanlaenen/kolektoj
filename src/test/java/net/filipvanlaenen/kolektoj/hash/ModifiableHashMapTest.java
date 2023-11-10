@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 
 /**
@@ -33,6 +34,10 @@ public class ModifiableHashMapTest {
      */
     private static final int SIX = 6;
     /**
+     * The magic number ten.
+     */
+    private static final int TEN = 10;
+    /**
      * An entry with key null and value null.
      */
     private static final Entry<Integer, String> ENTRY_NULL = new Entry<Integer, String>(null, null);
@@ -40,6 +45,10 @@ public class ModifiableHashMapTest {
      * An entry with key 1 and value one.
      */
     private static final Entry<Integer, String> ENTRY1 = new Entry<Integer, String>(1, "one");
+    /**
+     * An entry with key 1 and value bis.
+     */
+    private static final Entry<Integer, String> ENTRY1BIS = new Entry<Integer, String>(1, "bis");
     /**
      * An entry with key 2 and value two.
      */
@@ -124,6 +133,25 @@ public class ModifiableHashMapTest {
     @Test
     public void containsShouldReturnTrueForAnEntryInTheMap() {
         assertTrue(MAP123.contains(ENTRY1));
+    }
+
+    /**
+     * Verifies that contains returns true for an entry in a map with duplicate keys.
+     */
+    @Test
+    public void containsShouldReturnTrueForAnEntryInAMapWithDuplicateKeys() {
+        ModifiableMap<Integer, String> map =
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY1BIS, ENTRY3);
+        assertTrue(map.contains(ENTRY1));
+        assertTrue(map.contains(ENTRY1BIS));
+    }
+
+    /**
+     * Verifies that contains returns false for an empty map.
+     */
+    @Test
+    public void containsShouldReturnFalseForAnEmptyMap() {
+        assertFalse(new ModifiableHashMap<Integer, String>().contains(new Entry<Integer, String>(0, "zero")));
     }
 
     /**
@@ -243,12 +271,28 @@ public class ModifiableHashMapTest {
      */
     @Test
     public void getAllShouldReturnManyValuesForKey() {
-        ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES,
-                ENTRY1, new Entry<Integer, String>(1, "two"), ENTRY3);
+        ModifiableMap<Integer, String> map =
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY1BIS, ENTRY3);
         Collection<String> actual = map.getAll(1);
         assertEquals(2, actual.size());
         assertTrue(actual.contains("one"));
-        assertTrue(actual.contains("two"));
+        assertTrue(actual.contains("bis"));
+        assertEquals(DISTINCT_ELEMENTS, actual.getElementCardinality());
+    }
+
+    /**
+     * Verifies that when you try to use getAll with a key in the map that has multiple values, a collection with the
+     * values is returned.
+     */
+    @Test
+    public void getAllShouldReturnDuplicateValuesForKey() {
+        ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>(
+                DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, ENTRY1, ENTRY1, ENTRY1BIS, ENTRY3);
+        Collection<String> actual = map.getAll(1);
+        assertEquals(THREE, actual.size());
+        assertTrue(actual.contains("one"));
+        assertTrue(actual.contains("bis"));
+        assertEquals(DUPLICATE_ELEMENTS, actual.getElementCardinality());
     }
 
     /**
@@ -472,6 +516,49 @@ public class ModifiableHashMapTest {
     }
 
     /**
+     * Verifies that adding a map with already present keys on a map with distinct keys returns false.
+     */
+    @Test
+    public void addAllWithDuplicateKeysOnMapWithDistinctKeysShouldReturnFalse() {
+        ModifiableMap<Integer, String> map =
+                new ModifiableHashMap<Integer, String>(DISTINCT_KEYS, ENTRY1, ENTRY2, ENTRY3);
+        assertFalse(map.addAll(new HashMap<Integer, String>(ENTRY1BIS)));
+    }
+
+    /**
+     * Verifies that adding a map with both present and absent keys adds the entries with absent keys.
+     */
+    @Test
+    public void addAllOnMapWithDistinctKeysShouldAddNewKeysOnly() {
+        ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>(DISTINCT_KEYS, ENTRY1, ENTRY2);
+        assertTrue(map.addAll(new HashMap<Integer, String>(ENTRY3, ENTRY1BIS)));
+        assertEquals(THREE, map.size());
+    }
+
+    /**
+     * Verifies that adding a map with already present keys and values on a map with duplicate keys and distinct values
+     * returns false.
+     */
+    @Test
+    public void addAllWithDuplicateKeyAndValuesOnMapWithDuplicateKeysAndDistinctValuesShouldReturnFalse() {
+        ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>(
+                KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
+        assertFalse(map.addAll(new HashMap<Integer, String>(new Entry<Integer, String>(1, "one"))));
+    }
+
+    /**
+     * Verifies that adding a map with both present and absent keys and values adds the entries with new keys or new
+     * values.
+     */
+    @Test
+    public void addAllOnMapWithDuplicateKeysAndDistinctValuesShouldAddNewKeysAndNewValues() {
+        ModifiableMap<Integer, String> map =
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2);
+        assertTrue(map.addAll(new HashMap<Integer, String>(ENTRY3, ENTRY1BIS, new Entry<Integer, String>(1, "one"))));
+        assertEquals(FOUR, map.size());
+    }
+
+    /**
      * Verifies that adding a map of size one returns true.
      */
     @Test
@@ -490,14 +577,14 @@ public class ModifiableHashMapTest {
     }
 
     /**
-     * Verifies that adding a map with a large map returns true. This tests that resizing works as intended.
+     * Verifies that adding a map with a large map returns true. This tests that resizing works as intended. Note that
+     * the size of the large map is constructed to match the ratios in the implementation.
      */
     @Test
     public void addAllWithLargeMapReturnsTrue() {
-        ModifiableMap<Integer, String> map1 = new ModifiableHashMap<Integer, String>();
+        ModifiableMap<Integer, String> map1 = createNewMap();
         ModifiableMap<Integer, String> map2 = new ModifiableHashMap<Integer, String>();
-        for (int i = 0; i < SIX; i++) {
-            map1.add(i, "1");
+        for (int i = 0; i < TEN; i++) {
             map2.add(SIX + i, "2");
         }
         assertTrue(map1.addAll(map2));
@@ -537,6 +624,7 @@ public class ModifiableHashMapTest {
         ModifiableMap<Integer, String> map = createNewMap();
         map.clear();
         assertTrue(map.isEmpty());
+        assertFalse(map.containsKey(1));
     }
 
     /**
@@ -557,5 +645,51 @@ public class ModifiableHashMapTest {
         ModifiableMap<Integer, String> map = createNewMap();
         map.clear();
         assertTrue(map.getValues().isEmpty());
+    }
+
+    /**
+     * Verifies that containsAll returns true when a map is compared with itself.
+     */
+    @Test
+    public void containsAllShouldReturnTrueWhenAMapIsComparedWithItself() {
+        assertTrue(MAP123.containsAll(MAP123));
+    }
+
+    /**
+     * Verifies that containsAll returns false when a map doesn't contain all the entries of the map is is compared
+     * with.
+     */
+    @Test
+    public void containsAllShouldReturnFalseWhenAMapContainsOtherEntries() {
+        assertFalse(MAP123.containsAll(MAP123NULL));
+    }
+
+    /**
+     * Verifies that when another key and value cardinality is specified, getKeyAndValueCardinality returns the
+     * specified one.
+     */
+    @Test
+    public void getKeyAndValueCardinalityShouldBeWiredCorrectly() {
+        assertEquals(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES,
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES)
+                        .getKeyAndValueCardinality());
+    }
+
+    /**
+     * Verifies that trying to remove an absent key throws IllegalArgumentException.
+     */
+    @Test
+    public void removeShouldThrowExceptionForAbsentKey() {
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> createNewMap().remove(FOUR));
+        assertEquals("Map doesn't contain an entry with the key 4.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that removing a key returns the associated value.
+     */
+    @Test
+    public void removeShouldReturnTheValyeForTheKey() {
+        assertEquals("one", createNewMap().remove(1));
     }
 }
