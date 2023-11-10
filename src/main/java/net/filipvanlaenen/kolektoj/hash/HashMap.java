@@ -2,7 +2,7 @@ package net.filipvanlaenen.kolektoj.hash;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;
@@ -73,38 +73,31 @@ public final class HashMap<K, V> implements Map<K, V> {
         this.keyAndValueCardinality = keyAndValueCardinality;
         hashedEntriesSize = entries.length * HASHING_RATIO;
         Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) entries.getClass();
-        Entry<K, V>[] hashedArray = (Entry<K, V>[]) Array.newInstance(clazz.getComponentType(), hashedEntriesSize);
-        ModifiableCollection<Entry<K, V>> collection =
+        Entry<K, V>[] theHashedEntries = (Entry<K, V>[]) Array.newInstance(clazz.getComponentType(), hashedEntriesSize);
+        ModifiableCollection<Entry<K, V>> theEntries =
                 new ModifiableArrayCollection<Entry<K, V>>(getElementCardinality());
-        ModifiableCollection<K> keys = new ModifiableArrayCollection<K>(
+        ModifiableCollection<K> theKeys = new ModifiableArrayCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS);
         for (Entry<K, V> entry : entries) {
             if (entry == null) {
                 throw new IllegalArgumentException("Map entries can't be null.");
             }
             K key = entry.key();
-            boolean shouldBeAdded = true;
-            switch (keyAndValueCardinality) {
-            case DISTINCT_KEYS:
-                shouldBeAdded = !keys.contains(key);
-                break;
-            case DUPLICATE_KEYS_WITH_DISTINCT_VALUES:
-                shouldBeAdded = !collection.contains(entry);
-                break;
-            }
-            if (shouldBeAdded) {
-                collection.add(entry);
-                keys.add(key);
+            if (keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES
+                    || keyAndValueCardinality == DUPLICATE_KEYS_WITH_DISTINCT_VALUES && !theEntries.contains(entry)
+                    || keyAndValueCardinality == DISTINCT_KEYS && !theKeys.contains(key)) {
+                theEntries.add(entry);
+                theKeys.add(key);
                 int i = HashUtilities.hash(key, hashedEntriesSize);
-                while (hashedArray[i] != null) {
+                while (theHashedEntries[i] != null) {
                     i = Math.floorMod(i + 1, hashedEntriesSize);
                 }
-                hashedArray[i] = entry;
+                theHashedEntries[i] = entry;
             }
         }
-        this.entries = new ArrayCollection<Entry<K, V>>(collection);
-        this.keys = new ArrayCollection<K>(keys);
-        this.hashedEntries = hashedArray;
+        this.entries = new ArrayCollection<Entry<K, V>>(theEntries);
+        this.keys = new ArrayCollection<K>(theKeys);
+        this.hashedEntries = theHashedEntries;
     }
 
     @Override
@@ -183,8 +176,10 @@ public final class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public Collection<V> getAll(final K key) throws IllegalArgumentException {
+        ModifiableCollection<V> result = new ModifiableArrayCollection<V>(
+                keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS
+                        : DISTINCT_ELEMENTS);
         int index = HashUtilities.hash(key, hashedEntriesSize);
-        ModifiableCollection<V> result = ModifiableCollection.empty();
         while (hashedEntries[index] != null) {
             K k = hashedEntries[index].key();
             if (Objects.equals(k, key)) {

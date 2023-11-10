@@ -1,10 +1,8 @@
 package net.filipvanlaenen.kolektoj.hash;
 
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.*;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -277,6 +275,20 @@ public class HashMapTest {
     }
 
     /**
+     * Verifies that getKeys returns all the keys.
+     */
+    @Test
+    public void getKeysShouldReturnAllKeys() {
+        Map<Integer, String> map = new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
+        Collection<Integer> actual = map.getKeys();
+        assertEquals(THREE, actual.size());
+        assertTrue(actual.contains(1));
+        assertTrue(actual.contains(2));
+        assertTrue(actual.contains(THREE));
+        assertEquals(DISTINCT_ELEMENTS, actual.getElementCardinality());
+    }
+
+    /**
      * Verifies that when you try to use getAll with a key in the map that has multiple values, a collection with the
      * values is returned.
      */
@@ -288,20 +300,43 @@ public class HashMapTest {
         assertEquals(2, actual.size());
         assertTrue(actual.contains("one"));
         assertTrue(actual.contains("two"));
+        assertEquals(DISTINCT_ELEMENTS, actual.getElementCardinality());
     }
 
     /**
-     * Verifies that getKeys returns all the keys. The unit test creates a new map to ensure that the lazy
-     * initialization hasn't been executed yet.
+     * Verifies that when you try to use getAll with a key in the map that has duplicate values, a collection with the
+     * values is returned.
      */
     @Test
-    public void getKeysShouldReturnAllKeys() {
-        Map<Integer, String> map = new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
-        Collection<Integer> actual = map.getKeys();
-        assertEquals(THREE, actual.size());
-        assertTrue(actual.contains(1));
-        assertTrue(actual.contains(2));
-        assertTrue(actual.contains(THREE));
+    public void getAllShouldReturnDuplicateValuesForKey() {
+        Map<Integer, String> map = new HashMap<Integer, String>(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, ENTRY1,
+                new Entry<Integer, String>(1, "one"), ENTRY3);
+        Collection<String> actual = map.getAll(1);
+        assertEquals(2, actual.size());
+        assertTrue(actual.contains("one"));
+        assertTrue(actual.contains("one"));
+        assertEquals(DUPLICATE_ELEMENTS, actual.getElementCardinality());
+    }
+
+    /**
+     * Verifies that the collection returned by getKeys has distinct elements as its cardinality for a map with distinct
+     * keys.
+     */
+    @Test
+    public void getKeysShouldReturnCollectionWithDistinctElementsForMapWithDistinctKeys() {
+        Map<Integer, String> map = new HashMap<Integer, String>(DISTINCT_KEYS, ENTRY1, ENTRY2, ENTRY3);
+        assertEquals(DISTINCT_ELEMENTS, map.getKeys().getElementCardinality());
+    }
+
+    /**
+     * Verifies that the collection returned by getKeys has duplicate elements as its cardinality for a map with
+     * duplicate keys.
+     */
+    @Test
+    public void getKeysShouldReturnCollectionWithDuplicateElementsForMapWithDuplicateKeys() {
+        Map<Integer, String> map =
+                new HashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
+        assertEquals(DUPLICATE_ELEMENTS, map.getKeys().getElementCardinality());
     }
 
     /**
@@ -346,5 +381,23 @@ public class HashMapTest {
             sum += entry.key();
         }
         assertEquals(SIX, sum);
+    }
+
+    /**
+     * Verifies that by default, a hash map has key and value cardinality <code>DISTINCT_KEYS</code>.
+     */
+    @Test
+    public void keyAndValueCardinalityShouldBeDistinctKeysByDefault() {
+        assertEquals(DISTINCT_KEYS, new HashMap<Integer, String>().getKeyAndValueCardinality());
+    }
+
+    /**
+     * Verifies that when another key and value cardinality is specified, getKeyAndValueCardinality returns the
+     * specified one.
+     */
+    @Test
+    public void getKeyAndValueCardinalityShouldBeWiredCorrectly() {
+        assertEquals(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES,
+                new HashMap<Integer, String>(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES).getKeyAndValueCardinality());
     }
 }
