@@ -689,7 +689,26 @@ public class ModifiableHashMapTest {
      * Verifies that removing a key returns the associated value.
      */
     @Test
-    public void removeShouldReturnTheValyeForTheKey() {
+    public void removeShouldReturnTheValueForTheKey() {
         assertEquals("one", createNewMap().remove(1));
+    }
+
+    /**
+     * Verifies that multiple entries have the same key, and some of them are removed, getAll still returns all values.
+     * This ensures that the hashed array is rehashed as holes appear in the overflow after removing entries.
+     */
+    @Test
+    public void removeShouldRehashIfHolesAppear() {
+        ModifiableMap<Integer, String> map =
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES);
+        map.add(1, "a");
+        map.add(1, "b");
+        map.add(1, "c");
+        map.add(1, "d");
+        map.add(1, "e");
+        map.add(1, "f");
+        map.add(1, "g");
+        map.remove(1);
+        assertEquals(SIX, map.getAll(1).size());
     }
 }

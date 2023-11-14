@@ -307,6 +307,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         V value = entry.value();
         entries.remove(entry);
         hashedEntries[index] = null;
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        // EQMU: Negating the second conditional below produces an equivalent mutant.
+        // EQMU: Replacing integer multiplication with division below produces an equivalent mutant.
         if (hashedEntries[Math.floorMod(index + 1, hashedEntriesSize)] != null
                 || entries.size() * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
             resizeHashedEntriesTo(entries.size() * HASHING_RATIO);
