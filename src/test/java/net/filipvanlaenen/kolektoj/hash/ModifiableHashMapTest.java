@@ -13,8 +13,10 @@ import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
+import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 
 /**
@@ -694,8 +696,8 @@ public class ModifiableHashMapTest {
     }
 
     /**
-     * Verifies that multiple entries have the same key, and some of them are removed, getAll still returns all values.
-     * This ensures that the hashed array is rehashed as holes appear in the overflow after removing entries.
+     * Verifies that when multiple entries have the same key, and some of them are removed, getAll still returns all
+     * values. This ensures that the hashed array is rehashed as holes appear in the overflow after removing entries.
      */
     @Test
     public void removeShouldRehashIfHolesAppear() {
@@ -709,6 +711,53 @@ public class ModifiableHashMapTest {
         map.add(1, "f");
         map.add(1, "g");
         map.remove(1);
+        assertEquals(SIX, map.getAll(1).size());
+    }
+
+    /**
+     * Verifies that when all entries are removed, a collection is empty.
+     */
+    @Test
+    public void removeAllWithTheSameEntriesShouldMakeMapEmpty() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.removeAll(MAP123);
+        assertTrue(map.isEmpty());
+    }
+
+    /**
+     * Verifies that when some entries are removed, removeAll returns true.
+     */
+    @Test
+    public void removeAllShouldReturnTrueWhenSomeEntriesAreRemoved() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        assertTrue(map.removeAll(new ModifiableHashMap<Integer, String>(ENTRY1, ENTRY2)));
+    }
+
+    /**
+     * Verifies that when no entries are removed, removeAll returns false.
+     */
+    @Test
+    public void removeAllShouldReturnFalseWhenNoEntriesAreRemoved() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        assertFalse(map.removeAll(new ModifiableHashMap<Integer, String>(ENTRY4)));
+    }
+
+    /**
+     * Verifies that when multiple entries have the same key, and some of them are removed, getAll still returns all
+     * values. This ensures that the hashed array is rehashed as holes appear in the overflow after removing entries.
+     */
+    @Test
+    public void removeAllShouldRehashIfHolesAppear() {
+        ModifiableMap<Integer, String> map =
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES);
+        map.add(1, "a");
+        map.add(1, "b");
+        map.add(1, "c");
+        map.add(1, "d");
+        map.add(1, "e");
+        map.add(1, "f");
+        map.add(1, "g");
+        map.removeAll(ModifiableMap.of(1, "a"));
         assertEquals(SIX, map.getAll(1).size());
     }
 }
