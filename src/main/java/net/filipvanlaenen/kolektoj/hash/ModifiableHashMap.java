@@ -112,7 +112,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         entries.add(entry);
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (entries.size() * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
-            resizeHashedEntriesTo(entries.size() * HASHING_RATIO);
+            resizeHashedEntriesTo(entries.size());
         } else {
             int i = HashUtilities.hash(key, hashedEntriesSize);
             while (hashedEntries[i] != null) {
@@ -133,7 +133,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         int numberOfNewEntries = map.size();
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if ((entries.size() + numberOfNewEntries) * MINIMAL_HASHING_RATIO > hashedEntriesSize) {
-            resizeHashedEntriesTo((entries.size() + numberOfNewEntries) * HASHING_RATIO);
+            resizeHashedEntriesTo(entries.size() + numberOfNewEntries);
         }
         boolean result = false;
         for (Entry<? extends K, ? extends V> entry : map) {
@@ -312,7 +312,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         // EQMU: Replacing integer multiplication with division below produces an equivalent mutant.
         if (hashedEntries[Math.floorMod(index + 1, hashedEntriesSize)] != null
                 || entries.size() * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
-            resizeHashedEntriesTo(entries.size() * HASHING_RATIO);
+            resizeHashedEntriesTo(entries.size());
         }
         keys.remove(key);
         values.remove(value);
@@ -331,7 +331,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             entries.remove(entry);
             hashedEntries[index] = null;
             if (hashedEntries[Math.floorMod(index + 1, hashedEntriesSize)] != null) {
-                resizeHashedEntriesTo(entries.size() * HASHING_RATIO);
+                resizeHashedEntriesTo(entries.size());
             }
             keys.remove(entry.key());
             values.remove(entry.value());
@@ -341,19 +341,20 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         // EQMU: Negating the conditional below produces an equivalent mutant.
         // EQMU: Replacing integer multiplication with division below produces an equivalent mutant.
         if (entries.size() * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
-            resizeHashedEntriesTo(entries.size() * HASHING_RATIO);
+            // EQMU: Removing the call to resizeHashedEntriesTo below produces an equivalent mutant.
+            resizeHashedEntriesTo(entries.size());
         }
         return result;
     }
 
     /**
-     * Resizes the hashed entries array to the new length. It is assumed that the new length is not less than the
-     * current size.
+     * Resizes the hashed entries array to the new base length. The base length will be multiplied by a ratio to
+     * calculate the actual new length for the hashed entries array.
      *
-     * @param newLength The new length for the hashed entries array.
+     * @param newBaseLength The new base length for the hashed entries array.
      */
-    private void resizeHashedEntriesTo(final int newLength) {
-        hashedEntriesSize = newLength;
+    private void resizeHashedEntriesTo(final int newBaseLength) {
+        hashedEntriesSize = newBaseLength * HASHING_RATIO;
         Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
         for (Entry<K, V> entry : entries) {
             int j = HashUtilities.hash(entry.key(), hashedEntriesSize);
@@ -386,15 +387,19 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
                 entries.remove(entry);
                 hashedEntries[index] = null;
                 if (hashedEntries[Math.floorMod(index + 1, hashedEntriesSize)] != null) {
-                    resizeHashedEntriesTo(size * HASHING_RATIO);
+                    resizeHashedEntriesTo(size);
                 }
                 keys.remove(entry.key());
                 values.remove(entry.value());
                 result = true;
             }
         }
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        // EQMU: Negating the conditional below produces an equivalent mutant.
+        // EQMU: Replacing integer multiplication with division below produces an equivalent mutant.
         if (size * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
-            resizeHashedEntriesTo(size * HASHING_RATIO);
+            // EQMU: Removing the call to resizeHashedEntriesTo below produces an equivalent mutant.
+            resizeHashedEntriesTo(size);
         }
         return result;
     }

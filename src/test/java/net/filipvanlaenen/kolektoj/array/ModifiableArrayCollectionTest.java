@@ -428,7 +428,7 @@ public class ModifiableArrayCollectionTest {
     }
 
     /**
-     * Verifies that when all elements are retained, a collection is empty.
+     * Verifies that when all elements are retained, the collection has remained intact.
      */
     @Test
     public void retainAllWithTheSameElementsShouldNotRemoveElements() {

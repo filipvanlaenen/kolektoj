@@ -2,21 +2,16 @@ package net.filipvanlaenen.kolektoj.hash;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
-import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.Map.Entry;
-import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
-import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 
 /**
@@ -63,6 +58,10 @@ public class ModifiableHashMapTest {
      * An entry with key 4 and value four.
      */
     private static final Entry<Integer, String> ENTRY4 = new Entry<Integer, String>(4, "four");
+    /**
+     * Map with the integers 1 and 2.
+     */
+    private static final Map<Integer, String> MAP12 = new HashMap<Integer, String>(ENTRY1, ENTRY2);
     /**
      * Map with the integers 1, 2 and 3 mapped to their words.
      */
@@ -348,9 +347,7 @@ public class ModifiableHashMapTest {
      */
     @Test
     public void toArrayShouldProduceAnArrayWithTheEntriesOfTheMap() {
-
-        ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>(ENTRY1, ENTRY2);
-        Entry<Integer, String>[] actual = map.toArray();
+        Entry<Integer, String>[] actual = MAP12.toArray();
         assertTrue(actual.length == 2 && (actual[0] == ENTRY1 || actual[1] == ENTRY1)
                 && (actual[0] == ENTRY2 || actual[1] == ENTRY2));
     }
@@ -543,8 +540,8 @@ public class ModifiableHashMapTest {
      */
     @Test
     public void addAllWithDuplicateKeyAndValuesOnMapWithDuplicateKeysAndDistinctValuesShouldReturnFalse() {
-        ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>(
-                KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
+        ModifiableMap<Integer, String> map =
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
         assertFalse(map.addAll(new HashMap<Integer, String>(new Entry<Integer, String>(1, "one"))));
     }
 
@@ -730,7 +727,7 @@ public class ModifiableHashMapTest {
     @Test
     public void removeAllShouldReturnTrueWhenSomeEntriesAreRemoved() {
         ModifiableMap<Integer, String> map = createNewMap();
-        assertTrue(map.removeAll(new ModifiableHashMap<Integer, String>(ENTRY1, ENTRY2)));
+        assertTrue(map.removeAll(MAP12));
     }
 
     /**
@@ -759,5 +756,90 @@ public class ModifiableHashMapTest {
         map.add(1, "g");
         map.removeAll(ModifiableMap.of(1, "a"));
         assertEquals(SIX, map.getAll(1).size());
+    }
+
+    /**
+     * Verifies that when multiple entries have the same key, and some of them are removed, getAll still returns all
+     * values. This ensures that the hashed array is rehashed as holes appear in the overflow after removing entries.
+     */
+    @Test
+    public void removeAllShouldRehashIfManyEntriesAreRemoved() {
+        ModifiableMap<Integer, String> map1 = new ModifiableHashMap<Integer, String>();
+        ModifiableMap<Integer, String> map2 = new ModifiableHashMap<Integer, String>();
+        for (int i = 0; i < TEN; i++) {
+            map1.add(i, "" + i);
+            map2.add(i, "" + i);
+        }
+        map1.removeAll(map2);
+        assertTrue(map1.isEmpty());
+    }
+
+    /**
+     * Verifies that when some entries are removed, retainAll returns true.
+     */
+    @Test
+    public void retainAllShouldReturnTrueWhenSomeEntriesAreRemoved() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        assertTrue(map.retainAll(MAP12));
+    }
+
+    /**
+     * Verifies that when no entries are removed, retainAll returns false.
+     */
+    @Test
+    public void retainAllShouldReturnFalseWhenNoEntriesAreRemoved() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        assertFalse(map.retainAll(MAP123));
+    }
+
+    /**
+     * Verifies that when all entries are retained, a map remains intact.
+     */
+    @Test
+    public void retainAllWithTheSameEntriessShouldNotRemoveEntries() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.retainAll(MAP123);
+        assertEquals(THREE, map.size());
+        assertTrue(map.contains(ENTRY1));
+        assertTrue(map.contains(ENTRY2));
+        assertTrue(map.contains(ENTRY3));
+    }
+
+    /**
+     * Verifies that when only absent entries should be retained, retainAll empties the map.
+     */
+    @Test
+    public void retainAllWithAbsentEntriesOnlyClearsTheMap() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.retainAll(MAP4);
+        assertTrue(map.isEmpty());
+    }
+
+    /**
+     * Verifies that when multiple entries have the same key, and some of them are not retained, getAll still returns
+     * all values. This ensures that the hashed array is rehashed as holes appear in the overflow after removing entries
+     * in the retainAll method.
+     */
+    @Test
+    public void retainAllShouldRehashIfHolesAppear() {
+        ModifiableMap<Integer, String> map1 =
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES);
+        ModifiableMap<Integer, String> map2 =
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES);
+        map1.add(1, "a");
+        map1.add(1, "b");
+        map1.add(1, "c");
+        map1.add(1, "d");
+        map1.add(1, "e");
+        map1.add(1, "f");
+        map1.add(1, "g");
+        map2.add(1, "b");
+        map2.add(1, "c");
+        map2.add(1, "d");
+        map2.add(1, "e");
+        map2.add(1, "f");
+        map2.add(1, "g");
+        map1.retainAll(map2);
+        assertEquals(SIX, map1.getAll(1).size());
     }
 }
