@@ -19,24 +19,54 @@ import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
  * @param <E> The element type.
  */
 public final class ModifiableLinkedListCollection<E> implements ModifiableCollection<E> {
-    private class Node {
+    /**
+     * A class implementing a node in a linked list.
+     */
+    private final class Node {
+        /**
+         * The element of the node.
+         */
         private final E element;
+        /**
+         * The next node in the linked list.
+         */
         private Node next;
 
-        private Node(E element, Node next) {
+        /**
+         * Constructor taking the element and the next nodes as its parameters.
+         *
+         * @param element The element of this node.
+         * @param next    The next node in the linked list.
+         */
+        private Node(final E element, final Node next) {
             this.element = element;
             this.next = next;
         }
 
+        /**
+         * Returns the element of this node.
+         *
+         * @return The element of this node.
+         */
         private E getElement() {
             return element;
         }
 
+        /**
+         * Returns the next node in the linked list.
+         *
+         * @return The next node in the linked list.
+         */
         private Node getNext() {
             return next;
         }
 
-        private void setNext(Node next) {
+        /**
+         * Sets the next node in the linked list.
+         *
+         * @param next The next node in the linked list.
+         */
+        private void setNext(final Node next) {
             this.next = next;
         }
     }
@@ -45,6 +75,9 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
      * A cached array with the elements.
      */
     private E[] cachedArray;
+    /**
+     * A boolean flag indicating whether the cachedArray field is dirty.
+     */
     private boolean cachedArrayDirty;
     /**
      * The element cardinality.
@@ -84,7 +117,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     }
 
     @Override
-    public boolean add(E element) {
+    public boolean add(final E element) {
         if (elementCardinality == DISTINCT_ELEMENTS && contains(element)) {
             return false;
         }
@@ -95,7 +128,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     }
 
     @Override
-    public boolean addAll(Collection<? extends E> collection) {
+    public boolean addAll(final Collection<? extends E> collection) {
         boolean result = false;
         for (E element : collection) {
             result |= add(element);
@@ -112,7 +145,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     }
 
     @Override
-    public boolean contains(E element) {
+    public boolean contains(final E element) {
         Node current = head;
         while (current != null) {
             if (Objects.equals(current.getElement(), element)) {
@@ -167,7 +200,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     }
 
     @Override
-    public boolean remove(E element) {
+    public boolean remove(final E element) {
         if (head == null) {
             return false;
         }
@@ -193,7 +226,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     }
 
     @Override
-    public boolean removeAll(Collection<? extends E> collection) {
+    public boolean removeAll(final Collection<? extends E> collection) {
         boolean result = false;
         for (E element : collection) {
             result |= remove(element);
@@ -202,7 +235,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     }
 
     @Override
-    public boolean retainAll(Collection<? extends E> collection) {
+    public boolean retainAll(final Collection<? extends E> collection) {
         if (head == null) {
             return false;
         }

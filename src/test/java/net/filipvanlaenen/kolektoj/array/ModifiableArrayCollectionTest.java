@@ -6,7 +6,7 @@ import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection} class.
  */
-public class ModifiableArrayCollectionTest<E>
+public final class ModifiableArrayCollectionTest<E>
         extends ModifiableCollectionTestBase<ModifiableArrayCollection<Integer>> {
 
     @Override

@@ -6,7 +6,7 @@ import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.linkedlist.ModifiableLinkedListCollection} class.
  */
-public class ModifiableLinkedListCollectionTest<E>
+public final class ModifiableLinkedListCollectionTest<E>
         extends ModifiableCollectionTestBase<ModifiableLinkedListCollection<Integer>> {
 
     @Override
