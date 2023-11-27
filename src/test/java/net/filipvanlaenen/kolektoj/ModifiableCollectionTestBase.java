@@ -395,6 +395,14 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     }
 
     /**
+     * Verifies that containsAll returns false if one element doesn't match.
+     */
+    @Test
+    public void containsAllShouldReturnFalseWhenOneElementDoesNotMatch() {
+        assertFalse(collection123.containsAll(createModifiableCollection(1, 2, FOUR)));
+    }
+
+    /**
      * Verifies that the spliterator has the distinct flag not set for collections with duplicate elements.
      */
     @Test
