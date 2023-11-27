@@ -141,7 +141,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     public void clear() {
         head = null;
         size = 0;
-        cachedArrayDirty = cachedArray.length == 0;
+        cachedArrayDirty = cachedArray.length != 0;
     }
 
     @Override

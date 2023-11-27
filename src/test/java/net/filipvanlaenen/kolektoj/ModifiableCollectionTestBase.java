@@ -15,6 +15,8 @@ import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.ModifiableCollection} interface.
+ *
+ * @param <T> The subclass type to be tested.
  */
 public abstract class ModifiableCollectionTestBase<T extends ModifiableCollection<Integer>> {
     /**
@@ -46,10 +48,22 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
      */
     private final ModifiableCollection<Integer> collection123null = createModifiableCollection(1, 2, 3, null);
 
-    protected abstract T createModifiableCollection(final Integer... integers);
+    /**
+     * Creates a modifiable collection containing the provided integers.
+     *
+     * @param integers The integers to be included in the modifiable collection.
+     * @return A modifiable collection containing the provided integers.
+     */
+    protected abstract T createModifiableCollection(Integer... integers);
 
-    protected abstract T createModifiableCollection(final ElementCardinality distinctElements,
-            final Integer... integers);
+    /**
+     * Creates a modifiable collection with the specified element cardinality containing the provided integers.
+     *
+     * @param elementCardinality The element cardinality for the modifiable collection.
+     * @param integers           The integers to be included in the modifiable collection.
+     * @return A modifiable collection with the specified element cardinality containing the provided integers.
+     */
+    protected abstract T createModifiableCollection(ElementCardinality elementCardinality, Integer... integers);
 
     /**
      * Creates a new modifiable collection to run the unit tests on.
@@ -261,6 +275,22 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     }
 
     /**
+     * Verifies that trying to remove an element from an empty collection returns false.
+     */
+    @Test
+    public void removeOnEmptyCollectionShouldReturnFalse() {
+        assertFalse(createModifiableCollection().remove(1));
+    }
+
+    /**
+     * Verifies that trying to remove an element from a collection with only that element returns true.
+     */
+    @Test
+    public void removeElementFromCollectionWithOnlyThatElementShouldReturnTrue() {
+        assertTrue(createModifiableCollection(1).remove(1));
+    }
+
+    /**
      * Verifies that trying to remove an element that isn't in the collection returns false.
      */
     @Test
@@ -304,6 +334,7 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
         ModifiableCollection<Integer> collection = createCollection123();
         collection.clear();
         assertTrue(collection.isEmpty());
+        assertEquals(0, collection.toArray().length);
     }
 
     /**
@@ -422,6 +453,14 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     }
 
     /**
+     * Verifies that retainAll on an empty collection returns false.
+     */
+    @Test
+    public void retainAllShouldReturnFalseOnAnEmptyCollection() {
+        assertFalse(createModifiableCollection().retainAll(collection123));
+    }
+
+    /**
      * Verifies that when some elements are removed, retainAll returns true.
      */
     @Test
@@ -458,7 +497,7 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     @Test
     public void retainAllWithAbsentElementsOnlyClearsTheCollection() {
         ModifiableCollection<Integer> collection = createCollection123();
-        collection.retainAll(Collection.of(FOUR));
+        assertTrue(collection.retainAll(Collection.of(FOUR)));
         assertTrue(collection.isEmpty());
     }
 }
