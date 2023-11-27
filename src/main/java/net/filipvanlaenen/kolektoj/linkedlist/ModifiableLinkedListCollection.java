@@ -3,6 +3,7 @@ package net.filipvanlaenen.kolektoj.linkedlist;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
+import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
@@ -17,7 +18,7 @@ import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
  *
  * @param <E> The element type.
  */
-public class ModifiableLinkedListCollection<E> implements ModifiableCollection<E> {
+public final class ModifiableLinkedListCollection<E> implements ModifiableCollection<E> {
     private class Node {
         private final E element;
         private Node next;
@@ -40,6 +41,11 @@ public class ModifiableLinkedListCollection<E> implements ModifiableCollection<E
         }
     }
 
+    /**
+     * A cached array with the elements.
+     */
+    private E[] cachedArray;
+    private boolean cachedArrayDirty;
     /**
      * The element cardinality.
      */
@@ -73,6 +79,8 @@ public class ModifiableLinkedListCollection<E> implements ModifiableCollection<E
         for (final E element : elements) {
             add(element);
         }
+        cachedArray = elements.clone();
+        cachedArrayDirty = elements.length == size;
     }
 
     @Override
@@ -82,6 +90,7 @@ public class ModifiableLinkedListCollection<E> implements ModifiableCollection<E
         }
         head = new Node(element, head);
         size++;
+        cachedArrayDirty = true;
         return true;
     }
 
@@ -91,6 +100,7 @@ public class ModifiableLinkedListCollection<E> implements ModifiableCollection<E
         for (E element : collection) {
             result |= add(element);
         }
+        cachedArrayDirty |= result;
         return result;
     }
 
@@ -98,6 +108,7 @@ public class ModifiableLinkedListCollection<E> implements ModifiableCollection<E
     public void clear() {
         head = null;
         size = 0;
+        cachedArrayDirty = cachedArray.length == 0;
     }
 
     @Override
@@ -113,9 +124,27 @@ public class ModifiableLinkedListCollection<E> implements ModifiableCollection<E
     }
 
     @Override
-    public boolean containsAll(Collection<?> collection) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean containsAll(final Collection<?> collection) {
+        if (collection.size() > size) {
+            return false;
+        }
+        boolean[] matches = new boolean[size];
+        for (Object element : collection) {
+            Node current = head;
+            for (int i = 0; i < size; i++) {
+                if (!matches[i] && Objects.equals(element, current.getElement())) {
+                    matches[i] = true;
+                    break;
+                }
+                current = current.getNext();
+            }
+        }
+        for (boolean match : matches) {
+            if (!match) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -145,6 +174,7 @@ public class ModifiableLinkedListCollection<E> implements ModifiableCollection<E
         if (Objects.equals(head.getElement(), element)) {
             head = head.getNext();
             size--;
+            cachedArrayDirty = true;
             return true;
         }
         Node current = head;
@@ -153,6 +183,7 @@ public class ModifiableLinkedListCollection<E> implements ModifiableCollection<E
             if (Objects.equals(next.getElement(), element)) {
                 current.setNext(next.getNext());
                 size--;
+                cachedArrayDirty = true;
                 return true;
             }
             current = next;
@@ -163,14 +194,56 @@ public class ModifiableLinkedListCollection<E> implements ModifiableCollection<E
 
     @Override
     public boolean removeAll(Collection<? extends E> collection) {
-        // TODO Auto-generated method stub
-        return false;
+        boolean result = false;
+        for (E element : collection) {
+            result |= remove(element);
+        }
+        return result;
     }
 
     @Override
     public boolean retainAll(Collection<? extends E> collection) {
-        // TODO Auto-generated method stub
-        return false;
+        if (head == null) {
+            return false;
+        }
+        boolean[] retain = new boolean[size];
+        for (E element : collection) {
+            Node current = head;
+            for (int i = 0; i < size; i++) {
+                if (!retain[i] && Objects.equals(element, current.getElement())) {
+                    retain[i] = true;
+                    break;
+                }
+                current = current.getNext();
+            }
+        }
+        boolean result = false;
+        int i = 0;
+        while (i < retain.length && !retain[i]) {
+            head = head.getNext();
+            size--;
+            cachedArrayDirty = true;
+            result = true;
+            i++;
+        }
+        if (head == null) {
+            return true;
+        }
+        Node current = head;
+        Node next = current.getNext();
+        while (i < retain.length) {
+            if (retain[i]) {
+                current = next;
+            } else {
+                current.setNext(next.getNext());
+                size--;
+                cachedArrayDirty = true;
+                result = true;
+            }
+            next = current == null ? null : current.getNext();
+            i++;
+        }
+        return result;
     }
 
     @Override
@@ -185,7 +258,16 @@ public class ModifiableLinkedListCollection<E> implements ModifiableCollection<E
 
     @Override
     public E[] toArray() {
-        // TODO Auto-generated method stub
-        return null;
+        if (cachedArrayDirty) {
+            Class<E[]> clazz = (Class<E[]>) cachedArray.getClass();
+            cachedArray = (E[]) Array.newInstance(clazz.getComponentType(), size);
+            Node current = head;
+            for (int i = 0; i < size; i++) {
+                cachedArray[i] = current.getElement();
+                current = current.getNext();
+            }
+            cachedArrayDirty = false;
+        }
+        return cachedArray.clone();
     }
 }
