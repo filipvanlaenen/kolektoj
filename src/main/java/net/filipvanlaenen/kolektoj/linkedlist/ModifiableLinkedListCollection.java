@@ -80,7 +80,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
             add(element);
         }
         cachedArray = elements.clone();
-        cachedArrayDirty = elements.length == size;
+        cachedArrayDirty = elements.length != size;
     }
 
     @Override

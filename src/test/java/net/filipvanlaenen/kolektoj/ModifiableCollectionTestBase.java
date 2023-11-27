@@ -314,9 +314,21 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
         ModifiableCollection<Integer> collection =
                 createModifiableCollection(DISTINCT_ELEMENTS, 1, 2, 2, THREE, 2, THREE);
         assertEquals(THREE, collection.size());
+        assertEquals(THREE, collection.toArray().length);
         assertTrue(collection.contains(1));
         assertTrue(collection.contains(2));
         assertTrue(collection.contains(THREE));
+    }
+
+    /**
+     * Verifies that duplicate elements are not removed if a collection with duplicate elements is constructed.
+     */
+    @Test
+    public void constructorShouldNotRemoveDuplicateElementsFromDuplicateCollection() {
+        ModifiableCollection<Integer> collection =
+                createModifiableCollection(DUPLICATE_ELEMENTS, 1, 2, 2, THREE, 2, THREE);
+        assertEquals(SIX, collection.size());
+        assertEquals(SIX, collection.toArray().length);
     }
 
     /**
