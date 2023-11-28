@@ -1,11 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
-import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Spliterator;
 
@@ -469,12 +465,37 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     }
 
     /**
-     * Verifies that when some elements are removed, retainAll returns true.
+     * Verifies that the correct removal of all but one elements by retainAll.
      */
     @Test
-    public void retainAllShouldReturnTrueWhenSomeElementsAreRemoved() {
-        ModifiableCollection<Integer> collection = createCollection123();
-        assertTrue(collection.retainAll(collection12));
+    public void retainAllShouldRemoveAllButOneElementsCorrectly() {
+        for (int i = 1; i <= THREE; i++) {
+            ModifiableCollection<Integer> collection = createCollection123();
+            assertTrue(collection.retainAll(createModifiableCollection(i)));
+            assertEquals(1, collection.size());
+            assertEquals(1, collection.toArray().length);
+            for (int j = 1; j <= THREE; j++) {
+                assertEquals(i == j, collection.contains(j));
+            }
+        }
+    }
+
+    /**
+     * Verifies that the correct removal of one element by retainAll.
+     */
+    @Test
+    public void retainAllShouldRemoveOneElementCorrectly() {
+        for (int i = 1; i <= THREE; i++) {
+            ModifiableCollection<Integer> collection = createCollection123();
+            ModifiableCollection<Integer> r = createCollection123();
+            r.remove(i);
+            assertTrue(collection.retainAll(r));
+            assertEquals(2, collection.size());
+            assertEquals(2, collection.toArray().length);
+            for (int j = 1; j <= THREE; j++) {
+                assertEquals(i != j, collection.contains(j));
+            }
+        }
     }
 
     /**

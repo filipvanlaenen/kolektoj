@@ -264,6 +264,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         }
         Node current = head;
         Node next = current.getNext();
+        i++;
         while (i < retain.length) {
             if (retain[i]) {
                 current = next;
@@ -273,7 +274,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
                 cachedArrayDirty = true;
                 result = true;
             }
-            next = current == null ? null : current.getNext();
+            next = current.getNext();
             i++;
         }
         return result;
