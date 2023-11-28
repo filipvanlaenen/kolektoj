@@ -133,7 +133,6 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         for (E element : collection) {
             result |= add(element);
         }
-        cachedArrayDirty |= result;
         return result;
     }
 
