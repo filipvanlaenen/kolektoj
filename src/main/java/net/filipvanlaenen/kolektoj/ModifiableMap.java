@@ -1,5 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
+import java.util.function.Predicate;
+
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 
@@ -161,6 +163,15 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
      * @return True if the size of the map decreased after removing the entries from the map.
      */
     boolean removeAll(Map<? extends K, ? extends V> map);
+
+    /**
+     * Removes all entries from this map that satisfy the given predicate, and returns whether it decreased the size of
+     * the map.
+     * 
+     * @param predicate The predicate to be applied to each entry of the map.
+     * @return True if the size of the map decreased after removing the entries that satisfied the given predicate.
+     */
+    boolean removeIf(Predicate<Entry<? extends K, ? extends V>> predicate);
 
     /**
      * Retains the entries of a map in this map, while removing all other, and returns whether it decreased the size of

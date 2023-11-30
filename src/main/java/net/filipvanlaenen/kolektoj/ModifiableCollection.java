@@ -1,5 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
+import java.util.function.Predicate;
+
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
 /**
@@ -78,6 +80,16 @@ public interface ModifiableCollection<E> extends Collection<E> {
      * @return True if the size of the collection decreased after removing the elements of the collection.
      */
     boolean removeAll(Collection<? extends E> collection);
+
+    /**
+     * Removes all elements from this collection that satisfy the given predicate, and returns whether it decreased the
+     * size of the collection.
+     * 
+     * @param predicate The predicate to be applied to each element of the collection.
+     * @return True if the size of the collection decreased after removing the elements that satisfied the given
+     *         predicate.
+     */
+    boolean removeIf(Predicate<? super E> predicate);
 
     /**
      * Retains elements from a collection in this collection and removes all other, and returns whether it decreased the

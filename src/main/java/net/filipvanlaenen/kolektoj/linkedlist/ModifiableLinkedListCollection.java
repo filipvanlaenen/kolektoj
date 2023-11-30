@@ -7,6 +7,7 @@ import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
+import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
@@ -234,6 +235,20 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     }
 
     @Override
+    public boolean removeIf(Predicate<? super E> predicate) {
+        if (head == null) {
+            return false;
+        }
+        boolean[] retain = new boolean[size];
+        Node current = head;
+        for (int i = 0; i < size; i++) {
+            retain[i] = !predicate.test(current.getElement());
+            current = current.getNext();
+        }
+        return retainAndMarkCachedArrayDirty(retain);
+    }
+
+    @Override
     public boolean retainAll(final Collection<? extends E> collection) {
         if (head == null) {
             return false;
@@ -249,6 +264,16 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
                 current = current.getNext();
             }
         }
+        return retainAndMarkCachedArrayDirty(retain);
+    }
+
+    /**
+     * Retains the elements according to a retention array and marks the cached array dirty flag if necessary.
+     *
+     * @param retain The retention array.
+     * @return True if at least one element was removed.
+     */
+    private boolean retainAndMarkCachedArrayDirty(final boolean[] retain) {
         boolean result = false;
         int i = 0;
         while (i < retain.length && !retain[i]) {

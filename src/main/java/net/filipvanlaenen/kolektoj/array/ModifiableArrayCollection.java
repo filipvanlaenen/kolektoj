@@ -7,6 +7,7 @@ import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
+import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
@@ -198,6 +199,15 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
         return result;
     }
 
+    @Override
+    public boolean removeIf(Predicate<? super E> predicate) {
+        boolean[] retain = new boolean[size];
+        for (int i = 0; i < size; i++) {
+            retain[i] = !predicate.test(elements[i]);
+        }
+        return retainAndResize(retain);
+    }
+
     /**
      * Resizes the array to the new length. It is assumed that the new length is not less than the current size.
      *
@@ -220,6 +230,16 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
                 }
             }
         }
+        return retainAndResize(retain);
+    }
+
+    /**
+     * Retains the elements according to a retention array and resizes if necessary.
+     *
+     * @param retain The retention array.
+     * @return True if at least one element was removed.
+     */
+    private boolean retainAndResize(final boolean[] retain) {
         int i = 0;
         boolean result = false;
         while (i < size) {

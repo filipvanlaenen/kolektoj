@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
+import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
@@ -347,6 +348,17 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         return result;
     }
 
+    @Override
+    public boolean removeIf(Predicate<Entry<? extends K, ? extends V>> predicate) {
+        int size = entries.size();
+        boolean[] retain = new boolean[size];
+        Entry<K, V>[] entriesArray = entries.toArray();
+        for (int i = 0; i < size; i++) {
+            retain[i] = predicate.test(entriesArray[i]);
+        }
+        return retainAndRehash(entriesArray, retain);
+    }
+
     /**
      * Resizes the hashed entries array to the new base length. The base length will be multiplied by a ratio to
      * calculate the actual new length for the hashed entries array.
@@ -379,6 +391,18 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
                 }
             }
         }
+        return retainAndRehash(entriesArray, retain);
+    }
+
+    /**
+     * Retains the entries according to a retention array and rehashes if necessary.
+     *
+     * @param entriesArray A array with the entries.
+     * @param retain       The retention array.
+     * @return True if at least one entry was removed.
+     */
+    private boolean retainAndRehash(final Entry<K, V>[] entriesArray, final boolean[] retain) {
+        int size = retain.length;
         boolean result = false;
         for (int i = 0; i < size; i++) {
             if (!retain[i]) {
