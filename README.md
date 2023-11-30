@@ -66,7 +66,7 @@ interface map to Kolektoj methods.
 | default Stream&lt;E> parallelStream()                     |                            |                                                          |
 | boolean remove(Object o)                                  | ModifiableCollection&lt;E> | boolean remove(E element)                                |
 | boolean removeAll(Collection&lt;?> c)                     | ModifiableCollection&lt;E> | boolean removeAll(Collection&lt;? extends E> collection) |
-| default boolean removeIf(Predicate&lt;? super E> filter)  |                            |                                                          |
+| default boolean removeIf(Predicate&lt;? super E> filter)  | ModifiableCollection&lt;E> | boolean removeIf(Predicate&lt;? super E> predicate)      |
 | boolean retainAll(Collection&lt;?> c)                     | ModifiableCollection&lt;E> | boolean retainAll(Collection&lt;? extends E> collection) |
 | int size()                                                | Collection&lt;E>           | int size()                                               |
 | default Spliterator&lt;E> spliterator()                   | Collection&lt;E>           | Spliterator&lt;E> spliterator()                          |
