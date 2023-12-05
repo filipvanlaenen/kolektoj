@@ -75,6 +75,32 @@ interface map to Kolektoj methods.
 | default &lt;T> T[] toArray(IntFunction&lt;T[]> generator) | Collection&lt;E>           | E[] toArray()                                            |
 | &lt;T> T[] toArray(T[] a)                                 | Collection&lt;E>           | E[] toArray()                                            |
 
+#### java.util.List&lt;E>
+
+The table below shows how the methods defined on the
+[java.util.List&lt;E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html) interface map
+to Kolektoj methods.
+
+| JDK 17 Method                                           | Kolektoj Class                    | Kolektoj Method                                                    |
+|---------------------------------------------------------|-----------------------------------|--------------------------------------------------------------------|
+| boolean add(int index, E element)                       | ModifiableOrderedCollection&lt;E> | boolean addAt(int index, E element)                                |
+| boolean addAll(int index, Collection&lt;? extends E> c) | ModifiableOrderedCollection&lt;E> | boolean addAllAt(int index, Collection&lt;? extends E> collection) |
+| E get(int index)                                        | OrderedCollection&lt;E>           | E getAt(int index)                                                 |
+| int indexOf(Object o)                                   |                                   |                                                                    |
+| int lastIndexOf(Object o)                               |                                   |                                                                    |
+| ListIterator&lt;E> listIterator()                       |                                   |                                                                    |
+| ListIterator&lt;E> listIterator(int index)              |                                   |                                                                    |
+| E remove(int index)                                     | ModifiableOrderedCollection&lt;E> | E removeAt(int index)                                              |
+| default void replaceAll(UnaryOperator&lt;E> operator)   |                                   |                                                                    |
+| E set(int index, E element)                             |                                   |                                                                    |
+| default void sort(Comparator&lt;? super E> c)           |                                   |                                                                    |
+| List&lt;E> subList(int fromIndex, int toIndex)          |                                   |                                                                    |
+
+#### java.util.Set&lt;E>
+
+The [java.util.Set&lt;E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html) interface
+extends the java.util.Collection&lt;E> interface directly, but does not add any new methods to it.
+
 #### Other
 
 * java.util.concurrent.BlockingDeque
@@ -82,12 +108,10 @@ interface map to Kolektoj methods.
 * java.util.concurrent.ConcurrentMap
 * java.util.concurrent.ConcurrentNavigableMap
 * java.util.Deque
-* java.util.List
 * java.util.Map
 * java.util.NavigableMap
 * java.util.NavigableSet
 * java.util.Queue
-* java.util.Set
 * java.util.SortedMap
 * java.util.SortedSet
 * java.util.concurrent.TransferQueue
