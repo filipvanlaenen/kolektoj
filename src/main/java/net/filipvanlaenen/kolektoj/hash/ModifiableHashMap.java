@@ -349,7 +349,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     }
 
     @Override
-    public boolean removeIf(Predicate<Entry<? extends K, ? extends V>> predicate) {
+    public boolean removeIf(final Predicate<Entry<? extends K, ? extends V>> predicate) {
         int size = entries.size();
         boolean[] retain = new boolean[size];
         Entry<K, V>[] entriesArray = entries.toArray();

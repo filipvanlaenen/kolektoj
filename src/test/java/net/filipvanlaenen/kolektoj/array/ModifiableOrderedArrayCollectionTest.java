@@ -17,7 +17,7 @@ import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection} class.
  */
-public class ModifiableOrderedArrayCollectionTest
+public final class ModifiableOrderedArrayCollectionTest
         extends ModifiableCollectionTestBase<ModifiableOrderedArrayCollection<Integer>> {
     /**
      * The magic number three.

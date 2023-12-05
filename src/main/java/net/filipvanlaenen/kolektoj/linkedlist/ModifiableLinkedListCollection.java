@@ -235,7 +235,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     }
 
     @Override
-    public boolean removeIf(Predicate<? super E> predicate) {
+    public boolean removeIf(final Predicate<? super E> predicate) {
         if (head == null) {
             return false;
         }

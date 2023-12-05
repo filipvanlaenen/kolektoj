@@ -167,7 +167,7 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
     /**
      * Removes all entries from this map that satisfy the given predicate, and returns whether it decreased the size of
      * the map.
-     * 
+     *
      * @param predicate The predicate to be applied to each entry of the map.
      * @return True if the size of the map decreased after removing the entries that satisfied the given predicate.
      */

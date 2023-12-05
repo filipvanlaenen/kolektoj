@@ -84,7 +84,7 @@ public interface ModifiableCollection<E> extends Collection<E> {
     /**
      * Removes all elements from this collection that satisfy the given predicate, and returns whether it decreased the
      * size of the collection.
-     * 
+     *
      * @param predicate The predicate to be applied to each element of the collection.
      * @return True if the size of the collection decreased after removing the elements that satisfied the given
      *         predicate.

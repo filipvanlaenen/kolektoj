@@ -289,7 +289,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     }
 
     @Override
-    public boolean removeIf(Predicate<? super E> predicate) {
+    public boolean removeIf(final Predicate<? super E> predicate) {
         boolean[] retain = new boolean[size];
         for (int i = 0; i < size; i++) {
             retain[i] = !predicate.test(elements[i]);
