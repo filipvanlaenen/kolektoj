@@ -8,7 +8,6 @@ import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
  */
 public final class ModifiableArrayCollectionTest
         extends ModifiableCollectionTestBase<ModifiableArrayCollection<Integer>> {
-
     @Override
     protected ModifiableArrayCollection<Integer> createModifiableCollection(final Integer... integers) {
         return new ModifiableArrayCollection<Integer>(integers);
