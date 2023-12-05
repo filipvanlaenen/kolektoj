@@ -24,6 +24,10 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
      */
     private static final int FOUR = 4;
     /**
+     * The magic number five.
+     */
+    private static final int FIVE = 5;
+    /**
      * The magic number six.
      */
     private static final int SIX = 6;
@@ -92,6 +96,22 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     @Test
     public void containsShouldReturnFalseForAnElementNotInTheCollection() {
         assertFalse(collection123.contains(0));
+    }
+
+    /**
+     * Verifies that contains returns true for null if it is in the collection.
+     */
+    @Test
+    public void containsShouldReturnTrueForNullIfInTheTheCollection() {
+        assertTrue(collection123null.contains(null));
+    }
+
+    /**
+     * Verifies that contains returns false for null if it isn't in the collection.
+     */
+    @Test
+    public void containsShouldReturnFalseForNullIfNotInTheTheCollection() {
+        assertFalse(collection123.contains(null));
     }
 
     /**
@@ -457,6 +477,22 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     }
 
     /**
+     * Verifies that removeIf returns false when no elements are removed.
+     */
+    @Test
+    public void removeIfShouldReturnFalseWhenNoElementsAreRemoved() {
+        assertFalse(createCollection123().removeIf(x -> false));
+    }
+
+    /**
+     * Verifies that removeIf returns true when an element is removed.
+     */
+    @Test
+    public void removeIfShouldReturnTrueWhenAnElementIsRemoved() {
+        assertTrue(createCollection123().removeIf(x -> x == 1));
+    }
+
+    /**
      * Verifies that retainAll on an empty collection returns false.
      */
     @Test
@@ -508,6 +544,15 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     }
 
     /**
+     * Verifies that when some elements are removed, retainAll returns true.
+     */
+    @Test
+    public void retainAllShouldReturnTrueWhenSomeElementsAreRemoved() {
+        ModifiableCollection<Integer> collection = createCollection123();
+        assertTrue(collection.retainAll(collection12));
+    }
+
+    /**
      * Verifies that when all elements are retained, the collection has remained intact.
      */
     @Test
@@ -528,5 +573,16 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
         ModifiableCollection<Integer> collection = createCollection123();
         assertTrue(collection.retainAll(Collection.of(FOUR)));
         assertTrue(collection.isEmpty());
+    }
+
+    /**
+     * Verifies that retainAll doesn't retain all duplicate elements.
+     */
+    @Test
+    public void retainAllShouldNotRetainAllDuplicateElements() {
+        ModifiableCollection<Integer> collection =
+                createModifiableCollection(DUPLICATE_ELEMENTS, 0, 1, 1, 2, THREE, THREE);
+        collection.retainAll(Collection.of(DUPLICATE_ELEMENTS, 0, 1, 2, THREE, THREE));
+        assertEquals(FIVE, collection.size());
     }
 }
