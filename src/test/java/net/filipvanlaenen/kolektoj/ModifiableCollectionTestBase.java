@@ -477,6 +477,14 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     }
 
     /**
+     * Verifies that removeIf returns false on an empty collection.
+     */
+    @Test
+    public void removeIfShouldReturnFalseOnAnEmptyCollection() {
+        assertFalse(createModifiableCollection().removeIf(x -> true));
+    }
+
+    /**
      * Verifies that removeIf returns false when no elements are removed.
      */
     @Test
