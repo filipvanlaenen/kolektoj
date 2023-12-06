@@ -38,6 +38,18 @@ The following collection properties have been identified:
 
 ![Overview](Overview.png)
 
+The table below shows the various implementations of the interfaces.
+
+| Interface                   | Array                            | Hash              | Linked List                    | Tree |
+|-----------------------------|----------------------------------|-------------------|--------------------------------|------|
+| Collection                  | ArrayCollection                  |                   |                                |      |
+| ModifiableCollection        | ModifiableArrayCollection        |                   | ModifiableLinkedListCollection |      |
+| OrderedCollection           | OrderedArrayCollection           |                   |                                |      |
+| ModifiableOrderedCollection | ModifiableOrderedArrayCollection |                   |                                |      |
+| ModifiableSortedCollection  |                                  |                   |                                |      |
+| Map                         |                                  | HashMap           |                                |      |
+| ModifiableMap               |                                  | ModifiableHashMap |                                |      |
+
 ## Comparison with the Java Platform Collections Framework
 
 The comparison below is based on the Java Platform
