@@ -9,13 +9,17 @@ import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
+import net.filipvanlaenen.kolektoj.MapTestBase;
 import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
+import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.hash.ModifiableHashMap} class.
  */
-public class ModifiableHashMapTest {
+public final class ModifiableHashMapTest
+        extends MapTestBase<ModifiableHashMap<Integer, String>, ModifiableHashMap<KeyWithCollidingHash, Integer>> {
     /**
      * The magic number three.
      */
@@ -74,19 +78,21 @@ public class ModifiableHashMapTest {
      */
     private static final Map<Integer, String> MAP4 = new HashMap<Integer, String>(ENTRY4);
 
-    /**
-     * Class with colliding hash codes.
-     */
-    private final class KeyWithCollidingHash {
-        @Override
-        public boolean equals(final Object other) {
-            return this == other;
-        }
+    @Override
+    protected ModifiableHashMap<Integer, String> createMap(final Entry<Integer, String>... entries) {
+        return new ModifiableHashMap<Integer, String>(entries);
+    }
 
-        @Override
-        public int hashCode() {
-            return 0;
-        }
+    @Override
+    protected ModifiableHashMap<Integer, String> createMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Entry<Integer, String>... entries) {
+        return new ModifiableHashMap<Integer, String>(keyAndValueCardinality, entries);
+    }
+
+    @Override
+    protected ModifiableHashMap<KeyWithCollidingHash, Integer> createCollidingKeyHashMap(
+            final Entry<KeyWithCollidingHash, Integer>... entries) {
+        return new ModifiableHashMap<KeyWithCollidingHash, Integer>(entries);
     }
 
     /**
@@ -100,6 +106,8 @@ public class ModifiableHashMapTest {
 
     /**
      * Verifies that trying to pass null as an argument to the constructor throws IllegalArgumentException.
+     *
+     * TODO: Should this be moved to MapTestBase?
      */
     @Test
     public void constructorShouldThrowExceptionIfNullIsPassedAsAnArgument() {
@@ -110,6 +118,8 @@ public class ModifiableHashMapTest {
 
     /**
      * Verifies that trying to pass null as one of many arguments to the constructor throws IllegalArgumentException.
+     *
+     * TODO: Should this be moved to MapTestBase?
      */
     @Test
     public void constructorShouldThrowExceptionIfNullIsPassedAsOneOfTheArguments() {
@@ -119,23 +129,9 @@ public class ModifiableHashMapTest {
     }
 
     /**
-     * Verifies that the correct length is returned for a map with three entries.
-     */
-    @Test
-    public void sizeShouldReturnThreeForAMapOfThreeEntries() {
-        assertEquals(THREE, MAP123.size());
-    }
-
-    /**
-     * Verifies that contains returns true for an entry in the map.
-     */
-    @Test
-    public void containsShouldReturnTrueForAnEntryInTheMap() {
-        assertTrue(MAP123.contains(ENTRY1));
-    }
-
-    /**
      * Verifies that contains returns true for an entry in a map with duplicate keys.
+     *
+     * TODO: Should this be moved to MapTestBase?
      */
     @Test
     public void containsShouldReturnTrueForAnEntryInAMapWithDuplicateKeys() {
@@ -146,127 +142,10 @@ public class ModifiableHashMapTest {
     }
 
     /**
-     * Verifies that contains returns false for an empty map.
-     */
-    @Test
-    public void containsShouldReturnFalseForAnEmptyMap() {
-        assertFalse(new ModifiableHashMap<Integer, String>().contains(new Entry<Integer, String>(0, "zero")));
-    }
-
-    /**
-     * Verifies that contains returns false for an entry not in the map.
-     */
-    @Test
-    public void containsShouldReturnFalseForAnEntryNotInTheMap() {
-        assertFalse(MAP123.contains(new Entry<Integer, String>(0, "zero")));
-    }
-
-    /**
-     * Verifies that containsKey returns true for a key in the map.
-     */
-    @Test
-    public void containsKeyShouldReturnTrueForAKeyInTheMap() {
-        assertTrue(MAP123.containsKey(1));
-    }
-
-    /**
-     * Verifies that containsKey returns false for a key not in the map.
-     */
-    @Test
-    public void containsKeyShouldReturnFalseForAKeyNotInTheMap() {
-        assertFalse(MAP123.containsKey(0));
-    }
-
-    /**
-     * Verifies that containsKey returns false for null if not in the map.
-     */
-    @Test
-    public void containsKeyShouldReturnFalseForNullIfNotInTheMap() {
-        assertFalse(MAP123.containsKey(null));
-    }
-
-    /**
-     * Verifies that containsValue returns true for a value in the map.
-     */
-    @Test
-    public void containsValueShouldReturnTrueForAValueInTheMap() {
-        assertTrue(MAP123.containsValue("one"));
-    }
-
-    /**
-     * Verifies that containsValue returns true for null if in the map.
-     */
-    @Test
-    public void containsValueShouldReturnTrueForNullIfInTheMap() {
-        assertTrue(MAP123NULL.containsValue(null));
-    }
-
-    /**
-     * Verifies that containsValue returns false for a value not in the map.
-     */
-    @Test
-    public void containsValueShouldReturnFalseForAValueNotInTheMap() {
-        assertFalse(MAP123.containsValue("zero"));
-    }
-
-    /**
-     * Verifies that trying to get an element from an empty map throws IndexOutOfBoundsException.
-     */
-    @Test
-    public void getShouldThrowExceptionWhenCalledOnAnEmptyMap() {
-        IndexOutOfBoundsException exception =
-                assertThrows(IndexOutOfBoundsException.class, () -> new ModifiableHashMap<Integer, String>().get());
-        assertEquals("Cannot return an entry from an empty map.", exception.getMessage());
-    }
-
-    /**
-     * Verifies that when you get an entry from a map, the map contains it.
-     */
-    @Test
-    public void getShouldReturnAnEntryPresentInTheMap() {
-        Entry<Integer, String> entry = MAP123.get();
-        assertTrue(MAP123.contains(entry));
-    }
-
-    /**
-     * Verifies that when you try to use get with a key not in the map, an IllegalArgumentException is thrown.
-     */
-    @Test
-    public void getShouldThrowExceptionWhenCalledWithAbsentKey() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> MAP123.get(0));
-        assertEquals("Map doesn't contain an entry with the key 0.", exception.getMessage());
-    }
-
-    /**
-     * Verifies that when you try to use get with a key in the map, the value is returned.
-     */
-    @Test
-    public void getShouldReturnValueForKey() {
-        assertEquals("one", MAP123.get(1));
-    }
-
-    /**
-     * Verifies that when you try to use getAll with a key not in the map, an IllegalArgumentException is thrown.
-     */
-    @Test
-    public void getAllShouldThrowExceptionWhenCalledWithAbsentKey() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> MAP123.getAll(0));
-        assertEquals("Map doesn't contain entries with the key 0.", exception.getMessage());
-    }
-
-    /**
-     * Verifies that when you try to use getAll with a key in the map, a collection with the value is returned.
-     */
-    @Test
-    public void getAllShouldReturnSingleValueForKey() {
-        Collection<String> actual = MAP123.getAll(1);
-        assertEquals(1, actual.size());
-        assertTrue(actual.contains("one"));
-    }
-
-    /**
      * Verifies that when you try to use getAll with a key in the map that has multiple values, a collection with the
      * values is returned.
+     *
+     * TODO: Should this be moved to MapTestBase?
      */
     @Test
     public void getAllShouldReturnManyValuesForKey() {
@@ -282,6 +161,8 @@ public class ModifiableHashMapTest {
     /**
      * Verifies that when you try to use getAll with a key in the map that has multiple values, a collection with the
      * values is returned.
+     *
+     * TODO: Should this be moved to MapTestBase?
      */
     @Test
     public void getAllShouldReturnDuplicateValuesForKey() {
@@ -295,20 +176,10 @@ public class ModifiableHashMapTest {
     }
 
     /**
-     * Verifies that getKeys returns all the keys.
-     */
-    @Test
-    public void getKeysShouldReturnAllKeys() {
-        Collection<Integer> actual = MAP123.getKeys();
-        assertEquals(THREE, actual.size());
-        assertTrue(actual.contains(1));
-        assertTrue(actual.contains(2));
-        assertTrue(actual.contains(THREE));
-    }
-
-    /**
      * Verifies that the collection returned by getKeys has distinct elements as its cardinality for a map with distinct
      * keys.
+     *
+     * TODO: Should this be moved to MapTestBase?
      */
     @Test
     public void getKeysShouldReturnCollectionWithDistinctElementsForMapWithDistinctKeys() {
@@ -320,55 +191,14 @@ public class ModifiableHashMapTest {
     /**
      * Verifies that the collection returned by getKeys has duplicate elements as its cardinality for a map with
      * duplicate keys.
+     *
+     * TODO: Should this be moved to MapTestBase?
      */
     @Test
     public void getKeysShouldReturnCollectionWithDuplicateElementsForMapWithDuplicateKeys() {
         ModifiableMap<Integer, String> map =
                 new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
         assertEquals(DUPLICATE_ELEMENTS, map.getKeys().getElementCardinality());
-    }
-
-    /**
-     * Verifies that getValues returns all the values.
-     */
-    @Test
-    public void getValuesShouldReturnAllKeys() {
-        Collection<String> actual = new ModifiableHashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3).getValues();
-        assertEquals(THREE, actual.size());
-        assertTrue(actual.contains("one"));
-        assertTrue(actual.contains("two"));
-        assertTrue(actual.contains("three"));
-    }
-
-    /**
-     * Verifies that the map produces an array with the entries.
-     */
-    @Test
-    public void toArrayShouldProduceAnArrayWithTheEntriesOfTheMap() {
-        Entry<Integer, String>[] actual = MAP12.toArray();
-        assertTrue(actual.length == 2 && (actual[0] == ENTRY1 || actual[1] == ENTRY1)
-                && (actual[0] == ENTRY2 || actual[1] == ENTRY2));
-    }
-
-    /**
-     * Verifies that the map produces a stream that reduces to the correct key sum, thus verifying that the spliterator
-     * is created correctly.
-     */
-    @Test
-    public void streamShouldProduceAStreamThatReducesToTheCorrectSum() {
-        assertEquals(SIX, MAP123.stream().map(e -> e.key()).reduce(0, Integer::sum));
-    }
-
-    /**
-     * Verifies that the map produces an iterator that when used in a for loop, produces the correct key sum.
-     */
-    @Test
-    public void iteratorShouldProduceCorrectSumInForLoop() {
-        int sum = 0;
-        for (Entry<Integer, String> entry : MAP123) {
-            sum += entry.key();
-        }
-        assertEquals(SIX, sum);
     }
 
     /**
@@ -642,34 +472,6 @@ public class ModifiableHashMapTest {
         ModifiableMap<Integer, String> map = createNewMap();
         map.clear();
         assertTrue(map.getValues().isEmpty());
-    }
-
-    /**
-     * Verifies that containsAll returns true when a map is compared with itself.
-     */
-    @Test
-    public void containsAllShouldReturnTrueWhenAMapIsComparedWithItself() {
-        assertTrue(MAP123.containsAll(MAP123));
-    }
-
-    /**
-     * Verifies that containsAll returns false when a map doesn't contain all the entries of the map is is compared
-     * with.
-     */
-    @Test
-    public void containsAllShouldReturnFalseWhenAMapContainsOtherEntries() {
-        assertFalse(MAP123.containsAll(MAP123NULL));
-    }
-
-    /**
-     * Verifies that when another key and value cardinality is specified, getKeyAndValueCardinality returns the
-     * specified one.
-     */
-    @Test
-    public void getKeyAndValueCardinalityShouldBeWiredCorrectly() {
-        assertEquals(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES,
-                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES)
-                        .getKeyAndValueCardinality());
     }
 
     /**

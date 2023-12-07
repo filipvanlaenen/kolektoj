@@ -306,8 +306,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void getKeysShouldReturnAllKeys() {
-        Map<Integer, String> map = createMap(ENTRY1, ENTRY2, ENTRY3);
-        Collection<Integer> actual = map.getKeys();
+        Collection<Integer> actual = map123.getKeys();
         assertEquals(THREE, actual.size());
         assertTrue(actual.contains(1));
         assertTrue(actual.contains(2));
@@ -369,8 +368,8 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      * Verifies that getValues returns all the values.
      */
     @Test
-    public void getValuesShouldReturnAllKeys() {
-        Collection<String> actual = createMap(ENTRY1, ENTRY2, ENTRY3).getValues();
+    public void getValuesShouldReturnAllValues() {
+        Collection<String> actual = map123.getValues();
         assertEquals(THREE, actual.size());
         assertTrue(actual.contains("one"));
         assertTrue(actual.contains("two"));
