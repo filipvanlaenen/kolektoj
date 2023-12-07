@@ -10,19 +10,19 @@ import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
  */
 public final class HashMapTest extends MapTestBase<HashMap<Integer, String>, HashMap<KeyWithCollidingHash, Integer>> {
     @Override
-    protected HashMap<Integer, String> createMap(Entry<Integer, String>... entries) {
+    protected HashMap<Integer, String> createMap(final Entry<Integer, String>... entries) {
         return new HashMap<Integer, String>(entries);
     }
 
     @Override
-    protected HashMap<Integer, String> createMap(KeyAndValueCardinality keyAndValueCardinality,
-            Entry<Integer, String>... entries) {
+    protected HashMap<Integer, String> createMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Entry<Integer, String>... entries) {
         return new HashMap<Integer, String>(keyAndValueCardinality, entries);
     }
 
     @Override
     protected HashMap<KeyWithCollidingHash, Integer> createCollidingKeyHashMap(
-            Entry<KeyWithCollidingHash, Integer>... entries) {
+            final Entry<KeyWithCollidingHash, Integer>... entries) {
         return new HashMap<KeyWithCollidingHash, Integer>(entries);
     }
 }

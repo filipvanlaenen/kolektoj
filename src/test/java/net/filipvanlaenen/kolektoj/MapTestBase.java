@@ -2,13 +2,8 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +14,8 @@ import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.Map} interface.
  *
- * @param <T> The subclass type to be tested.
+ * @param <T>  The subclass type to be tested.
+ * @param <TC> The subclass type to be tested using a key with colliding hash values.
  */
 public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map<KeyWithCollidingHash, Integer>> {
     /**
@@ -49,20 +45,20 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
     /**
      * An empty map.
      */
-    private final Map<Integer, String> EMPTY = createMap();
+    private final Map<Integer, String> empty = createMap();
     /**
      * Map with the integers 1, 2 and 3 mapped to their words.
      */
-    private final Map<Integer, String> MAP123 = createMap(ENTRY1, ENTRY2, ENTRY3);
+    private final Map<Integer, String> map123 = createMap(ENTRY1, ENTRY2, ENTRY3);
     /**
      * Map with the integers 1, 2 and 3 mapped to their words, and null to null.
      */
-    private final Map<Integer, String> MAP123NULL = createMap(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
+    private final Map<Integer, String> map123null = createMap(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
 
     /**
      * Class with colliding hash codes.
      */
-    static public final class KeyWithCollidingHash {
+    public static final class KeyWithCollidingHash {
         @Override
         public boolean equals(final Object other) {
             return this == other;
@@ -82,6 +78,13 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     protected abstract T createMap(Entry<Integer, String>... entries);
 
+    /**
+     * Creates a map containing the provided entries with a key and value cardinality.
+     *
+     * @param keyAndValueCardinality The key and value cardinality requested.
+     * @param entries                The entries to be included in the map.
+     * @return A map containing the provided entries with the key and value cardinality.
+     */
     protected abstract T createMap(KeyAndValueCardinality keyAndValueCardinality, Entry<Integer, String>... entries);
 
     /**
@@ -97,7 +100,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void sizeShouldReturnThreeForAMapOfThreeEntries() {
-        assertEquals(THREE, MAP123.size());
+        assertEquals(THREE, map123.size());
     }
 
     /**
@@ -105,7 +108,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void containsShouldReturnFalseForAnEmptyMap() {
-        assertFalse(EMPTY.contains(ENTRY1));
+        assertFalse(empty.contains(ENTRY1));
     }
 
     /**
@@ -113,7 +116,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void containsShouldReturnTrueForAnEntryInTheMap() {
-        assertTrue(MAP123.contains(ENTRY1));
+        assertTrue(map123.contains(ENTRY1));
     }
 
     /**
@@ -121,7 +124,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void containsShouldReturnFalseForAnEntryNotInTheMap() {
-        assertFalse(MAP123.contains(new Entry<Integer, String>(0, "zero")));
+        assertFalse(map123.contains(new Entry<Integer, String>(0, "zero")));
     }
 
     /**
@@ -146,7 +149,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void containsKeyShouldReturnFalseForAnEmptyMap() {
-        assertFalse(EMPTY.containsKey(1));
+        assertFalse(empty.containsKey(1));
     }
 
     /**
@@ -154,7 +157,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void containsKeyShouldReturnTrueForAKeyInTheMap() {
-        assertTrue(MAP123.containsKey(1));
+        assertTrue(map123.containsKey(1));
     }
 
     /**
@@ -162,7 +165,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void containsKeyShouldReturnFalseForAKeyNotInTheMap() {
-        assertFalse(MAP123.containsKey(0));
+        assertFalse(map123.containsKey(0));
     }
 
     /**
@@ -170,7 +173,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void containsKeyShouldReturnFalseForNullIfNotInTheMap() {
-        assertFalse(MAP123.containsKey(null));
+        assertFalse(map123.containsKey(null));
     }
 
     /**
@@ -215,7 +218,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void containsValueShouldReturnTrueForAValueInTheMap() {
-        assertTrue(MAP123.containsValue("one"));
+        assertTrue(map123.containsValue("one"));
     }
 
     /**
@@ -223,7 +226,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void containsValueShouldReturnTrueForNullIfInTheMap() {
-        assertTrue(MAP123NULL.containsValue(null));
+        assertTrue(map123null.containsValue(null));
     }
 
     /**
@@ -231,7 +234,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void containsValueShouldReturnFalseForAValueNotInTheMap() {
-        assertFalse(MAP123.containsValue("zero"));
+        assertFalse(map123.containsValue("zero"));
     }
 
     /**
@@ -248,8 +251,8 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void getShouldReturnAnEntryPresentInTheMap() {
-        Entry<Integer, String> entry = MAP123.get();
-        assertTrue(MAP123.contains(entry));
+        Entry<Integer, String> entry = map123.get();
+        assertTrue(map123.contains(entry));
     }
 
     /**
@@ -257,7 +260,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void getShouldThrowExceptionWhenCalledWithAbsentKey() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> MAP123.get(0));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> map123.get(0));
         assertEquals("Map doesn't contain an entry with the key 0.", exception.getMessage());
     }
 
@@ -266,7 +269,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void getShouldReturnValueForKey() {
-        assertEquals("one", MAP123.get(1));
+        assertEquals("one", map123.get(1));
     }
 
     /**
@@ -274,7 +277,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void getAllShouldThrowExceptionWhenCalledWithAbsentKey() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> MAP123.getAll(0));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> map123.getAll(0));
         assertEquals("Map doesn't contain entries with the key 0.", exception.getMessage());
     }
 
@@ -283,7 +286,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void getAllShouldReturnSingleValueForKey() {
-        Collection<String> actual = MAP123.getAll(1);
+        Collection<String> actual = map123.getAll(1);
         assertEquals(1, actual.size());
         assertTrue(actual.contains("one"));
     }
@@ -293,7 +296,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void getAllShouldReturnSingleValueForNull() {
-        Collection<String> actual = MAP123NULL.getAll(null);
+        Collection<String> actual = map123null.getAll(null);
         assertEquals(1, actual.size());
         assertTrue(actual.contains(null));
     }
@@ -391,7 +394,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void streamShouldProduceAStreamThatReducesToTheCorrectSum() {
-        assertEquals(SIX, MAP123.stream().map(e -> e.key()).reduce(0, Integer::sum));
+        assertEquals(SIX, map123.stream().map(e -> e.key()).reduce(0, Integer::sum));
     }
 
     /**
@@ -400,7 +403,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
     @Test
     public void iteratorShouldProduceCorrectSumInForLoop() {
         int sum = 0;
-        for (Entry<Integer, String> entry : MAP123) {
+        for (Entry<Integer, String> entry : map123) {
             sum += entry.key();
         }
         assertEquals(SIX, sum);
@@ -429,7 +432,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void containsAllShouldReturnTrueWhenAMapIsComparedWithItself() {
-        assertTrue(MAP123.containsAll(MAP123));
+        assertTrue(map123.containsAll(map123));
     }
 
     /**
@@ -438,6 +441,6 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void containsAllShouldReturnFalseWhenAMapContainsOtherEntries() {
-        assertFalse(MAP123.containsAll(MAP123NULL));
+        assertFalse(map123.containsAll(map123null));
     }
 }
