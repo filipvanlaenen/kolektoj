@@ -113,6 +113,40 @@ to Kolektoj methods.
 The [java.util.Set&lt;E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html) interface
 extends the java.util.Collection&lt;E> interface directly, but does not add any new methods to it.
 
+#### java.util.Map&lt;E>
+
+The table below shows how the methods defined on the
+[java.util.Map&lt;E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html) interface map
+to Kolektoj methods.
+
+| JDK 17 Method                                                                                       | Kolektoj Class      | Kolektoj Method |
+|-----------------------------------------------------------------------------------------------------|---------------------|-----------------|
+| void clear()                                                                                        | ModifiableMap&lt;E> | void clear()    |
+| default V compute(K key, BiFunction&lt;? super K,? super V,? extends V> remappingFunction)          |                     |                 |
+| default V computeIfAbsent(K key, Function&lt;? super K,? extends V> mappingFunction)                |                     |                 |
+| default V computeIfPresent(K key, BiFunction&lt;? super K,? super V,? extends V> remappingFunction) |                     |                 |
+| boolean containsKey(Object key)                                                                     |                     |                 |
+| boolean containsValue(Object value)                                                                 |                     |                 |
+| Set&lt;Map.Entry&lt;K,V>> entrySet()                                                                |                     |                 |
+| boolean equals(Object o)                                                                            |                     |                 |
+| default void forEach(BiConsumer&lt;? super K,? super V> action)                                     |                     |                 |
+| V get(Object key)                                                                                   |                     |                 |
+| default V getOrDefault(Object key, V defaultValue)                                                  |                     |                 |
+| int hashCode()                                                                                      |                     |                 |
+| boolean isEmpty()                                                                                   |                     |                 |
+| Set&lt;K> keySet()                                                                                  |                     |                 |
+| default V merge(K key, V value, BiFunction&lt;? super V,? super V,? extends V> remappingFunction)   |                     |                 |
+| V put(K key, V value)                                                                               |                     |                 |
+| void putAll(Map&lt;? extends K,? extends V> m)                                                      |                     |                 |
+| default V putIfAbsent(K key, V value)                                                               |                     |                 |
+| V remove(Object key)                                                                                |                     |                 |
+| default boolean remove(Object key, Object value)                                                    |                     |                 |
+| default V replace(K key, V value)                                                                   |                     |                 |
+| default boolean replace(K key, V oldValue, V newValue)                                              |                     |                 |
+| default void replaceAll(BiFunction&lt;? super K,? super V,? extends V> function)                    |                     |                 |
+| int size()                                                                                          |                     |                 |
+| Collection&lt;V> values()                                                                           |                     |                 |
+
 #### Other
 
 * java.util.concurrent.BlockingDeque
@@ -120,7 +154,6 @@ extends the java.util.Collection&lt;E> interface directly, but does not add any 
 * java.util.concurrent.ConcurrentMap
 * java.util.concurrent.ConcurrentNavigableMap
 * java.util.Deque
-* java.util.Map
 * java.util.NavigableMap
 * java.util.NavigableSet
 * java.util.Queue
