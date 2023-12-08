@@ -1,17 +1,15 @@
 package net.filipvanlaenen.kolektoj.hash;
 
-import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
-import net.filipvanlaenen.kolektoj.MapTestBase;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
+import net.filipvanlaenen.kolektoj.MapTestBase;
 import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 
@@ -102,103 +100,6 @@ public final class ModifiableHashMapTest
      */
     private static ModifiableMap<Integer, String> createNewMap() {
         return new ModifiableHashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
-    }
-
-    /**
-     * Verifies that trying to pass null as an argument to the constructor throws IllegalArgumentException.
-     *
-     * TODO: Should this be moved to MapTestBase?
-     */
-    @Test
-    public void constructorShouldThrowExceptionIfNullIsPassedAsAnArgument() {
-        IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> new ModifiableHashMap<Integer, String>(null));
-        assertEquals("Map entries can't be null.", exception.getMessage());
-    }
-
-    /**
-     * Verifies that trying to pass null as one of many arguments to the constructor throws IllegalArgumentException.
-     *
-     * TODO: Should this be moved to MapTestBase?
-     */
-    @Test
-    public void constructorShouldThrowExceptionIfNullIsPassedAsOneOfTheArguments() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> new ModifiableHashMap<Integer, String>(ENTRY1, null));
-        assertEquals("Map entries can't be null.", exception.getMessage());
-    }
-
-    /**
-     * Verifies that contains returns true for an entry in a map with duplicate keys.
-     *
-     * TODO: Should this be moved to MapTestBase?
-     */
-    @Test
-    public void containsShouldReturnTrueForAnEntryInAMapWithDuplicateKeys() {
-        ModifiableMap<Integer, String> map =
-                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY1BIS, ENTRY3);
-        assertTrue(map.contains(ENTRY1));
-        assertTrue(map.contains(ENTRY1BIS));
-    }
-
-    /**
-     * Verifies that when you try to use getAll with a key in the map that has multiple values, a collection with the
-     * values is returned.
-     *
-     * TODO: Should this be moved to MapTestBase?
-     */
-    @Test
-    public void getAllShouldReturnManyValuesForKey() {
-        ModifiableMap<Integer, String> map =
-                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY1BIS, ENTRY3);
-        Collection<String> actual = map.getAll(1);
-        assertEquals(2, actual.size());
-        assertTrue(actual.contains("one"));
-        assertTrue(actual.contains("bis"));
-        assertEquals(DISTINCT_ELEMENTS, actual.getElementCardinality());
-    }
-
-    /**
-     * Verifies that when you try to use getAll with a key in the map that has multiple values, a collection with the
-     * values is returned.
-     *
-     * TODO: Should this be moved to MapTestBase?
-     */
-    @Test
-    public void getAllShouldReturnDuplicateValuesForKey() {
-        ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>(
-                DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, ENTRY1, ENTRY1, ENTRY1BIS, ENTRY3);
-        Collection<String> actual = map.getAll(1);
-        assertEquals(THREE, actual.size());
-        assertTrue(actual.contains("one"));
-        assertTrue(actual.contains("bis"));
-        assertEquals(DUPLICATE_ELEMENTS, actual.getElementCardinality());
-    }
-
-    /**
-     * Verifies that the collection returned by getKeys has distinct elements as its cardinality for a map with distinct
-     * keys.
-     *
-     * TODO: Should this be moved to MapTestBase?
-     */
-    @Test
-    public void getKeysShouldReturnCollectionWithDistinctElementsForMapWithDistinctKeys() {
-        ModifiableMap<Integer, String> map =
-                new ModifiableHashMap<Integer, String>(DISTINCT_KEYS, ENTRY1, ENTRY2, ENTRY3);
-        assertEquals(DISTINCT_ELEMENTS, map.getKeys().getElementCardinality());
-    }
-
-    /**
-     * Verifies that the collection returned by getKeys has duplicate elements as its cardinality for a map with
-     * duplicate keys.
-     *
-     * TODO: Should this be moved to MapTestBase?
-     */
-    @Test
-    public void getKeysShouldReturnCollectionWithDuplicateElementsForMapWithDuplicateKeys() {
-        ModifiableMap<Integer, String> map =
-                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
-        assertEquals(DUPLICATE_ELEMENTS, map.getKeys().getElementCardinality());
     }
 
     /**

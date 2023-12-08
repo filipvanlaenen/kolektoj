@@ -70,6 +70,9 @@ public final class HashMap<K, V> implements Map<K, V> {
      */
     public HashMap(final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, V>... entries)
             throws IllegalArgumentException {
+        if (entries == null) {
+            throw new IllegalArgumentException("Map entries can't be null.");
+        }
         this.keyAndValueCardinality = keyAndValueCardinality;
         hashedEntriesSize = entries.length * HASHING_RATIO;
         Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) entries.getClass();

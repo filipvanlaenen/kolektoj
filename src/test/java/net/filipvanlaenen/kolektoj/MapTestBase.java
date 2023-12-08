@@ -35,6 +35,10 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     private static final Entry<Integer, String> ENTRY1 = new Entry<Integer, String>(1, "one");
     /**
+     * An entry with key 1 and value bis.
+     */
+    private static final Entry<Integer, String> ENTRY1BIS = new Entry<Integer, String>(1, "bis");
+    /**
      * An entry with key 2 and value two.
      */
     private static final Entry<Integer, String> ENTRY2 = new Entry<Integer, String>(2, "two");
@@ -96,6 +100,25 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
     protected abstract TC createCollidingKeyHashMap(Entry<KeyWithCollidingHash, Integer>... entries);
 
     /**
+     * Verifies that trying to pass null as an argument to the constructor throws IllegalArgumentException.
+     */
+    @Test
+    public void constructorShouldThrowExceptionIfNullIsPassedAsAnArgument() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> createMap(null));
+        assertEquals("Map entries can't be null.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that trying to pass null as one of many arguments to the constructor throws IllegalArgumentException.
+     */
+    @Test
+    public void constructorShouldThrowExceptionIfNullIsPassedAsOneOfTheArguments() {
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> createMap(ENTRY1, null));
+        assertEquals("Map entries can't be null.", exception.getMessage());
+    }
+
+    /**
      * Verifies that the correct length is returned for a map with three entries.
      */
     @Test
@@ -117,6 +140,16 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
     @Test
     public void containsShouldReturnTrueForAnEntryInTheMap() {
         assertTrue(map123.contains(ENTRY1));
+    }
+
+    /**
+     * Verifies that contains returns true for an entry in a map with duplicate keys.
+     */
+    @Test
+    public void containsShouldReturnTrueForAnEntryInAMapWithDuplicateKeys() {
+        Map<Integer, String> map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY1BIS, ENTRY3);
+        assertTrue(map.contains(ENTRY1));
+        assertTrue(map.contains(ENTRY1BIS));
     }
 
     /**
@@ -320,12 +353,11 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void getAllShouldReturnManyValuesForKey() {
-        Map<Integer, String> map =
-                createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, new Entry<Integer, String>(1, "two"), ENTRY3);
+        Map<Integer, String> map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY1BIS, ENTRY3);
         Collection<String> actual = map.getAll(1);
         assertEquals(2, actual.size());
         assertTrue(actual.contains("one"));
-        assertTrue(actual.contains("two"));
+        assertTrue(actual.contains("bis"));
         assertEquals(DISTINCT_ELEMENTS, actual.getElementCardinality());
     }
 
@@ -335,12 +367,12 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      */
     @Test
     public void getAllShouldReturnDuplicateValuesForKey() {
-        Map<Integer, String> map =
-                createMap(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, ENTRY1, new Entry<Integer, String>(1, "one"), ENTRY3);
+        Map<Integer, String> map = createMap(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, ENTRY1,
+                new Entry<Integer, String>(1, "one"), ENTRY1BIS, ENTRY3);
         Collection<String> actual = map.getAll(1);
-        assertEquals(2, actual.size());
+        assertEquals(THREE, actual.size());
         assertTrue(actual.contains("one"));
-        assertTrue(actual.contains("one"));
+        assertTrue(actual.contains("bis"));
         assertEquals(DUPLICATE_ELEMENTS, actual.getElementCardinality());
     }
 
