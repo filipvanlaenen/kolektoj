@@ -119,33 +119,33 @@ The table below shows how the methods defined on the
 [java.util.Map&lt;E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html) interface map
 to Kolektoj methods.
 
-| JDK 17 Method                                                                                       | Kolektoj Class      | Kolektoj Method                |
-|-----------------------------------------------------------------------------------------------------|---------------------|--------------------------------|
-| void clear()                                                                                        | ModifiableMap&lt;E> | void clear()                   |
-| default V compute(K key, BiFunction&lt;? super K,? super V,? extends V> remappingFunction)          |                     |                                |
-| default V computeIfAbsent(K key, Function&lt;? super K,? extends V> mappingFunction)                |                     |                                |
-| default V computeIfPresent(K key, BiFunction&lt;? super K,? super V,? extends V> remappingFunction) |                     |                                |
-| boolean containsKey(Object key)                                                                     | Map&lt;E>           | boolean containsKey(K key)     |
-| boolean containsValue(Object value)                                                                 | Map&lt;E>           | boolean containsValue(V value) |
-| Set&lt;Map.Entry&lt;K,V>> entrySet()                                                                |                     |                                |
-| boolean equals(Object o)                                                                            |                     |                                |
-| default void forEach(BiConsumer&lt;? super K,? super V> action)                                     |                     |                                |
-| V get(Object key)                                                                                   | Map&lt;E>           | V get(K key)                   |
-| default V getOrDefault(Object key, V defaultValue)                                                  |                     |                                |
-| int hashCode()                                                                                      |                     |                                |
-| boolean isEmpty()                                                                                   |                     |                                |
-| Set&lt;K> keySet()                                                                                  | Map&lt;E>           | Collection<K> getKeys()        |
-| default V merge(K key, V value, BiFunction&lt;? super V,? super V,? extends V> remappingFunction)   |                     |                                |
-| V put(K key, V value)                                                                               |                     |                                |
-| void putAll(Map&lt;? extends K,? extends V> m)                                                      |                     |                                |
-| default V putIfAbsent(K key, V value)                                                               |                     |                                |
-| V remove(Object key)                                                                                |                     |                                |
-| default boolean remove(Object key, Object value)                                                    |                     |                                |
-| default V replace(K key, V value)                                                                   |                     |                                |
-| default boolean replace(K key, V oldValue, V newValue)                                              |                     |                                |
-| default void replaceAll(BiFunction&lt;? super K,? super V,? extends V> function)                    |                     |                                |
-| int size()                                                                                          |                     |                                |
-| Collection&lt;V> values()                                                                           | Map&lt;E>           | Collection<V> getValues()      |
+| JDK 17 Method                                                                                       | Kolektoj Class      | Kolektoj Method                                                 |
+|-----------------------------------------------------------------------------------------------------|---------------------|-----------------------------------------------------------------|
+| void clear()                                                                                        | ModifiableMap&lt;E> | void clear()                                                    |
+| default V compute(K key, BiFunction&lt;? super K,? super V,? extends V> remappingFunction)          |                     |                                                                 |
+| default V computeIfAbsent(K key, Function&lt;? super K,? extends V> mappingFunction)                |                     |                                                                 |
+| default V computeIfPresent(K key, BiFunction&lt;? super K,? super V,? extends V> remappingFunction) |                     |                                                                 |
+| boolean containsKey(Object key)                                                                     | Map&lt;E>           | boolean containsKey(K key)                                      |
+| boolean containsValue(Object value)                                                                 | Map&lt;E>           | boolean containsValue(V value)                                  |
+| Set&lt;Map.Entry&lt;K,V>> entrySet()                                                                | Map&lt;E>           | extends Collection&lt;Entry&lt;K, V>>                           |
+| boolean equals(Object o)                                                                            |                     |                                                                 |
+| default void forEach(BiConsumer&lt;? super K,? super V> action)                                     |                     |                                                                 |
+| V get(Object key)                                                                                   | Map&lt;E>           | V get(K key)                                                    |
+| default V getOrDefault(Object key, V defaultValue)                                                  |                     |                                                                 |
+| int hashCode()                                                                                      |                     |                                                                 |
+| boolean isEmpty()                                                                                   | Collection&lt;E>    | default boolean isEmpty()                                       |
+| Set&lt;K> keySet()                                                                                  | Map&lt;E>           | Collection<K> getKeys()                                         |
+| default V merge(K key, V value, BiFunction&lt;? super V,? super V,? extends V> remappingFunction)   |                     |                                                                 |
+| V put(K key, V value)                                                                               | ModifiableMap&lt;E> | default V put(K key, V value)                                   |
+| void putAll(Map&lt;? extends K,? extends V> m)                                                      | ModifiableMap&lt;E> | default void putAll(final Map&lt;? extends K, ? extends V> map) |
+| default V putIfAbsent(K key, V value)                                                               |                     |                                                                 |
+| V remove(Object key)                                                                                | ModifiableMap&lt;E> | V remove(K key)                                                 |
+| default boolean remove(Object key, Object value)                                                    |                     |                                                                 |
+| default V replace(K key, V value)                                                                   | ModifiableMap&lt;E> | V update(K key, V value)                                        |
+| default boolean replace(K key, V oldValue, V newValue)                                              |                     |                                                                 |
+| default void replaceAll(BiFunction&lt;? super K,? super V,? extends V> function)                    |                     |                                                                 |
+| int size()                                                                                          | Collection&lt;E>    | int size()                                                      |
+| Collection&lt;V> values()                                                                           | Map&lt;E>           | Collection<V> getValues()                                       |
 
 #### Other
 
