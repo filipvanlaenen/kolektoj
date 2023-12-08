@@ -83,6 +83,50 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
     }
 
     /**
+     * Returns a new modifiable map containing four entries using the provided keys and values.
+     *
+     * @param <K>    The key type.
+     * @param <V>    The value type.
+     * @param key1   The first key for the entry.
+     * @param value1 The first value for the entry.
+     * @param key2   The second key for the entry.
+     * @param value2 The second value for the entry.
+     * @param key3   The third key for the entry.
+     * @param value3 The third value for the entry.
+     * @param key4   The fourth key for the entry.
+     * @param value4 The fourth value for the entry.
+     * @return A new modifiable map containing four entries using the provided keys and values.
+     */
+    static <K, V> ModifiableMap<K, V> of(final K key1, final V value1, final K key2, final V value2, final K key3,
+            final V value3, final K key4, final V value4) {
+        return new ModifiableHashMap<K, V>(new Entry<K, V>(key1, value1), new Entry<K, V>(key2, value2),
+                new Entry<K, V>(key3, value3), new Entry<K, V>(key4, value4));
+    }
+
+    /**
+     * Returns a new modifiable map containing five entries using the provided keys and values.
+     *
+     * @param <K>    The key type.
+     * @param <V>    The value type.
+     * @param key1   The first key for the entry.
+     * @param value1 The first value for the entry.
+     * @param key2   The second key for the entry.
+     * @param value2 The second value for the entry.
+     * @param key3   The third key for the entry.
+     * @param value3 The third value for the entry.
+     * @param key4   The fourth key for the entry.
+     * @param value4 The fourth value for the entry.
+     * @param key5   The fifth key for the entry.
+     * @param value5 The fifth value for the entry.
+     * @return A new modifiable map containing five entries using the provided keys and values.
+     */
+    static <K, V> ModifiableMap<K, V> of(final K key1, final V value1, final K key2, final V value2, final K key3,
+            final V value3, final K key4, final V value4, final K key5, final V value5) {
+        return new ModifiableHashMap<K, V>(new Entry<K, V>(key1, value1), new Entry<K, V>(key2, value2),
+                new Entry<K, V>(key3, value3), new Entry<K, V>(key4, value4), new Entry<K, V>(key5, value5));
+    }
+
+    /**
      * Returns a new modifiable map with the specified entries and key and value cardinality.
      *
      * @param <K>                    The key type.

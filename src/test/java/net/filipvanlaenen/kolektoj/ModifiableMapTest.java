@@ -15,6 +15,14 @@ public class ModifiableMapTest {
      * The magic number three.
      */
     private static final int THREE = 3;
+    /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
+     * The magic number five.
+     */
+    private static final int FIVE = 5;
 
     /**
      * Verifies that an empty map is empty.
@@ -63,6 +71,34 @@ public class ModifiableMapTest {
         assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
         assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));
         assertTrue(actual.contains(new Entry<Integer, String>(THREE, "three")));
+    }
+
+    /**
+     * Verifies that a map constructed with four keys and values contains four entries with the keys and values.
+     */
+    @Test
+    public void ofShouldConstructAMapContainingFourEntriesWithTheKeysAndValues() {
+        ModifiableMap<Integer, String> actual = ModifiableMap.of(1, "one", 2, "two", THREE, "three", FOUR, "four");
+        assertEquals(FOUR, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "three")));
+        assertTrue(actual.contains(new Entry<Integer, String>(FOUR, "four")));
+    }
+
+    /**
+     * Verifies that a map constructed with five keys and values contains five entries with the keys and values.
+     */
+    @Test
+    public void ofShouldConstructAMapContainingFiveEntriesWithTheKeysAndValues() {
+        ModifiableMap<Integer, String> actual =
+                ModifiableMap.of(1, "one", 2, "two", THREE, "three", FOUR, "four", FIVE, "five");
+        assertEquals(FIVE, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "three")));
+        assertTrue(actual.contains(new Entry<Integer, String>(FOUR, "four")));
+        assertTrue(actual.contains(new Entry<Integer, String>(FIVE, "five")));
     }
 
     /**
