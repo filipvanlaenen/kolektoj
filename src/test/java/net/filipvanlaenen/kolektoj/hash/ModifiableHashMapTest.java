@@ -567,4 +567,36 @@ public final class ModifiableHashMapTest
         map1.retainAll(map2);
         assertEquals(SIX, map1.getAll(1).size());
     }
+
+    /**
+     * Verifies that trying to update an absent key throws IllegalArgumentException.
+     */
+    @Test
+    public void updateShouldThrowExceptionForAbsentKey() {
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> createNewMap().update(FOUR, "four"));
+        assertEquals("Map doesn't contain an entry with the key 4.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that updating a key with a new value stores the new value for the key.
+     */
+    @Test
+    public void updateShouldStoreTheNewValueForTheKey() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.update(1, "bis");
+        assertEquals("bis", map.get(1));
+        assertTrue(map.containsValue("bis"));
+        assertTrue(map.contains(ENTRY1BIS));
+        assertFalse(map.containsValue("one"));
+        assertFalse(map.contains(ENTRY1));
+    }
+
+    /**
+     * Verifies that updating a key with a new value returns the old value for the key.
+     */
+    @Test
+    public void updateShouldReturnTheOldValueForTheKey() {
+        assertEquals("one", createNewMap().update(1, "bis"));
+    }
 }
