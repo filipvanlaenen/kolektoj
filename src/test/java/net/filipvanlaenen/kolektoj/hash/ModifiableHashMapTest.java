@@ -476,6 +476,30 @@ public final class ModifiableHashMapTest
     }
 
     /**
+     * Verifies that removeIf returns false on an empty map.
+     */
+    @Test
+    public void removeIfShouldReturnFalseOnAnEmptyMap() {
+        assertFalse(createMap().removeIf(x -> true));
+    }
+
+    /**
+     * Verifies that removeIf returns false when no elements are removed.
+     */
+    @Test
+    public void removeIfShouldReturnFalseWhenNoElementsAreRemoved() {
+        assertFalse(createNewMap().removeIf(x -> false));
+    }
+
+    /**
+     * Verifies that removeIf returns true when an element is removed.
+     */
+    @Test
+    public void removeIfShouldReturnTrueWhenAnElementIsRemoved() {
+        assertTrue(createNewMap().removeIf(x -> x.key() == 1));
+    }
+
+    /**
      * Verifies that when some entries are removed, retainAll returns true.
      */
     @Test

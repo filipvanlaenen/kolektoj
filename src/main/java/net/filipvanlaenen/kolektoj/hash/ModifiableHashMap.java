@@ -354,7 +354,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         boolean[] retain = new boolean[size];
         Entry<K, V>[] entriesArray = entries.toArray();
         for (int i = 0; i < size; i++) {
-            retain[i] = predicate.test(entriesArray[i]);
+            retain[i] = !predicate.test(entriesArray[i]);
         }
         return retainAndRehash(entriesArray, retain);
     }
