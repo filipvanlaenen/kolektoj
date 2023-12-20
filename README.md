@@ -131,13 +131,13 @@ to Kolektoj methods.
 | boolean equals(Object o)                                                                            |                     |                                                                 |
 | default void forEach(BiConsumer&lt;? super K,? super V> action)                                     |                     |                                                                 |
 | V get(Object key)                                                                                   | Map&lt;E>           | V get(K key)                                                    |
-| default V getOrDefault(Object key, V defaultValue)                                                  | Map&lt;E>           | default V get(final K key, final V defaultValue)                |
+| default V getOrDefault(Object key, V defaultValue)                                                  | Map&lt;E>           | default V get(K key, V defaultValue)                            |
 | int hashCode()                                                                                      |                     |                                                                 |
 | boolean isEmpty()                                                                                   | Collection&lt;E>    | default boolean isEmpty()                                       |
 | Set&lt;K> keySet()                                                                                  | Map&lt;E>           | Collection<K> getKeys()                                         |
 | default V merge(K key, V value, BiFunction&lt;? super V,? super V,? extends V> remappingFunction)   |                     |                                                                 |
 | V put(K key, V value)                                                                               | ModifiableMap&lt;E> | default V put(K key, V value)                                   |
-| void putAll(Map&lt;? extends K,? extends V> m)                                                      | ModifiableMap&lt;E> | default void putAll(final Map&lt;? extends K, ? extends V> map) |
+| void putAll(Map&lt;? extends K,? extends V> m)                                                      | ModifiableMap&lt;E> | default void putAll(Map&lt;? extends K, ? extends V> map)       |
 | default V putIfAbsent(K key, V value)                                                               |                     |                                                                 |
 | V remove(Object key)                                                                                | ModifiableMap&lt;E> | V remove(K key)                                                 |
 | default boolean remove(Object key, Object value)                                                    |                     |                                                                 |
