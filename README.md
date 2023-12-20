@@ -131,7 +131,7 @@ to Kolektoj methods.
 | boolean equals(Object o)                                                                            |                     |                                                                 |
 | default void forEach(BiConsumer&lt;? super K,? super V> action)                                     |                     |                                                                 |
 | V get(Object key)                                                                                   | Map&lt;E>           | V get(K key)                                                    |
-| default V getOrDefault(Object key, V defaultValue)                                                  |                     |                                                                 |
+| default V getOrDefault(Object key, V defaultValue)                                                  | Map&lt;E>           | default V get(final K key, final V defaultValue)                |
 | int hashCode()                                                                                      |                     |                                                                 |
 | boolean isEmpty()                                                                                   | Collection&lt;E>    | default boolean isEmpty()                                       |
 | Set&lt;K> keySet()                                                                                  | Map&lt;E>           | Collection<K> getKeys()                                         |

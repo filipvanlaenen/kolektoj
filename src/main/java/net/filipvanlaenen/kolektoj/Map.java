@@ -195,6 +195,17 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
     V get(K key) throws IllegalArgumentException;
 
     /**
+     * Returns a value mapped to the key, or the provided value if the key is absent.
+     *
+     * @param key          The key.
+     * @param defaultValue The value to be returned if the key is absent.
+     * @return A value mapped to the key, of the provided value if the key is absent.
+     */
+    default V get(final K key, final V defaultValue) {
+        return containsKey(key) ? get(key) : defaultValue;
+    }
+
+    /**
      * Returns a collection with all values mapped to the key. Throws an exception if the map doesn't contain entries
      * with the key.
      *

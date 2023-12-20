@@ -1,9 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -142,5 +140,21 @@ public class MapTest {
     public void getElementCardinalityShouldReturnDistinctElementsForMapWithDistinctKeys() {
         assertEquals(ElementCardinality.DISTINCT_ELEMENTS,
                 new HashMap<Integer, String>(DISTINCT_KEYS).getElementCardinality());
+    }
+
+    /**
+     * Verifies that the get method with a default value returns the mapped value when the key is present in the map.
+     */
+    @Test
+    public void getWithDefaultValueShouldReturnMappedValueWhenKeyIsPresent() {
+        assertEquals("one", Map.of(1, "one").get(1, null));
+    }
+
+    /**
+     * Verifies that the get method with a default value returns the default value when the key is absent in the map.
+     */
+    @Test
+    public void getWithDefaultValueShouldReturnDefaultValueWhenKeyIsAbsent() {
+        assertNull(Map.of(1, "one").get(2, null));
     }
 }
