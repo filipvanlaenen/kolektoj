@@ -20,68 +20,153 @@ import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
  *
  * @param <E> The element type.
  */
-public class SortedTreeCollection<E extends Comparable<E>> implements SortedCollection<E> {
+public final class SortedTreeCollection<E extends Comparable<E>> implements SortedCollection<E> {
+    /**
+     * A class implementing a node in a sorted tree.
+     */
     private final class Node {
+        /**
+         * The element of the node.
+         */
         private E element;
+        /**
+         * The height of the node.
+         */
         private int height;
+        /**
+         * The left child, with elements that compare less than the element of this node.
+         */
         private Node leftChild;
+        /**
+         * The right child, with elements that compare greater than the element of this node.
+         */
         private Node rightChild;
 
+        /**
+         * Constructor taking an element as its parameter.
+         *
+         * @param element The element for this node.
+         */
         private Node(final E element) {
             this.element = element;
         }
 
+        /**
+         * Calculates the balance factor for this node.
+         *
+         * @return The balance factor for this node.
+         */
         private int calculateBalanceFactor() {
-            return height(rightChild) - height(leftChild);
+            return getHeight(rightChild) - getHeight(leftChild);
         }
 
-        private int getChildSize(final Node child) {
-            return child == null ? 0 : child.getSize();
-        }
-
+        /**
+         * Returns the element of this node.
+         *
+         * @return The element of this node.
+         */
         private E getElement() {
             return element;
         }
 
+        /**
+         * Returns the height of this node.
+         *
+         * @return The height of this node.
+         */
         private int getHeight() {
             return height;
         }
 
+        /**
+         * Helper method returning -1 if the provided parameter is <code>null</code>, and the height of the node
+         * otherwise.
+         *
+         * @param node The node.
+         * @return The height of the node, or -1 if the provided parameter is <code>null</code>.
+         */
+        private int getHeight(final Node node) {
+            return node == null ? -1 : node.getHeight();
+        }
+
+        /**
+         * Returns the left child of this node.
+         *
+         * @return The left child of this node.
+         */
         private Node getLeftChild() {
             return leftChild;
         }
 
+        /**
+         * Returns the leftmost child by descending as far as possible to the left starting from this node.
+         *
+         * @return The leftmost child of this node.
+         */
         private Node getLeftmostChild() {
             return leftChild == null ? this : leftChild;
         }
 
+        /**
+         * Returns the right child of this node.
+         *
+         * @return The right child of this node.
+         */
         private Node getRightChild() {
             return rightChild;
         }
 
+        /**
+         * Returns the size of this node, which is the size of the left and the right child plus one.
+         *
+         * @return The size of this node.
+         */
         private int getSize() {
-            return 1 + getChildSize(leftChild) + getChildSize(rightChild);
+            return 1 + getSize(leftChild) + getSize(rightChild);
         }
 
-        private int height(final Node node) {
-            return node != null ? node.getHeight() : -1;
+        /**
+         * Helper method returning 0 if the provided parameter is <code>null</code>, and the size of the node otherwise.
+         *
+         * @param node The node.
+         * @return The size of the node, or 0 if the provided parameter is <code>null</code>.
+         */
+        private int getSize(final Node node) {
+            return node == null ? 0 : node.getSize();
         }
 
-        private void setElement(final E newElement) {
-            this.element = newElement;
-
+        /**
+         * Sets the element of this node.
+         *
+         * @param element The new element for this node.
+         */
+        private void setElement(final E element) {
+            this.element = element;
         }
 
-        private void setLeftChild(final Node newLeftChild) {
-            leftChild = newLeftChild;
+        /**
+         * Sets the left child of this node.
+         *
+         * @param leftChild The left child for this node.
+         */
+        private void setLeftChild(final Node leftChild) {
+            this.leftChild = leftChild;
         }
 
-        private void setRightChild(final Node newRightChild) {
-            rightChild = newRightChild;
+        /**
+         * Sets the right child of this node.
+         *
+         * @param rightChild The right child for this node.
+         */
+        private void setRightChild(final Node rightChild) {
+            this.rightChild = rightChild;
         }
 
+        /**
+         * Updates the height of this node.
+         */
         private void updateHeight() {
-            height = Math.max(height(leftChild), height(rightChild)) + 1;
+            height = Math.max(getHeight(leftChild), getHeight(rightChild)) + 1;
         }
     }
 
@@ -94,10 +179,16 @@ public class SortedTreeCollection<E extends Comparable<E>> implements SortedColl
      */
     private boolean cachedArrayDirty;
     /**
-     * The element cardinality.
+     * The comparator to use for comparing the elements in this collection.
      */
     private final Comparator<E> comparator;
+    /**
+     * The element cardinality.
+     */
     private final ElementCardinality elementCardinality;
+    /**
+     * The root node of the collection.
+     */
     private Node root;
     /**
      * The size of the collection.
@@ -216,27 +307,30 @@ public class SortedTreeCollection<E extends Comparable<E>> implements SortedColl
         if (collection.size() > size) {
             return false;
         }
-        boolean[] matches = new boolean[size];
+        boolean[] matched = new boolean[size];
         Class<E> componentType = (Class<E>) cachedArray.getClass().getComponentType();
         for (Object element : collection) {
-            findMatch(root, matches, 0, (E) element);
-        }
-        for (boolean match : matches) {
-            if (!match) {
+            if (componentType.isInstance(element) && findMatch(root, matched, 0, (E) element)) {
+
+            } else {
                 return false;
             }
         }
         return true;
     }
 
-    private void findMatch(final Node node, final boolean[] matches, final int index, E element) {
+    private boolean findMatch(final Node node, final boolean[] matched, final int index, final E element) {
         if (node == null) {
-            return;
+            return false;
         }
-        E castElement = (E) element;
-        if (!matches[index] && comparator.compare(node.getElement(), castElement) == 0) {
-            matches[index] = true;
-            return;
+        int comparison = comparator.compare(node.getElement(), element);
+        if (!matched[index] && comparison == 0) {
+            matched[index] = true;
+            return true;
+        } else if (comparison < 0) {
+            return findMatch(node.getLeftChild(), matched, index, element);
+        } else {
+            return findMatch(node.getRightChild(), matched, index + node.getLeftChild().getSize() + 1, element);
         }
     }
 

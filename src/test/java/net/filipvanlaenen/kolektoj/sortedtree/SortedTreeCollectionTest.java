@@ -11,10 +11,9 @@ import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.SortedTreeCollection} class.
  */
 public final class SortedTreeCollectionTest extends ModifiableCollectionTestBase<SortedTreeCollection<Integer>> {
-
     private static final Comparator<Integer> COMPARATOR = new Comparator<Integer>() {
         @Override
-        public int compare(Integer i1, Integer i2) {
+        public int compare(final Integer i1, final Integer i2) {
             if (Objects.equals(i1, i2)) {
                 return 0;
             } else if (i1 == null) {
