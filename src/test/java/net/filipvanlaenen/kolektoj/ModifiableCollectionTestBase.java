@@ -216,7 +216,7 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
      */
     @Test
     public void emptyCollectionShouldContainAnElementAfterHavingItAdded() {
-        ModifiableCollection<Integer> collection = createCollection123();
+        ModifiableCollection<Integer> collection = createModifiableCollection();
         collection.add(SIX);
         assertTrue(collection.contains(SIX));
     }
@@ -395,11 +395,19 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     }
 
     /**
-     * Verifies that containsAll returns false is the other collection is larger.
+     * Verifies that containsAll returns false if the other collection is larger.
      */
     @Test
     public void containsAllShouldReturnFalseIfTheOtherCollectionIsLarger() {
         assertFalse(collection123.containsAll(collection123null));
+    }
+
+    /**
+     * Verifies that containsAll returns true if the other collection is a subset.
+     */
+    @Test
+    public void containsAllShouldReturnTrueIfTheOtherCollectionIsASubset() {
+        assertTrue(collection123null.containsAll(collection123));
     }
 
     /**

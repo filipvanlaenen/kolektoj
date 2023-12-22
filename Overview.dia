@@ -108,6 +108,7 @@
   <dia:layer name="Background" visible="true" connectable="true"/>
   <dia:layer name="Background" visible="true" connectable="true"/>
   <dia:layer name="Background" visible="true" connectable="true"/>
+  <dia:layer name="Background" visible="true" connectable="true"/>
   <dia:layer name="Background" visible="true" connectable="true" active="true">
     <dia:object type="UML - Class" version="0" id="O0">
       <dia:attribute name="obj_pos">
@@ -1793,22 +1794,22 @@
     </dia:object>
     <dia:object type="UML - Class" version="0" id="O10">
       <dia:attribute name="obj_pos">
-        <dia:point val="22.5198,31.8529"/>
+        <dia:point val="24.3248,31.8529"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="22.4698,31.8029;33.6048,35.5029"/>
+        <dia:rectangle val="24.2748,31.8029;31.7998,35.5029"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="22.5198,31.8529"/>
+        <dia:point val="24.3248,31.8529"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
-        <dia:real val="11.035"/>
+        <dia:real val="7.4249999999999998"/>
       </dia:attribute>
       <dia:attribute name="elem_height">
         <dia:real val="3.6000000000000001"/>
       </dia:attribute>
       <dia:attribute name="name">
-        <dia:string>#ModifiableSortedCollection&lt;E&gt;#</dia:string>
+        <dia:string>#SortedCollection&lt;E&gt;#</dia:string>
       </dia:attribute>
       <dia:attribute name="stereotype">
         <dia:string>#interface#</dia:string>
