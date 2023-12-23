@@ -163,17 +163,17 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         }
         boolean[] matches = new boolean[size];
         for (Object element : collection) {
+            boolean found = false;
             Node current = head;
             for (int i = 0; i < size; i++) {
                 if (!matches[i] && Objects.equals(element, current.getElement())) {
                     matches[i] = true;
+                    found = true;
                     break;
                 }
                 current = current.getNext();
             }
-        }
-        for (boolean match : matches) {
-            if (!match) {
+            if (!found) {
                 return false;
             }
         }
