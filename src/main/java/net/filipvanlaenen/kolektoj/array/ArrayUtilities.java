@@ -85,15 +85,15 @@ final class ArrayUtilities {
         }
         boolean[] matches = new boolean[size];
         for (Object element : collection) {
+            boolean found = false;
             for (int i = 0; i < size; i++) {
                 if (!matches[i] && Objects.equals(element, source[i])) {
                     matches[i] = true;
+                    found = true;
                     break;
                 }
             }
-        }
-        for (boolean match : matches) {
-            if (!match) {
+            if (!found) {
                 return false;
             }
         }
