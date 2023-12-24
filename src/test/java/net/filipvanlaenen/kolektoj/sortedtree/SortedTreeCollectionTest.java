@@ -1,11 +1,10 @@
 package net.filipvanlaenen.kolektoj.sortedtree;
 
-import net.filipvanlaenen.kolektoj.ModifiableCollectionTestBase;
-
 import java.util.Comparator;
 import java.util.Objects;
 
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
+import net.filipvanlaenen.kolektoj.ModifiableCollectionTestBase;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.SortedTreeCollection} class.

@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj.array;
 
 import java.lang.reflect.Array;
+import java.util.Comparator;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
@@ -16,6 +17,7 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
      * The characteristics of the spliterator.
      */
     private final int characteristics;
+    private final Comparator<E> comparator;
     /**
      * The elements of the spliterator.
      */
@@ -32,8 +34,19 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
      * @param additionalCharacteristics The characteristics for the spliterator in addition to SIZED and SUBSIZED.
      */
     public ArraySpliterator(final E[] elements, final int additionalCharacteristics) {
+        this(elements, additionalCharacteristics, null);
+    }
+
+    /**
+     * Constructor taking the elements and additional characteristics as its arguments.
+     *
+     * @param elements                  The elements for the spliterator.
+     * @param additionalCharacteristics The characteristics for the spliterator in addition to SIZED and SUBSIZED.
+     */
+    public ArraySpliterator(final E[] elements, final int additionalCharacteristics, final Comparator<E> comparator) {
         this.elements = elements.clone();
         this.characteristics = SIZED | SUBSIZED | additionalCharacteristics;
+        this.comparator = comparator;
     }
 
     /**
@@ -45,12 +58,14 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
      * @param to              The position just after the last element to be included.
      * @param characteristics The characteristics for the spliterator in addition to SIZED and SUBSIZED.
      */
-    private ArraySpliterator(final E[] elements, final int from, final int to, final int characteristics) {
+    private ArraySpliterator(final E[] elements, final int from, final int to, final int characteristics,
+            final Comparator<E> comparator) {
         int size = to - from;
         Class<E[]> clazz = (Class<E[]>) elements.getClass();
         this.elements = (E[]) Array.newInstance(clazz.getComponentType(), size);
         System.arraycopy(elements, from, this.elements, 0, size);
         this.characteristics = characteristics;
+        this.comparator = comparator;
     }
 
     @Override
@@ -61,6 +76,11 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
     @Override
     public long estimateSize() {
         return (long) (elements.length - index);
+    }
+
+    @Override
+    public Comparator<E> getComparator() {
+        return comparator;
     }
 
     @Override
@@ -79,7 +99,7 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
         if (index < splitIndex) {
             int originalIndex = index;
             index = splitIndex;
-            return new ArraySpliterator<E>(elements, originalIndex, splitIndex, characteristics);
+            return new ArraySpliterator<E>(elements, originalIndex, splitIndex, characteristics, comparator);
         } else {
             return null;
         }

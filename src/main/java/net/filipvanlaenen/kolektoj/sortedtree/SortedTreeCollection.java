@@ -310,9 +310,7 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         boolean[] matched = new boolean[size];
         Class<E> componentType = (Class<E>) cachedArray.getClass().getComponentType();
         for (Object element : collection) {
-            if (componentType.isInstance(element) && findMatch(root, matched, 0, (E) element)) {
-
-            } else {
+            if (!(componentType.isInstance(element) && findMatch(root, matched, 0, (E) element))) {
                 return false;
             }
         }
@@ -323,14 +321,22 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         if (node == null) {
             return false;
         }
-        int comparison = comparator.compare(node.getElement(), element);
+        int comparison = comparator.compare(element, node.getElement());
         if (!matched[index] && comparison == 0) {
             matched[index] = true;
             return true;
         } else if (comparison < 0) {
-            return findMatch(node.getLeftChild(), matched, index, element);
+            return findMatch(node.getLeftChild(), matched, index + 1, element);
+        } else if (comparison > 0) {
+            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
+            return findMatch(node.getRightChild(), matched, index + leftSize + 1, element);
+        } else if (elementCardinality == DISTINCT_ELEMENTS) {
+            return false;
+        } else if (findMatch(node.getLeftChild(), matched, index + 1, element)) {
+            return true;
         } else {
-            return findMatch(node.getRightChild(), matched, index + node.getLeftChild().getSize() + 1, element);
+            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
+            return findMatch(node.getRightChild(), matched, index + leftSize + 1, element);
         }
     }
 
@@ -401,14 +407,17 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
             return new Node(element);
         } else if (comparator.compare(element, node.getElement()) < 0) {
             node.setLeftChild(insertNodeAndUpdateSize(element, node.getLeftChild()));
+            node.updateHeight();
             return node;
         } else if (comparator.compare(element, node.getElement()) > 0) {
             node.setRightChild(insertNodeAndUpdateSize(element, node.getRightChild()));
+            node.updateHeight();
             return node;
         } else if (elementCardinality == DISTINCT_ELEMENTS) {
             return node;
         } else {
             node.setRightChild(insertNodeAndUpdateSize(element, node.getRightChild()));
+            node.updateHeight();
             return node;
         }
     }
@@ -474,7 +483,7 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
     @Override
     public Spliterator<E> spliterator() {
         return new ArraySpliterator<E>(toArray(), Spliterator.ORDERED | Spliterator.SORTED
-                | (elementCardinality == DISTINCT_ELEMENTS ? Spliterator.DISTINCT : 0));
+                | (elementCardinality == DISTINCT_ELEMENTS ? Spliterator.DISTINCT : 0), comparator);
     }
 
     @Override
