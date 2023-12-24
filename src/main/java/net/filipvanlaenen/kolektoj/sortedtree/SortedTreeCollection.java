@@ -317,6 +317,35 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         return true;
     }
 
+    private Node deleteNodeAndUpdateSize(final E element, final Node node) {
+        if (node == null) {
+            return null;
+        } else if (comparator.compare(element, node.getElement()) < 0) {
+            node.setLeftChild(deleteNodeAndUpdateSize(element, node.getLeftChild()));
+            node.updateHeight();
+            return node;
+        } else if (comparator.compare(element, node.getElement()) > 0) {
+            node.setRightChild(deleteNodeAndUpdateSize(element, node.getRightChild()));
+            node.updateHeight();
+            return node;
+        } else if (node.getLeftChild() == null && node.getRightChild() == null) {
+            size--;
+            return null;
+        } else if (node.getLeftChild() == null) {
+            size--;
+            return node.getRightChild();
+        } else if (node.getRightChild() == null) {
+            size--;
+            return node.getLeftChild();
+        } else {
+            Node inOrderSuccessor = node.getRightChild().getLeftmostChild();
+            node.setElement(inOrderSuccessor.getElement());
+            node.setRightChild(deleteNodeAndUpdateSize(inOrderSuccessor.getElement(), node.getRightChild()));
+            node.updateHeight();
+            return node;
+        }
+    }
+
     private boolean findMatch(final Node node, final boolean[] matched, final int index, final E element) {
         if (node == null) {
             return false;
@@ -337,32 +366,6 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         } else {
             int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
             return findMatch(node.getRightChild(), matched, index + leftSize + 1, element);
-        }
-    }
-
-    private Node deleteNodeAndUpdateSize(final E element, final Node node) {
-        if (node == null) {
-            return null;
-        } else if (comparator.compare(element, node.getElement()) < 0) {
-            node.setLeftChild(deleteNodeAndUpdateSize(element, node.getLeftChild()));
-            return node;
-        } else if (comparator.compare(element, node.getElement()) > 0) {
-            node.setRightChild(deleteNodeAndUpdateSize(element, node.getRightChild()));
-            return node;
-        } else if (node.getLeftChild() == null && node.getRightChild() == null) {
-            size--;
-            return null;
-        } else if (node.getLeftChild() == null) {
-            size--;
-            return node.getRightChild();
-        } else if (node.getRightChild() == null) {
-            size--;
-            return node.getLeftChild();
-        } else {
-            Node inOrderSuccessor = node.getRightChild().getLeftmostChild();
-            node.setElement(inOrderSuccessor.getElement());
-            node.setRightChild(deleteNodeAndUpdateSize(inOrderSuccessor.getElement(), node.getRightChild()));
-            return node;
         }
     }
 
@@ -427,6 +430,20 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         return new ArrayIterator<E>(toArray());
     }
 
+    private int markForRemoval(final E[] deleteArray, final int size, final Node node,
+            final Predicate<? super E> predicate) {
+        if (node == null) {
+            return size;
+        }
+        int result = size;
+        if (predicate.test(node.getElement())) {
+            deleteArray[result++] = node.getElement();
+        }
+        result = markForRemoval(deleteArray, result, node.getLeftChild(), predicate);
+        result = markForRemoval(deleteArray, result, node.getRightChild(), predicate);
+        return result;
+    }
+
     @Override
     public boolean remove(final E element) {
         if (root == null) {
@@ -465,8 +482,13 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
 
     @Override
     public boolean removeIf(final Predicate<? super E> predicate) {
-        // TODO Auto-generated method stub
-        return false;
+        Class<E[]> clazz = (Class<E[]>) cachedArray.getClass();
+        E[] removeArray = (E[]) Array.newInstance(clazz.getComponentType(), size);
+        int removeArraySize = markForRemoval(removeArray, 0, root, predicate);
+        for (int i = 0; i < removeArraySize; i++) {
+            remove(removeArray[i]);
+        }
+        return removeArraySize > 0;
     }
 
     @Override
