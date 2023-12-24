@@ -216,8 +216,9 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         root = insertNodeAndUpdateSize(element, root);
         root.updateHeight();
         root = rebalance(root);
-        cachedArrayDirty = size != originalSize;
-        return cachedArrayDirty;
+        boolean changed = size != originalSize;
+        cachedArrayDirty = cachedArrayDirty || changed;
+        return changed;
     }
 
     private Node rebalance(final Node node) {
@@ -310,7 +311,7 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         boolean[] matched = new boolean[size];
         Class<E> componentType = (Class<E>) cachedArray.getClass().getComponentType();
         for (Object element : collection) {
-            if (!(componentType.isInstance(element) && findMatch(root, matched, 0, (E) element))) {
+            if (!(componentType.isInstance(element) && findAndMarkMatch(root, matched, 0, (E) element))) {
                 return false;
             }
         }
@@ -346,7 +347,7 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         }
     }
 
-    private boolean findMatch(final Node node, final boolean[] matched, final int index, final E element) {
+    private boolean findAndMarkMatch(final Node node, final boolean[] matched, final int index, final E element) {
         if (node == null) {
             return false;
         }
@@ -355,17 +356,17 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
             matched[index] = true;
             return true;
         } else if (comparison < 0) {
-            return findMatch(node.getLeftChild(), matched, index + 1, element);
+            return findAndMarkMatch(node.getLeftChild(), matched, index + 1, element);
         } else if (comparison > 0) {
             int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-            return findMatch(node.getRightChild(), matched, index + leftSize + 1, element);
+            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
         } else if (elementCardinality == DISTINCT_ELEMENTS) {
             return false;
-        } else if (findMatch(node.getLeftChild(), matched, index + 1, element)) {
+        } else if (findAndMarkMatch(node.getLeftChild(), matched, index + 1, element)) {
             return true;
         } else {
             int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-            return findMatch(node.getRightChild(), matched, index + leftSize + 1, element);
+            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
         }
     }
 
@@ -455,8 +456,9 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
             root.updateHeight();
             root = rebalance(root);
         }
-        cachedArrayDirty = size != originalSize;
-        return cachedArrayDirty;
+        boolean changed = size != originalSize;
+        cachedArrayDirty = cachedArrayDirty || changed;
+        return changed;
     }
 
     @Override
@@ -493,8 +495,37 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
 
     @Override
     public boolean retainAll(final Collection<? extends E> collection) {
-        // TODO Auto-generated method stub
-        return false;
+        boolean[] matched = new boolean[size];
+        Class<E> componentType = (Class<E>) cachedArray.getClass().getComponentType();
+        for (Object element : collection) {
+            if (componentType.isInstance(element)) {
+                findAndMarkMatch(root, matched, 0, (E) element);
+            }
+        }
+        Class<E[]> clazz = (Class<E[]>) cachedArray.getClass();
+        E[] removeArray = (E[]) Array.newInstance(clazz.getComponentType(), size);
+        int removeArraySize = collectUnmatched(removeArray, 0, root, matched, 0);
+        for (int i = 0; i < removeArraySize; i++) {
+            remove(removeArray[i]);
+        }
+        boolean changed = removeArraySize > 0;
+        cachedArrayDirty = cachedArrayDirty || changed;
+        return changed;
+    }
+
+    private int collectUnmatched(final E[] removeArray, final int removeArraySize, final Node node,
+            final boolean[] matched, final int index) {
+        if (node == null) {
+            return removeArraySize;
+        }
+        int result = removeArraySize;
+        if (!matched[index]) {
+            removeArray[result++] = node.getElement();
+        }
+        result = collectUnmatched(removeArray, result, node.getLeftChild(), matched, index + 1);
+        int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
+        result = collectUnmatched(removeArray, result, node.getRightChild(), matched, index + leftSize + 1);
+        return result;
     }
 
     @Override
