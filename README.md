@@ -40,15 +40,20 @@ The following collection properties have been identified:
 
 The table below shows the various implementations of the interfaces.
 
-| Interface                   | Array                            | Hash              | Linked List                    | Tree                 |
-|-----------------------------|----------------------------------|-------------------|--------------------------------|----------------------|
-| Collection                  | ArrayCollection                  |                   |                                |                      |
-| ModifiableCollection        | ModifiableArrayCollection        |                   | ModifiableLinkedListCollection |                      |
-| OrderedCollection           | OrderedArrayCollection           |                   |                                |                      |
-| ModifiableOrderedCollection | ModifiableOrderedArrayCollection |                   |                                |                      |
-| SortedCollection            |                                  |                   |                                | SortedTreeCollection |
-| Map                         |                                  | HashMap           |                                |                      |
-| ModifiableMap               |                                  | ModifiableHashMap |                                |                      |
+| Interface                   | Array                            | Hash              | Linked List                    | Tree                    |
+|-----------------------------|----------------------------------|-------------------|--------------------------------|-------------------------|
+| Collection                  | ArrayCollection                  |                   |                                | ¹                       |
+| ModifiableCollection        | ModifiableArrayCollection        |                   | ModifiableLinkedListCollection | _SortedTreeCollection_¹ |
+| OrderedCollection           | OrderedArrayCollection           |                   |                                |                         |
+| ModifiableOrderedCollection | ModifiableOrderedArrayCollection |                   |                                | —²                      |
+| SortedCollection            |                                  |                   |                                | SortedTreeCollection    |
+| Map                         |                                  | HashMap           |                                |                         |
+| ModifiableMap               |                                  | ModifiableHashMap |                                |                         |
+
+¹ Implementing this interface using this mechanism automatically provides functionality for a more specialized
+interface.
+
+² Implementing this interface conflicts with the functionality implied by the mechanism.
 
 ## Comparison with the Java Platform Collections Framework
 
