@@ -43,7 +43,7 @@ The table below shows the various implementations of the interfaces.
 | Interface                   | Array                            | Hash              | Linked List                    | Sorted Tree             |
 |-----------------------------|----------------------------------|-------------------|--------------------------------|-------------------------|
 | Collection                  | ArrayCollection                  |                   |                                | ¹                       |
-| ModifiableCollection        | ModifiableArrayCollection        |                   | ModifiableLinkedListCollection | *SortedTreeCollection* ¹ |
+| ModifiableCollection        | ModifiableArrayCollection        |                   | ModifiableLinkedListCollection | *SortedTreeCollection*¹ |
 | OrderedCollection           | OrderedArrayCollection           |                   |                                |                         |
 | ModifiableOrderedCollection | ModifiableOrderedArrayCollection |                   |                                | —²                      |
 | SortedCollection            |                                  |                   |                                | SortedTreeCollection    |
