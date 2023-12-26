@@ -7,9 +7,9 @@ import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.ModifiableCollectionTestBase;
 
 /**
- * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.SortedTreeCollection} class.
+ * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection} class.
  */
-public final class SortedTreeCollectionTest extends ModifiableCollectionTestBase<SortedTreeCollection<Integer>> {
+public final class ModifiableSortedTreeCollectionTest extends ModifiableCollectionTestBase<ModifiableSortedTreeCollection<Integer>> {
     private static final Comparator<Integer> COMPARATOR = new Comparator<Integer>() {
         @Override
         public int compare(final Integer i1, final Integer i2) {
@@ -28,13 +28,13 @@ public final class SortedTreeCollectionTest extends ModifiableCollectionTestBase
     };
 
     @Override
-    protected SortedTreeCollection<Integer> createModifiableCollection(final Integer... integers) {
-        return new SortedTreeCollection<Integer>(COMPARATOR, integers);
+    protected ModifiableSortedTreeCollection<Integer> createModifiableCollection(final Integer... integers) {
+        return new ModifiableSortedTreeCollection<Integer>(COMPARATOR, integers);
     }
 
     @Override
-    protected SortedTreeCollection<Integer> createModifiableCollection(final ElementCardinality elementCardinality,
+    protected ModifiableSortedTreeCollection<Integer> createModifiableCollection(final ElementCardinality elementCardinality,
             final Integer... integers) {
-        return new SortedTreeCollection<Integer>(elementCardinality, COMPARATOR, integers);
+        return new ModifiableSortedTreeCollection<Integer>(elementCardinality, COMPARATOR, integers);
     }
 }

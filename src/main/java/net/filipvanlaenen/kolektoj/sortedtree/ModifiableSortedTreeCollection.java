@@ -20,7 +20,7 @@ import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
  *
  * @param <E> The element type.
  */
-public final class SortedTreeCollection<E extends Comparable<E>> implements SortedCollection<E> {
+public final class ModifiableSortedTreeCollection<E extends Comparable<E>> implements SortedCollection<E> {
     /**
      * A class implementing a node in a sorted tree.
      */
@@ -195,11 +195,11 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
      */
     private int size;
 
-    public SortedTreeCollection(final Comparator<E> comparator, final E... elements) {
+    public ModifiableSortedTreeCollection(final Comparator<E> comparator, final E... elements) {
         this(DUPLICATE_ELEMENTS, comparator, elements);
     }
 
-    public SortedTreeCollection(final ElementCardinality elementCardinality, final Comparator<E> comparator,
+    public ModifiableSortedTreeCollection(final ElementCardinality elementCardinality, final Comparator<E> comparator,
             final E... elements) {
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;
@@ -219,44 +219,6 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         boolean changed = size != originalSize;
         cachedArrayDirty = cachedArrayDirty || changed;
         return changed;
-    }
-
-    private Node rebalance(final Node node) {
-        int balanceFactor = node.calculateBalanceFactor();
-        if (balanceFactor < -1) {
-            if (node.getLeftChild().calculateBalanceFactor() <= 0) {
-                return rotateRight(node);
-            } else {
-                node.setLeftChild(rotateLeft(node.getLeftChild()));
-                return rotateRight(node);
-            }
-        } else if (balanceFactor > 1) {
-            if (node.getRightChild().calculateBalanceFactor() >= 0) {
-                return rotateLeft(node);
-            } else {
-                node.setRightChild(rotateRight(node.getRightChild()));
-                return rotateLeft(node);
-            }
-        }
-        return node;
-    }
-
-    private Node rotateLeft(final Node node) {
-        Node rightChild = node.getRightChild();
-        node.setRightChild(rightChild.getLeftChild());
-        rightChild.setLeftChild(node);
-        node.updateHeight();
-        rightChild.updateHeight();
-        return rightChild;
-    }
-
-    private Node rotateRight(final Node node) {
-        Node leftChild = node.getLeftChild();
-        node.setLeftChild(leftChild.getRightChild());
-        leftChild.setRightChild(node);
-        node.updateHeight();
-        leftChild.updateHeight();
-        return leftChild;
     }
 
     @Override
@@ -282,6 +244,21 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         root = null;
         size = 0;
         cachedArrayDirty = cachedArray.length != 0;
+    }
+
+    private int collectUnmatchedForRemoval(final E[] removeArray, final int removeArraySize, final Node node,
+            final boolean[] matched, final int index) {
+        if (node == null) {
+            return removeArraySize;
+        }
+        int result = removeArraySize;
+        if (!matched[index]) {
+            removeArray[result++] = node.getElement();
+        }
+        result = collectUnmatchedForRemoval(removeArray, result, node.getLeftChild(), matched, index + 1);
+        int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
+        result = collectUnmatchedForRemoval(removeArray, result, node.getRightChild(), matched, index + leftSize + 1);
+        return result;
     }
 
     @Override
@@ -445,6 +422,26 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         return result;
     }
 
+    private Node rebalance(final Node node) {
+        int balanceFactor = node.calculateBalanceFactor();
+        if (balanceFactor < -1) {
+            if (node.getLeftChild().calculateBalanceFactor() <= 0) {
+                return rotateRight(node);
+            } else {
+                node.setLeftChild(rotateLeft(node.getLeftChild()));
+                return rotateRight(node);
+            }
+        } else if (balanceFactor > 1) {
+            if (node.getRightChild().calculateBalanceFactor() >= 0) {
+                return rotateLeft(node);
+            } else {
+                node.setRightChild(rotateRight(node.getRightChild()));
+                return rotateLeft(node);
+            }
+        }
+        return node;
+    }
+
     @Override
     public boolean remove(final E element) {
         if (root == null) {
@@ -504,7 +501,7 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         }
         Class<E[]> clazz = (Class<E[]>) cachedArray.getClass();
         E[] removeArray = (E[]) Array.newInstance(clazz.getComponentType(), size);
-        int removeArraySize = collectUnmatched(removeArray, 0, root, matched, 0);
+        int removeArraySize = collectUnmatchedForRemoval(removeArray, 0, root, matched, 0);
         for (int i = 0; i < removeArraySize; i++) {
             remove(removeArray[i]);
         }
@@ -513,19 +510,22 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
         return changed;
     }
 
-    private int collectUnmatched(final E[] removeArray, final int removeArraySize, final Node node,
-            final boolean[] matched, final int index) {
-        if (node == null) {
-            return removeArraySize;
-        }
-        int result = removeArraySize;
-        if (!matched[index]) {
-            removeArray[result++] = node.getElement();
-        }
-        result = collectUnmatched(removeArray, result, node.getLeftChild(), matched, index + 1);
-        int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-        result = collectUnmatched(removeArray, result, node.getRightChild(), matched, index + leftSize + 1);
-        return result;
+    private Node rotateLeft(final Node node) {
+        Node rightChild = node.getRightChild();
+        node.setRightChild(rightChild.getLeftChild());
+        rightChild.setLeftChild(node);
+        node.updateHeight();
+        rightChild.updateHeight();
+        return rightChild;
+    }
+
+    private Node rotateRight(final Node node) {
+        Node leftChild = node.getLeftChild();
+        node.setLeftChild(leftChild.getRightChild());
+        leftChild.setRightChild(node);
+        node.updateHeight();
+        leftChild.updateHeight();
+        return leftChild;
     }
 
     @Override
