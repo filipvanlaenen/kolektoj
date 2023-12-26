@@ -40,15 +40,15 @@ The following collection properties have been identified:
 
 The table below shows the various implementations of the interfaces.
 
-| Interface                   | Array                            | Hash              | Linked List                    | Sorted Tree             |
-|-----------------------------|----------------------------------|-------------------|--------------------------------|-------------------------|
-| Collection                  | ArrayCollection                  |                   |                                | ¹                       |
-| ModifiableCollection        | ModifiableArrayCollection        |                   | ModifiableLinkedListCollection | *SortedTreeCollection*¹ |
-| OrderedCollection           | OrderedArrayCollection           |                   |                                |                         |
-| ModifiableOrderedCollection | ModifiableOrderedArrayCollection |                   |                                | —²                      |
-| SortedCollection            |                                  |                   |                                | SortedTreeCollection    |
-| Map                         |                                  | HashMap           |                                |                         |
-| ModifiableMap               |                                  | ModifiableHashMap |                                |                         |
+| Interface                   | Array                            | Hash              | Linked List                    | Sorted Tree                       |
+|-----------------------------|----------------------------------|-------------------|--------------------------------|-----------------------------------|
+| Collection                  | ArrayCollection                  |                   |                                | *SortedTreeCollection*¹           |
+| ModifiableCollection        | ModifiableArrayCollection        |                   | ModifiableLinkedListCollection | *ModifiableSortedTreeCollection*¹ |
+| OrderedCollection           | OrderedArrayCollection           |                   |                                | SortedTreeCollection              |
+| ModifiableOrderedCollection | ModifiableOrderedArrayCollection |                   |                                | —²                                |
+| SortedCollection            |                                  |                   |                                | ModifiableSortedTreeCollection    |
+| Map                         |                                  | HashMap           |                                |                                   |
+| ModifiableMap               |                                  | ModifiableHashMap |                                |                                   |
 
 ¹ Implementing this interface using this mechanism automatically provides functionality for a more specialized
 interface.
