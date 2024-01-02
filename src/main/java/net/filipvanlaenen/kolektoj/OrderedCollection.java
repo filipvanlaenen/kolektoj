@@ -1,5 +1,8 @@
 package net.filipvanlaenen.kolektoj;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 import net.filipvanlaenen.kolektoj.array.OrderedArrayCollection;
 
 /**
@@ -8,6 +11,37 @@ import net.filipvanlaenen.kolektoj.array.OrderedArrayCollection;
  * @param <E> The element type.
  */
 public interface OrderedCollection<E> extends Collection<E> {
+    static <E> OrderedCollection<E> createSequence(final Function<Integer, E> generator, final int times) {
+        ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.empty();
+        for (int i = 0; i < times; i++) {
+            collection.add(generator.apply(i));
+        }
+        return new OrderedArrayCollection<E>(collection);
+    }
+
+    static <E, F extends E> OrderedCollection<E> createSequence(final F firstElement,
+            final Function<? super E, E> generator, final Predicate<? super E> whileCondition) {
+        ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.empty();
+        E element = firstElement;
+        while (whileCondition.test(element)) {
+            collection.add(element);
+            element = generator.apply(element);
+        }
+        return new OrderedArrayCollection<E>(collection);
+    }
+
+    static <E> OrderedCollection<E> createSequence(final Function<Integer, E> generator,
+            final Predicate<? super E> whileCondition) {
+        ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.empty();
+        int index = 0;
+        E element = generator.apply(index);
+        while (whileCondition.test(element)) {
+            collection.add(element);
+            element = generator.apply(++index);
+        }
+        return new OrderedArrayCollection<E>(collection);
+    }
+
     /**
      * Returns a new empty ordered collection.
      *
