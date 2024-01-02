@@ -11,14 +11,43 @@ import net.filipvanlaenen.kolektoj.array.OrderedArrayCollection;
  * @param <E> The element type.
  */
 public interface OrderedCollection<E> extends Collection<E> {
-    static <E> OrderedCollection<E> createSequence(final Function<Integer, E> generator, final int times) {
+    /**
+     * Returns an ordered collection holding a sequence of elements, starting with the provided first element, and with
+     * the next elements generated recursively from the first element.
+     *
+     * @param <E>              The element type.
+     * @param <F>              The element type or a subclass.
+     * @param firstElement     The first element of the sequence.
+     * @param generator        A function generating a next element when given an element.
+     * @param numberOfElements The requested number of elements.
+     * @return An ordered collection holding a sequence of elements.
+     */
+    static <E, F extends E> OrderedCollection<E> createSequence(final F firstElement,
+            final Function<? super E, E> generator, final int numberOfElements) {
         ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.empty();
-        for (int i = 0; i < times; i++) {
-            collection.add(generator.apply(i));
+        if (numberOfElements > 0) {
+            E element = firstElement;
+            collection.add(element);
+            for (int i = 1; i < numberOfElements; i++) {
+                element = generator.apply(element);
+                collection.add(element);
+            }
         }
         return new OrderedArrayCollection<E>(collection);
     }
 
+    /**
+     * Returns an ordered collection holding a sequence of elements, starting with the provided first element, and with
+     * the next elements generated recursively from the first element until a condition evaluates to false.
+     *
+     * @param <E>            The element type.
+     * @param <F>            The element type or a subclass.
+     * @param firstElement   The first element of the sequence.
+     * @param generator      A function generating a next element when given an element.
+     * @param whileCondition A predicate defining a condition to be met by the generated elements to be part of the
+     *                       sequence.
+     * @return An ordered collection holding a sequence of elements.
+     */
     static <E, F extends E> OrderedCollection<E> createSequence(final F firstElement,
             final Function<? super E, E> generator, final Predicate<? super E> whileCondition) {
         ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.empty();
@@ -30,6 +59,33 @@ public interface OrderedCollection<E> extends Collection<E> {
         return new OrderedArrayCollection<E>(collection);
     }
 
+    /**
+     * Returns an ordered collection holding a sequence of elements generated from a function taking an index as its
+     * parameter.
+     *
+     * @param <E>              The element type.
+     * @param generator        A function generating an element from an index.
+     * @param numberOfElements The requested number of elements.
+     * @return An ordered collection holding a sequence of elements.
+     */
+    static <E> OrderedCollection<E> createSequence(final Function<Integer, E> generator, final int numberOfElements) {
+        ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.empty();
+        for (int i = 0; i < numberOfElements; i++) {
+            collection.add(generator.apply(i));
+        }
+        return new OrderedArrayCollection<E>(collection);
+    }
+
+    /**
+     * Returns an ordered collection holding a sequence of elements generated from a function taking an index as its
+     * parameter until a condition evaluates to false.
+     *
+     * @param <E>            The element type.
+     * @param generator      A function generating an element from an index.
+     * @param whileCondition A predicate defining a condition to be met by the generated elements to be part of the
+     *                       sequence.
+     * @return An ordered collection holding a sequence of elements.
+     */
     static <E> OrderedCollection<E> createSequence(final Function<Integer, E> generator,
             final Predicate<? super E> whileCondition) {
         ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.empty();

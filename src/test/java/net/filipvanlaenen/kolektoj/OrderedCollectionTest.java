@@ -12,6 +12,11 @@ import org.junit.jupiter.api.Test;
  */
 public class OrderedCollectionTest {
     /**
+     * The magic number three.
+     */
+    private static final int THREE = 3;
+
+    /**
      * Verifies that an empty ordered collection is empty.
      */
     @Test
@@ -33,5 +38,57 @@ public class OrderedCollectionTest {
     @Test
     public void ofWithElementCardinalityShouldReturnACollectionWithTheElementCardinality() {
         assertEquals(DISTINCT_ELEMENTS, OrderedCollection.of(DISTINCT_ELEMENTS, 1).getElementCardinality());
+    }
+
+    /**
+     * Verifies that a sequence with three integers can be generated using the index to generate the elements.
+     */
+    @Test
+    public void createSequenceShouldCreateSequenceWithThreeIntegersFromIndex() {
+        OrderedCollection<Integer> expected = OrderedCollection.of(0, 1, 2);
+        OrderedCollection<Integer> actual = OrderedCollection.createSequence(i -> i, THREE);
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies that a sequence with three integers can be generated using the first element to generate the following
+     * elements.
+     */
+    @Test
+    public void createSequenceShouldCreateSequenceWithThreeIntegersFromFirstElement() {
+        OrderedCollection<Integer> expected = OrderedCollection.of(1, 2, THREE);
+        OrderedCollection<Integer> actual = OrderedCollection.createSequence(1, i -> i + 1, THREE);
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies that an empty sequence is created if the requested number of times is zero.
+     */
+    @Test
+    public void createSequenceShouldCreateEmptySequenceFromFirstElementIfTimesIsZero() {
+        OrderedCollection<Integer> actual = OrderedCollection.createSequence(1, i -> i + 1, 0);
+        assertTrue(actual.isEmpty());
+    }
+
+    /**
+     * Verifies that a sequence with integers can be generated using the index to generate the elements until a
+     * condition evaluates false.
+     */
+    @Test
+    public void createSequenceShouldCreateSequenceWithIntegersFromIndexUntilPredicateEvaluatesFalse() {
+        OrderedCollection<Integer> expected = OrderedCollection.of(0, 1, 2);
+        OrderedCollection<Integer> actual = OrderedCollection.createSequence(i -> i, i -> i < THREE);
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies that a sequence with three integers can be generated using the first element to generate the following
+     * elements.
+     */
+    @Test
+    public void createSequenceShouldCreateSequenceWithIntegersFromFirstElementUntilPredicateEvaluatesFalse() {
+        OrderedCollection<Integer> expected = OrderedCollection.of(1, 2, THREE);
+        OrderedCollection<Integer> actual = OrderedCollection.createSequence(1, i -> i + 1, i -> i <= THREE);
+        assertTrue(actual.containsSame(expected));
     }
 }
