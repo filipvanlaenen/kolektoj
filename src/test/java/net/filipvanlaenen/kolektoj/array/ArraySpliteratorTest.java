@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Comparator;
 import java.util.Spliterator;
 
 import org.junit.jupiter.api.Test;
@@ -166,6 +167,23 @@ public class ArraySpliteratorTest {
     public void additionalCharacteristicsShouldBeAddedToTheSpliterator() {
         assertEquals(Spliterator.SIZED | Spliterator.SORTED | Spliterator.SUBSIZED,
                 new ArraySpliterator<Integer>(ARRAY123456, Spliterator.SORTED).characteristics());
+    }
 
+    /**
+     * Verifies that getComparator returns <code>null</code> when no comparator is provided.
+     */
+    @Test
+    public void getComparatorShouldReturnNullWhenNoComparatorWasProvided() {
+        assertNull(createNewSpliterator().getComparator());
+    }
+
+    /**
+     * Verifies that getComparator returns the provided comparator.
+     */
+    @Test
+    public void getComparatorShouldReturnTheProvidedComparator() {
+        Comparator<Integer> comparator = Comparator.naturalOrder();
+        ArraySpliterator<Integer> spliterator = new ArraySpliterator<Integer>(ARRAY123456, 0, comparator);
+        assertEquals(comparator, spliterator.getComparator());
     }
 }
