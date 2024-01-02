@@ -9,7 +9,7 @@ import net.filipvanlaenen.kolektoj.Collection;
 /**
  * A class with utility methods for array-backed collections.
  */
-final class ArrayUtilities {
+public final class ArrayUtilities {
     /**
      * Private constructor to avoid instantiation of this utility class.
      */
@@ -23,7 +23,7 @@ final class ArrayUtilities {
      * @param source The array to clone.
      * @return A new array containing only distinct elements from the source array.
      */
-    static <E> E[] cloneDistinctElements(final E[] source) {
+    public static <E> E[] cloneDistinctElements(final E[] source) {
         int originalLength = source.length;
         int resultLength = originalLength;
         boolean[] duplicate = new boolean[originalLength];
@@ -132,7 +132,7 @@ final class ArrayUtilities {
      * @param comparator The comparator to use.
      * @return The array sorted using the comparator.
      */
-    static <E> E[] quicksort(final E[] source, final Comparator<E> comparator) {
+    public static <E> E[] quicksort(final E[] source, final Comparator<E> comparator) {
         E[] result = source.clone();
         quicksort(result, comparator, 0, result.length - 1);
         return result;
