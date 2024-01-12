@@ -1,9 +1,8 @@
 package net.filipvanlaenen.kolektoj.array;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Comparator;
 import java.util.Spliterator;
@@ -13,11 +12,12 @@ import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
+import net.filipvanlaenen.kolektoj.OrderedCollectionTestBase;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.OrderedArrayCollection} class.
  */
-public class OrderedArrayCollectionTest {
+public class OrderedArrayCollectionTest extends OrderedCollectionTestBase<OrderedArrayCollection<Integer>> {
     /**
      * The magic number three.
      */
@@ -52,12 +52,9 @@ public class OrderedArrayCollectionTest {
     private static final OrderedCollection<Integer> COLLECTION123NULL =
             new OrderedArrayCollection<Integer>(1, 2, 3, null);
 
-    /**
-     * Verifies that the correct length is returned for a collection with three elements.
-     */
-    @Test
-    public void sizeShouldReturnThreeForACollectionOfThreeElements() {
-        assertEquals(THREE, COLLECTION123.size());
+    @Override
+    protected OrderedArrayCollection<Integer> createOrderedCollection(Integer... integers) {
+        return new OrderedArrayCollection<Integer>(integers);
     }
 
     /**

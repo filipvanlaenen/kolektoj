@@ -104,7 +104,7 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
     /**
      * An array with the elements.
      */
-    private E[] elements;
+    private final E[] elements;
     /**
      * The root node of the collection.
      */
@@ -112,7 +112,7 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
     /**
      * The size of the collection.
      */
-    private int size;
+    private final int size;
 
     public SortedTreeCollection(final Comparator<E> comparator, final E... elements) {
         this(DUPLICATE_ELEMENTS, comparator, elements);
@@ -127,6 +127,7 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
         } else {
             this.elements = ArrayUtilities.quicksort(elements, comparator);
         }
+        this.size = this.elements.length;
     }
 
     @Override
