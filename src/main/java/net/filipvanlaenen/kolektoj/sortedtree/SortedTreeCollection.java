@@ -41,14 +41,36 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
      */
     private final int size;
 
-    public SortedTreeCollection(final Comparator<E> comparator, final E... elements) {
-        this(DUPLICATE_ELEMENTS, comparator, elements);
-    }
-
+    /**
+     * Constructs a new sorted tree collection from another collection, with the elements sorted using the given
+     * comparator.
+     *
+     * @param source     The collection to create a new ordered collection from.
+     * @param comparator The comparator by which to sort the elements.
+     */
     public SortedTreeCollection(final Comparator<E> comparator, final Collection<E> source) {
         this(source.getElementCardinality(), comparator, source.toArray());
     }
 
+    /**
+     * Constructs a new sorted tree collection with the given elements using the comparator for sorting. The element
+     * cardinality is defaulted to <code>DUPLICATE_ELEMENTS</code>.
+     *
+     * @param comparator The comparator by which to sort the elements.
+     * @param elements   The elements of the collection.
+     */
+    public SortedTreeCollection(final Comparator<E> comparator, final E... elements) {
+        this(DUPLICATE_ELEMENTS, comparator, elements);
+    }
+
+    /**
+     * Constructs a new sorted tree collection with the given elements and element cardinality and using the comparator
+     * for sorting.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param comparator         The comparator by which to sort the elements.
+     * @param elements           The elements of the collection.
+     */
     public SortedTreeCollection(final ElementCardinality elementCardinality, final Comparator<E> comparator,
             final E... elements) {
         this.comparator = comparator;
@@ -64,6 +86,25 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
         }
     }
 
+    @Override
+    public boolean contains(final E element) {
+        return SortedTreeUtilities.contains(root, comparator, element);
+    }
+
+    @Override
+    public boolean containsAll(final Collection<?> collection) {
+        return SortedTreeUtilities.containsAll(root, comparator, size,
+                (Class<E>) elements.getClass().getComponentType(), elementCardinality, collection);
+    }
+
+    /**
+     * Creates a sorted tree from a sorted array from the provided first to last index.
+     *
+     * @param array      The array with the elements, sorted.
+     * @param firstIndex The first index to be included in the tree.
+     * @param lastIndex  The last index to be included in the tree.
+     * @return A sorted tree with the elements from the sorted array.
+     */
     private Node<E> createSortedTree(final E[] array, final int firstIndex, final int lastIndex) {
         int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
         Node<E> node = new Node<E>(array[middleIndex]);
@@ -74,17 +115,6 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
             node.setRightChild(createSortedTree(array, middleIndex + 1, lastIndex));
         }
         return node;
-    }
-
-    @Override
-    public boolean contains(final E element) {
-        return SortedTreeUtilities.contains(root, comparator, element);
-    }
-
-    @Override
-    public boolean containsAll(final Collection<?> collection) {
-        return SortedTreeUtilities.containsAll(root, comparator, size,
-                (Class<E>) elements.getClass().getComponentType(), elementCardinality, collection);
     }
 
     @Override

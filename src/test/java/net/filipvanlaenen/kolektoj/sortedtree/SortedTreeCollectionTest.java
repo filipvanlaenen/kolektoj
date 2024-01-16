@@ -7,7 +7,14 @@ import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.OrderedCollectionTestBase;
 
-public class SortedTreeCollectionTest extends OrderedCollectionTestBase<SortedTreeCollection<Integer>> {
+/**
+ * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.SortedTreeCollection} class.
+ */
+public final class SortedTreeCollectionTest extends OrderedCollectionTestBase<SortedTreeCollection<Integer>> {
+    /**
+     * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
+     * value.
+     */
     private static final Comparator<Integer> COMPARATOR = new Comparator<Integer>() {
         @Override
         public int compare(final Integer i1, final Integer i2) {
@@ -32,18 +39,18 @@ public class SortedTreeCollectionTest extends OrderedCollectionTestBase<SortedTr
     }
 
     @Override
-    protected SortedTreeCollection<Integer> createOrderedCollection(ElementCardinality elementCardinality,
-            Integer... integers) {
+    protected SortedTreeCollection<Integer> createOrderedCollection(final ElementCardinality elementCardinality,
+            final Integer... integers) {
         return new SortedTreeCollection<Integer>(elementCardinality, COMPARATOR, integers);
     }
 
     @Override
-    protected SortedTreeCollection<Integer> createOrderedCollection(Integer... integers) {
+    protected SortedTreeCollection<Integer> createOrderedCollection(final Integer... integers) {
         return new SortedTreeCollection<Integer>(COMPARATOR, integers);
     }
 
     @Override
-    protected SortedTreeCollection<Integer> createOrderedCollection(SortedTreeCollection<Integer> collection) {
+    protected SortedTreeCollection<Integer> createOrderedCollection(final SortedTreeCollection<Integer> collection) {
         return new SortedTreeCollection<Integer>(COMPARATOR, collection);
     }
 }
