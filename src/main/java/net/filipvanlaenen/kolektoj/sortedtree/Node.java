@@ -2,6 +2,8 @@ package net.filipvanlaenen.kolektoj.sortedtree;
 
 /**
  * A class implementing a node in a sorted tree.
+ *
+ * @param <E> The element type.
  */
 final class Node<E> {
     /**
@@ -58,13 +60,13 @@ final class Node<E> {
     }
 
     /**
-     * Helper method returning -1 if the provided parameter is <code>null</code>, and the height of the node
-     * otherwise.
+     * Helper method returning -1 if the provided parameter is <code>null</code>, and the height of the node otherwise.
      *
      * @param node The node.
+     * @param <F>  The element type.
      * @return The height of the node, or -1 if the provided parameter is <code>null</code>.
      */
-    private int getHeight(final Node<E> node) {
+    private static <F> int getHeight(final Node<F> node) {
         return node == null ? -1 : node.getHeight();
     }
 
@@ -83,7 +85,7 @@ final class Node<E> {
      * @return The leftmost child of this node.
      */
     Node<E> getLeftmostChild() {
-        return leftChild == null ? this : leftChild;
+        return leftChild == null ? this : leftChild.getLeftmostChild();
     }
 
     /**
@@ -108,9 +110,10 @@ final class Node<E> {
      * Helper method returning 0 if the provided parameter is <code>null</code>, and the size of the node otherwise.
      *
      * @param node The node.
+     * @param <F>  The element type.
      * @return The size of the node, or 0 if the provided parameter is <code>null</code>.
      */
-    private int getSize(final Node<E> node) {
+    private static <F> int getSize(final Node<F> node) {
         return node == null ? 0 : node.getSize();
     }
 
