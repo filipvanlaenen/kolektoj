@@ -21,79 +21,6 @@ import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
  */
 public final class SortedTreeCollection<E extends Comparable<E>> implements OrderedCollection<E> {
     /**
-     * A class implementing a node in a sorted tree.
-     */
-    private final class Node {
-        /**
-         * The element of the node.
-         */
-        private E element;
-        /**
-         * The left child, with elements that compare less than the element of this node.
-         */
-        private Node leftChild;
-        /**
-         * The right child, with elements that compare greater than the element of this node.
-         */
-        private Node rightChild;
-
-        /**
-         * Constructor taking an element as its parameter.
-         *
-         * @param element The element for this node.
-         */
-        private Node(final E element) {
-            this.element = element;
-        }
-
-        /**
-         * Returns the element of this node.
-         *
-         * @return The element of this node.
-         */
-        private E getElement() {
-            return element;
-        }
-
-        /**
-         * Returns the left child of this node.
-         *
-         * @return The left child of this node.
-         */
-        private Node getLeftChild() {
-            return leftChild;
-        }
-
-        /**
-         * Returns the right child of this node.
-         *
-         * @return The right child of this node.
-         */
-        private Node getRightChild() {
-            return rightChild;
-        }
-
-        /**
-         * Returns the size of this node, which is the size of the left and the right child plus one.
-         *
-         * @return The size of this node.
-         */
-        private int getSize() {
-            return 1 + getSize(leftChild) + getSize(rightChild);
-        }
-
-        /**
-         * Helper method returning 0 if the provided parameter is <code>null</code>, and the size of the node otherwise.
-         *
-         * @param node The node.
-         * @return The size of the node, or 0 if the provided parameter is <code>null</code>.
-         */
-        private int getSize(final Node node) {
-            return node == null ? 0 : node.getSize();
-        }
-    }
-
-    /**
      * The comparator to use for comparing the elements in this collection.
      */
     private final Comparator<E> comparator;
@@ -108,7 +35,7 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
     /**
      * The root node of the collection.
      */
-    private Node root;
+    private Node<E> root;
     /**
      * The size of the collection.
      */
@@ -132,59 +59,13 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
 
     @Override
     public boolean contains(final E element) {
-        return contains(root, element);
-    }
-
-    private boolean contains(final Node node, final E element) {
-        if (node == null) {
-            return false;
-        }
-        int comparison = comparator.compare(element, node.getElement());
-        if (comparison == 0) {
-            return true;
-        } else if (comparison < 0) {
-            return contains(node.getLeftChild(), element);
-        } else {
-            return contains(node.getRightChild(), element);
-        }
+        return SortedTreeUtilities.contains(root, comparator, element);
     }
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        if (collection.size() > size) {
-            return false;
-        }
-        boolean[] matched = new boolean[size];
-        Class<E> componentType = (Class<E>) elements.getClass().getComponentType();
-        for (Object element : collection) {
-            if (!(componentType.isInstance(element) && findAndMarkMatch(root, matched, 0, (E) element))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean findAndMarkMatch(final Node node, final boolean[] matched, final int index, final E element) {
-        if (node == null) {
-            return false;
-        }
-        int comparison = comparator.compare(element, node.getElement());
-        if (!matched[index] && comparison == 0) {
-            matched[index] = true;
-            return true;
-        } else if (comparison < 0) {
-            return findAndMarkMatch(node.getLeftChild(), matched, index + 1, element);
-        } else if (comparison > 0) {
-            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
-        } else if (elementCardinality == DISTINCT_ELEMENTS) {
-            return false;
-        } else if (findAndMarkMatch(node.getLeftChild(), matched, index + 1, element)) {
-            return true;
-        } else {
-            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
-        }
+        return SortedTreeUtilities.containsAll(root, comparator, size,
+                (Class<E>) elements.getClass().getComponentType(), elementCardinality, collection);
     }
 
     @Override

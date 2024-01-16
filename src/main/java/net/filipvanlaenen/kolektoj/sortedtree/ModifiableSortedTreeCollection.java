@@ -22,155 +22,6 @@ import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
  */
 public final class ModifiableSortedTreeCollection<E extends Comparable<E>> implements SortedCollection<E> {
     /**
-     * A class implementing a node in a sorted tree.
-     */
-    private final class Node {
-        /**
-         * The element of the node.
-         */
-        private E element;
-        /**
-         * The height of the node.
-         */
-        private int height;
-        /**
-         * The left child, with elements that compare less than the element of this node.
-         */
-        private Node leftChild;
-        /**
-         * The right child, with elements that compare greater than the element of this node.
-         */
-        private Node rightChild;
-
-        /**
-         * Constructor taking an element as its parameter.
-         *
-         * @param element The element for this node.
-         */
-        private Node(final E element) {
-            this.element = element;
-        }
-
-        /**
-         * Calculates the balance factor for this node.
-         *
-         * @return The balance factor for this node.
-         */
-        private int calculateBalanceFactor() {
-            return getHeight(rightChild) - getHeight(leftChild);
-        }
-
-        /**
-         * Returns the element of this node.
-         *
-         * @return The element of this node.
-         */
-        private E getElement() {
-            return element;
-        }
-
-        /**
-         * Returns the height of this node.
-         *
-         * @return The height of this node.
-         */
-        private int getHeight() {
-            return height;
-        }
-
-        /**
-         * Helper method returning -1 if the provided parameter is <code>null</code>, and the height of the node
-         * otherwise.
-         *
-         * @param node The node.
-         * @return The height of the node, or -1 if the provided parameter is <code>null</code>.
-         */
-        private int getHeight(final Node node) {
-            return node == null ? -1 : node.getHeight();
-        }
-
-        /**
-         * Returns the left child of this node.
-         *
-         * @return The left child of this node.
-         */
-        private Node getLeftChild() {
-            return leftChild;
-        }
-
-        /**
-         * Returns the leftmost child by descending as far as possible to the left starting from this node.
-         *
-         * @return The leftmost child of this node.
-         */
-        private Node getLeftmostChild() {
-            return leftChild == null ? this : leftChild;
-        }
-
-        /**
-         * Returns the right child of this node.
-         *
-         * @return The right child of this node.
-         */
-        private Node getRightChild() {
-            return rightChild;
-        }
-
-        /**
-         * Returns the size of this node, which is the size of the left and the right child plus one.
-         *
-         * @return The size of this node.
-         */
-        private int getSize() {
-            return 1 + getSize(leftChild) + getSize(rightChild);
-        }
-
-        /**
-         * Helper method returning 0 if the provided parameter is <code>null</code>, and the size of the node otherwise.
-         *
-         * @param node The node.
-         * @return The size of the node, or 0 if the provided parameter is <code>null</code>.
-         */
-        private int getSize(final Node node) {
-            return node == null ? 0 : node.getSize();
-        }
-
-        /**
-         * Sets the element of this node.
-         *
-         * @param element The new element for this node.
-         */
-        private void setElement(final E element) {
-            this.element = element;
-        }
-
-        /**
-         * Sets the left child of this node.
-         *
-         * @param leftChild The left child for this node.
-         */
-        private void setLeftChild(final Node leftChild) {
-            this.leftChild = leftChild;
-        }
-
-        /**
-         * Sets the right child of this node.
-         *
-         * @param rightChild The right child for this node.
-         */
-        private void setRightChild(final Node rightChild) {
-            this.rightChild = rightChild;
-        }
-
-        /**
-         * Updates the height of this node.
-         */
-        private void updateHeight() {
-            height = Math.max(getHeight(leftChild), getHeight(rightChild)) + 1;
-        }
-    }
-
-    /**
      * A cached array with the elements.
      */
     private E[] cachedArray;
@@ -189,7 +40,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
     /**
      * The root node of the collection.
      */
-    private Node root;
+    private Node<E> root;
     /**
      * The size of the collection.
      */
@@ -203,7 +54,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
             final E... elements) {
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;
-        for (final E element : elements) {
+        for (E element : elements) {
             add(element);
         }
         cachedArray = elements.clone();
@@ -230,7 +81,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         return result;
     }
 
-    private int addNodesToCachedArray(final Node node, final int index) {
+    private int addNodesToCachedArray(final Node<E> node, final int index) {
         if (node == null) {
             return index;
         }
@@ -246,7 +97,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         cachedArrayDirty = cachedArray.length != 0;
     }
 
-    private int collectUnmatchedForRemoval(final E[] removeArray, final int removeArraySize, final Node node,
+    private int collectUnmatchedForRemoval(final E[] removeArray, final int removeArraySize, final Node<E> node,
             final boolean[] matched, final int index) {
         if (node == null) {
             return removeArraySize;
@@ -263,39 +114,16 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
 
     @Override
     public boolean contains(final E element) {
-        return contains(root, element);
-    }
-
-    private boolean contains(final Node node, final E element) {
-        if (node == null) {
-            return false;
-        }
-        int comparison = comparator.compare(element, node.getElement());
-        if (comparison == 0) {
-            return true;
-        } else if (comparison < 0) {
-            return contains(node.getLeftChild(), element);
-        } else {
-            return contains(node.getRightChild(), element);
-        }
+        return SortedTreeUtilities.contains(root, comparator, element);
     }
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        if (collection.size() > size) {
-            return false;
-        }
-        boolean[] matched = new boolean[size];
-        Class<E> componentType = (Class<E>) cachedArray.getClass().getComponentType();
-        for (Object element : collection) {
-            if (!(componentType.isInstance(element) && findAndMarkMatch(root, matched, 0, (E) element))) {
-                return false;
-            }
-        }
-        return true;
+        return SortedTreeUtilities.containsAll(root, comparator, size,
+                (Class<E>) cachedArray.getClass().getComponentType(), elementCardinality, collection);
     }
 
-    private Node deleteNodeAndUpdateSize(final E element, final Node node) {
+    private Node<E> deleteNodeAndUpdateSize(final E element, final Node<E> node) {
         if (node == null) {
             return null;
         } else if (comparator.compare(element, node.getElement()) < 0) {
@@ -316,7 +144,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
             size--;
             return node.getLeftChild();
         } else {
-            Node inOrderSuccessor = node.getRightChild().getLeftmostChild();
+            Node<E> inOrderSuccessor = node.getRightChild().getLeftmostChild();
             node.setElement(inOrderSuccessor.getElement());
             node.setRightChild(deleteNodeAndUpdateSize(inOrderSuccessor.getElement(), node.getRightChild()));
             node.updateHeight();
@@ -324,7 +152,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         }
     }
 
-    private boolean findAndMarkMatch(final Node node, final boolean[] matched, final int index, final E element) {
+    private boolean findAndMarkMatch(final Node<E> node, final boolean[] matched, final int index, final E element) {
         if (node == null) {
             return false;
         }
@@ -366,7 +194,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         }
     }
 
-    private E getAt(final Node node, final int index) {
+    private E getAt(final Node<E> node, final int index) {
         int leftSize = node.getLeftChild().getSize();
         if (leftSize < index) {
             return getAt(node.getRightChild(), index - leftSize - 1);
@@ -382,10 +210,10 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         return elementCardinality;
     }
 
-    private Node insertNodeAndUpdateSize(final E element, final Node node) {
+    private Node<E> insertNodeAndUpdateSize(final E element, final Node<E> node) {
         if (node == null) {
             size++;
-            return new Node(element);
+            return new Node<E>(element);
         } else if (comparator.compare(element, node.getElement()) < 0) {
             node.setLeftChild(insertNodeAndUpdateSize(element, node.getLeftChild()));
             node.updateHeight();
@@ -408,7 +236,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         return new ArrayIterator<E>(toArray());
     }
 
-    private int markForRemoval(final E[] deleteArray, final int size, final Node node,
+    private int markForRemoval(final E[] deleteArray, final int size, final Node<E> node,
             final Predicate<? super E> predicate) {
         if (node == null) {
             return size;
@@ -422,7 +250,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         return result;
     }
 
-    private Node rebalance(final Node node) {
+    private Node<E> rebalance(final Node<E> node) {
         int balanceFactor = node.calculateBalanceFactor();
         if (balanceFactor < -1) {
             if (node.getLeftChild().calculateBalanceFactor() <= 0) {
@@ -510,8 +338,8 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         return changed;
     }
 
-    private Node rotateLeft(final Node node) {
-        Node rightChild = node.getRightChild();
+    private Node<E> rotateLeft(final Node<E> node) {
+        Node<E> rightChild = node.getRightChild();
         node.setRightChild(rightChild.getLeftChild());
         rightChild.setLeftChild(node);
         node.updateHeight();
@@ -519,8 +347,8 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         return rightChild;
     }
 
-    private Node rotateRight(final Node node) {
-        Node leftChild = node.getLeftChild();
+    private Node<E> rotateRight(final Node<E> node) {
+        Node<E> leftChild = node.getLeftChild();
         node.setLeftChild(leftChild.getRightChild());
         leftChild.setRightChild(node);
         node.updateHeight();
