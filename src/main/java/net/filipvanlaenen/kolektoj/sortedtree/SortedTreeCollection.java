@@ -45,6 +45,10 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
         this(DUPLICATE_ELEMENTS, comparator, elements);
     }
 
+    public SortedTreeCollection(final Comparator<E> comparator, final Collection<E> source) {
+        this(source.getElementCardinality(), comparator, source.toArray());
+    }
+
     public SortedTreeCollection(final ElementCardinality elementCardinality, final Comparator<E> comparator,
             final E... elements) {
         this.comparator = comparator;
@@ -55,6 +59,21 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
             this.elements = ArrayUtilities.quicksort(elements, comparator);
         }
         this.size = this.elements.length;
+        if (size > 0) {
+            root = createSortedTree(this.elements, 0, size - 1);
+        }
+    }
+
+    private Node<E> createSortedTree(final E[] array, final int firstIndex, final int lastIndex) {
+        int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
+        Node<E> node = new Node<E>(array[middleIndex]);
+        if (middleIndex > firstIndex) {
+            node.setLeftChild(createSortedTree(array, firstIndex, middleIndex - 1));
+        }
+        if (middleIndex < lastIndex) {
+            node.setRightChild(createSortedTree(array, middleIndex + 1, lastIndex));
+        }
+        return node;
     }
 
     @Override

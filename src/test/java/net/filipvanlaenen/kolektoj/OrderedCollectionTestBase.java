@@ -4,13 +4,13 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Comparator;
 import java.util.Spliterator;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
-import net.filipvanlaenen.kolektoj.array.OrderedArrayCollection;
 
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.OrderedCollection} interface.
@@ -23,13 +23,33 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
      */
     private static final int THREE = 3;
     /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
+     * The magic number five.
+     */
+    private static final int FIVE = 5;
+    /**
+     * The magic number six.
+     */
+    private static final int SIX = 6;
+    /**
      * An array containing the numbers 1, 2 and 3.
      */
     private static final Integer[] ARRAY123 = new Integer[] {1, 2, THREE};
     /**
+     * An array containing the numbers from 1 to 6.
+     */
+    private static final Integer[] ARRAY123456 = new Integer[] {1, 2, THREE, FOUR, FIVE, SIX};
+    /**
      * Ordered array collection with the integers 1, 2 and 3.
      */
-    private final OrderedCollection<Integer> collection123 = createOrderedCollection(1, 2, 3);
+    private final T collection123 = createOrderedCollection(1, 2, 3);
+    /**
+     * Ordered array collection with the integers 1, 2, 3 and null.
+     */
+    private final OrderedCollection<Integer> collection123Null = createOrderedCollection(1, 2, 3, null);
 
     /**
      * Creates an ordered collection containing the provided integers.
@@ -48,6 +68,43 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
      */
     protected abstract T createOrderedCollection(ElementCardinality elementCardinality, Integer... integers);
 
+    protected abstract T createOrderedCollection(final T collection);
+
+    protected abstract T createOrderedCollection(final Collection<Integer> collection,
+            final Comparator<Integer> comparator);
+
+    /**
+     * Verifies that contains returns true for an element in the collection.
+     */
+    @Test
+    public void containsShouldReturnTrueForAnElementInTheCollection() {
+        assertTrue(collection123.contains(1));
+    }
+
+    /**
+     * Verifies that containsAll returns false is the other collection is larger.
+     */
+    @Test
+    public void containsAllShouldReturnFalseIfTheOtherCollectionIsLarger() {
+        assertFalse(collection123.containsAll(collection123Null));
+    }
+
+    /**
+     * Verifies that containsAll returns true if a collection is compared to itself.
+     */
+    @Test
+    public void containsAllShouldReturnTrueWhenComparedToItself() {
+        assertTrue(collection123.containsAll(collection123));
+    }
+
+    /**
+     * Verifies that contains returns false for an element not in the collection.
+     */
+    @Test
+    public void containsShouldReturnFalseForAnElementNotInTheCollection() {
+        assertFalse(collection123.contains(0));
+    }
+
     /**
      * Verifies that the correct length is returned for an ordered collection with three elements.
      */
@@ -62,6 +119,15 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
     @Test
     public void getAtShouldReturnCorrectElement() {
         assertEquals(2, collection123.getAt(1));
+    }
+
+    /**
+     * Verifies that when you get an element from a collection, the collection contains it.
+     */
+    @Test
+    public void getShouldReturnAnElementPresentInTheCollection() {
+        Integer element = collection123.get();
+        assertTrue(collection123.contains(element));
     }
 
     /**
@@ -92,6 +158,47 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
     @Test
     public void toArrayShouldProduceAnArrayWithTheElementsOfTheCollection() {
         assertArrayEquals(ARRAY123, collection123.toArray());
+    }
+
+    /**
+     * Verifies that the collection constructed using another ordered collection produces the correct array.
+     */
+    @Test
+    public void constructorUsingOrderedCollectionShouldProduceTheCorrectArray() {
+        assertArrayEquals(ARRAY123, createOrderedCollection(collection123).toArray());
+    }
+
+    /**
+     * Verifies that the collection constructed using another collection and the natural comparator produces the correct
+     * array.
+     */
+    @Test
+    public void constructorUsingCollectionAndNaturalOrderComparatorShouldProduceTheCorrectArray() {
+        assertArrayEquals(ARRAY123456,
+                createOrderedCollection(Collection.of(1, FIVE, SIX, 2, FOUR, THREE), Comparator.naturalOrder())
+                        .toArray());
+    }
+
+    /**
+     * Verifies that the constructor using a comparator transfers the element cardinality correctly.
+     */
+    @Test
+    public void constructorUsingCollectionAndNaturalOrderComparatorShouldTransferElementCardinality() {
+        assertEquals(DISTINCT_ELEMENTS,
+                createOrderedCollection(Collection.of(DISTINCT_ELEMENTS, 1, FIVE, SIX, 2, FOUR, THREE),
+                        Comparator.naturalOrder()).getElementCardinality());
+    }
+
+    /**
+     * Verifies that duplicate elements are removed if a collection with distinct elements is constructed.
+     */
+    @Test
+    public void constructorShouldRemoveDuplicateElementsFromDistinctCollection() {
+        OrderedCollection<Integer> collection = createOrderedCollection(DISTINCT_ELEMENTS, 1, 2, 2, THREE, 2, THREE);
+        assertEquals(THREE, collection.size());
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
+        assertTrue(collection.contains(THREE));
     }
 
     /**
