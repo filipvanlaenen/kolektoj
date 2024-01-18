@@ -33,10 +33,6 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
      */
     private final E[] elements;
     /**
-     * The root node of the collection.
-     */
-    private Node<E> root;
-    /**
      * The size of the collection.
      */
     private final int size;
@@ -81,49 +77,26 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
         } else {
             this.elements = ArrayUtilities.quicksort(elements, comparator);
         }
-        sortedTree = new SortedTree<E>(comparator, elementCardinality);
+        sortedTree = SortedTree.fromSortedArray(comparator, elementCardinality, this.elements);
         this.size = this.elements.length;
-        if (size > 0) {
-            root = createSortedTree(this.elements, 0, size - 1);
-        }
     }
 
     @Override
     public boolean contains(final E element) {
-        return sortedTree.contains(root, element);
+        return sortedTree.contains(element);
     }
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        return sortedTree.containsAll(root, size, (Class<E>) elements.getClass().getComponentType(), collection);
-    }
-
-    /**
-     * Creates a sorted tree from a sorted array from the provided first to last index.
-     *
-     * @param array      The array with the elements, sorted.
-     * @param firstIndex The first index to be included in the tree.
-     * @param lastIndex  The last index to be included in the tree.
-     * @return A sorted tree with the elements from the sorted array.
-     */
-    private Node<E> createSortedTree(final E[] array, final int firstIndex, final int lastIndex) {
-        int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
-        Node<E> node = new Node<E>(array[middleIndex]);
-        if (middleIndex > firstIndex) {
-            node.setLeftChild(createSortedTree(array, firstIndex, middleIndex - 1));
-        }
-        if (middleIndex < lastIndex) {
-            node.setRightChild(createSortedTree(array, middleIndex + 1, lastIndex));
-        }
-        return node;
+        return sortedTree.containsAll((Class<E>) elements.getClass().getComponentType(), collection);
     }
 
     @Override
     public E get() throws IndexOutOfBoundsException {
-        if (root == null) {
+        if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
         } else {
-            return root.getElement();
+            return sortedTree.getRootElement();
         }
     }
 
