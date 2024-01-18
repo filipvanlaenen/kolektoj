@@ -44,16 +44,15 @@ The table below shows the various implementations of the interfaces.
 |-----------------------------|----------------------------------|-------------------|--------------------------------|-----------------------------------|
 | Collection                  | ArrayCollection                  |                   |                                | *SortedTreeCollection*¹           |
 | ModifiableCollection        | ModifiableArrayCollection        |                   | ModifiableLinkedListCollection | *ModifiableSortedTreeCollection*¹ |
-| OrderedCollection           | OrderedArrayCollection           |                   |                                | SortedTreeCollection              |
-| ModifiableOrderedCollection | ModifiableOrderedArrayCollection |                   |                                | —²                                |
-| SortedCollection            |                                  |                   |                                | ModifiableSortedTreeCollection    |
+| OrderedCollection           | OrderedArrayCollection           | —²                |                                | SortedTreeCollection              |
+| ModifiableOrderedCollection | ModifiableOrderedArrayCollection | —²                |                                | —²                                |
+| SortedCollection            |                                  | —²                |                                | ModifiableSortedTreeCollection    |
 | Map                         |                                  | HashMap           |                                |                                   |
 | ModifiableMap               |                                  | ModifiableHashMap |                                |                                   |
 
-¹ Implementing this interface using this mechanism automatically provides functionality for a more specialized
-interface.
+¹ This implementation of the interface automatically provides functionality for a more specialized interface.
 
-² Implementing this interface conflicts with the functionality implied by the mechanism.
+² The nature of this implementation conflicts with the functionality of this interface.
 
 ## Comparison with the Java Platform Collections Framework
 
