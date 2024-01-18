@@ -7,9 +7,26 @@ import java.util.Comparator;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
-final class SortedTreeUtilities {
-    static <E extends Comparable<E>> boolean contains(final Node<E> node, final Comparator<E> comparator,
-            final E element) {
+final class SortedTree<E extends Comparable<E>> {
+    /**
+     * The comparator to use for comparing the elements in this collection.
+     */
+    private final Comparator<E> comparator;
+    /**
+     * The element cardinality.
+     */
+    private final ElementCardinality elementCardinality;
+    /**
+     * The root node of the collection.
+     */
+    private Node<E> root;
+
+    SortedTree(final Comparator<E> comparator, final ElementCardinality elementCardinality) {
+        this.comparator = comparator;
+        this.elementCardinality = elementCardinality;
+    }
+
+    boolean contains(final Node<E> node, final E element) {
         if (node == null) {
             return false;
         }
@@ -17,31 +34,27 @@ final class SortedTreeUtilities {
         if (comparison == 0) {
             return true;
         } else if (comparison < 0) {
-            return contains(node.getLeftChild(), comparator, element);
+            return contains(node.getLeftChild(), element);
         } else {
-            return contains(node.getRightChild(), comparator, element);
+            return contains(node.getRightChild(), element);
         }
     }
 
-    static <E extends Comparable<E>> boolean containsAll(final Node<E> node, final Comparator<E> comparator,
-            final int size, final Class<E> componentType, final ElementCardinality elementCardinality,
+    boolean containsAll(final Node<E> node, final int size, final Class<E> componentType,
             final Collection<?> collection) {
         if (collection.size() > size) {
             return false;
         }
         boolean[] matched = new boolean[size];
         for (Object element : collection) {
-            if (!(componentType.isInstance(element)
-                    && findAndMarkMatch(node, comparator, elementCardinality, matched, 0, (E) element))) {
+            if (!(componentType.isInstance(element) && findAndMarkMatch(node, matched, 0, (E) element))) {
                 return false;
             }
         }
         return true;
     }
 
-    private static <E extends Comparable<E>> boolean findAndMarkMatch(final Node<E> node,
-            final Comparator<E> comparator, final ElementCardinality elementCardinality, final boolean[] matched,
-            final int index, final E element) {
+    private boolean findAndMarkMatch(final Node<E> node, final boolean[] matched, final int index, final E element) {
         if (node == null) {
             return false;
         }
@@ -50,19 +63,17 @@ final class SortedTreeUtilities {
             matched[index] = true;
             return true;
         } else if (comparison < 0) {
-            return findAndMarkMatch(node.getLeftChild(), comparator, elementCardinality, matched, index + 1, element);
+            return findAndMarkMatch(node.getLeftChild(), matched, index + 1, element);
         } else if (comparison > 0) {
             int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-            return findAndMarkMatch(node.getRightChild(), comparator, elementCardinality, matched, index + leftSize + 1,
-                    element);
+            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
         } else if (elementCardinality == DISTINCT_ELEMENTS) {
             return false;
-        } else if (findAndMarkMatch(node.getLeftChild(), comparator, elementCardinality, matched, index + 1, element)) {
+        } else if (findAndMarkMatch(node.getLeftChild(), matched, index + 1, element)) {
             return true;
         } else {
             int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-            return findAndMarkMatch(node.getRightChild(), comparator, elementCardinality, matched, index + leftSize + 1,
-                    element);
+            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
         }
     }
 }

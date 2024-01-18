@@ -45,6 +45,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
      * The size of the collection.
      */
     private int size;
+    private final SortedTree<E> sortedTree;
 
     public ModifiableSortedTreeCollection(final Comparator<E> comparator, final E... elements) {
         this(DUPLICATE_ELEMENTS, comparator, elements);
@@ -57,6 +58,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         for (E element : elements) {
             add(element);
         }
+        sortedTree = new SortedTree<E>(comparator, elementCardinality);
         cachedArray = elements.clone();
         cachedArrayDirty = elements.length != size;
     }
@@ -66,7 +68,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         int originalSize = size;
         root = insertNodeAndUpdateSize(element, root);
         root.updateHeight();
-        root = rebalance(root);
+        root = root.rebalance();
         boolean changed = size != originalSize;
         cachedArrayDirty = cachedArrayDirty || changed;
         return changed;
@@ -114,13 +116,12 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
 
     @Override
     public boolean contains(final E element) {
-        return SortedTreeUtilities.contains(root, comparator, element);
+        return sortedTree.contains(root, element);
     }
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        return SortedTreeUtilities.containsAll(root, comparator, size,
-                (Class<E>) cachedArray.getClass().getComponentType(), elementCardinality, collection);
+        return sortedTree.containsAll(root, size, (Class<E>) cachedArray.getClass().getComponentType(), collection);
     }
 
     private Node<E> deleteNodeAndUpdateSize(final E element, final Node<E> node) {
@@ -250,26 +251,6 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         return result;
     }
 
-    private Node<E> rebalance(final Node<E> node) {
-        int balanceFactor = node.calculateBalanceFactor();
-        if (balanceFactor < -1) {
-            if (node.getLeftChild().calculateBalanceFactor() <= 0) {
-                return rotateRight(node);
-            } else {
-                node.setLeftChild(rotateLeft(node.getLeftChild()));
-                return rotateRight(node);
-            }
-        } else if (balanceFactor > 1) {
-            if (node.getRightChild().calculateBalanceFactor() >= 0) {
-                return rotateLeft(node);
-            } else {
-                node.setRightChild(rotateRight(node.getRightChild()));
-                return rotateLeft(node);
-            }
-        }
-        return node;
-    }
-
     @Override
     public boolean remove(final E element) {
         if (root == null) {
@@ -279,7 +260,7 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         root = deleteNodeAndUpdateSize(element, root);
         if (root != null) {
             root.updateHeight();
-            root = rebalance(root);
+            root = root.rebalance();
         }
         boolean changed = size != originalSize;
         cachedArrayDirty = cachedArrayDirty || changed;
@@ -336,24 +317,6 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
         boolean changed = removeArraySize > 0;
         cachedArrayDirty = cachedArrayDirty || changed;
         return changed;
-    }
-
-    private Node<E> rotateLeft(final Node<E> node) {
-        Node<E> rightChild = node.getRightChild();
-        node.setRightChild(rightChild.getLeftChild());
-        rightChild.setLeftChild(node);
-        node.updateHeight();
-        rightChild.updateHeight();
-        return rightChild;
-    }
-
-    private Node<E> rotateRight(final Node<E> node) {
-        Node<E> leftChild = node.getLeftChild();
-        node.setLeftChild(leftChild.getRightChild());
-        leftChild.setRightChild(node);
-        node.updateHeight();
-        leftChild.updateHeight();
-        return leftChild;
     }
 
     @Override

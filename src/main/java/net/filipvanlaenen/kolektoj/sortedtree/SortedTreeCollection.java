@@ -40,6 +40,7 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
      * The size of the collection.
      */
     private final int size;
+    private final SortedTree<E> sortedTree;
 
     /**
      * Constructs a new sorted tree collection from another collection, with the elements sorted using the given
@@ -80,6 +81,7 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
         } else {
             this.elements = ArrayUtilities.quicksort(elements, comparator);
         }
+        sortedTree = new SortedTree<E>(comparator, elementCardinality);
         this.size = this.elements.length;
         if (size > 0) {
             root = createSortedTree(this.elements, 0, size - 1);
@@ -88,13 +90,12 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Orde
 
     @Override
     public boolean contains(final E element) {
-        return SortedTreeUtilities.contains(root, comparator, element);
+        return sortedTree.contains(root, element);
     }
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        return SortedTreeUtilities.containsAll(root, comparator, size,
-                (Class<E>) elements.getClass().getComponentType(), elementCardinality, collection);
+        return sortedTree.containsAll(root, size, (Class<E>) elements.getClass().getComponentType(), collection);
     }
 
     /**

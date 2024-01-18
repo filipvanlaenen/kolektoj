@@ -117,6 +117,44 @@ final class Node<E> {
         return node == null ? 0 : node.getSize();
     }
 
+    Node<E> rebalance() {
+        int balanceFactor = calculateBalanceFactor();
+        if (balanceFactor < -1) {
+            if (getLeftChild().calculateBalanceFactor() <= 0) {
+                return rotateRight();
+            } else {
+                setLeftChild(getLeftChild().rotateLeft());
+                return rotateRight();
+            }
+        } else if (balanceFactor > 1) {
+            if (getRightChild().calculateBalanceFactor() >= 0) {
+                return rotateLeft();
+            } else {
+                setRightChild(getRightChild().rotateRight());
+                return rotateLeft();
+            }
+        }
+        return this;
+    }
+
+    private Node<E> rotateLeft() {
+        Node<E> rightChild = getRightChild();
+        setRightChild(rightChild.getLeftChild());
+        rightChild.setLeftChild(this);
+        updateHeight();
+        rightChild.updateHeight();
+        return rightChild;
+    }
+
+    private Node<E> rotateRight() {
+        Node<E> leftChild = getLeftChild();
+        setLeftChild(leftChild.getRightChild());
+        leftChild.setRightChild(this);
+        updateHeight();
+        leftChild.updateHeight();
+        return leftChild;
+    }
+
     /**
      * Sets the element of this node.
      *
