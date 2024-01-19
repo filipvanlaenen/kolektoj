@@ -44,11 +44,14 @@ The table below shows the various implementations of the interfaces.
 |-----------------------------|----------------------------------|-------------------|--------------------------------|-----------------------------------|
 | Collection                  | ArrayCollection                  |                   |                                | *SortedTreeCollection*¹           |
 | ModifiableCollection        | ModifiableArrayCollection        |                   | ModifiableLinkedListCollection | *ModifiableSortedTreeCollection*¹ |
-| OrderedCollection           | OrderedArrayCollection           | —²                |                                | SortedTreeCollection              |
+| OrderedCollection           | OrderedArrayCollection           | —²                |                                | *SortedTreeCollection*¹           |
 | ModifiableOrderedCollection | ModifiableOrderedArrayCollection | —²                |                                | —²                                |
-| SortedCollection            |                                  | —²                |                                | ModifiableSortedTreeCollection    |
+| SortedCollection            |                                  | —²                |                                | SortedTreeCollection              |
+| ModifiableSortedCollection  |                                  | —²                |                                | ModifiableSortedTreeCollection    |
 | Map                         |                                  | HashMap           |                                |                                   |
 | ModifiableMap               |                                  | ModifiableHashMap |                                |                                   |
+| SortedMap                   |                                  | —²                |                                |                                   |
+| ModifiableSortedMap         |                                  | —²                |                                |                                   |
 
 ¹ This implementation of the interface automatically provides functionality for a more specialized interface.
 
