@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
-import net.filipvanlaenen.kolektoj.OrderedCollection;
+import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
@@ -19,7 +19,7 @@ import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
  *
  * @param <E> The element type.
  */
-public final class SortedTreeCollection<E extends Comparable<E>> implements OrderedCollection<E> {
+public final class SortedTreeCollection<E extends Comparable<E>> implements SortedCollection<E> {
     /**
      * The comparator to use for comparing the elements in this collection.
      */

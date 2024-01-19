@@ -10,17 +10,17 @@ import java.util.Spliterator;
 import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
-import net.filipvanlaenen.kolektoj.SortedCollection;
+import net.filipvanlaenen.kolektoj.ModifiableSortedCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 
 /**
- * An implementation of the {@link net.filipvanlaenen.kolektoj.SortedCollection} interface backed by a sorted tree, in
+ * An implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableSortedCollection} interface backed by a sorted tree, in
  * particular an AVL tree.
  *
  * @param <E> The element type.
  */
-public final class ModifiableSortedTreeCollection<E extends Comparable<E>> implements SortedCollection<E> {
+public final class ModifiableSortedTreeCollection<E extends Comparable<E>> implements ModifiableSortedCollection<E> {
     /**
      * A cached array with the elements.
      */
