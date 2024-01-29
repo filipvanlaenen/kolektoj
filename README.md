@@ -1,5 +1,7 @@
 # Kolektoj — Yet Another Java Collections Framework
 
+*“Kolektoj” is the Esperanto word for “collections”.*
+
 The aim of this project is to provide a clean Java collections framework.
 
 * [Design Principles](#design-principles)
