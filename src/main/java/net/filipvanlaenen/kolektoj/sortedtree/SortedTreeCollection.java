@@ -88,7 +88,7 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        return sortedTree.containsAll((Class<E>) elements.getClass().getComponentType(), collection);
+        return sortedTree.containsAll(collection);
     }
 
     @Override

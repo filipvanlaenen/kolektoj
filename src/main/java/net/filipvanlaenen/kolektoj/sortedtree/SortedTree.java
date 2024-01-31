@@ -2,7 +2,9 @@ package net.filipvanlaenen.kolektoj.sortedtree;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 
+import java.lang.reflect.Array;
 import java.util.Comparator;
+import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
@@ -12,6 +14,7 @@ final class SortedTree<E extends Comparable<E>> {
      * The comparator to use for comparing the elements in this collection.
      */
     private final Comparator<E> comparator;
+    private final Class<E> componentType;
     /**
      * The element cardinality.
      */
@@ -25,16 +28,55 @@ final class SortedTree<E extends Comparable<E>> {
      */
     private int size;
 
-    SortedTree(final Comparator<E> comparator, final ElementCardinality elementCardinality) {
-        this(comparator, elementCardinality, null, 0);
+    SortedTree(final Comparator<E> comparator, final ElementCardinality elementCardinality,
+            final Class<E> componentType) {
+        this(comparator, elementCardinality, null, 0, componentType);
     }
 
     private SortedTree(final Comparator<E> comparator, final ElementCardinality elementCardinality, final Node<E> root,
-            final int size) {
+            final int size, final Class<E> componentType) {
         this.comparator = comparator;
+        this.componentType = componentType;
         this.elementCardinality = elementCardinality;
         this.root = root;
         this.size = size;
+    }
+
+    boolean add(final E element) {
+        int originalSize = size;
+        root = insertNodeAndUpdateSize(element, root);
+        root.updateHeight();
+        root = root.rebalance();
+        return size != originalSize;
+    }
+
+    private int addNodesToArray(final E[] array, final Node<E> node, final int index) {
+        if (node == null) {
+            return index;
+        }
+        int result = addNodesToArray(array, node.getLeftChild(), index);
+        array[result++] = node.getElement();
+        return addNodesToArray(array, node.getRightChild(), result);
+    }
+
+    void clear() {
+        root = null;
+        size = 0;
+    }
+
+    private int collectUnmatchedForRemoval(final E[] removeArray, final int removeArraySize, final Node<E> node,
+            final boolean[] matched, final int index) {
+        if (node == null) {
+            return removeArraySize;
+        }
+        int result = removeArraySize;
+        if (!matched[index]) {
+            removeArray[result++] = node.getElement();
+        }
+        result = collectUnmatchedForRemoval(removeArray, result, node.getLeftChild(), matched, index + 1);
+        int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
+        result = collectUnmatchedForRemoval(removeArray, result, node.getRightChild(), matched, index + leftSize + 1);
+        return result;
     }
 
     boolean contains(E element) {
@@ -55,18 +97,13 @@ final class SortedTree<E extends Comparable<E>> {
         }
     }
 
-    boolean containsAll(final Class<E> componentType, final Collection<?> collection) {
-        return containsAll(root, size, componentType, collection);
-    }
-
-    boolean containsAll(final Node<E> node, final int size, final Class<E> componentType,
-            final Collection<?> collection) {
+    boolean containsAll(final Collection<?> collection) {
         if (collection.size() > size) {
             return false;
         }
         boolean[] matched = new boolean[size];
         for (Object element : collection) {
-            if (!(componentType.isInstance(element) && findAndMarkMatch(node, matched, 0, (E) element))) {
+            if (!(componentType.isInstance(element) && findAndMarkMatch(root, matched, 0, (E) element))) {
                 return false;
             }
         }
@@ -92,6 +129,35 @@ final class SortedTree<E extends Comparable<E>> {
             node.setRightChild(createSortedTree(sortedArray, middleIndex + 1, lastIndex));
         }
         return node;
+    }
+
+    private Node<E> deleteNodeAndUpdateSize(final E element, final Node<E> node) {
+        if (node == null) {
+            return null;
+        } else if (comparator.compare(element, node.getElement()) < 0) {
+            node.setLeftChild(deleteNodeAndUpdateSize(element, node.getLeftChild()));
+            node.updateHeight();
+            return node;
+        } else if (comparator.compare(element, node.getElement()) > 0) {
+            node.setRightChild(deleteNodeAndUpdateSize(element, node.getRightChild()));
+            node.updateHeight();
+            return node;
+        } else if (node.getLeftChild() == null && node.getRightChild() == null) {
+            size--;
+            return null;
+        } else if (node.getLeftChild() == null) {
+            size--;
+            return node.getRightChild();
+        } else if (node.getRightChild() == null) {
+            size--;
+            return node.getLeftChild();
+        } else {
+            Node<E> inOrderSuccessor = node.getRightChild().getLeftmostChild();
+            node.setElement(inOrderSuccessor.getElement());
+            node.setRightChild(deleteNodeAndUpdateSize(inOrderSuccessor.getElement(), node.getRightChild()));
+            node.updateHeight();
+            return node;
+        }
     }
 
     private boolean findAndMarkMatch(final Node<E> node, final boolean[] matched, final int index, final E element) {
@@ -121,10 +187,113 @@ final class SortedTree<E extends Comparable<E>> {
             final ElementCardinality elementCardinality, final E[] sortedArray) {
         int size = sortedArray.length;
         return new SortedTree<E>(comparator, elementCardinality,
-                size == 0 ? null : createSortedTree(sortedArray, 0, size - 1), size);
+                size == 0 ? null : createSortedTree(sortedArray, 0, size - 1), size,
+                (Class<E>) sortedArray.getClass().getComponentType());
     }
 
-    public E getRootElement() {
+    E getAt(final int index) throws IndexOutOfBoundsException {
+        if (index >= size) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an element at a position beyond the size of the collection.");
+        } else {
+            return getAt(root, index);
+        }
+    }
+
+    private E getAt(final Node<E> node, final int index) {
+        int leftSize = node.getLeftChild().getSize();
+        if (leftSize < index) {
+            return getAt(node.getRightChild(), index - leftSize - 1);
+        } else if (leftSize == index) {
+            return node.getElement();
+        } else {
+            return getAt(node.getLeftChild(), index);
+        }
+    }
+
+    E getRootElement() {
         return root.getElement();
+    }
+
+    int getSize() {
+        return size;
+    }
+
+    private Node<E> insertNodeAndUpdateSize(final E element, final Node<E> node) {
+        if (node == null) {
+            size++;
+            return new Node<E>(element);
+        } else if (comparator.compare(element, node.getElement()) < 0) {
+            node.setLeftChild(insertNodeAndUpdateSize(element, node.getLeftChild()));
+            node.updateHeight();
+            return node;
+        } else if (comparator.compare(element, node.getElement()) > 0) {
+            node.setRightChild(insertNodeAndUpdateSize(element, node.getRightChild()));
+            node.updateHeight();
+            return node;
+        } else if (elementCardinality == DISTINCT_ELEMENTS) {
+            return node;
+        } else {
+            node.setRightChild(insertNodeAndUpdateSize(element, node.getRightChild()));
+            node.updateHeight();
+            return node;
+        }
+    }
+
+    private int markForRemoval(final E[] deleteArray, final int index, final Node<E> node,
+            final Predicate<? super E> predicate) {
+        if (node == null) {
+            return index;
+        }
+        int newIndex = index;
+        if (predicate.test(node.getElement())) {
+            deleteArray[newIndex++] = node.getElement();
+        }
+        newIndex = markForRemoval(deleteArray, newIndex, node.getLeftChild(), predicate);
+        newIndex = markForRemoval(deleteArray, newIndex, node.getRightChild(), predicate);
+        return newIndex;
+    }
+
+    boolean remove(final E element) {
+        if (root == null) {
+            return false;
+        }
+        int originalSize = size;
+        root = deleteNodeAndUpdateSize(element, root);
+        if (root != null) {
+            root.updateHeight();
+            root = root.rebalance();
+        }
+        return size != originalSize;
+    }
+
+    boolean removeIf(final Predicate<? super E> predicate) {
+        E[] removeArray = (E[]) Array.newInstance(componentType, size);
+        int removeArraySize = markForRemoval(removeArray, 0, root, predicate);
+        for (int i = 0; i < removeArraySize; i++) {
+            remove(removeArray[i]);
+        }
+        return removeArraySize > 0;
+    }
+
+    boolean retainAll(final Collection<? extends E> collection) {
+        boolean[] matched = new boolean[size];
+        for (Object element : collection) {
+            if (componentType.isInstance(element)) {
+                findAndMarkMatch(root, matched, 0, (E) element);
+            }
+        }
+        E[] removeArray = (E[]) Array.newInstance(componentType, size);
+        int removeArraySize = collectUnmatchedForRemoval(removeArray, 0, root, matched, 0);
+        for (int i = 0; i < removeArraySize; i++) {
+            remove(removeArray[i]);
+        }
+        return removeArraySize > 0;
+    }
+
+    E[] toArray() {
+        E[] array = (E[]) Array.newInstance(componentType, size);
+        addNodesToArray(array, root, 0);
+        return array.clone();
     }
 }
