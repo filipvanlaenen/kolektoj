@@ -143,6 +143,41 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     }
 
     /**
+     * Verifies that <code>toArray</code> produces an updated array even if the last add didn't change the collection.
+     */
+    @Test
+    public void toArrayShouldProduceAnUpdatedArrayEvenIfTheLastAddDidNotChangeTheCollection() {
+        ModifiableCollection<Integer> collection = createModifiableCollection(DISTINCT_ELEMENTS, 1);
+        collection.add(2);
+        collection.add(1);
+        assertEquals(2, collection.toArray().length);
+    }
+
+    /**
+     * Verifies that <code>toArray</code> produces an updated array even if the last remove didn't change the
+     * collection.
+     */
+    @Test
+    public void toArrayShouldProduceAnUpdatedArrayEvenIfTheLastRemoveDidNotChangeTheCollection() {
+        ModifiableCollection<Integer> collection = createModifiableCollection(DISTINCT_ELEMENTS, 1, 2);
+        collection.remove(2);
+        collection.remove(THREE);
+        assertEquals(1, collection.toArray().length);
+    }
+
+    /**
+     * Verifies that <code>toArray</code> produces an updated array even if the last retainAll didn't change the
+     * collection.
+     */
+    @Test
+    public void toArrayShouldProduceAnUpdatedArrayEvenIfTheLastRetainAllDidNotChangeTheCollection() {
+        ModifiableCollection<Integer> collection = createModifiableCollection(DISTINCT_ELEMENTS, 1, 2);
+        collection.retainAll(Collection.of(1));
+        collection.retainAll(Collection.of(1));
+        assertEquals(1, collection.toArray().length);
+    }
+
+    /**
      * Verifies that the collection produces a stream that reduces to the correct sum, thus verifying that the
      * spliterator is created correctly.
      */
