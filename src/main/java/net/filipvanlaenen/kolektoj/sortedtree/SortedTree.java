@@ -9,39 +9,60 @@ import java.util.function.Predicate;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
+/**
+ * A class implementing an AVL tree.
+ *
+ * @param <E> The element type.
+ */
 final class SortedTree<E extends Comparable<E>> {
     /**
      * The comparator to use for comparing the elements in this collection.
      */
     private final Comparator<E> comparator;
-    private final Class<E> componentType;
     /**
      * The element cardinality.
      */
     private final ElementCardinality elementCardinality;
     /**
-     * The root node of the collection.
+     * The type of the elements.
+     */
+    private final Class<E> elementType;
+    /**
+     * The root node of the tree.
      */
     private Node<E> root;
     /**
-     * The size of the collection.
+     * The size of the tree.
      */
     private int size;
 
+    /**
+     * Creates and empty sorted tree.
+     *
+     * @param comparator         The comparator.
+     * @param elementCardinality The element cardinality.
+     * @param elementType        The element type.
+     */
     SortedTree(final Comparator<E> comparator, final ElementCardinality elementCardinality,
-            final Class<E> componentType) {
-        this(comparator, elementCardinality, null, 0, componentType);
+            final Class<E> elementType) {
+        this(comparator, elementCardinality, null, 0, elementType);
     }
 
     private SortedTree(final Comparator<E> comparator, final ElementCardinality elementCardinality, final Node<E> root,
-            final int size, final Class<E> componentType) {
+            final int size, final Class<E> elementType) {
         this.comparator = comparator;
-        this.componentType = componentType;
+        this.elementType = elementType;
         this.elementCardinality = elementCardinality;
         this.root = root;
         this.size = size;
     }
 
+    /**
+     * Adds an element to this tree and returns whether it increased the size of the tree.
+     *
+     * @param element The element to be added to the tree.
+     * @return True if the size of the tree increased after adding the element.
+     */
     boolean add(final E element) {
         int originalSize = size;
         root = insertNodeAndUpdateSize(element, root);
@@ -59,6 +80,9 @@ final class SortedTree<E extends Comparable<E>> {
         return addNodesToArray(array, node.getRightChild(), result);
     }
 
+    /**
+     * Removes all elements from the tree.
+     */
     void clear() {
         root = null;
         size = 0;
@@ -79,10 +103,23 @@ final class SortedTree<E extends Comparable<E>> {
         return result;
     }
 
-    boolean contains(E element) {
+    /**
+     * Returns whether the tree contains the element.
+     *
+     * @param element The element.
+     * @return True if the tree contains the element.
+     */
+    boolean contains(final E element) {
         return contains(root, element);
     }
 
+    /**
+     * Returns whether the subtree starting at the provided node contains the element.
+     *
+     * @param node    The node.
+     * @param element The element.
+     * @return True if the subtree at the provided node contains the element.
+     */
     boolean contains(final Node<E> node, final E element) {
         if (node == null) {
             return false;
@@ -97,13 +134,21 @@ final class SortedTree<E extends Comparable<E>> {
         }
     }
 
+    /**
+     * Returns whether this tree contains all the elements of the provided collection, with the same number of
+     * occurrences.
+     *
+     * @param collection The collection to compare elements against.
+     * @return True if all of the elements in the provided collection are present in this tree with the same number of
+     *         occurrences.
+     */
     boolean containsAll(final Collection<?> collection) {
         if (collection.size() > size) {
             return false;
         }
         boolean[] matched = new boolean[size];
         for (Object element : collection) {
-            if (!(componentType.isInstance(element) && findAndMarkMatch(root, matched, 0, (E) element))) {
+            if (!(elementType.isInstance(element) && findAndMarkMatch(root, matched, 0, (E) element))) {
                 return false;
             }
         }
@@ -117,6 +162,7 @@ final class SortedTree<E extends Comparable<E>> {
      * @param firstIndex  The first index to be included in the tree.
      * @param lastIndex   The last index to be included in the tree.
      * @return A sorted tree with the elements from the sorted array.
+     * @param <E> The element type.
      */
     private static <E extends Comparable<E>> Node<E> createSortedTree(final E[] sortedArray, final int firstIndex,
             final int lastIndex) {
@@ -200,6 +246,12 @@ final class SortedTree<E extends Comparable<E>> {
         }
     }
 
+    /**
+     * Returns the element from the tree at the given position.
+     *
+     * @param index The position of the element that should be returned.
+     * @return The element from the tree at the given position.
+     */
     private E getAt(final Node<E> node, final int index) {
         int leftSize = node.getLeftChild().getSize();
         if (leftSize < index) {
@@ -211,10 +263,20 @@ final class SortedTree<E extends Comparable<E>> {
         }
     }
 
+    /**
+     * Returns the element of the root node of the tree.
+     *
+     * @return The element of the root node of the tree.
+     */
     E getRootElement() {
         return root.getElement();
     }
 
+    /**
+     * Returns the number of elements in the tree.
+     *
+     * @return The number of elements in the tree.
+     */
     int getSize() {
         return size;
     }
@@ -254,6 +316,12 @@ final class SortedTree<E extends Comparable<E>> {
         return newIndex;
     }
 
+    /**
+     * Removes an element from this tree if it is present.
+     *
+     * @param element The element to be removed from the tree.
+     * @return True if the element was present in the tree.
+     */
     boolean remove(final E element) {
         if (root == null) {
             return false;
@@ -267,8 +335,15 @@ final class SortedTree<E extends Comparable<E>> {
         return size != originalSize;
     }
 
+    /**
+     * Removes all elements from this tree that satisfy the given predicate, and returns whether it decreased the size
+     * of the tree.
+     *
+     * @param predicate The predicate to be applied to each element of the tree.
+     * @return True if the size of the tree decreased after removing the elements that satisfied the given predicate.
+     */
     boolean removeIf(final Predicate<? super E> predicate) {
-        E[] removeArray = (E[]) Array.newInstance(componentType, size);
+        E[] removeArray = (E[]) Array.newInstance(elementType, size);
         int removeArraySize = markForRemoval(removeArray, 0, root, predicate);
         for (int i = 0; i < removeArraySize; i++) {
             remove(removeArray[i]);
@@ -276,14 +351,21 @@ final class SortedTree<E extends Comparable<E>> {
         return removeArraySize > 0;
     }
 
+    /**
+     * Retains elements from a collection in this tree and removes all other, and returns whether it decreased the size
+     * of the tree.
+     *
+     * @param collection A collection with elements to retain in this tree.
+     * @return True if the size of the tree decreased after retaining only the elements from the provided collection.
+     */
     boolean retainAll(final Collection<? extends E> collection) {
         boolean[] matched = new boolean[size];
         for (Object element : collection) {
-            if (componentType.isInstance(element)) {
+            if (elementType.isInstance(element)) {
                 findAndMarkMatch(root, matched, 0, (E) element);
             }
         }
-        E[] removeArray = (E[]) Array.newInstance(componentType, size);
+        E[] removeArray = (E[]) Array.newInstance(elementType, size);
         int removeArraySize = collectUnmatchedForRemoval(removeArray, 0, root, matched, 0);
         for (int i = 0; i < removeArraySize; i++) {
             remove(removeArray[i]);
@@ -291,8 +373,13 @@ final class SortedTree<E extends Comparable<E>> {
         return removeArraySize > 0;
     }
 
+    /**
+     * Returns the content of this tree as an array.
+     *
+     * @return An array containing the elements of this tree.
+     */
     E[] toArray() {
-        E[] array = (E[]) Array.newInstance(componentType, size);
+        E[] array = (E[]) Array.newInstance(elementType, size);
         addNodesToArray(array, root, 0);
         return array.clone();
     }

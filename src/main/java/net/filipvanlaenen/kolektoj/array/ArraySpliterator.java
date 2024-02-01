@@ -17,6 +17,9 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
      * The characteristics of the spliterator.
      */
     private final int characteristics;
+    /**
+     * The comparator of the spliterator.
+     */
     private final Comparator<E> comparator;
     /**
      * The elements of the spliterator.
@@ -42,6 +45,7 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
      *
      * @param elements                  The elements for the spliterator.
      * @param additionalCharacteristics The characteristics for the spliterator in addition to SIZED and SUBSIZED.
+     * @param comparator                The comparator for the spliterator.
      */
     public ArraySpliterator(final E[] elements, final int additionalCharacteristics, final Comparator<E> comparator) {
         this.elements = elements.clone();
@@ -57,6 +61,7 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
      * @param from            The position of the first element to be included.
      * @param to              The position just after the last element to be included.
      * @param characteristics The characteristics for the spliterator in addition to SIZED and SUBSIZED.
+     * @param comparator      The comparator for the spliterator.
      */
     private ArraySpliterator(final E[] elements, final int from, final int to, final int characteristics,
             final Comparator<E> comparator) {

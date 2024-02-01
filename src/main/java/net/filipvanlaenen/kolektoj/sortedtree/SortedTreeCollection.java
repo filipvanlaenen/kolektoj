@@ -36,6 +36,9 @@ public final class SortedTreeCollection<E extends Comparable<E>> implements Sort
      * The size of the collection.
      */
     private final int size;
+    /**
+     * The sorted tree with the elements.
+     */
     private final SortedTree<E> sortedTree;
 
     /**

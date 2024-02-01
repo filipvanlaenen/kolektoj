@@ -1,7 +1,7 @@
 package net.filipvanlaenen.kolektoj.sortedtree;
 
 /**
- * A class implementing a node in a sorted tree.
+ * A class implementing a node in an AVL tree.
  *
  * @param <E> The element type.
  */
@@ -117,6 +117,11 @@ final class Node<E> {
         return node == null ? 0 : node.getSize();
     }
 
+    /**
+     * Rebalances the current node.
+     *
+     * @return The node that should replace the current node.
+     */
     Node<E> rebalance() {
         int balanceFactor = calculateBalanceFactor();
         if (balanceFactor < -1) {
@@ -137,22 +142,64 @@ final class Node<E> {
         return this;
     }
 
+    /**
+     * Rotates the tree at this node to the left.
+     *
+     * This means that the tree as outlined in the diagram below:
+     *
+     * <PRE>
+     *             this
+     *   leftChild                  rightChild
+     *                  middleChild            farRightChild
+     * </PRE>
+     *
+     * is transformed into the following tree:
+     *
+     * <PRE>
+     *                              rightChild
+     *             this                        farRightChild
+     *   leftChild      middleChild
+     * </PRE>
+     *
+     * @return The right child that should replace the current node.
+     */
     private Node<E> rotateLeft() {
-        Node<E> rightChild = getRightChild();
-        setRightChild(rightChild.getLeftChild());
-        rightChild.setLeftChild(this);
+        Node<E> originalRightChild = getRightChild();
+        setRightChild(originalRightChild.getLeftChild());
+        originalRightChild.setLeftChild(this);
         updateHeight();
-        rightChild.updateHeight();
-        return rightChild;
+        originalRightChild.updateHeight();
+        return originalRightChild;
     }
 
+    /**
+     * Rotates the tree at this node to the right.
+     *
+     * This means that the tree as outlined in the diagram below:
+     *
+     * <PRE>
+     *                                      this
+     *                leftChild                  rightChild
+     *   farLeftChild           middleChild
+     * </PRE>
+     *
+     * is transformed into the following tree:
+     *
+     * <PRE>
+     *                leftChild
+     *   farLeftChild                       this
+     *                          middleChild      rightChild
+     * </PRE>
+     *
+     * @return The left child that should replace the current node.
+     */
     private Node<E> rotateRight() {
-        Node<E> leftChild = getLeftChild();
-        setLeftChild(leftChild.getRightChild());
-        leftChild.setRightChild(this);
+        Node<E> originalLeftChild = getLeftChild();
+        setLeftChild(originalLeftChild.getRightChild());
+        originalLeftChild.setRightChild(this);
         updateHeight();
-        leftChild.updateHeight();
-        return leftChild;
+        originalLeftChild.updateHeight();
+        return originalLeftChild;
     }
 
     /**

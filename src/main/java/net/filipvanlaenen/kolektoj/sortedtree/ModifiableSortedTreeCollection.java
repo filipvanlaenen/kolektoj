@@ -36,12 +36,41 @@ public final class ModifiableSortedTreeCollection<E extends Comparable<E>> imple
      * The element cardinality.
      */
     private final ElementCardinality elementCardinality;
+    /**
+     * The sorted tree with the elements.
+     */
     private final SortedTree<E> sortedTree;
 
+    /**
+     * Constructs a new modifiable sorted tree collection from another collection, with the elements sorted using the
+     * given comparator.
+     *
+     * @param source     The collection to create a new ordered collection from.
+     * @param comparator The comparator by which to sort the elements.
+     */
+    public ModifiableSortedTreeCollection(final Comparator<E> comparator, final Collection<E> source) {
+        this(source.getElementCardinality(), comparator, source.toArray());
+    }
+
+    /**
+     * Constructs a new modifiable sorted tree collection with the given elements using the comparator for sorting. The
+     * element cardinality is defaulted to <code>DUPLICATE_ELEMENTS</code>.
+     *
+     * @param comparator The comparator by which to sort the elements.
+     * @param elements   The elements of the collection.
+     */
     public ModifiableSortedTreeCollection(final Comparator<E> comparator, final E... elements) {
         this(DUPLICATE_ELEMENTS, comparator, elements);
     }
 
+    /**
+     * Constructs a new modifiable sorted tree collection with the given elements and element cardinality and using the
+     * comparator for sorting.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param comparator         The comparator by which to sort the elements.
+     * @param elements           The elements of the collection.
+     */
     public ModifiableSortedTreeCollection(final ElementCardinality elementCardinality, final Comparator<E> comparator,
             final E... elements) {
         this.comparator = comparator;
