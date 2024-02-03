@@ -11,7 +11,7 @@ import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
  * @param <K> The key type.
  * @param <V> The value type.
  */
-public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
+public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, UpdatableMap<K, V> {
     /**
      * Returns a new empty modifiable map.
      *
@@ -225,15 +225,4 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> 
      * @return True if the size of the map decreased after removing the entries not present in the provided map.
      */
     boolean retainAll(Map<? extends K, ? extends V> map);
-
-    /**
-     * Updates the key with the given value, and returns the vale that was previously mapped to the key. Throws an
-     * exception if the map doesn't contain an entry with the key.
-     *
-     * @param key   The key.
-     * @param value The value.
-     * @return The value the key was mapped to previously.
-     * @throws IllegalArgumentException Thrown if the map doesn't contain an entry with the key.
-     */
-    V update(K key, V value) throws IllegalArgumentException;
 }
