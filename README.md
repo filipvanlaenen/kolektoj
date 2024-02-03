@@ -51,7 +51,7 @@ The table below shows the various implementations of the interfaces.
 | SortedCollection            |                                  | —²                |                                | SortedTreeCollection              |
 | ModifiableSortedCollection  |                                  | —²                |                                | ModifiableSortedTreeCollection    |
 | Map                         |                                  | HashMap           |                                |                                   |
-| UpdatableMap                |                                  |                   |                                |                                   |
+| UpdatableMap                |                                  | UpdatableHashMap  |                                |                                   |
 | ModifiableMap               |                                  | ModifiableHashMap |                                |                                   |
 | SortedMap                   |                                  | —²                |                                |                                   |
 | UpdatableSortedMap          |                                  | —²                |                                |                                   |
