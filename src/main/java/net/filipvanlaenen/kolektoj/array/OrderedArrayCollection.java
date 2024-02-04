@@ -3,7 +3,6 @@ package net.filipvanlaenen.kolektoj.array;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Spliterator;
 
@@ -24,17 +23,6 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
      * An array with the elements.
      */
     private final E[] elements;
-
-    /**
-     * Constructs an ordered collection from another collection, with the elements sorted using the given comparator.
-     *
-     * @param source     The collection to create a new ordered collection from.
-     * @param comparator The comparator by which to sort the elements.
-     */
-    public OrderedArrayCollection(final Collection<E> source, final Comparator<E> comparator) {
-        elementCardinality = source.getElementCardinality();
-        elements = ArrayUtilities.quicksort(source.toArray(), comparator);
-    }
 
     /**
      * Constructs an ordered collection with the given elements. The element cardinality is defaulted to

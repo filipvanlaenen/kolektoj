@@ -1,8 +1,5 @@
 package net.filipvanlaenen.kolektoj.array;
 
-import java.util.Comparator;
-
-import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.OrderedCollectionTestBase;
 
@@ -24,11 +21,5 @@ public class OrderedArrayCollectionTest extends OrderedCollectionTestBase<Ordere
     @Override
     protected OrderedArrayCollection<Integer> createOrderedCollection(OrderedArrayCollection<Integer> collection) {
         return new OrderedArrayCollection<Integer>(collection);
-    }
-
-    @Override
-    protected OrderedArrayCollection<Integer> createOrderedCollection(Collection<Integer> collection,
-            Comparator<Integer> comparator) {
-        return new OrderedArrayCollection<Integer>(collection, comparator);
     }
 }

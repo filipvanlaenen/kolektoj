@@ -2,9 +2,12 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Comparator;
 import java.util.Spliterator;
 import java.util.stream.Collectors;
 
@@ -23,25 +26,9 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
      */
     private static final int THREE = 3;
     /**
-     * The magic number four.
-     */
-    private static final int FOUR = 4;
-    /**
-     * The magic number five.
-     */
-    private static final int FIVE = 5;
-    /**
-     * The magic number six.
-     */
-    private static final int SIX = 6;
-    /**
      * An array containing the numbers 1, 2 and 3.
      */
     private static final Integer[] ARRAY123 = new Integer[] {1, 2, THREE};
-    /**
-     * An array containing the numbers from 1 to 6.
-     */
-    private static final Integer[] ARRAY123456 = new Integer[] {1, 2, THREE, FOUR, FIVE, SIX};
     /**
      * Ordered array collection with the integers 1, 2 and 3.
      */
@@ -69,9 +56,6 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
     protected abstract T createOrderedCollection(ElementCardinality elementCardinality, Integer... integers);
 
     protected abstract T createOrderedCollection(final T collection);
-
-    protected abstract T createOrderedCollection(final Collection<Integer> collection,
-            final Comparator<Integer> comparator);
 
     /**
      * Verifies that contains returns true for an element in the collection.
@@ -166,27 +150,6 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
     @Test
     public void constructorUsingOrderedCollectionShouldProduceTheCorrectArray() {
         assertArrayEquals(ARRAY123, createOrderedCollection(collection123).toArray());
-    }
-
-    /**
-     * Verifies that the collection constructed using another collection and the natural comparator produces the correct
-     * array.
-     */
-    @Test
-    public void constructorUsingCollectionAndNaturalOrderComparatorShouldProduceTheCorrectArray() {
-        assertArrayEquals(ARRAY123456,
-                createOrderedCollection(Collection.of(1, FIVE, SIX, 2, FOUR, THREE), Comparator.naturalOrder())
-                        .toArray());
-    }
-
-    /**
-     * Verifies that the constructor using a comparator transfers the element cardinality correctly.
-     */
-    @Test
-    public void constructorUsingCollectionAndNaturalOrderComparatorShouldTransferElementCardinality() {
-        assertEquals(DISTINCT_ELEMENTS,
-                createOrderedCollection(Collection.of(DISTINCT_ELEMENTS, 1, FIVE, SIX, 2, FOUR, THREE),
-                        Comparator.naturalOrder()).getElementCardinality());
     }
 
     /**

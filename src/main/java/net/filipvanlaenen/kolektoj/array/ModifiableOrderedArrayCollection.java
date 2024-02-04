@@ -4,7 +4,6 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
 import java.lang.reflect.Array;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
@@ -35,19 +34,6 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
      * The size of the collection.
      */
     private int size;
-
-    /**
-     * Constructs a modifiable ordered array collection from another collection, with the elements sorted using the
-     * given comparator.
-     *
-     * @param source     The collection to create a new ordered collection from.
-     * @param comparator The comparator by which to sort the elements.
-     */
-    public ModifiableOrderedArrayCollection(final Collection<E> source, final Comparator<E> comparator) {
-        elementCardinality = source.getElementCardinality();
-        elements = ArrayUtilities.quicksort(source.toArray(), comparator);
-        size = elements.length;
-    }
 
     /**
      * Constructs a modifiable ordered array collection with the given elements.

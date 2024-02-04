@@ -1,18 +1,21 @@
 package net.filipvanlaenen.kolektoj.array;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Comparator;
 import java.util.Spliterator;
 
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.ModifiableCollectionTestBase;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
-import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection} class.
@@ -35,10 +38,6 @@ public final class ModifiableOrderedArrayCollectionTest
      * The magic number six.
      */
     private static final int SIX = 6;
-    /**
-     * An array containing the numbers from 1 to 6.
-     */
-    private static final Integer[] ARRAY123456 = new Integer[] {1, 2, THREE, FOUR, FIVE, SIX};
     /**
      * Collection with the integers 1, 2 and 3.
      */
@@ -343,28 +342,6 @@ public final class ModifiableOrderedArrayCollectionTest
     @Test
     public void removeAtShouldReturnTheElementThatIsRemoved() {
         assertEquals(2, createNewCollection().removeAt(1));
-    }
-
-    /**
-     * Verifies that the collection constructed using another collection and the natural comparator produces the correct
-     * array.
-     */
-    @Test
-    public void constructorUsingCollectionAndNaturalOrderComparatorShouldProduceTheCorrectArray() {
-        assertArrayEquals(ARRAY123456,
-                new ModifiableOrderedArrayCollection<Integer>(Collection.of(1, FIVE, SIX, 2, FOUR, THREE),
-                        Comparator.naturalOrder()).toArray());
-    }
-
-    /**
-     * Verifies that the constructor using a comparator transfers the element cardinality correctly.
-     */
-    @Test
-    public void constructorUsingCollectionAndNaturalOrderComparatorShouldTransferElementCardinality() {
-        assertEquals(DISTINCT_ELEMENTS,
-                new ModifiableOrderedArrayCollection<Integer>(
-                        Collection.of(DISTINCT_ELEMENTS, 1, FIVE, SIX, 2, FOUR, THREE), Comparator.naturalOrder())
-                                .getElementCardinality());
     }
 
     /**

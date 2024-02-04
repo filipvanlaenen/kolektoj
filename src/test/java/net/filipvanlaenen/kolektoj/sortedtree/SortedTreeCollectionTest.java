@@ -3,7 +3,6 @@ package net.filipvanlaenen.kolektoj.sortedtree;
 import java.util.Comparator;
 import java.util.Objects;
 
-import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.OrderedCollectionTestBase;
 
@@ -31,12 +30,6 @@ public final class SortedTreeCollectionTest extends OrderedCollectionTestBase<So
             }
         }
     };
-
-    @Override
-    protected SortedTreeCollection<Integer> createOrderedCollection(final Collection<Integer> collection,
-            final Comparator<Integer> comparator) {
-        return new SortedTreeCollection<Integer>(comparator, collection);
-    }
 
     @Override
     protected SortedTreeCollection<Integer> createOrderedCollection(final ElementCardinality elementCardinality,
