@@ -1,7 +1,6 @@
 package net.filipvanlaenen.kolektoj;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
-import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 import net.filipvanlaenen.kolektoj.hash.UpdatableHashMap;
 
 /**
