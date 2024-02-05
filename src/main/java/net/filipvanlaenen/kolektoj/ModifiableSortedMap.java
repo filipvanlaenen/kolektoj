@@ -8,5 +8,6 @@ import net.filipvanlaenen.kolektoj.Map.Entry;
  * @param <K> The key type.
  * @param <V> The value type.
  */
-public interface ModifiableSortedMap<K, V> extends Collection<Entry<K, V>>, ModifiableMap<K, V>, SortedMap<K, V> {
+public interface ModifiableSortedMap<K, V>
+        extends Collection<Entry<K, V>>, ModifiableMap<K, V>, UpdatableSortedMap<K, V> {
 }
