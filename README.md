@@ -70,6 +70,9 @@ for JDK 17.
 ### JDK 17 Interfaces
 
 * [java.util.Collection&lt;E>](#javautilcollectione)
+* [java.util.List&lt;E>](#javautilliste)
+* [java.util.Set&lt;E>](#javautilsete)
+* [java.util.Map&lt;E>](#javautilmape)
 
 #### java.util.Collection&lt;E>
 
