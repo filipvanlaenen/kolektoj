@@ -69,10 +69,23 @@ for JDK 17.
 
 ### JDK 17 Interfaces
 
+The Java Platform Collections Framework contains the following interfaces in JDK 17:
+
 * [java.util.Collection&lt;E>](#javautilcollectione)
 * [java.util.List&lt;E>](#javautilliste)
 * [java.util.Set&lt;E>](#javautilsete)
 * [java.util.Map&lt;E>](#javautilmape)
+* java.util.concurrent.BlockingDeque
+* java.util.concurrent.BlockingQueue
+* java.util.concurrent.ConcurrentMap
+* java.util.concurrent.ConcurrentNavigableMap
+* java.util.Deque
+* java.util.NavigableMap
+* java.util.NavigableSet
+* java.util.Queue
+* java.util.SortedMap
+* java.util.SortedSet
+* java.util.concurrent.TransferQueue
 
 #### java.util.Collection&lt;E>
 
@@ -162,20 +175,6 @@ to Kolektoj methods.
 | default void replaceAll(BiFunction&lt;? super K,? super V,? extends V> function)                    |                     |                                                                 |
 | int size()                                                                                          | Collection&lt;E>    | int size()                                                      |
 | Collection&lt;V> values()                                                                           | Map&lt;E>           | Collection<V> getValues()                                       |
-
-#### Other
-
-* java.util.concurrent.BlockingDeque
-* java.util.concurrent.BlockingQueue
-* java.util.concurrent.ConcurrentMap
-* java.util.concurrent.ConcurrentNavigableMap
-* java.util.Deque
-* java.util.NavigableMap
-* java.util.NavigableSet
-* java.util.Queue
-* java.util.SortedMap
-* java.util.SortedSet
-* java.util.concurrent.TransferQueue
 
 ### JDK 17 Classes
 
