@@ -178,6 +178,8 @@ to Kolektoj methods.
 
 ### JDK 17 Classes
 
+The Java Platform Collections Framework contains the following classes in JDK 17:
+
 * AbstractCollection
 * AbstractList
 * AbstractMap
