@@ -69,6 +69,8 @@ for JDK 17.
 
 ### JDK 17 Interfaces
 
+* [java.util.Collection&lt;E>](#javautilcollectione)
+
 #### java.util.Collection&lt;E>
 
 The table below shows how the methods defined on the
