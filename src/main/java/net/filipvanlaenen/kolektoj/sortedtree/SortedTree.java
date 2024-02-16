@@ -14,7 +14,7 @@ import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
  *
  * @param <E> The element type.
  */
-final class SortedTree<E extends Comparable<E>> {
+final class SortedTree<E> {
     /**
      * The comparator to use for comparing the elements in this collection.
      */
@@ -164,8 +164,7 @@ final class SortedTree<E extends Comparable<E>> {
      * @return A sorted tree with the elements from the sorted array.
      * @param <E> The element type.
      */
-    private static <E extends Comparable<E>> Node<E> createSortedTree(final E[] sortedArray, final int firstIndex,
-            final int lastIndex) {
+    private static <E> Node<E> createSortedTree(final E[] sortedArray, final int firstIndex, final int lastIndex) {
         int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
         Node<E> node = new Node<E>(sortedArray[middleIndex]);
         if (middleIndex > firstIndex) {
@@ -229,7 +228,7 @@ final class SortedTree<E extends Comparable<E>> {
         }
     }
 
-    static <E extends Comparable<E>> SortedTree<E> fromSortedArray(final Comparator<E> comparator,
+    static <E> SortedTree<E> fromSortedArray(final Comparator<E> comparator,
             final ElementCardinality elementCardinality, final E[] sortedArray) {
         int size = sortedArray.length;
         return new SortedTree<E>(comparator, elementCardinality,

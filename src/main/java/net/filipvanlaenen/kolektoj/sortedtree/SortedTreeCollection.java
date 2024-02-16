@@ -19,7 +19,7 @@ import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
  *
  * @param <E> The element type.
  */
-public final class SortedTreeCollection<E extends Comparable<E>> implements SortedCollection<E> {
+public final class SortedTreeCollection<E> implements SortedCollection<E> {
     /**
      * The comparator to use for comparing the elements in this collection.
      */
