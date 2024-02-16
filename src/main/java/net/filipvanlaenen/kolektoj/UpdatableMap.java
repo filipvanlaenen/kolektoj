@@ -6,7 +6,7 @@ import net.filipvanlaenen.kolektoj.hash.UpdatableHashMap;
 /**
  * Interface defining the signature for all updatable maps. Updatable maps allow the values to be updated, but no new
  * keys to be added.
- * 
+ *
  *
  * @param <K> The key type.
  * @param <V> The value type.
