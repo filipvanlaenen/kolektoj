@@ -48,7 +48,7 @@ The table below shows the various implementations of the interfaces.
 | ModifiableCollection        | ModifiableArrayCollection        |                   | ModifiableLinkedListCollection | *ModifiableSortedTreeCollection*¹ |
 | OrderedCollection           | OrderedArrayCollection           | —²                |                                | *SortedTreeCollection*¹           |
 | ModifiableOrderedCollection | ModifiableOrderedArrayCollection | —²                |                                | —²                                |
-| SortedCollection            |                                  | —²                |                                | SortedTreeCollection              |
+| SortedCollection            | SortedArrayCollection            | —²                |                                | SortedTreeCollection              |
 | ModifiableSortedCollection  |                                  | —²                |                                | ModifiableSortedTreeCollection    |
 | Map                         |                                  | HashMap           |                                | *SortedTreeMap*¹                  |
 | UpdatableMap                |                                  | UpdatableHashMap  |                                | *UpdatableSortedTreeMap*¹         |
