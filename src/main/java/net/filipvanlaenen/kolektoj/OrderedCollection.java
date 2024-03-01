@@ -127,7 +127,7 @@ public interface OrderedCollection<E> extends Collection<E> {
      * @param elements           The elements for the new ordered collection.
      * @return A new ordered collection with the specified element cardinality and the elements.
      */
-    static <E> Collection<E> of(final ElementCardinality elementCardinality, final E... elements) {
+    static <E> OrderedCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
         return new OrderedArrayCollection<E>(elementCardinality, elements);
     }
 
