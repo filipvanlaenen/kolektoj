@@ -47,7 +47,7 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
     protected abstract T createOrderedCollection(Integer... integers);
 
     /**
-     * Creates an ordered collection containing the provided integers.
+     * Creates an ordered collection containing the provided integers with a given element cardinality.
      *
      * @param elementCardinality The element cardinality for the ordered collection.
      * @param integers           The integers to be included in the ordered collection.
@@ -55,7 +55,13 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
      */
     protected abstract T createOrderedCollection(ElementCardinality elementCardinality, Integer... integers);
 
-    protected abstract T createOrderedCollection(final T collection);
+    /**
+     * Creates an ordered collection from another ordered collection.
+     *
+     * @param orderedCollection The ordered collection to create a new ordered collection from.
+     * @return An ordered collection created from the provided ordered collection.
+     */
+    protected abstract T createOrderedCollection(T orderedCollection);
 
     /**
      * Verifies that contains returns true for an element in the collection.
@@ -162,6 +168,22 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
         assertTrue(collection.contains(1));
         assertTrue(collection.contains(2));
         assertTrue(collection.contains(THREE));
+    }
+
+    /**
+     * Verifies that by default, a collection can contain duplicate elements.
+     */
+    @Test
+    public void constructorShouldSetElementCardinalityToDuplicateByDefault() {
+        assertEquals(DUPLICATE_ELEMENTS, createOrderedCollection().getElementCardinality());
+    }
+
+    /**
+     * Verifies that when distinct elements are requested, the element cardinality is set to distinct elements.
+     */
+    @Test
+    public void constructorShouldSetElementCardinalityToDistinctElementsWhenSpecified() {
+        assertEquals(DISTINCT_ELEMENTS, createOrderedCollection(DISTINCT_ELEMENTS, 1).getElementCardinality());
     }
 
     /**
