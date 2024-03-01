@@ -69,6 +69,36 @@ public final class ArrayUtilities {
     }
 
     /**
+     * Returns true if the first <code>size</code> elements of the sorted <code>source</code> array contain an element
+     * equal to the <code>element</code>.
+     *
+     * @param <E>        The element type.
+     * @param elements   The array that should contain the elements.
+     * @param size       The number of elements to check in the source array.
+     * @param element    The element.
+     * @param comparator The comparator to use.
+     * @return True if the first <code>size</code> elements of the <code>source</code> array contain an elements equal
+     *         to the <code>element</code>, and false otherwise.
+     */
+    static <E> boolean contains(final E[] elements, final int size, final E element, final Comparator<E> comparator) {
+        int below = -1;
+        int above = size;
+        while (above > below + 1) {
+            int middle = (below + above) / 2;
+            int comparison = comparator.compare(element, elements[middle]);
+            if (comparison == 0) {
+                return true;
+            } else if (comparison < 0) {
+                // EQMU: Changing the conditional boundary above produces an equivalent mutant.
+                above = middle;
+            } else {
+                below = middle;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns true if the first <code>size</code> elements of the <code>source</code> array contain all the elements of
      * the <code>collection</code>.
      *
@@ -91,6 +121,72 @@ public final class ArrayUtilities {
                     matches[i] = true;
                     found = true;
                     break;
+                }
+            }
+            if (!found) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns true if the first <code>size</code> elements of the sorted <code>source</code> array contain all the
+     * elements of the <code>collection</code>.
+     *
+     * @param <E>        The element type.
+     * @param source     The array that should contain the elements.
+     * @param size       The number of elements to check in the source array.
+     * @param collection The collection.
+     * @param comparator The comparator to use.
+     * @return True if the first <code>size</code> elements of the <code>source</code> array contain all the elements of
+     *         the <code>collection</code>, and false otherwise.
+     */
+    static <E> boolean containsAll(final E[] source, final int size, final Collection<?> collection,
+            final Comparator<E> comparator) {
+        if (collection.size() > size) {
+            return false;
+        }
+        boolean[] matches = new boolean[size];
+        for (Object element : collection) {
+            boolean found = false;
+            int below = -1;
+            int above = size;
+            while (above > below + 1) {
+                int middle = (below + above) / 2;
+                // TODO: Return false if cast doesn't work.
+                int comparison = comparator.compare((E) element, source[middle]);
+                if (comparison == 0) {
+                    if (!matches[middle]) {
+                        matches[middle] = true;
+                        found = true;
+                        break;
+                    } else {
+                        while (middle > 0 && comparator.compare(source[middle - 1], source[middle]) == 0) {
+                            middle--;
+                            if (!matches[middle]) {
+                                matches[middle] = true;
+                                found = true;
+                                break;
+                            }
+                        }
+                        while (middle + 1 < size && comparator.compare(source[middle], source[middle + 1]) == 0) {
+                            middle++;
+                            if (!matches[middle]) {
+                                matches[middle] = true;
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) {
+                            break;
+                        }
+                    }
+                } else if (comparison < 0) {
+                    // EQMU: Changing the conditional boundary above produces an equivalent mutant.
+                    above = middle;
+                } else {
+                    below = middle;
                 }
             }
             if (!found) {
