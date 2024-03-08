@@ -53,7 +53,7 @@ The table below shows the various implementations of the interfaces.
 | Map                         |                                  | HashMap           |                                | *SortedTreeMap*¹                  |
 | UpdatableMap                |                                  | UpdatableHashMap  |                                | *UpdatableSortedTreeMap*¹         |
 | ModifiableMap               |                                  | ModifiableHashMap |                                | *ModifiableSortedTreeMap*¹        |
-| SortedMap                   | SortedArrayMap                   | —²                |                                |                                   |
+| SortedMap                   | SortedArrayMap                   | —²                |                                | SortedTreeMap                     |
 | UpdatableSortedMap          | UpdatableSortedArrayMap          | —²                |                                |                                   |
 | ModifiableSortedMap         |                                  | —²                |                                |                                   |
 

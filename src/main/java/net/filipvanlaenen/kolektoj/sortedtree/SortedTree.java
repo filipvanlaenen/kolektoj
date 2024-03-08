@@ -4,6 +4,7 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT
 
 import java.lang.reflect.Array;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
@@ -110,28 +111,8 @@ final class SortedTree<E> {
      * @return True if the tree contains the element.
      */
     boolean contains(final E element) {
-        return contains(root, element);
-    }
-
-    /**
-     * Returns whether the subtree starting at the provided node contains the element.
-     *
-     * @param node    The node.
-     * @param element The element.
-     * @return True if the subtree at the provided node contains the element.
-     */
-    boolean contains(final Node<E> node, final E element) {
-        if (node == null) {
-            return false;
-        }
-        int comparison = comparator.compare(element, node.getElement());
-        if (comparison == 0) {
-            return true;
-        } else if (comparison < 0) {
-            return contains(node.getLeftChild(), element);
-        } else {
-            return contains(node.getRightChild(), element);
-        }
+        Node<E> node = findNode(root, element);
+        return node != null && Objects.equals(element, node.getElement());
     }
 
     /**
@@ -225,6 +206,32 @@ final class SortedTree<E> {
         } else {
             int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
             return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
+        }
+    }
+
+    E find(final E element) {
+        Node<E> node = findNode(root, element);
+        return node == null ? null : node.getElement();
+    }
+
+    /**
+     * Returns the node containing the element, if the element is present, starting at the provided node .
+     *
+     * @param node    The node.
+     * @param element The element.
+     * @return The node containing the element if there is one, and <code>null</code> otherwise.
+     */
+    private Node<E> findNode(final Node<E> node, final E element) {
+        if (node == null) {
+            return null;
+        }
+        int comparison = comparator.compare(element, node.getElement());
+        if (comparison == 0) {
+            return node;
+        } else if (comparison < 0) {
+            return findNode(node.getLeftChild(), element);
+        } else {
+            return findNode(node.getRightChild(), element);
         }
     }
 
