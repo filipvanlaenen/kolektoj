@@ -77,7 +77,7 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        return ArrayUtilities.containsAll(this.elements, elements.length, collection, comparator);
+        return ArrayUtilities.containsAll(elements, elements.length, collection, comparator);
     }
 
     @Override

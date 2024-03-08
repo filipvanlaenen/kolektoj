@@ -81,21 +81,8 @@ public final class ArrayUtilities {
      *         to the <code>element</code>, and false otherwise.
      */
     static <E> boolean contains(final E[] elements, final int size, final E element, final Comparator<E> comparator) {
-        int below = -1;
-        int above = size;
-        while (above > below + 1) {
-            int middle = (below + above) / 2;
-            int comparison = comparator.compare(element, elements[middle]);
-            if (comparison == 0) {
-                return true;
-            } else if (comparison < 0) {
-                // EQMU: Changing the conditional boundary above produces an equivalent mutant.
-                above = middle;
-            } else {
-                below = middle;
-            }
-        }
-        return false;
+        int index = findIndex(elements, size, element, comparator);
+        return index >= 0 && Objects.equals(element, elements[index]);
     }
 
     /**
@@ -194,6 +181,36 @@ public final class ArrayUtilities {
             }
         }
         return true;
+    }
+
+    /**
+     * Returns an index where an element can be found in the first <code>size</code> elements of a sorted array, or -1
+     * if it's absent.
+     *
+     * @param <E>        The element type.
+     * @param elements   The array that should contain the elements.
+     * @param size       The number of elements to check in the source array.
+     * @param element    The element.
+     * @param comparator The comparator to use.
+     * @return An index where an element can be found in the first <code>size</code> elements of a sorted array, or -1
+     *         if it's absent.
+     */
+    static <E> int findIndex(final E[] elements, final int size, final E element, final Comparator<E> comparator) {
+        int below = -1;
+        int above = size;
+        while (above > below + 1) {
+            int middle = (below + above) / 2;
+            int comparison = comparator.compare(element, elements[middle]);
+            if (comparison == 0) {
+                return middle;
+            } else if (comparison < 0) {
+                // EQMU: Changing the conditional boundary above produces an equivalent mutant.
+                above = middle;
+            } else {
+                below = middle;
+            }
+        }
+        return -1;
     }
 
     /**

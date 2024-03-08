@@ -43,11 +43,11 @@ public final class HashMap<K, V> implements Map<K, V> {
      */
     private final KeyAndValueCardinality keyAndValueCardinality;
     /**
-     * A collection with the keys, initialized lazily.
+     * A collection with the keys.
      */
     private final Collection<K> keys;
     /**
-     * A collection with the values, initialized lazily.
+     * A collection with the values.
      */
     private final Collection<V> values;
 

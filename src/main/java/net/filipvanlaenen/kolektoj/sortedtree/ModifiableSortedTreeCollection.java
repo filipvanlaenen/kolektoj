@@ -19,7 +19,7 @@ import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
  *
  * @param <E> The element type.
  */
-public final class ModifiableSortedTreeCollection<E extends Comparable<E>> implements ModifiableSortedCollection<E> {
+public final class ModifiableSortedTreeCollection<E> implements ModifiableSortedCollection<E> {
     /**
      * A cached array with the elements.
      */
