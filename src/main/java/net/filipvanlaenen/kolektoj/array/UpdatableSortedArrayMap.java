@@ -13,18 +13,18 @@ import java.util.Spliterator;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
-import net.filipvanlaenen.kolektoj.SortedMap;
+import net.filipvanlaenen.kolektoj.UpdatableSortedMap;
 import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection;
 
 /**
- * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.SortedMap} interface.
+ * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.UpdatableSortedMap} interface.
  *
  * @param <K> The key type.
  * @param <V> The value type.
  */
-public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
+public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K, V> {
     /**
-     * The comparator to use for comparing the keys in this sorted map.
+     * The comparator to use for comparing the keys in this updatable sorted map.
      */
     private final Comparator<K> comparator;
     /**
@@ -36,11 +36,11 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
      */
     private final KeyAndValueCardinality keyAndValueCardinality;
     /**
-     * The comparator to use for comparing entries using the keys only in this sorted map.
+     * The comparator to use for comparing entries using the keys only in this updatable sorted map.
      */
     private final Comparator<Entry<K, V>> entryByKeyComparator;
     /**
-     * The comparator to use for comparing entries using the keys and the values in this sorted map.
+     * The comparator to use for comparing entries using the keys and the values in this updatable sorted map.
      */
     private final Comparator<Entry<K, V>> entryByKeyAndValueComparator;
     /**
@@ -50,7 +50,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     /**
      * A collection with the values.
      */
-    private final Collection<V> values;
+    private final ModifiableCollection<V> values;
 
     /**
      * Constructor taking the entries as its parameter.
@@ -58,7 +58,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
      * @param entries The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
-    public SortedArrayMap(final Comparator<K> comparator, final Entry<K, V>... entries)
+    public UpdatableSortedArrayMap(final Comparator<K> comparator, final Entry<K, V>... entries)
             throws IllegalArgumentException {
         this(DISTINCT_KEYS, comparator, entries);
     }
@@ -70,7 +70,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
      * @param entries                The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
-    public SortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
+    public UpdatableSortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
             final Entry<K, V>... entries) throws IllegalArgumentException {
         this.comparator = comparator;
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
@@ -109,7 +109,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
             theValues.add(entry.value());
         }
         this.keys = new SortedArrayCollection<K>(comparator, theKeys);
-        this.values = new ArrayCollection<V>(theValues);
+        this.values = new ModifiableArrayCollection<V>(theValues);
     }
 
     @Override
@@ -186,7 +186,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
 
     @Override
     public Collection<V> getValues() {
-        return values;
+        return new ArrayCollection<V>(values);
     }
 
     @Override
@@ -209,5 +209,18 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     @Override
     public Entry<K, V>[] toArray() {
         return entries.clone();
+    }
+
+    @Override
+    public V update(K key, V value) throws IllegalArgumentException {
+        int index = ArrayUtilities.findIndex(entries, entries.length, new Entry<K, V>(key, null), entryByKeyComparator);
+        if (index == -1) {
+            throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
+        }
+        V oldValue = entries[index].value();
+        entries[index] = new Entry<K, V>(key, value);
+        values.remove(oldValue);
+        values.add(value);
+        return oldValue;
     }
 }
