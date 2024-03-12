@@ -9,15 +9,14 @@ import org.junit.jupiter.api.Test;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
-import net.filipvanlaenen.kolektoj.MapTestBase;
-import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
+import net.filipvanlaenen.kolektoj.hash.HashMapTestBase.KeyWithCollidingHash;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.hash.ModifiableHashMap} class.
  */
 public final class ModifiableHashMapTest
-        extends MapTestBase<ModifiableHashMap<Integer, String>, ModifiableHashMap<KeyWithCollidingHash, Integer>> {
+        extends HashMapTestBase<ModifiableHashMap<Integer, String>, ModifiableHashMap<KeyWithCollidingHash, Integer>> {
     /**
      * The magic number three.
      */

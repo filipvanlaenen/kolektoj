@@ -2,22 +2,25 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
-import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.Map} interface.
  *
- * @param <T>  The subclass type to be tested.
- * @param <TC> The subclass type to be tested using a key with colliding hash values.
+ * @param <T> The subclass type to be tested.
  */
-public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map<KeyWithCollidingHash, Integer>> {
+public abstract class MapTestBase<T extends Map<Integer, String>> {
     /**
      * The magic number three.
      */
@@ -60,21 +63,6 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
     private final Map<Integer, String> map123null = createMap(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
 
     /**
-     * Class with colliding hash codes.
-     */
-    public static final class KeyWithCollidingHash {
-        @Override
-        public boolean equals(final Object other) {
-            return this == other;
-        }
-
-        @Override
-        public int hashCode() {
-            return 0;
-        }
-    }
-
-    /**
      * Creates a map containing the provided entries.
      *
      * @param entries The entries to be included in the map.
@@ -90,14 +78,6 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      * @return A map containing the provided entries with the key and value cardinality.
      */
     protected abstract T createMap(KeyAndValueCardinality keyAndValueCardinality, Entry<Integer, String>... entries);
-
-    /**
-     * Creates a map using keys with colliding hashes containing the provided entries.
-     *
-     * @param entries The entries to be included in the map.
-     * @return A map containing the provided entries.
-     */
-    protected abstract TC createCollidingKeyHashMap(Entry<KeyWithCollidingHash, Integer>... entries);
 
     /**
      * Verifies that trying to pass null as an argument to the constructor throws IllegalArgumentException.
@@ -161,23 +141,6 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
     }
 
     /**
-     * Verifies that contains returns the correct result, both true for presence and false for absence, when the hash
-     * code for the keys collides.
-     */
-    @Test
-    public void containsReturnsCorrectResultForCollidingKeyHashCodes() {
-        Entry<KeyWithCollidingHash, Integer>[] entries = new Entry[SIX];
-        for (int i = 0; i < entries.length; i++) {
-            entries[i] = new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(), i);
-        }
-        Map<KeyWithCollidingHash, Integer> map = createCollidingKeyHashMap(entries);
-        for (Entry<KeyWithCollidingHash, Integer> entry : entries) {
-            assertTrue(map.contains(entry));
-        }
-        assertFalse(map.contains(new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(), -1)));
-    }
-
-    /**
      * Verifies that containsKey returns false for a empty map.
      */
     @Test
@@ -207,43 +170,6 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
     @Test
     public void containsKeyShouldReturnFalseForNullIfNotInTheMap() {
         assertFalse(map123.containsKey(null));
-    }
-
-    /**
-     * Verifies that containsKey returns the correct result, both true for presence and false for absence, when the hash
-     * code for the keys collides.
-     */
-    @Test
-    public void containsKeyReturnsCorrectResultForCollidingKeyHashCodes() {
-        Entry<KeyWithCollidingHash, Integer>[] entries = new Entry[SIX];
-        for (int i = 0; i < entries.length; i++) {
-            entries[i] = new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(), i);
-        }
-        Map<KeyWithCollidingHash, Integer> map = createCollidingKeyHashMap(entries);
-        for (Entry<KeyWithCollidingHash, Integer> entry : entries) {
-            assertTrue(map.containsKey(entry.key()));
-        }
-        assertFalse(map.containsKey(new KeyWithCollidingHash()));
-        assertFalse(map.containsKey(null));
-    }
-
-    /**
-     * Verifies that containsKey returns the correct result, both true for presence and false for absence, when the hash
-     * code for the keys collides and contains null.
-     */
-    @Test
-    public void containsKeyReturnsCorrectResultForCollidingKeyHashCodesWithNull() {
-        Entry<KeyWithCollidingHash, Integer>[] entries = new Entry[SIX];
-        for (int i = 0; i < entries.length - 1; i++) {
-            entries[i] = new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(), i);
-        }
-        entries[entries.length - 1] = new Entry<KeyWithCollidingHash, Integer>(null, -1);
-        Map<KeyWithCollidingHash, Integer> map = createCollidingKeyHashMap(entries);
-        for (Entry<KeyWithCollidingHash, Integer> entry : entries) {
-            assertTrue(map.containsKey(entry.key()));
-        }
-        assertFalse(map.containsKey(new KeyWithCollidingHash()));
-        assertTrue(map.containsKey(null));
     }
 
     /**
