@@ -91,6 +91,14 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
      */
     public ModifiableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
             final Entry<K, V>... entries) throws IllegalArgumentException {
+        if (entries == null) {
+            throw new IllegalArgumentException("Map entries can't be null.");
+        }
+        for (Entry<K, V> entry : entries) {
+            if (entry == null) {
+                throw new IllegalArgumentException("Map entries can't be null.");
+            }
+        }
         this.comparator = comparator;
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
