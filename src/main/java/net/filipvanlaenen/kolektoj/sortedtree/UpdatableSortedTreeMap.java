@@ -12,8 +12,7 @@ import java.util.Spliterator;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
-import net.filipvanlaenen.kolektoj.SortedMap;
-import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.UpdatableSortedMap;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
@@ -22,13 +21,13 @@ import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 import net.filipvanlaenen.kolektoj.array.SortedArrayCollection;
 
 /**
- * An implementation of the {@link net.filipvanlaenen.kolektoj.SortedMap} interface backed by a sorted tree, in
+ * An implementation of the {@link net.filipvanlaenen.kolektoj.UpdatableSortedMap} interface backed by a sorted tree, in
  * particular an AVL tree.
  *
  * @param <K> The key type.
  * @param <V> The value type.
  */
-public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
+public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K, V> {
     /**
      * The comparator to use for comparing the keys in this sorted map.
      */
@@ -36,7 +35,11 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     /**
      * A sorted array with the entries.
      */
-    private final Entry<K, V>[] entries;
+    private Entry<K, V>[] cachedArray;
+    /**
+     * A boolean flag indicating whether the cachedArray field is dirty.
+     */
+    private boolean cachedArrayDirty;
     /**
      * The key and value cardinality.
      */
@@ -64,7 +67,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     /**
      * A collection with the values.
      */
-    private final Collection<V> values;
+    private final ModifiableCollection<V> values;
 
     /**
      * Constructor taking the entries as its parameter.
@@ -72,7 +75,8 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
      * @param entries The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
-    public SortedTreeMap(final Comparator<K> comparator, final Entry<K, V>... entries) throws IllegalArgumentException {
+    public UpdatableSortedTreeMap(final Comparator<K> comparator, final Entry<K, V>... entries)
+            throws IllegalArgumentException {
         this(DISTINCT_KEYS, comparator, entries);
     }
 
@@ -83,7 +87,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
      * @param entries                The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
-    public SortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
+    public UpdatableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
             final Entry<K, V>... entries) throws IllegalArgumentException {
         this.comparator = comparator;
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
@@ -109,14 +113,15 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         };
         this.keyAndValueCardinality = keyAndValueCardinality;
         if (keyAndValueCardinality == DISTINCT_KEYS) {
-            this.entries =
-                    ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(entries), entryByKeyComparator);
+            cachedArray = ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(entries), entryByKeyComparator);
+            cachedArrayDirty = cachedArray.length != entries.length;
         } else {
-            this.entries = ArrayUtilities.quicksort(entries, entryByKeyComparator);
+            cachedArray = ArrayUtilities.quicksort(entries, entryByKeyComparator);
+            cachedArrayDirty = false;
         }
-        size = this.entries.length;
+        size = this.cachedArray.length;
         sortedTree = SortedTree.fromSortedArray(entryByKeyComparator,
-                keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, this.entries);
+                keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, this.cachedArray);
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
         ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
@@ -125,7 +130,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
             theValues.add(entry.value());
         }
         this.keys = new SortedArrayCollection<K>(comparator, theKeys);
-        this.values = new ArrayCollection<V>(theValues);
+        this.values = new ModifiableArrayCollection<V>(theValues);
     }
 
     @Override
@@ -184,12 +189,12 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
 
     @Override
     public Collection<V> getValues() {
-        return values;
+        return new ArrayCollection<V>(values);
     }
 
     @Override
     public Iterator<Entry<K, V>> iterator() {
-        return new ArrayIterator<Entry<K, V>>(entries);
+        return new ArrayIterator<Entry<K, V>>(toArray());
     }
 
     @Override
@@ -201,11 +206,29 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     public Spliterator<Entry<K, V>> spliterator() {
         int characteristics = Spliterator.ORDERED | Spliterator.SORTED
                 | (keyAndValueCardinality == DISTINCT_KEYS ? Spliterator.DISTINCT : 0);
-        return new ArraySpliterator<Entry<K, V>>(entries, characteristics, entryByKeyComparator);
+        return new ArraySpliterator<Entry<K, V>>(toArray(), characteristics, entryByKeyComparator);
     }
 
     @Override
     public Entry<K, V>[] toArray() {
-        return entries.clone();
+        if (cachedArrayDirty) {
+            cachedArray = sortedTree.toArray();
+            cachedArrayDirty = false;
+        }
+        return cachedArray.clone();
+    }
+
+    @Override
+    public V update(K key, V value) throws IllegalArgumentException {
+        Node<Entry<K, V>> node = sortedTree.findNode(new Entry<K, V>(key, null));
+        if (node == null) {
+            throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
+        }
+        Entry<K, V> entry = node.getElement();
+        V oldValue = entry.value();
+        node.setElement(new Entry<K, V>(key, value));
+        values.remove(oldValue);
+        values.add(value);
+        return oldValue;
     }
 }

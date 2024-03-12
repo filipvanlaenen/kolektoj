@@ -210,8 +210,12 @@ final class SortedTree<E> {
     }
 
     E find(final E element) {
-        Node<E> node = findNode(root, element);
+        Node<E> node = findNode(element);
         return node == null ? null : node.getElement();
+    }
+
+    Node<E> findNode(final E element) {
+        return findNode(root, element);
     }
 
     /**
