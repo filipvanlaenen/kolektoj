@@ -55,7 +55,7 @@ The table below shows the various implementations of the interfaces.
 | ModifiableMap               |                                  | ModifiableHashMap |                                | *ModifiableSortedTreeMap*¹        |
 | SortedMap                   | SortedArrayMap                   | —²                |                                | SortedTreeMap                     |
 | UpdatableSortedMap          | UpdatableSortedArrayMap          | —²                |                                | UpdatableSortedTreeMap            |
-| ModifiableSortedMap         |                                  | —²                |                                |                                   |
+| ModifiableSortedMap         |                                  | —²                |                                | ModifiableSortedTreeMap           |
 
 ¹ This implementation of the interface automatically provides functionality for a more specialized interface.
 
