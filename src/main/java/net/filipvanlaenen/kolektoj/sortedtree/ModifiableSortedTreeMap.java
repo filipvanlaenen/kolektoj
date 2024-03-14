@@ -65,7 +65,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     /**
      * The sorted tree with the entries.
      */
-    private final SortedTree<Entry<K, V>> sortedTree;
+    private final SortedEntryTree<Entry<K, V>> sortedTree;
     /**
      * A collection with the values.
      */
@@ -130,7 +130,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
             cachedArrayDirty = false;
         }
         size = this.cachedArray.length;
-        sortedTree = SortedTree.fromSortedArray(entryByKeyComparator,
+        sortedTree = SortedEntryTree.fromSortedArray(entryByKeyComparator,
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, this.cachedArray);
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);

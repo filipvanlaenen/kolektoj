@@ -39,7 +39,7 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     /**
      * The sorted tree with the elements.
      */
-    private final SortedTree<E> sortedTree;
+    private final SortedElementTree<E> sortedTree;
 
     /**
      * Constructs a new modifiable sorted tree collection from another collection, with the elements sorted using the
@@ -75,8 +75,8 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
             final E... elements) {
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;
-        sortedTree =
-                new SortedTree<E>(comparator, elementCardinality, (Class<E>) elements.getClass().getComponentType());
+        sortedTree = new SortedElementTree<E>(comparator, elementCardinality,
+                (Class<E>) elements.getClass().getComponentType());
         for (E element : elements) {
             add(element);
         }

@@ -15,7 +15,7 @@ import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
  *
  * @param <E> The element type.
  */
-final class SortedTree<E> {
+abstract class SortedTree<E, N extends Node<E>> {
     /**
      * The comparator to use for comparing the elements in this collection.
      */
@@ -37,20 +37,8 @@ final class SortedTree<E> {
      */
     private int size;
 
-    /**
-     * Creates and empty sorted tree.
-     *
-     * @param comparator         The comparator.
-     * @param elementCardinality The element cardinality.
-     * @param elementType        The element type.
-     */
-    SortedTree(final Comparator<E> comparator, final ElementCardinality elementCardinality,
-            final Class<E> elementType) {
-        this(comparator, elementCardinality, null, 0, elementType);
-    }
-
-    private SortedTree(final Comparator<E> comparator, final ElementCardinality elementCardinality, final Node<E> root,
-            final int size, final Class<E> elementType) {
+    protected SortedTree(final Comparator<E> comparator, final ElementCardinality elementCardinality,
+            final Node<E> root, final int size, final Class<E> elementType) {
         this.comparator = comparator;
         this.elementType = elementType;
         this.elementCardinality = elementCardinality;
@@ -64,9 +52,9 @@ final class SortedTree<E> {
      * @param element The element to be added to the tree.
      * @return True if the size of the tree increased after adding the element.
      */
-    boolean add(final E element) {
+    boolean add(final E element, Node<E> newNode) {
         int originalSize = size;
-        root = insertNodeAndUpdateSize(element, root);
+        root = insertNodeAndUpdateSize(element, newNode, root);
         root.updateHeight();
         root = root.rebalance();
         return size != originalSize;
@@ -134,27 +122,6 @@ final class SortedTree<E> {
             }
         }
         return true;
-    }
-
-    /**
-     * Creates a sorted tree from a sorted array from the provided first to last index.
-     *
-     * @param sortedArray The array with the elements, sorted.
-     * @param firstIndex  The first index to be included in the tree.
-     * @param lastIndex   The last index to be included in the tree.
-     * @return A sorted tree with the elements from the sorted array.
-     * @param <E> The element type.
-     */
-    private static <E> Node<E> createSortedTree(final E[] sortedArray, final int firstIndex, final int lastIndex) {
-        int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
-        Node<E> node = new Node<E>(sortedArray[middleIndex]);
-        if (middleIndex > firstIndex) {
-            node.setLeftChild(createSortedTree(sortedArray, firstIndex, middleIndex - 1));
-        }
-        if (middleIndex < lastIndex) {
-            node.setRightChild(createSortedTree(sortedArray, middleIndex + 1, lastIndex));
-        }
-        return node;
     }
 
     private Node<E> deleteNodeAndUpdateSize(final E element, final Node<E> node) {
@@ -239,14 +206,6 @@ final class SortedTree<E> {
         }
     }
 
-    static <E> SortedTree<E> fromSortedArray(final Comparator<E> comparator,
-            final ElementCardinality elementCardinality, final E[] sortedArray) {
-        int size = sortedArray.length;
-        return new SortedTree<E>(comparator, elementCardinality,
-                size == 0 ? null : createSortedTree(sortedArray, 0, size - 1), size,
-                (Class<E>) sortedArray.getClass().getComponentType());
-    }
-
     E getAt(final int index) throws IndexOutOfBoundsException {
         if (index >= size) {
             throw new IndexOutOfBoundsException(
@@ -291,22 +250,22 @@ final class SortedTree<E> {
         return size;
     }
 
-    private Node<E> insertNodeAndUpdateSize(final E element, final Node<E> node) {
+    private Node<E> insertNodeAndUpdateSize(E element, Node<E> newNode, final Node<E> node) {
         if (node == null) {
             size++;
-            return new Node<E>(element);
+            return newNode;
         } else if (comparator.compare(element, node.getElement()) < 0) {
-            node.setLeftChild(insertNodeAndUpdateSize(element, node.getLeftChild()));
+            node.setLeftChild(insertNodeAndUpdateSize(element, newNode, node.getLeftChild()));
             node.updateHeight();
             return node;
         } else if (comparator.compare(element, node.getElement()) > 0) {
-            node.setRightChild(insertNodeAndUpdateSize(element, node.getRightChild()));
+            node.setRightChild(insertNodeAndUpdateSize(element, newNode, node.getRightChild()));
             node.updateHeight();
             return node;
         } else if (elementCardinality == DISTINCT_ELEMENTS) {
             return node;
         } else {
-            node.setRightChild(insertNodeAndUpdateSize(element, node.getRightChild()));
+            node.setRightChild(insertNodeAndUpdateSize(element, newNode, node.getRightChild()));
             node.updateHeight();
             return node;
         }

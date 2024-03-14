@@ -15,7 +15,7 @@ public class NodeTest {
     /**
      * A single node with the element 1.
      */
-    private static final Node<Integer> NODE1 = new Node<Integer>(1);
+    private static final Node<Integer> NODE1 = new ElementNode<Integer>(1);
 
     /**
      * Verifies that the getter method <code>getElement</code> is wired correctly to the constructor.
@@ -31,7 +31,7 @@ public class NodeTest {
      */
     @Test
     public void setElementShouldBeWiredCorrectlyToGetElement() {
-        Node<Integer> node = new Node<Integer>(1);
+        Node<Integer> node = new ElementNode<Integer>(1);
         node.setElement(2);
         assertEquals(2, node.getElement());
     }
@@ -42,7 +42,7 @@ public class NodeTest {
      */
     @Test
     public void setLeftChildShouldBeWiredCorrectlyToGetLeftChild() {
-        Node<Integer> node = new Node<Integer>(2);
+        Node<Integer> node = new ElementNode<Integer>(2);
         node.setLeftChild(NODE1);
         assertEquals(NODE1, node.getLeftChild());
     }
@@ -53,7 +53,7 @@ public class NodeTest {
      */
     @Test
     public void setRightChildShouldBeWiredCorrectlyToGetRightChild() {
-        Node<Integer> node = new Node<Integer>(2);
+        Node<Integer> node = new ElementNode<Integer>(2);
         node.setRightChild(NODE1);
         assertEquals(NODE1, node.getRightChild());
     }
@@ -71,9 +71,9 @@ public class NodeTest {
      */
     @Test
     public void getSizeShouldReturnSumOfSizesPlusOneForNodeWithLeftAndRightChild() {
-        Node<Integer> node = new Node<Integer>(1);
-        node.setLeftChild(new Node<Integer>(0));
-        node.setRightChild(new Node<Integer>(2));
+        Node<Integer> node = new ElementNode<Integer>(1);
+        node.setLeftChild(new ElementNode<Integer>(0));
+        node.setRightChild(new ElementNode<Integer>(2));
         assertEquals(THREE, node.getSize());
     }
 
@@ -82,7 +82,7 @@ public class NodeTest {
      */
     @Test
     public void calculateBalanceFactorShouldReturnZeroForASingleNodeAfterUpdatingTheHeight() {
-        Node<Integer> node = new Node<Integer>(1);
+        Node<Integer> node = new ElementNode<Integer>(1);
         node.updateHeight();
         assertEquals(0, node.calculateBalanceFactor());
     }
@@ -93,8 +93,8 @@ public class NodeTest {
      */
     @Test
     public void calculateBalanceFactorShouldReturnMinusOneForANodeWithALeftChildAfterUpdatingTheHeights() {
-        Node<Integer> node = new Node<Integer>(1);
-        Node<Integer> leftChild = new Node<Integer>(0);
+        Node<Integer> node = new ElementNode<Integer>(1);
+        Node<Integer> leftChild = new ElementNode<Integer>(0);
         leftChild.updateHeight();
         node.setLeftChild(leftChild);
         node.updateHeight();
@@ -107,8 +107,8 @@ public class NodeTest {
      */
     @Test
     public void calculateBalanceFactorShouldReturnOneForANodeWithARightChildAfterUpdatingTheHeights() {
-        Node<Integer> node = new Node<Integer>(1);
-        Node<Integer> rightChild = new Node<Integer>(0);
+        Node<Integer> node = new ElementNode<Integer>(1);
+        Node<Integer> rightChild = new ElementNode<Integer>(0);
         rightChild.updateHeight();
         node.setRightChild(rightChild);
         node.updateHeight();
@@ -121,9 +121,9 @@ public class NodeTest {
      */
     @Test
     public void calculateBalanceFactorShouldReturnTwoForANodeWithTwoRightChildrenAfterUpdatingTheHeights() {
-        Node<Integer> node = new Node<Integer>(2);
-        Node<Integer> rightChild = new Node<Integer>(1);
-        Node<Integer> rightGrandchild = new Node<Integer>(0);
+        Node<Integer> node = new ElementNode<Integer>(2);
+        Node<Integer> rightChild = new ElementNode<Integer>(1);
+        Node<Integer> rightGrandchild = new ElementNode<Integer>(0);
         rightGrandchild.updateHeight();
         rightChild.setRightChild(rightGrandchild);
         rightChild.updateHeight();
@@ -145,10 +145,10 @@ public class NodeTest {
      */
     @Test
     public void getLeftmostChildShouldReturnLeftGrandchildForNodeWithTwoLeftChildren() {
-        Node<Integer> node = new Node<Integer>(2);
-        Node<Integer> childNode = new Node<Integer>(1);
+        Node<Integer> node = new ElementNode<Integer>(2);
+        Node<Integer> childNode = new ElementNode<Integer>(1);
         node.setLeftChild(childNode);
-        Node<Integer> grandchildNode = new Node<Integer>(0);
+        Node<Integer> grandchildNode = new ElementNode<Integer>(0);
         childNode.setLeftChild(grandchildNode);
         assertEquals(grandchildNode, node.getLeftmostChild());
     }

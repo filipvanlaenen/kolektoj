@@ -5,7 +5,7 @@ package net.filipvanlaenen.kolektoj.sortedtree;
  *
  * @param <E> The element type.
  */
-final class Node<E> {
+abstract class Node<E> {
     /**
      * The element of the node.
      */
