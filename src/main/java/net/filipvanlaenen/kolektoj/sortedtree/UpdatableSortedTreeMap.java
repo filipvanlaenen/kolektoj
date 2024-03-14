@@ -224,9 +224,9 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        Entry<K, V> entry = node.getElement();
+        Entry<K, V> entry = node.getSortingKey();
         V oldValue = entry.value();
-        node.setElement(new Entry<K, V>(key, value));
+        node.setSortingKey(new Entry<K, V>(key, value));
         values.remove(oldValue);
         values.add(value);
         return oldValue;

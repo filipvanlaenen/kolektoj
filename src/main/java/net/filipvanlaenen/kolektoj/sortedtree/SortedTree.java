@@ -65,7 +65,7 @@ abstract class SortedTree<E, N extends Node<E>> {
             return index;
         }
         int result = addNodesToArray(array, node.getLeftChild(), index);
-        array[result++] = node.getElement();
+        array[result++] = node.getSortingKey();
         return addNodesToArray(array, node.getRightChild(), result);
     }
 
@@ -84,7 +84,7 @@ abstract class SortedTree<E, N extends Node<E>> {
         }
         int result = removeArraySize;
         if (!matched[index]) {
-            removeArray[result++] = node.getElement();
+            removeArray[result++] = node.getSortingKey();
         }
         result = collectUnmatchedForRemoval(removeArray, result, node.getLeftChild(), matched, index + 1);
         int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
@@ -100,7 +100,7 @@ abstract class SortedTree<E, N extends Node<E>> {
      */
     boolean contains(final E element) {
         Node<E> node = findNode(root, element);
-        return node != null && Objects.equals(element, node.getElement());
+        return node != null && Objects.equals(element, node.getSortingKey());
     }
 
     /**
@@ -127,11 +127,11 @@ abstract class SortedTree<E, N extends Node<E>> {
     private Node<E> deleteNodeAndUpdateSize(final E element, final Node<E> node) {
         if (node == null) {
             return null;
-        } else if (comparator.compare(element, node.getElement()) < 0) {
+        } else if (comparator.compare(element, node.getSortingKey()) < 0) {
             node.setLeftChild(deleteNodeAndUpdateSize(element, node.getLeftChild()));
             node.updateHeight();
             return node;
-        } else if (comparator.compare(element, node.getElement()) > 0) {
+        } else if (comparator.compare(element, node.getSortingKey()) > 0) {
             node.setRightChild(deleteNodeAndUpdateSize(element, node.getRightChild()));
             node.updateHeight();
             return node;
@@ -146,8 +146,8 @@ abstract class SortedTree<E, N extends Node<E>> {
             return node.getLeftChild();
         } else {
             Node<E> inOrderSuccessor = node.getRightChild().getLeftmostChild();
-            node.setElement(inOrderSuccessor.getElement());
-            node.setRightChild(deleteNodeAndUpdateSize(inOrderSuccessor.getElement(), node.getRightChild()));
+            node.setSortingKey(inOrderSuccessor.getSortingKey());
+            node.setRightChild(deleteNodeAndUpdateSize(inOrderSuccessor.getSortingKey(), node.getRightChild()));
             node.updateHeight();
             return node;
         }
@@ -157,7 +157,7 @@ abstract class SortedTree<E, N extends Node<E>> {
         if (node == null) {
             return false;
         }
-        int comparison = comparator.compare(element, node.getElement());
+        int comparison = comparator.compare(element, node.getSortingKey());
         if (!matched[index] && comparison == 0) {
             matched[index] = true;
             return true;
@@ -178,7 +178,7 @@ abstract class SortedTree<E, N extends Node<E>> {
 
     E find(final E element) {
         Node<E> node = findNode(element);
-        return node == null ? null : node.getElement();
+        return node == null ? null : node.getSortingKey();
     }
 
     Node<E> findNode(final E element) {
@@ -196,7 +196,7 @@ abstract class SortedTree<E, N extends Node<E>> {
         if (node == null) {
             return null;
         }
-        int comparison = comparator.compare(element, node.getElement());
+        int comparison = comparator.compare(element, node.getSortingKey());
         if (comparison == 0) {
             return node;
         } else if (comparison < 0) {
@@ -226,7 +226,7 @@ abstract class SortedTree<E, N extends Node<E>> {
         if (leftSize < index) {
             return getAt(node.getRightChild(), index - leftSize - 1);
         } else if (leftSize == index) {
-            return node.getElement();
+            return node.getSortingKey();
         } else {
             return getAt(node.getLeftChild(), index);
         }
@@ -238,7 +238,7 @@ abstract class SortedTree<E, N extends Node<E>> {
      * @return The element of the root node of the tree.
      */
     E getRootElement() {
-        return root.getElement();
+        return root.getSortingKey();
     }
 
     /**
@@ -254,11 +254,11 @@ abstract class SortedTree<E, N extends Node<E>> {
         if (node == null) {
             size++;
             return newNode;
-        } else if (comparator.compare(element, node.getElement()) < 0) {
+        } else if (comparator.compare(element, node.getSortingKey()) < 0) {
             node.setLeftChild(insertNodeAndUpdateSize(element, newNode, node.getLeftChild()));
             node.updateHeight();
             return node;
-        } else if (comparator.compare(element, node.getElement()) > 0) {
+        } else if (comparator.compare(element, node.getSortingKey()) > 0) {
             node.setRightChild(insertNodeAndUpdateSize(element, newNode, node.getRightChild()));
             node.updateHeight();
             return node;
@@ -277,8 +277,8 @@ abstract class SortedTree<E, N extends Node<E>> {
             return index;
         }
         int newIndex = index;
-        if (predicate.test(node.getElement())) {
-            deleteArray[newIndex++] = node.getElement();
+        if (predicate.test(node.getSortingKey())) {
+            deleteArray[newIndex++] = node.getSortingKey();
         }
         newIndex = markForRemoval(deleteArray, newIndex, node.getLeftChild(), predicate);
         newIndex = markForRemoval(deleteArray, newIndex, node.getRightChild(), predicate);

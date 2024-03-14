@@ -22,7 +22,7 @@ public class NodeTest {
      */
     @Test
     public void getElementShouldBeWiredCorrectlyToTheConstructor() {
-        assertEquals(1, NODE1.getElement());
+        assertEquals(1, NODE1.getSortingKey());
     }
 
     /**
@@ -32,8 +32,8 @@ public class NodeTest {
     @Test
     public void setElementShouldBeWiredCorrectlyToGetElement() {
         Node<Integer> node = new ElementNode<Integer>(1);
-        node.setElement(2);
-        assertEquals(2, node.getElement());
+        node.setSortingKey(2);
+        assertEquals(2, node.getSortingKey());
     }
 
     /**

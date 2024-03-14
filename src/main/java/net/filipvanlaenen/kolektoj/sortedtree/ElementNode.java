@@ -1,7 +1,7 @@
 package net.filipvanlaenen.kolektoj.sortedtree;
 
 /**
- * A class implementing a node in an AVL tree.
+ * A class implementing an element node in an AVL tree. The element is used as the key to sort the tree.
  *
  * @param <E> The element type.
  */

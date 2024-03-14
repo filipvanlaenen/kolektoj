@@ -3,33 +3,35 @@ package net.filipvanlaenen.kolektoj.sortedtree;
 /**
  * A class implementing a node in an AVL tree.
  *
- * @param <E> The element type.
+ * @param <K> The sorting key type.
  */
-abstract class Node<E> {
-    /**
-     * The element of the node.
-     */
-    private E element;
+abstract class Node<K> {
     /**
      * The height of the node.
      */
     private int height;
     /**
-     * The left child, with elements that compare less than the element of this node.
+     * The left child containing the nodes having sorting keys that compare less than (or equal to) the sorting key of
+     * this node.
      */
-    private Node<E> leftChild;
+    private Node<K> leftChild;
     /**
-     * The right child, with elements that compare greater than the element of this node.
+     * The right child containing the nodes having sorting keys that compare greater than (or equal to) the sorting key
+     * of this node.
      */
-    private Node<E> rightChild;
+    private Node<K> rightChild;
+    /**
+     * The sorting key for the node.
+     */
+    private K sortingKey;
 
     /**
-     * Constructor taking an element as its parameter.
+     * Constructor taking the node's sorting key as its parameter.
      *
-     * @param element The element for this node.
+     * @param sortingKey The sorting key for this node.
      */
-    Node(final E element) {
-        this.element = element;
+    Node(final K sortingKey) {
+        this.sortingKey = sortingKey;
     }
 
     /**
@@ -39,15 +41,6 @@ abstract class Node<E> {
      */
     int calculateBalanceFactor() {
         return getHeight(rightChild) - getHeight(leftChild);
-    }
-
-    /**
-     * Returns the element of this node.
-     *
-     * @return The element of this node.
-     */
-    E getElement() {
-        return element;
     }
 
     /**
@@ -63,10 +56,10 @@ abstract class Node<E> {
      * Helper method returning -1 if the provided parameter is <code>null</code>, and the height of the node otherwise.
      *
      * @param node The node.
-     * @param <F>  The element type.
+     * @param <L>  The sorting key type.
      * @return The height of the node, or -1 if the provided parameter is <code>null</code>.
      */
-    private static <F> int getHeight(final Node<F> node) {
+    private static <L> int getHeight(final Node<L> node) {
         return node == null ? -1 : node.getHeight();
     }
 
@@ -75,7 +68,7 @@ abstract class Node<E> {
      *
      * @return The left child of this node.
      */
-    Node<E> getLeftChild() {
+    Node<K> getLeftChild() {
         return leftChild;
     }
 
@@ -84,7 +77,7 @@ abstract class Node<E> {
      *
      * @return The leftmost child of this node.
      */
-    Node<E> getLeftmostChild() {
+    Node<K> getLeftmostChild() {
         return leftChild == null ? this : leftChild.getLeftmostChild();
     }
 
@@ -93,7 +86,7 @@ abstract class Node<E> {
      *
      * @return The right child of this node.
      */
-    Node<E> getRightChild() {
+    Node<K> getRightChild() {
         return rightChild;
     }
 
@@ -110,7 +103,7 @@ abstract class Node<E> {
      * Helper method returning 0 if the provided parameter is <code>null</code>, and the size of the node otherwise.
      *
      * @param node The node.
-     * @param <F>  The element type.
+     * @param <F>  The sorting key type.
      * @return The size of the node, or 0 if the provided parameter is <code>null</code>.
      */
     private static <F> int getSize(final Node<F> node) {
@@ -118,11 +111,20 @@ abstract class Node<E> {
     }
 
     /**
+     * Returns the sorting key of this node.
+     *
+     * @return The sorting key of this node.
+     */
+    K getSortingKey() {
+        return sortingKey;
+    }
+
+    /**
      * Rebalances the current node.
      *
      * @return The node that should replace the current node.
      */
-    Node<E> rebalance() {
+    Node<K> rebalance() {
         int balanceFactor = calculateBalanceFactor();
         if (balanceFactor < -1) {
             if (getLeftChild().calculateBalanceFactor() <= 0) {
@@ -163,8 +165,8 @@ abstract class Node<E> {
      *
      * @return The right child that should replace the current node.
      */
-    private Node<E> rotateLeft() {
-        Node<E> originalRightChild = getRightChild();
+    private Node<K> rotateLeft() {
+        Node<K> originalRightChild = getRightChild();
         setRightChild(originalRightChild.getLeftChild());
         originalRightChild.setLeftChild(this);
         updateHeight();
@@ -193,8 +195,8 @@ abstract class Node<E> {
      *
      * @return The left child that should replace the current node.
      */
-    private Node<E> rotateRight() {
-        Node<E> originalLeftChild = getLeftChild();
+    private Node<K> rotateRight() {
+        Node<K> originalLeftChild = getLeftChild();
         setLeftChild(originalLeftChild.getRightChild());
         originalLeftChild.setRightChild(this);
         updateHeight();
@@ -203,20 +205,11 @@ abstract class Node<E> {
     }
 
     /**
-     * Sets the element of this node.
-     *
-     * @param element The new element for this node.
-     */
-    void setElement(final E element) {
-        this.element = element;
-    }
-
-    /**
      * Sets the left child of this node.
      *
      * @param leftChild The left child for this node.
      */
-    void setLeftChild(final Node<E> leftChild) {
+    void setLeftChild(final Node<K> leftChild) {
         this.leftChild = leftChild;
     }
 
@@ -225,8 +218,17 @@ abstract class Node<E> {
      *
      * @param rightChild The right child for this node.
      */
-    void setRightChild(final Node<E> rightChild) {
+    void setRightChild(final Node<K> rightChild) {
         this.rightChild = rightChild;
+    }
+
+    /**
+     * Sets the sorting key of this node.
+     *
+     * @param sortingKey The new sorting key for this node.
+     */
+    void setSortingKey(final K sortingKey) {
+        this.sortingKey = sortingKey;
     }
 
     /**
