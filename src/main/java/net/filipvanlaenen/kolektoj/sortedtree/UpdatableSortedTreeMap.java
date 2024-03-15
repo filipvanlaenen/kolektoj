@@ -63,7 +63,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     /**
      * The sorted tree with the entries.
      */
-    private final SortedEntryTree<Entry<K, V>> sortedTree;
+    private final SortedEntryTree<K, V> sortedTree;
     /**
      * A collection with the values.
      */

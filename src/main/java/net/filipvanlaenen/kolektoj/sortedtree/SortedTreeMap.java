@@ -60,7 +60,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     /**
      * The sorted tree with the entries.
      */
-    private final SortedEntryTree<Entry<K, V>> sortedTree;
+    private final SortedEntryTree<K, V> sortedTree;
     /**
      * A collection with the values.
      */
