@@ -10,7 +10,7 @@ import net.filipvanlaenen.kolektoj.Map.Entry;
  *
  * @param <E> The element type.
  */
-final class SortedEntryTree<K, V> extends SortedTree<Entry<K, V>, EntryNode<Entry<K, V>>> {
+final class SortedEntryTree<K, V> extends SortedTree<Entry<K, V>, EntryNode<K, V>> {
     /**
      * Creates and empty sorted tree.
      *
@@ -29,7 +29,7 @@ final class SortedEntryTree<K, V> extends SortedTree<Entry<K, V>, EntryNode<Entr
     }
 
     boolean add(final Entry<K, V> element) {
-        return add(element, new EntryNode<Entry<K, V>>(element));
+        return add(element, new EntryNode<K, V>(element));
     }
 
     /**
@@ -44,7 +44,7 @@ final class SortedEntryTree<K, V> extends SortedTree<Entry<K, V>, EntryNode<Entr
     private static <K, V> Node<Entry<K, V>> createSortedTree(final Entry<K, V>[] sortedArray, final int firstIndex,
             final int lastIndex) {
         int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
-        Node<Entry<K, V>> node = new EntryNode<Entry<K, V>>(sortedArray[middleIndex]);
+        Node<Entry<K, V>> node = new EntryNode<K, V>(sortedArray[middleIndex]);
         if (middleIndex > firstIndex) {
             node.setLeftChild(createSortedTree(sortedArray, firstIndex, middleIndex - 1));
         }
