@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -31,11 +31,55 @@ public class SortedTreeTest {
             }
         }
     };
-    private static final SortedTree<Integer, Integer> EMPTY_TREE = new SortedTree(COMPARATOR);
+    private static final SortedTree<Integer, Integer> EMPTY_TREE = createEmptyTree();
+    private static final SortedTree<Integer, Integer> TINY_TREE = createTree(1);
+    private static final SortedTree<Integer, Integer> SMALL_TREE = createTree(3);
+    private static final SortedTree<Integer, Integer> LARGE_TREE = createTree(20);
+
+    private static SortedTree<Integer, Integer> createEmptyTree() {
+        return new SortedTree<Integer, Integer>(COMPARATOR, DISTINCT_ELEMENTS);
+    }
+
+    private static SortedTree<Integer, Integer> createTree(final int size) {
+        SortedTree<Integer, Integer> tree = createEmptyTree();
+        for (int key = 1; key <= size; key++) {
+            tree.add(key, key + 1);
+        }
+        return tree;
+    }
 
     @Test
     public void containsShouldReturnFalseForEmptyTree() {
         assertFalse(EMPTY_TREE.contains(1));
+    }
+
+    @Test
+    public void containsShouldReturnTrueForKeyAddedToEmptyTree() {
+        assertTrue(TINY_TREE.contains(1));
+    }
+
+    @Test
+    public void containsShouldReturnFalseForKeyNotAddedToEmptyTree() {
+        assertFalse(TINY_TREE.contains(0));
+    }
+
+    @Test
+    public void containsShouldReturnTrueForKeysInSmallTree() {
+        for (int key = 1; key <= 3; key++) {
+            assertTrue(SMALL_TREE.contains(key));
+        }
+    }
+
+    @Test
+    public void containsShouldReturnFalseForKeyNotInSmallTree() {
+        assertFalse(SMALL_TREE.contains(0));
+    }
+
+    @Test
+    public void containsShouldReturnTrueForKeysInLargeTree() {
+        for (int key = 1; key <= 20; key++) {
+            assertTrue(LARGE_TREE.contains(key));
+        }
     }
 
     @Test
@@ -49,41 +93,21 @@ public class SortedTreeTest {
     }
 
     @Test
-    public void containsShouldReturnTrueForKeyAddedToEmptyTree() {
-        SortedTree<Integer, Integer> sortedTree = new SortedTree(COMPARATOR);
-        sortedTree.add(1, 2);
-        assertTrue(sortedTree.contains(1));
-    }
-
-    @Test
-    public void containsShouldReturnFalseForKeyNotAddedToEmptyTree() {
-        SortedTree<Integer, Integer> sortedTree = new SortedTree(COMPARATOR);
-        sortedTree.add(1, 2);
-        assertFalse(sortedTree.contains(0));
-    }
-
-    @Test
     public void getNodeShouldReturnNodeWithKeyAndValueAddedToEmptyTree() {
-        SortedTree<Integer, Integer> sortedTree = new SortedTree(COMPARATOR);
-        sortedTree.add(1, 2);
-        Node<Integer, Integer> node = sortedTree.getNode();
+        Node<Integer, Integer> node = TINY_TREE.getNode();
         assertEquals(1, node.getKey());
         assertEquals(2, node.getContent());
     }
 
     @Test
     public void getNodeWithParameterShouldReturnNodeWithKeyAndValueAddedToEmptyTreeForKey() {
-        SortedTree<Integer, Integer> sortedTree = new SortedTree(COMPARATOR);
-        sortedTree.add(1, 2);
-        Node<Integer, Integer> node = sortedTree.getNode(1);
+        Node<Integer, Integer> node = TINY_TREE.getNode(1);
         assertEquals(1, node.getKey());
         assertEquals(2, node.getContent());
     }
 
     @Test
     public void getNodeWithParameterShouldReturnNullForKeyNotAddedToEmptyTree() {
-        SortedTree<Integer, Integer> sortedTree = new SortedTree(COMPARATOR);
-        sortedTree.add(1, 2);
-        assertNull(sortedTree.getNode(0));
+        assertNull(TINY_TREE.getNode(0));
     }
 }

@@ -26,8 +26,24 @@ class Node<K, C> {
         return content;
     }
 
+    int getHeight() {
+        return height;
+    }
+
     K getKey() {
         return key;
+    }
+
+    Node<K, C> getLeftChild() {
+        return leftChild;
+    }
+
+    Node<K, C> getRightChild() {
+        return rightChild;
+    }
+
+    void setHeight(final int height) {
+        this.height = height;
     }
 
     void setLeftChild(final Node<K, C> node) {
