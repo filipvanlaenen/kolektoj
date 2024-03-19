@@ -65,7 +65,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     /**
      * The sorted tree with the entries.
      */
-    private final SortedEntryTree<K, V> sortedTree;
+    private final DeprecatedSortedEntryTree<K, V> sortedTree;
     /**
      * A collection with the values.
      */
@@ -130,7 +130,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
             cachedArrayDirty = false;
         }
         size = this.cachedArray.length;
-        sortedTree = SortedEntryTree.fromSortedArray(entryByKeyComparator,
+        sortedTree = DeprecatedSortedEntryTree.fromSortedArray(entryByKeyComparator,
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, this.cachedArray);
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
@@ -276,7 +276,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
 
     @Override
     public V update(K key, V value) throws IllegalArgumentException {
-        Node<Entry<K, V>> node = sortedTree.findNode(new Entry<K, V>(key, null));
+        DeprecatedNode<Entry<K, V>> node = sortedTree.findNode(new Entry<K, V>(key, null));
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }

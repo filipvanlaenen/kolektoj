@@ -1,17 +1,19 @@
 package net.filipvanlaenen.kolektoj.sortedtree;
 
+import net.filipvanlaenen.kolektoj.Map.Entry;
+
 /**
- * A class implementing an element node in an AVL tree. The element is used as the key to sort the tree.
+ * A class implementing a node in an AVL tree.
  *
  * @param <E> The element type.
  */
-final class ElementNode<E> extends Node<E> {
+final class DeprecatedEntryNode<K, V> extends DeprecatedNode<Entry<K, V>> {
     /**
      * Constructor taking an element as its parameter.
      *
      * @param element The element for this node.
      */
-    ElementNode(final E element) {
+    DeprecatedEntryNode(final Entry<K, V> element) {
         super(element);
     }
 }

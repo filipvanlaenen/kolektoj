@@ -39,7 +39,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
     /**
      * The sorted tree with the elements.
      */
-    private final SortedElementTree<E> sortedTree;
+    private final DeprecatedSortedElementTree<E> sortedTree;
 
     /**
      * Constructs a new sorted tree collection from another collection, with the elements sorted using the given
@@ -80,7 +80,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
         } else {
             this.elements = ArrayUtilities.quicksort(elements, comparator);
         }
-        sortedTree = SortedElementTree.fromSortedArray(comparator, elementCardinality, this.elements);
+        sortedTree = DeprecatedSortedElementTree.fromSortedArray(comparator, elementCardinality, this.elements);
         this.size = this.elements.length;
     }
 

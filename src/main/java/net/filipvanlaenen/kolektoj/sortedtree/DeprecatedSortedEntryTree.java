@@ -10,7 +10,7 @@ import net.filipvanlaenen.kolektoj.Map.Entry;
  *
  * @param <E> The element type.
  */
-final class SortedEntryTree<K, V> extends SortedTree<Entry<K, V>, EntryNode<K, V>> {
+final class DeprecatedSortedEntryTree<K, V> extends DeprecatedSortedTree<Entry<K, V>, DeprecatedEntryNode<K, V>> {
     /**
      * Creates and empty sorted tree.
      *
@@ -18,18 +18,18 @@ final class SortedEntryTree<K, V> extends SortedTree<Entry<K, V>, EntryNode<K, V
      * @param elementCardinality The element cardinality.
      * @param elementType        The element type.
      */
-    SortedEntryTree(final Comparator<Entry<K, V>> comparator, final ElementCardinality elementCardinality,
+    DeprecatedSortedEntryTree(final Comparator<Entry<K, V>> comparator, final ElementCardinality elementCardinality,
             final Class<Entry<K, V>> elementType) {
         this(comparator, elementCardinality, null, 0, elementType);
     }
 
-    private SortedEntryTree(final Comparator<Entry<K, V>> comparator, final ElementCardinality elementCardinality,
-            final Node<Entry<K, V>> root, final int size, final Class<Entry<K, V>> elementType) {
+    private DeprecatedSortedEntryTree(final Comparator<Entry<K, V>> comparator, final ElementCardinality elementCardinality,
+            final DeprecatedNode<Entry<K, V>> root, final int size, final Class<Entry<K, V>> elementType) {
         super(comparator, elementCardinality, root, size, elementType);
     }
 
     boolean add(final Entry<K, V> element) {
-        return add(element, new EntryNode<K, V>(element));
+        return add(element, new DeprecatedEntryNode<K, V>(element));
     }
 
     /**
@@ -41,10 +41,10 @@ final class SortedEntryTree<K, V> extends SortedTree<Entry<K, V>, EntryNode<K, V
      * @return A sorted tree with the elements from the sorted array.
      * @param <E> The element type.
      */
-    private static <K, V> Node<Entry<K, V>> createSortedTree(final Entry<K, V>[] sortedArray, final int firstIndex,
+    private static <K, V> DeprecatedNode<Entry<K, V>> createSortedTree(final Entry<K, V>[] sortedArray, final int firstIndex,
             final int lastIndex) {
         int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
-        Node<Entry<K, V>> node = new EntryNode<K, V>(sortedArray[middleIndex]);
+        DeprecatedNode<Entry<K, V>> node = new DeprecatedEntryNode<K, V>(sortedArray[middleIndex]);
         if (middleIndex > firstIndex) {
             node.setLeftChild(createSortedTree(sortedArray, firstIndex, middleIndex - 1));
         }
@@ -54,10 +54,10 @@ final class SortedEntryTree<K, V> extends SortedTree<Entry<K, V>, EntryNode<K, V
         return node;
     }
 
-    static <K, V> SortedEntryTree<K, V> fromSortedArray(final Comparator<Entry<K, V>> comparator,
+    static <K, V> DeprecatedSortedEntryTree<K, V> fromSortedArray(final Comparator<Entry<K, V>> comparator,
             final ElementCardinality elementCardinality, final Entry<K, V>[] sortedArray) {
         int size = sortedArray.length;
-        return new SortedEntryTree<K, V>(comparator, elementCardinality,
+        return new DeprecatedSortedEntryTree<K, V>(comparator, elementCardinality,
                 size == 0 ? null : createSortedTree(sortedArray, 0, size - 1), size,
                 (Class<Entry<K, V>>) sortedArray.getClass().getComponentType());
     }
