@@ -53,4 +53,8 @@ class Node<K, C> {
     void setRightChild(final Node<K, C> node) {
         rightChild = node;
     }
+
+    int getSize() {
+        return 1 + (leftChild == null ? 0 : leftChild.getSize()) + (rightChild == null ? 0 : rightChild.getSize());
+    }
 }

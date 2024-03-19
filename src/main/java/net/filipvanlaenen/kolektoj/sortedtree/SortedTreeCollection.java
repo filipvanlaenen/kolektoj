@@ -9,6 +9,7 @@ import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
@@ -39,7 +40,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
     /**
      * The sorted tree with the elements.
      */
-    private final DeprecatedSortedElementTree<E> sortedTree;
+    private final SortedTree<E, E> sortedTree;
 
     /**
      * Constructs a new sorted tree collection from another collection, with the elements sorted using the given
@@ -80,18 +81,52 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
         } else {
             this.elements = ArrayUtilities.quicksort(elements, comparator);
         }
-        sortedTree = DeprecatedSortedElementTree.fromSortedArray(comparator, elementCardinality, this.elements);
+        sortedTree = SortedTree.fromSortedArray(comparator, elementCardinality, this.elements);
         this.size = this.elements.length;
     }
 
     @Override
     public boolean contains(final E element) {
-        return sortedTree.contains(element);
+        return sortedTree.containsKey(element);
     }
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        return sortedTree.containsAll(collection);
+        if (collection.size() > size) {
+            return false;
+        }
+        boolean[] matched = new boolean[size];
+        Class<E> elementType = (Class<E>) elements.getClass().getComponentType();
+        for (Object element : collection) {
+            if (!(elementType.isInstance(element)
+                    && findAndMarkMatch(sortedTree.getRootNode(), matched, 0, (E) element))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean findAndMarkMatch(final Node<E, E> node, final boolean[] matched, final int index, final E element) {
+        if (node == null) {
+            return false;
+        }
+        int comparison = comparator.compare(element, node.getKey());
+        if (!matched[index] && comparison == 0) {
+            matched[index] = true;
+            return true;
+        } else if (comparison < 0) {
+            return findAndMarkMatch(node.getLeftChild(), matched, index + 1, element);
+        } else if (comparison > 0) {
+            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
+            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
+        } else if (elementCardinality == DISTINCT_ELEMENTS) {
+            return false;
+        } else if (findAndMarkMatch(node.getLeftChild(), matched, index + 1, element)) {
+            return true;
+        } else {
+            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
+            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
+        }
     }
 
     @Override
@@ -99,7 +134,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
         } else {
-            return sortedTree.getRootElement();
+            return sortedTree.getRootNode().getKey();
         }
     }
 

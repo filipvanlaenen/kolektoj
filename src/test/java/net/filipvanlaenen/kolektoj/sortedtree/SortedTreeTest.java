@@ -92,12 +92,12 @@ public class SortedTreeTest {
 
     @Test
     public void getNodeShouldReturnNullForEmptyTree() {
-        assertNull(EMPTY_TREE.getNode());
+        assertNull(EMPTY_TREE.getRootNode());
     }
 
     @Test
     public void getNodeShouldReturnNodeWithKeyAndValueForTinyTree() {
-        Node<Integer, Integer> node = TINY_TREE.getNode();
+        Node<Integer, Integer> node = TINY_TREE.getRootNode();
         assertEquals(1, node.getKey());
         assertEquals(2, node.getContent());
     }

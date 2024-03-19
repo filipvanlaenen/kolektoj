@@ -44,7 +44,33 @@ class SortedTree<K, C> {
         return getNode(key) != null;
     }
 
-    Node<K, C> getNode() {
+    private void createNodes(final K[] sortedArray) {
+        size = sortedArray.length;
+        if (size > 0) {
+            root = createNodes(sortedArray, 0, size - 1);
+        }
+    }
+
+    private Node<K, C> createNodes(final K[] sortedArray, final int firstIndex, final int lastIndex) {
+        int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
+        Node<K, C> node = new Node<K, C>(sortedArray[middleIndex]);
+        if (middleIndex > firstIndex) {
+            node.setLeftChild(createNodes(sortedArray, firstIndex, middleIndex - 1));
+        }
+        if (middleIndex < lastIndex) {
+            node.setRightChild(createNodes(sortedArray, middleIndex + 1, lastIndex));
+        }
+        return node;
+    }
+
+    static <K> SortedTree<K, K> fromSortedArray(final Comparator<K> comparator,
+            final ElementCardinality elementCardinality, final K[] sortedArray) {
+        SortedTree<K, K> sortedTree = new SortedTree<K, K>(comparator, elementCardinality);
+        sortedTree.createNodes(sortedArray);
+        return sortedTree;
+    }
+
+    Node<K, C> getRootNode() {
         return root;
     }
 
