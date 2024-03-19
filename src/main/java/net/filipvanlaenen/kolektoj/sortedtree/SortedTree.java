@@ -41,21 +41,7 @@ class SortedTree<K, C> {
     }
 
     boolean containsKey(final K key) {
-        return containsKey(root, key);
-    }
-
-    private boolean containsKey(final Node<K, C> node, final K key) {
-        if (node == null) {
-            return false;
-        }
-        int comparison = comparator.compare(key, node.getKey());
-        if (comparison < 0) {
-            return containsKey(node.getLeftChild(), key);
-        } else if (comparison > 0) {
-            return containsKey(node.getRightChild(), key);
-        } else {
-            return true;
-        }
+        return getNode(key) != null;
     }
 
     Node<K, C> getNode() {
@@ -63,13 +49,20 @@ class SortedTree<K, C> {
     }
 
     Node<K, C> getNode(final K key) {
-        if (root == null) {
+        return getNode(root, key);
+    }
+
+    private Node<K, C> getNode(final Node<K, C> node, final K key) {
+        if (node == null) {
             return null;
         }
-        if (comparator.compare(key, root.getKey()) == 0) {
-            return root;
+        int comparison = comparator.compare(key, node.getKey());
+        if (comparison < 0) {
+            return getNode(node.getLeftChild(), key);
+        } else if (comparison > 0) {
+            return getNode(node.getRightChild(), key);
         } else {
-            return null;
+            return node;
         }
     }
 

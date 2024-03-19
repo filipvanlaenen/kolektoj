@@ -61,6 +61,7 @@ public class SortedTreeTest {
     @Test
     public void containsShouldReturnFalseForKeyAbsentInTinyTree() {
         assertFalse(TINY_TREE.containsKey(0));
+        assertFalse(TINY_TREE.containsKey(100));
     }
 
     @Test
@@ -95,26 +96,57 @@ public class SortedTreeTest {
     }
 
     @Test
-    public void getNodeWithKeyShouldReturnNullForEmptyTree() {
-        assertNull(EMPTY_TREE.getNode(1));
-    }
-
-    @Test
-    public void getNodeShouldReturnNodeWithKeyAndValueAddedToEmptyTree() {
+    public void getNodeShouldReturnNodeWithKeyAndValueForTinyTree() {
         Node<Integer, Integer> node = TINY_TREE.getNode();
         assertEquals(1, node.getKey());
         assertEquals(2, node.getContent());
     }
 
     @Test
-    public void getNodeWithParameterShouldReturnNodeWithKeyAndValueAddedToEmptyTreeForKey() {
+    public void getNodeWithKeyShouldReturnNullForEmptyTree() {
+        assertNull(EMPTY_TREE.getNode(1));
+    }
+
+    @Test
+    public void getNodeWithKeyShouldReturnNodeWithKeyAndValueForTinyTree() {
         Node<Integer, Integer> node = TINY_TREE.getNode(1);
         assertEquals(1, node.getKey());
         assertEquals(2, node.getContent());
     }
 
     @Test
-    public void getNodeWithParameterShouldReturnNullForKeyNotAddedToEmptyTree() {
+    public void getNodeWithKeyShouldReturnNullForKeyAbsentInTinyTree() {
         assertNull(TINY_TREE.getNode(0));
+        assertNull(TINY_TREE.getNode(100));
+    }
+
+    @Test
+    public void getNodeWithKeyShouldReturnNodeWithKeyAndValueForSmallTree() {
+        for (int key = 1; key <= 3; key++) {
+            Node<Integer, Integer> node = SMALL_TREE.getNode(key);
+            assertEquals(key, node.getKey());
+            assertEquals(key + 1, node.getContent());
+        }
+    }
+
+    @Test
+    public void getNodeWithKeyShouldReturnNullForKeyAbsentInSmallTree() {
+        assertNull(SMALL_TREE.getNode(0));
+        assertNull(SMALL_TREE.getNode(100));
+    }
+
+    @Test
+    public void getNodeWithKeyShouldReturnNodeWithKeyAndValueForLargeTree() {
+        for (int key = 1; key <= 20; key++) {
+            Node<Integer, Integer> node = LARGE_TREE.getNode(key);
+            assertEquals(key, node.getKey());
+            assertEquals(key + 1, node.getContent());
+        }
+    }
+
+    @Test
+    public void getNodeWithKeyShouldReturnNullForKeyAbsentInLargeTree() {
+        assertNull(LARGE_TREE.getNode(0));
+        assertNull(LARGE_TREE.getNode(100));
     }
 }
