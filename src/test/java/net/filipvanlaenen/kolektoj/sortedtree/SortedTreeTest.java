@@ -50,36 +50,43 @@ public class SortedTreeTest {
 
     @Test
     public void containsShouldReturnFalseForEmptyTree() {
-        assertFalse(EMPTY_TREE.contains(1));
+        assertFalse(EMPTY_TREE.containsKey(1));
     }
 
     @Test
-    public void containsShouldReturnTrueForKeyAddedToEmptyTree() {
-        assertTrue(TINY_TREE.contains(1));
+    public void containsShouldReturnTrueForKeyInTinyTree() {
+        assertTrue(TINY_TREE.containsKey(1));
     }
 
     @Test
-    public void containsShouldReturnFalseForKeyNotAddedToEmptyTree() {
-        assertFalse(TINY_TREE.contains(0));
+    public void containsShouldReturnFalseForKeyAbsentInTinyTree() {
+        assertFalse(TINY_TREE.containsKey(0));
     }
 
     @Test
     public void containsShouldReturnTrueForKeysInSmallTree() {
         for (int key = 1; key <= 3; key++) {
-            assertTrue(SMALL_TREE.contains(key));
+            assertTrue(SMALL_TREE.containsKey(key));
         }
     }
 
     @Test
-    public void containsShouldReturnFalseForKeyNotInSmallTree() {
-        assertFalse(SMALL_TREE.contains(0));
+    public void containsShouldReturnFalseForKeysAbsentInSmallTree() {
+        assertFalse(SMALL_TREE.containsKey(0));
+        assertFalse(SMALL_TREE.containsKey(100));
     }
 
     @Test
     public void containsShouldReturnTrueForKeysInLargeTree() {
         for (int key = 1; key <= 20; key++) {
-            assertTrue(LARGE_TREE.contains(key));
+            assertTrue(LARGE_TREE.containsKey(key));
         }
+    }
+
+    @Test
+    public void containsShouldReturnFalseForKeysAbsentInLargeTree() {
+        assertFalse(LARGE_TREE.containsKey(0));
+        assertFalse(LARGE_TREE.containsKey(100));
     }
 
     @Test

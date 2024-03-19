@@ -4,6 +4,7 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT
 
 import java.util.Comparator;
 
+import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
 /**
@@ -30,28 +31,28 @@ class SortedTree<K, C> {
         Node<K, C> newNode = new Node<K, C>(key, content);
         int originalSize = size;
         root = insertNodeAndUpdateSize(root, key, newNode);
-        updateHeight(root);
-        root = rebalance(root);
+        updateNodeHeight(root);
+        root = rebalanceNode(root);
         return size != originalSize;
     }
 
-    private int calculateBalanceFactor(Node<K, C> node) {
+    private int calculateNodeBalanceFactor(Node<K, C> node) {
         return getNodeHeight(node.getRightChild()) - getNodeHeight(node.getLeftChild());
     }
 
-    boolean contains(final K key) {
-        return contains(root, key);
+    boolean containsKey(final K key) {
+        return containsKey(root, key);
     }
 
-    private boolean contains(final Node<K, C> node, final K key) {
+    private boolean containsKey(final Node<K, C> node, final K key) {
         if (node == null) {
             return false;
         }
         int comparison = comparator.compare(key, node.getKey());
         if (comparison < 0) {
-            return contains(node.getLeftChild(), key);
+            return containsKey(node.getLeftChild(), key);
         } else if (comparison > 0) {
-            return contains(node.getRightChild(), key);
+            return containsKey(node.getRightChild(), key);
         } else {
             return true;
         }
@@ -82,32 +83,32 @@ class SortedTree<K, C> {
             return newNode;
         } else if (comparator.compare(key, node.getKey()) < 0) {
             node.setLeftChild(insertNodeAndUpdateSize(node.getLeftChild(), key, newNode));
-            updateHeight(node);
+            updateNodeHeight(node);
             return node;
         } else if (comparator.compare(key, node.getKey()) > 0) {
             node.setRightChild(insertNodeAndUpdateSize(node.getRightChild(), key, newNode));
-            updateHeight(node);
+            updateNodeHeight(node);
             return node;
         } else if (elementCardinality == DISTINCT_ELEMENTS) {
             return node;
         } else {
             node.setRightChild(insertNodeAndUpdateSize(node.getRightChild(), key, newNode));
-            updateHeight(node);
+            updateNodeHeight(node);
             return node;
         }
     }
 
-    private Node<K, C> rebalance(final Node<K, C> node) {
-        int balanceFactor = calculateBalanceFactor(node);
+    private Node<K, C> rebalanceNode(final Node<K, C> node) {
+        int balanceFactor = calculateNodeBalanceFactor(node);
         if (balanceFactor < -1) {
-            if (calculateBalanceFactor(node.getLeftChild()) <= 0) {
+            if (calculateNodeBalanceFactor(node.getLeftChild()) <= 0) {
                 return rotateRight(node);
             } else {
                 node.setLeftChild(rotateLeft(node.getLeftChild()));
                 return rotateRight(node);
             }
         } else if (balanceFactor > 1) {
-            if (calculateBalanceFactor(node.getRightChild()) >= 0) {
+            if (calculateNodeBalanceFactor(node.getRightChild()) >= 0) {
                 return rotateLeft(node);
             } else {
                 node.setRightChild(rotateRight(node.getRightChild()));
@@ -142,8 +143,8 @@ class SortedTree<K, C> {
         Node<K, C> originalRightChild = node.getRightChild();
         node.setRightChild(originalRightChild.getLeftChild());
         originalRightChild.setLeftChild(node);
-        updateHeight(node);
-        updateHeight(originalRightChild);
+        updateNodeHeight(node);
+        updateNodeHeight(originalRightChild);
         return originalRightChild;
     }
 
@@ -172,15 +173,15 @@ class SortedTree<K, C> {
         Node<K, C> originalLeftChild = node.getLeftChild();
         node.setLeftChild(originalLeftChild.getRightChild());
         originalLeftChild.setRightChild(node);
-        updateHeight(node);
-        updateHeight(originalLeftChild);
+        updateNodeHeight(node);
+        updateNodeHeight(originalLeftChild);
         return originalLeftChild;
     }
 
     /**
      * Updates the height of this node.
      */
-    private void updateHeight(final Node<K, C> node) {
+    private void updateNodeHeight(final Node<K, C> node) {
         int leftHeight = getNodeHeight(node.getLeftChild());
         int rightHeight = getNodeHeight(node.getRightChild());
         node.setHeight(Math.max(leftHeight, rightHeight) + 1);
