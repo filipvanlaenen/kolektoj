@@ -3,15 +3,19 @@ package net.filipvanlaenen.kolektoj.sortedtree;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
+import java.lang.reflect.Array;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableSortedCollection;
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
+import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
 
 /**
  * An implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableSortedCollection} interface backed by a sorted
@@ -39,7 +43,7 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     /**
      * The sorted tree with the elements.
      */
-    private final DeprecatedSortedElementTree<E> sortedTree;
+    private final SortedTree<E, E> sortedTree;
 
     /**
      * Constructs a new modifiable sorted tree collection from another collection, with the elements sorted using the
@@ -75,18 +79,18 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
             final E... elements) {
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;
-        sortedTree = new DeprecatedSortedElementTree<E>(comparator, elementCardinality,
-                (Class<E>) elements.getClass().getComponentType());
-        for (E element : elements) {
-            add(element);
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            this.cachedArray = ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(elements), comparator);
+        } else {
+            this.cachedArray = ArrayUtilities.quicksort(elements, comparator);
         }
-        cachedArray = elements.clone();
+        sortedTree = SortedTree.fromSortedArray(comparator, elementCardinality, this.cachedArray);
         cachedArrayDirty = elements.length != size();
     }
 
     @Override
     public boolean add(final E element) {
-        boolean changed = sortedTree.add(element);
+        boolean changed = sortedTree.add(element, element);
         cachedArrayDirty = cachedArrayDirty || changed;
         return changed;
     }
@@ -108,26 +112,60 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
 
     @Override
     public boolean contains(final E element) {
-        return sortedTree.contains(element);
+        return sortedTree.containsKey(element);
     }
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        return sortedTree.containsAll(collection);
+        if (collection.size() > size()) {
+            return false;
+        }
+        boolean[] matched = new boolean[size()];
+        Class<E> elementType = (Class<E>) cachedArray.getClass().getComponentType();
+        for (Object element : collection) {
+            if (!(elementType.isInstance(element)
+                    && findAndMarkMatch(sortedTree.getRootNode(), matched, 0, (E) element))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean findAndMarkMatch(final Node<E, E> node, final boolean[] matched, final int index, final E element) {
+        if (node == null) {
+            return false;
+        }
+        int comparison = comparator.compare(element, node.getKey());
+        if (!matched[index] && comparison == 0) {
+            matched[index] = true;
+            return true;
+        } else if (comparison < 0) {
+            return findAndMarkMatch(node.getLeftChild(), matched, index + 1, element);
+        } else if (comparison > 0) {
+            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
+            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
+        } else if (elementCardinality == DISTINCT_ELEMENTS) {
+            return false;
+        } else if (findAndMarkMatch(node.getLeftChild(), matched, index + 1, element)) {
+            return true;
+        } else {
+            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
+            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
+        }
     }
 
     @Override
     public E get() throws IndexOutOfBoundsException {
-        if (sortedTree.getSize() == 0) {
+        if (size() == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
         } else {
-            return sortedTree.getRootElement();
+            return sortedTree.getRootNode().getKey();
         }
     }
 
     @Override
     public E getAt(final int index) throws IndexOutOfBoundsException {
-        return sortedTree.getAt(index);
+        return null; // TODO
     }
 
     @Override
@@ -142,9 +180,8 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
 
     @Override
     public boolean remove(final E element) {
-        boolean changed = sortedTree.remove(element);
-        cachedArrayDirty = cachedArrayDirty || changed;
-        return changed;
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
@@ -170,14 +207,14 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
 
     @Override
     public boolean removeIf(final Predicate<? super E> predicate) {
-        return sortedTree.removeIf(predicate);
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
     public boolean retainAll(final Collection<? extends E> collection) {
-        boolean changed = sortedTree.retainAll(collection);
-        cachedArrayDirty = cachedArrayDirty || changed;
-        return changed;
+        // TODO Auto-generated method stub
+        return false;
     }
 
     @Override
@@ -194,7 +231,13 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     @Override
     public E[] toArray() {
         if (cachedArrayDirty) {
-            cachedArray = sortedTree.toArray();
+            Class<E> elementType = (Class<E>) cachedArray.getClass().getComponentType();
+            cachedArray = (E[]) Array.newInstance(elementType, size());
+            Node<E, E>[] compactedArray = sortedTree.toArray();
+            for (int i = 0; i < size(); i++) {
+                cachedArray[i] = compactedArray[i].getKey();
+
+            }
             cachedArrayDirty = false;
         }
         return cachedArray.clone();

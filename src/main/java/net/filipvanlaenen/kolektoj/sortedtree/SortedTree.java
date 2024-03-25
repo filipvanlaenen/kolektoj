@@ -265,4 +265,8 @@ class SortedTree<K, C> {
         int rightHeight = getNodeHeight(node.getRightChild());
         node.setHeight(Math.max(leftHeight, rightHeight) + 1);
     }
+
+    int getSize() {
+        return size;
+    }
 }
