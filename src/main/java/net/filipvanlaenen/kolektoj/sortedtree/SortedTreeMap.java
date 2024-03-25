@@ -117,11 +117,8 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         size = this.entries.length;
 
         sortedTree = SortedTree.fromSortedArray(comparator, keyAndValueCardinality, compact(this.entries));
-
-        // TODO: Can the keys be extracted using fromSortedArray?
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
-
         ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
         for (Entry<K, V> entry : entries) {
             theKeys.add(entry.key());
