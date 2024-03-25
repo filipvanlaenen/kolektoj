@@ -15,15 +15,13 @@ import java.util.function.Predicate;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.ModifiableSortedCollection;
 import net.filipvanlaenen.kolektoj.ModifiableSortedMap;
-import net.filipvanlaenen.kolektoj.SortedCollection;
-import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
-import net.filipvanlaenen.kolektoj.array.SortedArrayCollection;
 
 /**
  * An implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableSortedMap} interface backed by a sorted tree,
@@ -60,11 +58,11 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     /**
      * A sorted collection with the keys.
      */
-    private final SortedCollection<K> keys;
+    private final ModifiableSortedCollection<K> keys;
     /**
      * The size of the collection.
      */
-    private final int size;
+    private int size;
     /**
      * The sorted tree with the entries.
      */
@@ -142,7 +140,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
             theKeys.add(entry.key());
             theValues.add(entry.value());
         }
-        this.keys = new SortedArrayCollection<K>(comparator, theKeys);
+        this.keys = new ModifiableSortedTreeCollection<K>(comparator, theKeys);
         this.values = new ModifiableArrayCollection<V>(theValues);
     }
 
@@ -159,6 +157,11 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         } else {
             changed = node.getContent().add(value);
         }
+        if (changed) {
+            size++;
+        }
+        values.add(value);
+        keys.add(key);
         cachedArrayDirty = cachedArrayDirty || changed;
         return changed;
     }
@@ -318,8 +321,15 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         if (cachedArrayDirty) {
             Class<Entry<K, V>> elementType = (Class<Entry<K, V>>) cachedArray.getClass().getComponentType();
             cachedArray = (Entry<K, V>[]) Array.newInstance(elementType, size);
-
-            // TODO: cachedArray = sortedTree.toArray();
+            Node<K, ModifiableCollection<V>>[] compactedArray = sortedTree.toArray();
+            int i = 0;
+            for (Node<K, ModifiableCollection<V>> node : compactedArray) {
+                K key = node.getKey();
+                for (V value : node.getContent()) {
+                    cachedArray[i] = new Entry<K, V>(key, value);
+                    i++;
+                }
+            }
             cachedArrayDirty = false;
         }
         return cachedArray.clone();

@@ -5,6 +5,7 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT
 import java.lang.reflect.Array;
 import java.util.Comparator;
 
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
@@ -240,13 +241,18 @@ class SortedTree<K, C> {
         return originalLeftChild;
     }
 
+    private Node<K, C>[] createNodeArray(final int length, Node<K, C>... foo) {
+        Class<Node<K, C>> elementType = (Class<Node<K, C>>) foo.getClass().getComponentType();
+        return (Node<K, C>[]) Array.newInstance(elementType, length);
+    }
+
     /**
      * Returns the content of this tree as an array.
      *
      * @return An array containing the elements of this tree.
      */
     Node<K, C>[] toArray() {
-        Node<K, C>[] array = (Node<K, C>[]) new Object[size];
+        Node<K, C>[] array = createNodeArray(size);
         addNodesToArray(array, root, 0);
         return array.clone();
     }
