@@ -2,6 +2,7 @@ package net.filipvanlaenen.kolektoj.sortedtree;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 
+import java.lang.reflect.Array;
 import java.util.Comparator;
 
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
@@ -37,8 +38,22 @@ class SortedTree<K, C> {
         return size != originalSize;
     }
 
+    private int addNodesToArray(final Node<K, C>[] array, final Node<K, C> node, final int index) {
+        if (node == null) {
+            return index;
+        }
+        int result = addNodesToArray(array, node.getLeftChild(), index);
+        array[result++] = node;
+        return addNodesToArray(array, node.getRightChild(), result);
+    }
+
     private int calculateNodeBalanceFactor(Node<K, C> node) {
         return getNodeHeight(node.getRightChild()) - getNodeHeight(node.getLeftChild());
+    }
+
+    void clear() {
+        root = null;
+        size = 0;
     }
 
     boolean containsKey(final K key) {
@@ -223,6 +238,17 @@ class SortedTree<K, C> {
         updateNodeHeight(node);
         updateNodeHeight(originalLeftChild);
         return originalLeftChild;
+    }
+
+    /**
+     * Returns the content of this tree as an array.
+     *
+     * @return An array containing the elements of this tree.
+     */
+    Node<K, C>[] toArray() {
+        Node<K, C>[] array = (Node<K, C>[]) new Object[size];
+        addNodesToArray(array, root, 0);
+        return array.clone();
     }
 
     /**
