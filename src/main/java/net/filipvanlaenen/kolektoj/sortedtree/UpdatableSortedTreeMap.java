@@ -3,7 +3,9 @@ package net.filipvanlaenen.kolektoj.sortedtree;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
+import java.lang.reflect.Array;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
@@ -18,7 +20,6 @@ import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
-import net.filipvanlaenen.kolektoj.array.SortedArrayCollection;
 
 /**
  * An implementation of the {@link net.filipvanlaenen.kolektoj.UpdatableSortedMap} interface backed by a sorted tree, in
@@ -63,7 +64,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     /**
      * The sorted tree with the entries.
      */
-    private final DeprecatedSortedEntryTree<K, V> sortedTree;
+    private final SortedTree<K, ModifiableCollection<V>> sortedTree;
     /**
      * A collection with the values.
      */
@@ -89,6 +90,15 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
      */
     public UpdatableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
             final Entry<K, V>... entries) throws IllegalArgumentException {
+        if (entries == null) {
+            throw new IllegalArgumentException("Map entries can't be null.");
+        }
+        for (Entry<K, V> entry : entries) {
+            if (entry == null) {
+                throw new IllegalArgumentException("Map entries can't be null.");
+            }
+        }
+
         this.comparator = comparator;
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
@@ -120,8 +130,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
             cachedArrayDirty = false;
         }
         size = this.cachedArray.length;
-        sortedTree = DeprecatedSortedEntryTree.fromSortedArray(entryByKeyComparator,
-                keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, this.cachedArray);
+        sortedTree = SortedTree.fromSortedArray(comparator, keyAndValueCardinality, compact(this.cachedArray));
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
         ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
@@ -129,18 +138,42 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
             theKeys.add(entry.key());
             theValues.add(entry.value());
         }
-        this.keys = new SortedArrayCollection<K>(comparator, theKeys);
+        this.keys = new SortedTreeCollection<K>(comparator, theKeys);
         this.values = new ModifiableArrayCollection<V>(theValues);
+    }
+
+    private Entry<K, ModifiableCollection<V>>[] compact(Entry<K, V>[] entries) {
+        int originalLength = entries.length;
+        ElementCardinality cardinality =
+                keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS;
+        Entry<K, ModifiableCollection<V>>[] firstPass = createModifiableCollectionEntryArray(originalLength);
+        int j = -1;
+        for (int i = 0; i < originalLength; i++) {
+            if (i == 0 || !Objects.equals(entries[i].key(), firstPass[j].key())) {
+                j++;
+                firstPass[j] = new Entry<K, ModifiableCollection<V>>(entries[i].key(),
+                        new ModifiableArrayCollection<V>(cardinality));
+            }
+            firstPass[j].value().add(entries[i].value());
+        }
+        int resultLength = j + 1;
+        Entry<K, ModifiableCollection<V>>[] result = createModifiableCollectionEntryArray(resultLength);
+        for (int i = 0; i < resultLength; i++) {
+            result[i] = new Entry<K, ModifiableCollection<V>>(firstPass[i].key(),
+                    new ModifiableArrayCollection<V>(firstPass[i].value()));
+        }
+        return result;
     }
 
     @Override
     public boolean contains(Entry<K, V> element) {
-        return sortedTree.contains(element);
+        Node<K, ModifiableCollection<V>> node = sortedTree.getNode(element.key());
+        return node != null && node.getContent().contains(element.value());
     }
 
     @Override
     public boolean containsAll(Collection<?> collection) {
-        return sortedTree.containsAll(collection);
+        return false; // TODO
     }
 
     @Override
@@ -153,28 +186,39 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         return values.contains(value);
     }
 
+    private Entry<K, ModifiableCollection<V>>[] createModifiableCollectionEntryArray(final int length,
+            Entry<K, ModifiableCollection<V>>... foo) {
+        Class<Entry<K, ModifiableCollection<V>>> elementType =
+                (Class<Entry<K, ModifiableCollection<V>>>) foo.getClass().getComponentType();
+        return (Entry<K, ModifiableCollection<V>>[]) Array.newInstance(elementType, length);
+    }
+
     @Override
     public Entry<K, V> get() throws IndexOutOfBoundsException {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
-            return sortedTree.getRootElement();
+            Node<K, ModifiableCollection<V>> node = sortedTree.getRootNode();
+            return new Entry<K, V>(node.getKey(), node.getContent().get());
         }
     }
 
     @Override
     public V get(K key) throws IllegalArgumentException {
-        Entry<K, V> entry = sortedTree.find(new Entry<K, V>(key, null));
-        if (entry == null) {
+        Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
+        if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        return entry.value();
+        return node.getContent().get();
     }
 
     @Override
     public Collection<V> getAll(K key) throws IllegalArgumentException {
-        // TODO Auto-generated method stub
-        return null;
+        Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
+        if (node == null) {
+            throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
+        }
+        return new ArrayCollection<V>(node.getContent());
     }
 
     @Override
@@ -212,7 +256,17 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     @Override
     public Entry<K, V>[] toArray() {
         if (cachedArrayDirty) {
-            cachedArray = sortedTree.toArray();
+            Class<Entry<K, V>> elementType = (Class<Entry<K, V>>) cachedArray.getClass().getComponentType();
+            cachedArray = (Entry<K, V>[]) Array.newInstance(elementType, size);
+            Node<K, ModifiableCollection<V>>[] compactedArray = sortedTree.toArray();
+            int i = 0;
+            for (Node<K, ModifiableCollection<V>> node : compactedArray) {
+                K key = node.getKey();
+                for (V value : node.getContent()) {
+                    cachedArray[i] = new Entry<K, V>(key, value);
+                    i++;
+                }
+            }
             cachedArrayDirty = false;
         }
         return cachedArray.clone();
@@ -220,13 +274,14 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
 
     @Override
     public V update(K key, V value) throws IllegalArgumentException {
-        DeprecatedNode<Entry<K, V>> node = sortedTree.findNode(new Entry<K, V>(key, null));
+        Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        Entry<K, V> entry = node.getSortingKey();
-        V oldValue = entry.value();
-        node.setSortingKey(new Entry<K, V>(key, value));
+        ModifiableCollection<V> content = node.getContent();
+        V oldValue = content.get();
+        content.remove(oldValue);
+        content.add(value);
         values.remove(oldValue);
         values.add(value);
         return oldValue;
