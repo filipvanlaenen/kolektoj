@@ -38,12 +38,20 @@ class Node<K, C> {
         return leftChild;
     }
 
+    Node<K, C> getLeftmostChild() {
+        return leftChild == null ? this : leftChild.getLeftmostChild();
+    }
+
     Node<K, C> getRightChild() {
         return rightChild;
     }
 
     void setHeight(final int height) {
         this.height = height;
+    }
+
+    void setKey(final K key) {
+        this.key = key;
     }
 
     void setLeftChild(final Node<K, C> node) {
@@ -57,4 +65,5 @@ class Node<K, C> {
     int getSize() {
         return 1 + (leftChild == null ? 0 : leftChild.getSize()) + (rightChild == null ? 0 : rightChild.getSize());
     }
+
 }

@@ -241,6 +241,48 @@ class SortedTree<K, C> {
         return originalLeftChild;
     }
 
+    private Node<K, C> deleteNodeAndUpdateSize(final K element, final Node<K, C> node) {
+        if (node == null) {
+            return null;
+        } else if (comparator.compare(element, node.getKey()) < 0) {
+            node.setLeftChild(deleteNodeAndUpdateSize(element, node.getLeftChild()));
+            updateNodeHeight(node);
+            return node;
+        } else if (comparator.compare(element, node.getKey()) > 0) {
+            node.setRightChild(deleteNodeAndUpdateSize(element, node.getRightChild()));
+            updateNodeHeight(node);
+            return node;
+        } else if (node.getLeftChild() == null && node.getRightChild() == null) {
+            size--;
+            return null;
+        } else if (node.getLeftChild() == null) {
+            size--;
+            return node.getRightChild();
+        } else if (node.getRightChild() == null) {
+            size--;
+            return node.getLeftChild();
+        } else {
+            Node<K, C> inOrderSuccessor = node.getRightChild().getLeftmostChild();
+            node.setKey(inOrderSuccessor.getKey());
+            node.setRightChild(deleteNodeAndUpdateSize(inOrderSuccessor.getKey(), node.getRightChild()));
+            updateNodeHeight(node);
+            return node;
+        }
+    }
+
+    boolean remove(final K key) {
+        if (root == null) {
+            return false;
+        }
+        int originalSize = size;
+        root = deleteNodeAndUpdateSize(key, root);
+        if (root != null) {
+            updateNodeHeight(root);
+            root = rebalanceNode(root);
+        }
+        return size != originalSize;
+    }
+
     private Node<K, C>[] createNodeArray(final int length, Node<K, C>... foo) {
         Class<Node<K, C>> elementType = (Class<Node<K, C>>) foo.getClass().getComponentType();
         return (Node<K, C>[]) Array.newInstance(elementType, length);

@@ -180,8 +180,7 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
 
     @Override
     public boolean remove(final E element) {
-        // TODO Auto-generated method stub
-        return false;
+        return sortedTree.remove(element);
     }
 
     @Override
