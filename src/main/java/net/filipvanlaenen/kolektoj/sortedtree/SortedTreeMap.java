@@ -3,6 +3,7 @@ package net.filipvanlaenen.kolektoj.sortedtree;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -13,7 +14,6 @@ import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.SortedMap;
-import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
@@ -60,7 +60,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     /**
      * The sorted tree with the entries.
      */
-    private final DeprecatedSortedEntryTree<K, V> sortedTree;
+    private final SortedTree<K, Collection<V>> sortedTree;
     /**
      * A collection with the values.
      */
@@ -115,10 +115,13 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
             this.entries = ArrayUtilities.quicksort(entries, entryByKeyComparator);
         }
         size = this.entries.length;
-        sortedTree = DeprecatedSortedEntryTree.fromSortedArray(entryByKeyComparator,
-                keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, this.entries);
+
+        sortedTree = SortedTree.fromSortedArray(comparator, keyAndValueCardinality, compact(this.entries));
+
+        // TODO: Can the keys be extracted using fromSortedArray?
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
+
         ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
         for (Entry<K, V> entry : entries) {
             theKeys.add(entry.key());
@@ -128,14 +131,42 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         this.values = new ArrayCollection<V>(theValues);
     }
 
+    private Entry<K, Collection<V>>[] compact(Entry<K, V>[] entries) {
+        int originalLength = entries.length;
+        ElementCardinality cardinality =
+                keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS;
+        Entry<K, ModifiableCollection<V>>[] firstPass =
+                (Entry<K, ModifiableCollection<V>>[]) new Object[originalLength];
+        int j = -1;
+        for (int i = 0; i < originalLength; i++) {
+            if (i == 0 || !Objects.equals(entries[i].key(), firstPass[j].key())) {
+                j++;
+                firstPass[j] = new Entry<K, ModifiableCollection<V>>(entries[i].key(),
+                        new ModifiableArrayCollection<V>(cardinality));
+            }
+            firstPass[j].value().add(entries[i].value());
+        }
+        int resultLength = j + 1;
+        Entry<K, Collection<V>>[] result = (Entry<K, Collection<V>>[]) new Object[resultLength];
+        for (int i = 0; i < resultLength; i++) {
+            result[i] = new Entry<K, Collection<V>>(firstPass[i].key(), new ArrayCollection<V>(firstPass[i].value()));
+        }
+        return result;
+    }
+
     @Override
     public boolean contains(Entry<K, V> element) {
-        return sortedTree.contains(element);
+        Node<K, Collection<V>> node = sortedTree.getNode(element.key());
+        if (node == null) {
+            return false;
+        } else {
+            return node.getContent().contains(element.value());
+        }
     }
 
     @Override
     public boolean containsAll(Collection<?> collection) {
-        return sortedTree.containsAll(collection);
+        return false; // TODO
     }
 
     @Override
@@ -153,23 +184,27 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
-            return sortedTree.getRootElement();
+            Node<K, Collection<V>> root = sortedTree.getRootNode();
+            return new Entry<K, V>(root.getKey(), root.getContent().get());
         }
     }
 
     @Override
     public V get(K key) throws IllegalArgumentException {
-        Entry<K, V> entry = sortedTree.find(new Entry<K, V>(key, null));
-        if (entry == null) {
+        Node<K, Collection<V>> node = sortedTree.getNode(key);
+        if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        return entry.value();
+        return node.getContent().get();
     }
 
     @Override
     public Collection<V> getAll(K key) throws IllegalArgumentException {
-        // TODO Auto-generated method stub
-        return null;
+        Node<K, Collection<V>> node = sortedTree.getNode(key);
+        if (node == null) {
+            throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
+        }
+        return node.getContent();
     }
 
     @Override

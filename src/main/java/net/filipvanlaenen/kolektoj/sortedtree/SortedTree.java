@@ -4,8 +4,9 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT
 
 import java.util.Comparator;
 
-import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
+import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
 
 /**
  * A class implementing an AVL tree.
@@ -44,11 +45,31 @@ class SortedTree<K, C> {
         return getNode(key) != null;
     }
 
+    private void createNodes(Entry<K, C>[] sortedArray) {
+        size = sortedArray.length;
+        if (size > 0) {
+            root = createNodes(sortedArray, 0, size - 1);
+        }
+    }
+
     private void createNodes(final K[] sortedArray) {
         size = sortedArray.length;
         if (size > 0) {
             root = createNodes(sortedArray, 0, size - 1);
         }
+    }
+
+    private Node<K, C> createNodes(final Entry<K, C>[] sortedArray, final int firstIndex, final int lastIndex) {
+        int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
+        Entry<K, C> entry = sortedArray[middleIndex];
+        Node<K, C> node = new Node<K, C>(entry.key(), entry.value());
+        if (middleIndex > firstIndex) {
+            node.setLeftChild(createNodes(sortedArray, firstIndex, middleIndex - 1));
+        }
+        if (middleIndex < lastIndex) {
+            node.setRightChild(createNodes(sortedArray, middleIndex + 1, lastIndex));
+        }
+        return node;
     }
 
     private Node<K, C> createNodes(final K[] sortedArray, final int firstIndex, final int lastIndex) {
@@ -61,6 +82,13 @@ class SortedTree<K, C> {
             node.setRightChild(createNodes(sortedArray, middleIndex + 1, lastIndex));
         }
         return node;
+    }
+
+    static <K, C> SortedTree<K, C> fromSortedArray(final Comparator<K> comparator,
+            final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, C>[] sortedArray) {
+        SortedTree<K, C> sortedTree = new SortedTree<K, C>(comparator, DISTINCT_ELEMENTS);
+        sortedTree.createNodes(sortedArray);
+        return sortedTree;
     }
 
     static <K> SortedTree<K, K> fromSortedArray(final Comparator<K> comparator,
