@@ -173,7 +173,10 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
 
     @Override
     public boolean containsAll(Collection<?> collection) {
-        return false; // TODO
+        if (collection.size() > size()) {
+            return false;
+        }
+        return ArrayUtilities.containsAll(toArray(), size(), collection);
     }
 
     @Override

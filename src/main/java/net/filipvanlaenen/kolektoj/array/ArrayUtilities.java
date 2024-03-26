@@ -96,7 +96,7 @@ public final class ArrayUtilities {
      * @return True if the first <code>size</code> elements of the <code>source</code> array contain all the elements of
      *         the <code>collection</code>, and false otherwise.
      */
-    static <E> boolean containsAll(final E[] source, final int size, final Collection<?> collection) {
+    public static <E> boolean containsAll(final E[] source, final int size, final Collection<?> collection) {
         if (collection.size() > size) {
             return false;
         }

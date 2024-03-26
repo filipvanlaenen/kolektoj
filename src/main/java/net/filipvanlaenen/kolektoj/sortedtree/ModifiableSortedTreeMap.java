@@ -219,7 +219,10 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
 
     @Override
     public boolean containsAll(Collection<?> collection) {
-        return false; // TODO
+        if (collection.size() > size()) {
+            return false;
+        }
+        return ArrayUtilities.containsAll(toArray(), size(), collection);
     }
 
     @Override
