@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -102,14 +103,30 @@ public class ModifiableMapTest {
     }
 
     /**
+     * Verifies that a map constructed with entries is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithEntriesCorrectly() {
+        ModifiableMap<Integer, String> actual = ModifiableMap.of(new Entry<Integer, String>(1, "one"),
+                new Entry<Integer, String>(2, "two"), new Entry<Integer, String>(THREE, "three"));
+        assertEquals(DISTINCT_KEYS, actual.getKeyAndValueCardinality());
+        assertEquals(THREE, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "three")));
+    }
+
+    /**
      * Verifies that a map constructed with entries and key and value cardinality is constructed correctly.
      */
     @Test
     public void ofShouldConstructAMapWithKeyAndValueCardinalityAndEntriesCorrectly() {
-        ModifiableMap<Integer, String> map = ModifiableMap.of(DISTINCT_KEYS, new Entry<Integer, String>(1, "one"),
-                new Entry<Integer, String>(2, "two"));
-        assertEquals(DISTINCT_KEYS, map.getKeyAndValueCardinality());
-        assertEquals(2, map.size());
+        ModifiableMap<Integer, String> actual = ModifiableMap.of(DUPLICATE_KEYS_WITH_DISTINCT_VALUES,
+                new Entry<Integer, String>(1, "one"), new Entry<Integer, String>(2, "two"));
+        assertEquals(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, actual.getKeyAndValueCardinality());
+        assertEquals(2, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));
     }
 
     /**
