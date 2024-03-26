@@ -37,7 +37,7 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
      * @param elements           The elements for the new modifiable ordered collection.
      * @return A new modifiable ordered collection with the specified element cardinality and the elements.
      */
-    static <E> ModifiableCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
+    static <E> ModifiableOrderedCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
         return new ModifiableOrderedArrayCollection<E>(elementCardinality, elements);
     }
 
