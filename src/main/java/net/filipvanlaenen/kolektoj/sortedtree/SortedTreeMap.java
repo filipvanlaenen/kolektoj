@@ -5,6 +5,7 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICAT
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
+import java.lang.reflect.Array;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
@@ -141,8 +142,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         int originalLength = entries.length;
         ElementCardinality cardinality =
                 keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS;
-        Entry<K, ModifiableCollection<V>>[] firstPass =
-                (Entry<K, ModifiableCollection<V>>[]) new Object[originalLength];
+        Entry<K, ModifiableCollection<V>>[] firstPass = createModifiableCollectionEntryArray(originalLength);
         int j = -1;
         for (int i = 0; i < originalLength; i++) {
             if (i == 0 || !Objects.equals(entries[i].key(), firstPass[j].key())) {
@@ -153,7 +153,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
             firstPass[j].value().add(entries[i].value());
         }
         int resultLength = j + 1;
-        Entry<K, Collection<V>>[] result = (Entry<K, Collection<V>>[]) new Object[resultLength];
+        Entry<K, Collection<V>>[] result = createCollectionEntryArray(originalLength);
         for (int i = 0; i < resultLength; i++) {
             result[i] = new Entry<K, Collection<V>>(firstPass[i].key(), new ArrayCollection<V>(firstPass[i].value()));
         }
@@ -186,6 +186,18 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     @Override
     public boolean containsValue(V value) {
         return values.contains(value);
+    }
+
+    private Entry<K, Collection<V>>[] createCollectionEntryArray(final int length, Entry<K, Collection<V>>... foo) {
+        Class<Entry<K, Collection<V>>> elementType = (Class<Entry<K, Collection<V>>>) foo.getClass().getComponentType();
+        return (Entry<K, Collection<V>>[]) Array.newInstance(elementType, length);
+    }
+
+    private Entry<K, ModifiableCollection<V>>[] createModifiableCollectionEntryArray(final int length,
+            Entry<K, ModifiableCollection<V>>... foo) {
+        Class<Entry<K, ModifiableCollection<V>>> elementType =
+                (Class<Entry<K, ModifiableCollection<V>>>) foo.getClass().getComponentType();
+        return (Entry<K, ModifiableCollection<V>>[]) Array.newInstance(elementType, length);
     }
 
     @Override
