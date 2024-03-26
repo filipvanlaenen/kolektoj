@@ -10,9 +10,7 @@ import java.util.Spliterator;
 import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
-import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableSortedCollection;
-import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
@@ -117,41 +115,7 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        if (collection.size() > size()) {
-            return false;
-        }
-        boolean[] matched = new boolean[size()];
-        Class<E> elementType = (Class<E>) cachedArray.getClass().getComponentType();
-        for (Object element : collection) {
-            if (!(elementType.isInstance(element)
-                    && findAndMarkMatch(sortedTree.getRootNode(), matched, 0, (E) element))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean findAndMarkMatch(final Node<E, E> node, final boolean[] matched, final int index, final E element) {
-        if (node == null) {
-            return false;
-        }
-        int comparison = comparator.compare(element, node.getKey());
-        if (!matched[index] && comparison == 0) {
-            matched[index] = true;
-            return true;
-        } else if (comparison < 0) {
-            return findAndMarkMatch(node.getLeftChild(), matched, index + 1, element);
-        } else if (comparison > 0) {
-            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
-        } else if (elementCardinality == DISTINCT_ELEMENTS) {
-            return false;
-        } else if (findAndMarkMatch(node.getLeftChild(), matched, index + 1, element)) {
-            return true;
-        } else {
-            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
-        }
+        return sortedTree.containsAllKeys(collection);
     }
 
     @Override
@@ -215,7 +179,7 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
 
     @Override
     public boolean retainAll(final Collection<? extends E> collection) {
-        boolean changed = sortedTree.retainAll(collection);
+        boolean changed = sortedTree.retainAllKeys(collection);
         cachedArrayDirty = cachedArrayDirty || changed;
         return changed;
     }

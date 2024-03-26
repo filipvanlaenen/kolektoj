@@ -32,6 +32,10 @@ public final class ModifiableSortedTreeCollectionTest
      * The magic number five.
      */
     private static final int FIVE = 5;
+    /**
+     * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
+     * value.
+     */
     private static final Comparator<Integer> COMPARATOR = new Comparator<Integer>() {
         @Override
         public int compare(final Integer i1, final Integer i2) {
@@ -85,7 +89,7 @@ public final class ModifiableSortedTreeCollectionTest
     @Test
     public void addAllShouldInsertAnNewElementsAccordingToSorting() {
         ModifiableCollection<Integer> collection = createCollection513();
-        collection.addAll(Collection.of(2, 4));
+        collection.addAll(Collection.of(2, FOUR));
         assertArrayEquals(new Integer[] {1, 2, THREE, FOUR, FIVE}, collection.toArray());
     }
 

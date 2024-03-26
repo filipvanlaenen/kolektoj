@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
-import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
@@ -21,6 +20,7 @@ import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
 class SortedTree<K, C> {
     private final Comparator<K> comparator;
     private final ElementCardinality elementCardinality;
+    private final Class<K> keyType = getKeyType();
     private Node<K, C> root;
     /**
      * The size of the tree.
@@ -328,26 +328,39 @@ class SortedTree<K, C> {
         return removeArraySize > 0;
     }
 
-    private boolean findAndMarkMatch(final Node<K, C> node, final boolean[] matched, final int index, final K element) {
+    boolean containsAllKeys(final Collection<?> collection) {
+        if (collection.size() > size) {
+            return false;
+        }
+        boolean[] matched = new boolean[size];
+        for (Object key : collection) {
+            if (!(keyType.isInstance(key) && findAndMarkMatch(root, matched, 0, (K) key))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean findAndMarkMatch(final Node<K, C> node, final boolean[] matched, final int index, final K key) {
         if (node == null) {
             return false;
         }
-        int comparison = comparator.compare(element, node.getKey());
+        int comparison = comparator.compare(key, node.getKey());
         if (!matched[index] && comparison == 0) {
             matched[index] = true;
             return true;
         } else if (comparison < 0) {
-            return findAndMarkMatch(node.getLeftChild(), matched, index + 1, element);
+            return findAndMarkMatch(node.getLeftChild(), matched, index + 1, key);
         } else if (comparison > 0) {
             int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
+            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, key);
         } else if (elementCardinality == DISTINCT_ELEMENTS) {
             return false;
-        } else if (findAndMarkMatch(node.getLeftChild(), matched, index + 1, element)) {
+        } else if (findAndMarkMatch(node.getLeftChild(), matched, index + 1, key)) {
             return true;
         } else {
             int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, element);
+            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, key);
         }
     }
 
@@ -366,11 +379,10 @@ class SortedTree<K, C> {
         return result;
     }
 
-    boolean retainAll(final Collection<? extends K> collection) {
+    boolean retainAllKeys(final Collection<? extends K> keys) {
         boolean[] matched = new boolean[size];
-        Class<K> elementType = getKeyElementType();
-        for (Object element : collection) {
-            if (elementType.isInstance(element)) {
+        for (Object element : keys) {
+            if (keyType.isInstance(element)) {
                 findAndMarkMatch(root, matched, 0, (K) element);
             }
         }
@@ -386,7 +398,7 @@ class SortedTree<K, C> {
         return (Node<K, C>[]) Array.newInstance(getNodeElementType(foo), length);
     }
 
-    private Class<K> getKeyElementType(final K... foo) {
+    private Class<K> getKeyType(final K... foo) {
         return (Class<K>) foo.getClass().getComponentType();
     }
 
