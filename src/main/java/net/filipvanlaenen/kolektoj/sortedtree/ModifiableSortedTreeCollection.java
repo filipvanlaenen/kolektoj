@@ -165,7 +165,7 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
 
     @Override
     public E getAt(final int index) throws IndexOutOfBoundsException {
-        return null; // TODO
+        return sortedTree.getAt(index).getKey();
     }
 
     @Override
@@ -180,7 +180,9 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
 
     @Override
     public boolean remove(final E element) {
-        return sortedTree.remove(element);
+        boolean changed = sortedTree.remove(element);
+        cachedArrayDirty = cachedArrayDirty || changed;
+        return changed;
     }
 
     @Override
@@ -206,14 +208,16 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
 
     @Override
     public boolean removeIf(final Predicate<? super E> predicate) {
-        // TODO Auto-generated method stub
-        return false;
+        boolean changed = sortedTree.removeIf(predicate);
+        cachedArrayDirty = cachedArrayDirty || changed;
+        return changed;
     }
 
     @Override
     public boolean retainAll(final Collection<? extends E> collection) {
-        // TODO Auto-generated method stub
-        return false;
+        boolean changed = sortedTree.retainAll(collection);
+        cachedArrayDirty = cachedArrayDirty || changed;
+        return changed;
     }
 
     @Override
