@@ -160,7 +160,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
     @Override
     public boolean remove(final E element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i].equals(element)) {
+            if (Objects.equals(element, elements[i])) {
                 elements[i] = elements[size - 1];
                 size--;
                 // EQMU: Changing the conditional boundary below produces an equivalent mutant.
