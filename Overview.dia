@@ -13,16 +13,16 @@
           <dia:string>#A4#</dia:string>
         </dia:attribute>
         <dia:attribute name="tmargin">
-          <dia:real val="2.8222"/>
+          <dia:real val="2.8222000598907471"/>
         </dia:attribute>
         <dia:attribute name="bmargin">
-          <dia:real val="2.8222"/>
+          <dia:real val="2.8222000598907471"/>
         </dia:attribute>
         <dia:attribute name="lmargin">
-          <dia:real val="2.8222"/>
+          <dia:real val="2.8222000598907471"/>
         </dia:attribute>
         <dia:attribute name="rmargin">
-          <dia:real val="2.8222"/>
+          <dia:real val="2.8222000598907471"/>
         </dia:attribute>
         <dia:attribute name="is_portrait">
           <dia:boolean val="true"/>
@@ -58,9 +58,11 @@
     <dia:attribute name="color">
       <dia:color val="#d8e5e5ff"/>
     </dia:attribute>
-    <dia:attribute name="guides"/>
-    <dia:attribute name="guide_color">
-      <dia:color val="#00ff00ff"/>
+    <dia:attribute name="guides">
+      <dia:composite type="guides">
+        <dia:attribute name="hguides"/>
+        <dia:attribute name="vguides"/>
+      </dia:composite>
     </dia:attribute>
     <dia:attribute name="display">
       <dia:composite type="display">
@@ -70,16 +72,10 @@
         <dia:attribute name="snap-to-grid">
           <dia:boolean val="true"/>
         </dia:attribute>
-        <dia:attribute name="snap-to-guides">
-          <dia:boolean val="true"/>
-        </dia:attribute>
         <dia:attribute name="snap-to-object">
           <dia:boolean val="true"/>
         </dia:attribute>
         <dia:attribute name="show-grid">
-          <dia:boolean val="true"/>
-        </dia:attribute>
-        <dia:attribute name="show-guides">
           <dia:boolean val="true"/>
         </dia:attribute>
         <dia:attribute name="show-connection-points">
@@ -177,13 +173,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -675,13 +671,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -1107,13 +1103,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -1244,13 +1240,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O0" connection="6"/>
@@ -1294,13 +1290,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O0" connection="6"/>
@@ -1344,13 +1340,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O2" connection="6"/>
@@ -1361,7 +1357,7 @@
         <dia:point val="10.3228,28.1"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="9.47276,28.05;11.1728,33.8536"/>
+        <dia:rectangle val="9.4728,28.05;11.1728,33.8536"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -1393,13 +1389,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O1" connection="6"/>
@@ -1443,13 +1439,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O2" connection="6"/>
@@ -1497,13 +1493,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O1" connection="6"/>
@@ -1572,13 +1568,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -1864,13 +1860,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -2230,13 +2226,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -2634,13 +2630,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O0" connection="13"/>
@@ -2709,13 +2705,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -3221,8 +3217,8 @@
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="47.8984,21.5071"/>
-        <dia:point val="47.8984,25.1215"/>
-        <dia:point val="47.8984,25.1215"/>
+        <dia:point val="47.8984,25.1216"/>
+        <dia:point val="47.8984,25.1216"/>
         <dia:point val="47.8984,27.936"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
@@ -3246,13 +3242,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O11" connection="6"/>
@@ -3321,13 +3317,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -3424,7 +3420,7 @@
         <dia:point val="52.6471,16.2071"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="51.8971,15.4471;60.1199,18.7261"/>
+        <dia:rectangle val="51.8971,15.4571;60.1199,18.7261"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -3484,13 +3480,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O11" connection="9"/>
@@ -3559,13 +3555,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -3662,7 +3658,7 @@
         <dia:point val="17.3979,5.6"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="10.8557,4.84;18.1479,10.0266"/>
+        <dia:rectangle val="10.8557,4.85;18.1479,10.0266"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -3722,13 +3718,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O0" connection="3"/>
@@ -3797,13 +3793,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -3923,7 +3919,7 @@
         <dia:point val="52.6471,13.8571"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="51.8971,13.0971;70.8655,18.6998"/>
+        <dia:rectangle val="51.8971,13.1071;70.8655,18.6998"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -3983,13 +3979,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O11" connection="4"/>
@@ -4058,13 +4054,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -4424,13 +4420,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -4512,13 +4508,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O29" connection="8"/>
@@ -4537,8 +4533,8 @@
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="47.8984,21.5071"/>
-        <dia:point val="47.8984,25.1215"/>
-        <dia:point val="70.5901,25.1215"/>
+        <dia:point val="47.8984,25.1216"/>
+        <dia:point val="70.5901,25.1216"/>
         <dia:point val="70.5901,27.936"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
@@ -4562,13 +4558,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O11" connection="6"/>
@@ -4580,7 +4576,7 @@
         <dia:point val="47.8983,46.0774"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="47.0483,46.0274;61.7365,49.9716"/>
+        <dia:rectangle val="47.0483,46.0274;61.7366,49.9716"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -4612,13 +4608,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O13" connection="6"/>
@@ -4687,13 +4683,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -4824,13 +4820,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O10" connection="6"/>
@@ -4899,13 +4895,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -5078,13 +5074,13 @@
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="fill_color">
         <dia:color val="#ffffffff"/>
       </dia:attribute>
       <dia:attribute name="text_color">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="normal_font">
         <dia:font family="PT Sans" style="0" name="Courier"/>
@@ -5166,13 +5162,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O28" connection="6"/>
@@ -5216,13 +5212,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O21" connection="20"/>
@@ -5234,7 +5230,7 @@
         <dia:point val="47.8984,32.236"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="47.0483,32.186;70.6401,40.3611"/>
+        <dia:rectangle val="47.0484,32.186;70.6401,40.3611"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
@@ -5270,13 +5266,13 @@
         <dia:real val="0.80000000000000004"/>
       </dia:attribute>
       <dia:attribute name="text_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:attribute name="line_width">
         <dia:real val="0.10000000000000001"/>
       </dia:attribute>
       <dia:attribute name="line_colour">
-        <dia:color val="#62514aff"/>
+        <dia:color val="#1f883dff"/>
       </dia:attribute>
       <dia:connections>
         <dia:connection handle="0" to="O28" connection="6"/>
