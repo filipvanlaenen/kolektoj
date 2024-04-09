@@ -18,16 +18,22 @@ import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
  * @param <C> The content type.
  */
 class SortedTree<K, C> {
+    /**
+     * The key comparator to sort the nodes of the tree.
+     */
     private final Comparator<K> comparator;
     private final ElementCardinality elementCardinality;
     private final Class<K> keyType = getKeyType();
+    /**
+     * The root node of the tree.
+     */
     private Node<K, C> root;
     /**
      * The size of the tree.
      */
     private int size;
 
-    SortedTree(Comparator<K> comparator, final ElementCardinality elementCardinality) {
+    SortedTree(final Comparator<K> comparator, final ElementCardinality elementCardinality) {
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;
     }
@@ -50,7 +56,7 @@ class SortedTree<K, C> {
         return addNodesToArray(array, node.getRightChild(), result);
     }
 
-    private int calculateNodeBalanceFactor(Node<K, C> node) {
+    private int calculateNodeBalanceFactor(final Node<K, C> node) {
         return getNodeHeight(node.getRightChild()) - getNodeHeight(node.getLeftChild());
     }
 
@@ -59,18 +65,43 @@ class SortedTree<K, C> {
         size = 0;
     }
 
+    private int collectUnmatchedForRemoval(final Node<K, C>[] removeArray, final int removeArraySize,
+            final Node<K, C> node, final boolean[] matched, final int index) {
+        if (node == null) {
+            return removeArraySize;
+        }
+        int result = removeArraySize;
+        if (!matched[index]) {
+            removeArray[result++] = node;
+        }
+        result = collectUnmatchedForRemoval(removeArray, result, node.getLeftChild(), matched, index + 1);
+        int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
+        result = collectUnmatchedForRemoval(removeArray, result, node.getRightChild(), matched, index + leftSize + 1);
+        return result;
+    }
+
+    boolean containsAllKeys(final Collection<?> collection) {
+        if (collection.size() > size) {
+            return false;
+        }
+        boolean[] matched = new boolean[size];
+        for (Object key : collection) {
+            if (!(keyType.isInstance(key) && findAndMarkMatch(root, matched, 0, (K) key))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     boolean containsKey(final K key) {
         return getNode(key) != null;
     }
 
-    private void createNodes(Entry<K, C>[] sortedArray) {
-        size = sortedArray.length;
-        if (size > 0) {
-            root = createNodes(sortedArray, 0, size - 1);
-        }
+    private Node<K, C>[] createNodeArray(final int length, final Node<K, C>... foo) {
+        return (Node<K, C>[]) Array.newInstance(getNodeElementType(foo), length);
     }
 
-    private void createNodes(final K[] sortedArray) {
+    private void createNodes(final Entry<K, C>[] sortedArray) {
         size = sortedArray.length;
         if (size > 0) {
             root = createNodes(sortedArray, 0, size - 1);
@@ -90,6 +121,13 @@ class SortedTree<K, C> {
         return node;
     }
 
+    private void createNodes(final K[] sortedArray) {
+        size = sortedArray.length;
+        if (size > 0) {
+            root = createNodes(sortedArray, 0, size - 1);
+        }
+    }
+
     private Node<K, C> createNodes(final K[] sortedArray, final int firstIndex, final int lastIndex) {
         int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
         Node<K, C> node = new Node<K, C>(sortedArray[middleIndex]);
@@ -102,16 +140,68 @@ class SortedTree<K, C> {
         return node;
     }
 
-    static <K, C> SortedTree<K, C> fromSortedArray(final Comparator<K> comparator,
-            final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, C>[] sortedArray) {
-        SortedTree<K, C> sortedTree = new SortedTree<K, C>(comparator, DISTINCT_ELEMENTS);
-        sortedTree.createNodes(sortedArray);
-        return sortedTree;
+    private Node<K, C> deleteNodeAndUpdateSize(final K element, final Node<K, C> node) {
+        if (node == null) {
+            return null;
+        } else if (comparator.compare(element, node.getKey()) < 0) {
+            node.setLeftChild(deleteNodeAndUpdateSize(element, node.getLeftChild()));
+            updateNodeHeight(node);
+            return node;
+        } else if (comparator.compare(element, node.getKey()) > 0) {
+            node.setRightChild(deleteNodeAndUpdateSize(element, node.getRightChild()));
+            updateNodeHeight(node);
+            return node;
+        } else if (node.getLeftChild() == null && node.getRightChild() == null) {
+            size--;
+            return null;
+        } else if (node.getLeftChild() == null) {
+            size--;
+            return node.getRightChild();
+        } else if (node.getRightChild() == null) {
+            size--;
+            return node.getLeftChild();
+        } else {
+            Node<K, C> inOrderSuccessor = node.getRightChild().getLeftmostChild();
+            node.setKey(inOrderSuccessor.getKey());
+            node.setRightChild(deleteNodeAndUpdateSize(inOrderSuccessor.getKey(), node.getRightChild()));
+            updateNodeHeight(node);
+            return node;
+        }
+    }
+
+    private boolean findAndMarkMatch(final Node<K, C> node, final boolean[] matched, final int index, final K key) {
+        if (node == null) {
+            return false;
+        }
+        int comparison = comparator.compare(key, node.getKey());
+        if (!matched[index] && comparison == 0) {
+            matched[index] = true;
+            return true;
+        } else if (comparison < 0) {
+            return findAndMarkMatch(node.getLeftChild(), matched, index + 1, key);
+        } else if (comparison > 0) {
+            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
+            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, key);
+        } else if (elementCardinality == DISTINCT_ELEMENTS) {
+            return false;
+        } else if (findAndMarkMatch(node.getLeftChild(), matched, index + 1, key)) {
+            return true;
+        } else {
+            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
+            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, key);
+        }
     }
 
     static <K> SortedTree<K, K> fromSortedArray(final Comparator<K> comparator,
             final ElementCardinality elementCardinality, final K[] sortedArray) {
         SortedTree<K, K> sortedTree = new SortedTree<K, K>(comparator, elementCardinality);
+        sortedTree.createNodes(sortedArray);
+        return sortedTree;
+    }
+
+    static <K, C> SortedTree<K, C> fromSortedArray(final Comparator<K> comparator,
+            final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, C>[] sortedArray) {
+        SortedTree<K, C> sortedTree = new SortedTree<K, C>(comparator, DISTINCT_ELEMENTS);
         sortedTree.createNodes(sortedArray);
         return sortedTree;
     }
@@ -136,8 +226,8 @@ class SortedTree<K, C> {
         }
     }
 
-    Node<K, C> getRootNode() {
-        return root;
+    private Class<K> getKeyType(final K... foo) {
+        return (Class<K>) foo.getClass().getComponentType();
     }
 
     Node<K, C> getNode(final K key) {
@@ -158,8 +248,20 @@ class SortedTree<K, C> {
         }
     }
 
+    private Class<Node<K, C>> getNodeElementType(final Node<K, C>... foo) {
+        return (Class<Node<K, C>>) foo.getClass().getComponentType();
+    }
+
     private int getNodeHeight(final Node<K, C> node) {
         return node == null ? 0 : node.getHeight();
+    }
+
+    Node<K, C> getRootNode() {
+        return root;
+    }
+
+    int getSize() {
+        return size;
     }
 
     private Node<K, C> insertNodeAndUpdateSize(final Node<K, C> node, final K key, final Node<K, C> newNode) {
@@ -183,6 +285,20 @@ class SortedTree<K, C> {
         }
     }
 
+    private int markForRemoval(final Node<K, C>[] deleteArray, final int index, final Node<K, C> node,
+            final Predicate<? super K> predicate) {
+        if (node == null) {
+            return index;
+        }
+        int newIndex = index;
+        if (predicate.test(node.getKey())) {
+            deleteArray[newIndex++] = node;
+        }
+        newIndex = markForRemoval(deleteArray, newIndex, node.getLeftChild(), predicate);
+        newIndex = markForRemoval(deleteArray, newIndex, node.getRightChild(), predicate);
+        return newIndex;
+    }
+
     private Node<K, C> rebalanceNode(final Node<K, C> node) {
         int balanceFactor = calculateNodeBalanceFactor(node);
         if (balanceFactor < -1) {
@@ -201,6 +317,43 @@ class SortedTree<K, C> {
             }
         }
         return node;
+    }
+
+    boolean remove(final K key) {
+        if (root == null) {
+            return false;
+        }
+        int originalSize = size;
+        root = deleteNodeAndUpdateSize(key, root);
+        if (root != null) {
+            updateNodeHeight(root);
+            root = rebalanceNode(root);
+        }
+        return size != originalSize;
+    }
+
+    boolean removeIf(final Predicate<? super K> predicate) {
+        Node<K, C>[] removeArray = createNodeArray(size);
+        int removeArraySize = markForRemoval(removeArray, 0, root, predicate);
+        for (int i = 0; i < removeArraySize; i++) {
+            remove(removeArray[i].getKey());
+        }
+        return removeArraySize > 0;
+    }
+
+    boolean retainAllKeys(final Collection<? extends K> keys) {
+        boolean[] matched = new boolean[size];
+        for (Object element : keys) {
+            if (keyType.isInstance(element)) {
+                findAndMarkMatch(root, matched, 0, (K) element);
+            }
+        }
+        Node<K, C>[] removeArray = createNodeArray(size);
+        int removeArraySize = collectUnmatchedForRemoval(removeArray, 0, root, matched, 0);
+        for (int i = 0; i < removeArraySize; i++) {
+            remove(removeArray[i].getKey());
+        }
+        return removeArraySize > 0;
     }
 
     /**
@@ -263,149 +416,6 @@ class SortedTree<K, C> {
         return originalLeftChild;
     }
 
-    private Node<K, C> deleteNodeAndUpdateSize(final K element, final Node<K, C> node) {
-        if (node == null) {
-            return null;
-        } else if (comparator.compare(element, node.getKey()) < 0) {
-            node.setLeftChild(deleteNodeAndUpdateSize(element, node.getLeftChild()));
-            updateNodeHeight(node);
-            return node;
-        } else if (comparator.compare(element, node.getKey()) > 0) {
-            node.setRightChild(deleteNodeAndUpdateSize(element, node.getRightChild()));
-            updateNodeHeight(node);
-            return node;
-        } else if (node.getLeftChild() == null && node.getRightChild() == null) {
-            size--;
-            return null;
-        } else if (node.getLeftChild() == null) {
-            size--;
-            return node.getRightChild();
-        } else if (node.getRightChild() == null) {
-            size--;
-            return node.getLeftChild();
-        } else {
-            Node<K, C> inOrderSuccessor = node.getRightChild().getLeftmostChild();
-            node.setKey(inOrderSuccessor.getKey());
-            node.setRightChild(deleteNodeAndUpdateSize(inOrderSuccessor.getKey(), node.getRightChild()));
-            updateNodeHeight(node);
-            return node;
-        }
-    }
-
-    boolean remove(final K key) {
-        if (root == null) {
-            return false;
-        }
-        int originalSize = size;
-        root = deleteNodeAndUpdateSize(key, root);
-        if (root != null) {
-            updateNodeHeight(root);
-            root = rebalanceNode(root);
-        }
-        return size != originalSize;
-    }
-
-    private int markForRemoval(final Node<K, C>[] deleteArray, final int index, final Node<K, C> node,
-            final Predicate<? super K> predicate) {
-        if (node == null) {
-            return index;
-        }
-        int newIndex = index;
-        if (predicate.test(node.getKey())) {
-            deleteArray[newIndex++] = node;
-        }
-        newIndex = markForRemoval(deleteArray, newIndex, node.getLeftChild(), predicate);
-        newIndex = markForRemoval(deleteArray, newIndex, node.getRightChild(), predicate);
-        return newIndex;
-    }
-
-    boolean removeIf(final Predicate<? super K> predicate) {
-        Node<K, C>[] removeArray = createNodeArray(size);
-        int removeArraySize = markForRemoval(removeArray, 0, root, predicate);
-        for (int i = 0; i < removeArraySize; i++) {
-            remove(removeArray[i].getKey());
-        }
-        return removeArraySize > 0;
-    }
-
-    boolean containsAllKeys(final Collection<?> collection) {
-        if (collection.size() > size) {
-            return false;
-        }
-        boolean[] matched = new boolean[size];
-        for (Object key : collection) {
-            if (!(keyType.isInstance(key) && findAndMarkMatch(root, matched, 0, (K) key))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean findAndMarkMatch(final Node<K, C> node, final boolean[] matched, final int index, final K key) {
-        if (node == null) {
-            return false;
-        }
-        int comparison = comparator.compare(key, node.getKey());
-        if (!matched[index] && comparison == 0) {
-            matched[index] = true;
-            return true;
-        } else if (comparison < 0) {
-            return findAndMarkMatch(node.getLeftChild(), matched, index + 1, key);
-        } else if (comparison > 0) {
-            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, key);
-        } else if (elementCardinality == DISTINCT_ELEMENTS) {
-            return false;
-        } else if (findAndMarkMatch(node.getLeftChild(), matched, index + 1, key)) {
-            return true;
-        } else {
-            int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-            return findAndMarkMatch(node.getRightChild(), matched, index + leftSize + 1, key);
-        }
-    }
-
-    private int collectUnmatchedForRemoval(final Node<K, C>[] removeArray, final int removeArraySize,
-            final Node<K, C> node, final boolean[] matched, final int index) {
-        if (node == null) {
-            return removeArraySize;
-        }
-        int result = removeArraySize;
-        if (!matched[index]) {
-            removeArray[result++] = node;
-        }
-        result = collectUnmatchedForRemoval(removeArray, result, node.getLeftChild(), matched, index + 1);
-        int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
-        result = collectUnmatchedForRemoval(removeArray, result, node.getRightChild(), matched, index + leftSize + 1);
-        return result;
-    }
-
-    boolean retainAllKeys(final Collection<? extends K> keys) {
-        boolean[] matched = new boolean[size];
-        for (Object element : keys) {
-            if (keyType.isInstance(element)) {
-                findAndMarkMatch(root, matched, 0, (K) element);
-            }
-        }
-        Node<K, C>[] removeArray = createNodeArray(size);
-        int removeArraySize = collectUnmatchedForRemoval(removeArray, 0, root, matched, 0);
-        for (int i = 0; i < removeArraySize; i++) {
-            remove(removeArray[i].getKey());
-        }
-        return removeArraySize > 0;
-    }
-
-    private Node<K, C>[] createNodeArray(final int length, final Node<K, C>... foo) {
-        return (Node<K, C>[]) Array.newInstance(getNodeElementType(foo), length);
-    }
-
-    private Class<K> getKeyType(final K... foo) {
-        return (Class<K>) foo.getClass().getComponentType();
-    }
-
-    private Class<Node<K, C>> getNodeElementType(final Node<K, C>... foo) {
-        return (Class<Node<K, C>>) foo.getClass().getComponentType();
-    }
-
     /**
      * Returns the content of this tree as an array.
      *
@@ -424,9 +434,5 @@ class SortedTree<K, C> {
         int leftHeight = getNodeHeight(node.getLeftChild());
         int rightHeight = getNodeHeight(node.getRightChild());
         node.setHeight(Math.max(leftHeight, rightHeight) + 1);
-    }
-
-    int getSize() {
-        return size;
     }
 }
