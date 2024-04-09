@@ -11,9 +11,9 @@ import net.filipvanlaenen.kolektoj.MapTestBase;
 import net.filipvanlaenen.kolektoj.hash.HashMapTestBase.KeyWithCollidingHash;
 
 /**
- * 
+ * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.Map} interface backed by hashing.
  *
- * @param <T>
+ * @param <T>  The subclass type to be tested.
  * @param <TC> The subclass type to be tested using a key with colliding hash values.
  */
 public abstract class HashMapTestBase<T extends Map<Integer, String>, TC extends Map<KeyWithCollidingHash, Integer>>
