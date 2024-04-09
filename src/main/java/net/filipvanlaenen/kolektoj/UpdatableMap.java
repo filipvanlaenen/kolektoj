@@ -141,7 +141,7 @@ public interface UpdatableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
     }
 
     /**
-     * Updates the key with the given value, and returns the vale that was previously mapped to the key. Throws an
+     * Updates the key with the given value, and returns the value that was previously mapped to the key. Throws an
      * exception if the map doesn't contain an entry with the key.
      *
      * @param key   The key.
