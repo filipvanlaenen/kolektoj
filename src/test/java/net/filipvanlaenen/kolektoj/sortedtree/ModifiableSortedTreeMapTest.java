@@ -10,7 +10,8 @@ import net.filipvanlaenen.kolektoj.ModifiableSortedMapTestBase;
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeMap} class.
  */
-public class ModifiableSortedTreeMapTest extends ModifiableSortedMapTestBase<ModifiableSortedTreeMap<Integer, String>> {
+public final class ModifiableSortedTreeMapTest
+        extends ModifiableSortedMapTestBase<ModifiableSortedTreeMap<Integer, String>> {
 
     /**
      * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
@@ -34,13 +35,13 @@ public class ModifiableSortedTreeMapTest extends ModifiableSortedMapTestBase<Mod
     };
 
     @Override
-    protected ModifiableSortedTreeMap<Integer, String> createMap(Entry<Integer, String>... entries) {
+    protected ModifiableSortedTreeMap<Integer, String> createMap(final Entry<Integer, String>... entries) {
         return new ModifiableSortedTreeMap<Integer, String>(COMPARATOR, entries);
     }
 
     @Override
-    protected ModifiableSortedTreeMap<Integer, String> createMap(KeyAndValueCardinality keyAndValueCardinality,
-            Entry<Integer, String>... entries) {
+    protected ModifiableSortedTreeMap<Integer, String> createMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Entry<Integer, String>... entries) {
         return new ModifiableSortedTreeMap<Integer, String>(keyAndValueCardinality, COMPARATOR, entries);
     }
 }
