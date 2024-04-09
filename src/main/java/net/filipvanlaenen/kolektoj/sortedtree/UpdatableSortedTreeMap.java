@@ -50,10 +50,6 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
      */
     private final Comparator<Entry<K, V>> entryByKeyComparator;
     /**
-     * The comparator to use for comparing entries using the keys and the values in this sorted map.
-     */
-    private final Comparator<Entry<K, V>> entryByKeyAndValueComparator;
-    /**
      * A sorted collection with the keys.
      */
     private final SortedCollection<K> keys;
@@ -102,23 +98,8 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         this.comparator = comparator;
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
-            public int compare(Entry<K, V> e1, Entry<K, V> e2) {
+            public int compare(final Entry<K, V> e1, final Entry<K, V> e2) {
                 return comparator.compare(e1.key(), e2.key());
-            }
-        };
-        this.entryByKeyAndValueComparator = new Comparator<Entry<K, V>>() {
-            @Override
-            public int compare(Entry<K, V> e1, Entry<K, V> e2) {
-                int keyComparison = comparator.compare(e1.key(), e2.key());
-                if (keyComparison == 0) {
-                    if (Objects.equals(e1.value(), e2.value())) {
-                        return 0;
-                    } else {
-                        return 1;
-                    }
-                } else {
-                    return keyComparison;
-                }
             }
         };
         this.keyAndValueCardinality = keyAndValueCardinality;
@@ -142,7 +123,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         this.values = new ModifiableArrayCollection<V>(theValues);
     }
 
-    private Entry<K, ModifiableCollection<V>>[] compact(Entry<K, V>[] entries) {
+    private Entry<K, ModifiableCollection<V>>[] compact(final Entry<K, V>[] entries) {
         int originalLength = entries.length;
         ElementCardinality cardinality =
                 keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS;
@@ -166,13 +147,13 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     }
 
     @Override
-    public boolean contains(Entry<K, V> element) {
+    public boolean contains(final Entry<K, V> element) {
         Node<K, ModifiableCollection<V>> node = sortedTree.getNode(element.key());
         return node != null && node.getContent().contains(element.value());
     }
 
     @Override
-    public boolean containsAll(Collection<?> collection) {
+    public boolean containsAll(final Collection<?> collection) {
         if (collection.size() > size()) {
             return false;
         }
@@ -180,17 +161,17 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     }
 
     @Override
-    public boolean containsKey(K key) {
+    public boolean containsKey(final K key) {
         return keys.contains(key);
     }
 
     @Override
-    public boolean containsValue(V value) {
+    public boolean containsValue(final V value) {
         return values.contains(value);
     }
 
     private Entry<K, ModifiableCollection<V>>[] createModifiableCollectionEntryArray(final int length,
-            Entry<K, ModifiableCollection<V>>... foo) {
+            final Entry<K, ModifiableCollection<V>>... foo) {
         Class<Entry<K, ModifiableCollection<V>>> elementType =
                 (Class<Entry<K, ModifiableCollection<V>>>) foo.getClass().getComponentType();
         return (Entry<K, ModifiableCollection<V>>[]) Array.newInstance(elementType, length);
@@ -207,7 +188,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     }
 
     @Override
-    public V get(K key) throws IllegalArgumentException {
+    public V get(final K key) throws IllegalArgumentException {
         Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
@@ -216,7 +197,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     }
 
     @Override
-    public Collection<V> getAll(K key) throws IllegalArgumentException {
+    public Collection<V> getAll(final K key) throws IllegalArgumentException {
         Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
@@ -276,7 +257,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     }
 
     @Override
-    public V update(K key, V value) throws IllegalArgumentException {
+    public V update(final K key, final V value) throws IllegalArgumentException {
         Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
