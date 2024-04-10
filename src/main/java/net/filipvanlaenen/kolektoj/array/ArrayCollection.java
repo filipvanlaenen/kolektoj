@@ -28,7 +28,7 @@ public final class ArrayCollection<E> implements Collection<E> {
      *
      * @param source The collection to create a new collection from.
      */
-    public ArrayCollection(final Collection<E> source) {
+    public ArrayCollection(final Collection<E> source) throws IllegalArgumentException {
         this(source.getElementCardinality(), source.toArray());
     }
 
@@ -38,7 +38,7 @@ public final class ArrayCollection<E> implements Collection<E> {
      *
      * @param elements The elements of the collection.
      */
-    public ArrayCollection(final E... elements) {
+    public ArrayCollection(final E... elements) throws IllegalArgumentException {
         this(DUPLICATE_ELEMENTS, elements);
     }
 
@@ -48,7 +48,9 @@ public final class ArrayCollection<E> implements Collection<E> {
      * @param elementCardinality The element cardinality.
      * @param elements           The elements of the collection.
      */
-    public ArrayCollection(final ElementCardinality elementCardinality, final E... elements) {
+    public ArrayCollection(final ElementCardinality elementCardinality, final E... elements)
+            throws IllegalArgumentException {
+        validateElements(elements);
         this.elementCardinality = elementCardinality;
         if (elementCardinality == DISTINCT_ELEMENTS) {
             this.elements = ArrayUtilities.cloneDistinctElements(elements);

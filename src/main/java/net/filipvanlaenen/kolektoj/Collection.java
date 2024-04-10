@@ -30,11 +30,10 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
     /**
      * Returns a new empty collection.
      *
-     * @param <E> The element type.
      * @return A new empty collection.
      */
-    static <E> Collection<E> empty() {
-        return new ArrayCollection<E>();
+    static Collection<Object> empty() {
+        return new ArrayCollection<Object>(EmptyArrays.OBJECTS);
     }
 
     /**
@@ -146,4 +145,11 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
      * @return An array containing the elements of this collection.
      */
     E[] toArray();
+
+    default void validateElements(E[] elements) throws IllegalArgumentException {
+        if (elements.length == 0 && elements != EmptyArrays.OBJECTS
+                && elements.getClass().equals(EmptyArrays.OBJECTS.getClass())) {
+            throw new IllegalArgumentException("Cannot construct an empty collection from an empty variable argument.");
+        }
+    }
 }
