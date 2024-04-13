@@ -24,14 +24,14 @@ public interface OrderedCollection<E> extends Collection<E> {
      */
     static <E, F extends E> OrderedCollection<E> createSequence(final F firstElement,
             final Function<? super E, E> generator, final int numberOfElements) {
-        ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.empty();
-        if (numberOfElements > 0) {
-            E element = firstElement;
+        if (numberOfElements < 1) {
+            return (OrderedCollection<E>) OrderedCollection.empty();
+        }
+        ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.of(firstElement);
+        E element = firstElement;
+        for (int i = 1; i < numberOfElements; i++) {
+            element = generator.apply(element);
             collection.add(element);
-            for (int i = 1; i < numberOfElements; i++) {
-                element = generator.apply(element);
-                collection.add(element);
-            }
         }
         return new OrderedArrayCollection<E>(collection);
     }
@@ -50,8 +50,11 @@ public interface OrderedCollection<E> extends Collection<E> {
      */
     static <E, F extends E> OrderedCollection<E> createSequence(final F firstElement,
             final Function<? super E, E> generator, final Predicate<? super E> whileCondition) {
-        ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.empty();
-        E element = firstElement;
+        if (!whileCondition.test(firstElement)) {
+            return (OrderedCollection<E>) OrderedCollection.empty();
+        }
+        ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.of(firstElement);
+        E element = generator.apply(firstElement);
         while (whileCondition.test(element)) {
             collection.add(element);
             element = generator.apply(element);
@@ -69,8 +72,11 @@ public interface OrderedCollection<E> extends Collection<E> {
      * @return An ordered collection holding a sequence of elements.
      */
     static <E> OrderedCollection<E> createSequence(final Function<Integer, E> generator, final int numberOfElements) {
-        ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.empty();
-        for (int i = 0; i < numberOfElements; i++) {
+        if (numberOfElements < 1) {
+            return (OrderedCollection<E>) OrderedCollection.empty();
+        }
+        ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.of(generator.apply(0));
+        for (int i = 1; i < numberOfElements; i++) {
             collection.add(generator.apply(i));
         }
         return new OrderedArrayCollection<E>(collection);
@@ -88,8 +94,12 @@ public interface OrderedCollection<E> extends Collection<E> {
      */
     static <E> OrderedCollection<E> createSequence(final Function<Integer, E> generator,
             final Predicate<? super E> whileCondition) {
-        ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.empty();
-        int index = 0;
+        E firstElement = generator.apply(0);
+        if (!whileCondition.test(firstElement)) {
+            return (OrderedCollection<E>) OrderedCollection.empty();
+        }
+        ModifiableOrderedCollection<E> collection = ModifiableOrderedCollection.of(firstElement);
+        int index = 1;
         E element = generator.apply(index);
         while (whileCondition.test(element)) {
             collection.add(element);
