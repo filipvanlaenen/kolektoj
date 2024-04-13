@@ -73,6 +73,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
      */
     public SortedTreeCollection(final ElementCardinality elementCardinality, final Comparator<E> comparator,
             final E... elements) {
+        validateElements(elements);
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;
         if (elementCardinality == DISTINCT_ELEMENTS) {

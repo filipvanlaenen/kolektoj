@@ -13,12 +13,11 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
     /**
      * Returns a new empty sorted collection.
      *
-     * @param <E>        The element type.
      * @param comparator The comparator by which to sort the elements.
      * @return A new empty sorted collection.
      */
-    static <E> SortedCollection<E> empty(final Comparator<E> comparator) {
-        return new SortedArrayCollection<E>(comparator);
+    static SortedCollection<Object> empty(final Comparator<Object> comparator) {
+        return new SortedArrayCollection<Object>(comparator, EmptyArrays.OBJECTS);
     }
 
     /**

@@ -61,6 +61,7 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
      */
     public SortedArrayCollection(final ElementCardinality elementCardinality, final Comparator<E> comparator,
             final E... elements) {
+        validateElements(elements);
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;
         if (elementCardinality == DISTINCT_ELEMENTS) {

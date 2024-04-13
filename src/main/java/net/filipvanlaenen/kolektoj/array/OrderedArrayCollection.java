@@ -41,6 +41,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
      * @param elements           The elements of the collection.
      */
     public OrderedArrayCollection(final ElementCardinality elementCardinality, final E... elements) {
+        validateElements(elements);
         this.elementCardinality = elementCardinality;
         if (elementCardinality == DISTINCT_ELEMENTS) {
             this.elements = ArrayUtilities.cloneDistinctElements(elements);

@@ -40,7 +40,12 @@ public class SortedCollectionTest {
      */
     @Test
     public void isEmptyShouldReturnTrueForAnEmptyCollection() {
-        assertTrue(SortedCollection.empty(COMPARATOR).isEmpty());
+        assertTrue(SortedCollection.empty(new Comparator<Object>() {
+            @Override
+            public int compare(final Object o1, final Object o2) {
+                return 0;
+            }
+        }).isEmpty());
     }
 
     /**
