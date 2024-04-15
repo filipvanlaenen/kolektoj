@@ -151,7 +151,7 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
         int size = size();
         E[] result = array.length >= size ? array
                 : (E[]) Array.newInstance((Class<E[]>) array.getClass().getComponentType(), size);
-        System.arraycopy(toArray(), 0, array, 0, size);
+        System.arraycopy(toArray(), 0, result, 0, size);
         for (int i = size; i < array.length; i++) {
             array[i] = null;
         }

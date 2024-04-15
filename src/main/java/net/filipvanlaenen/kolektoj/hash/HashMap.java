@@ -12,6 +12,7 @@ import java.util.Spliterator;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
@@ -33,7 +34,7 @@ public final class HashMap<K, V> implements Map<K, V> {
     /**
      * A hashed array with the entries.
      */
-    private final Entry<K, V>[] hashedEntries;
+    private final Object[] hashedEntries;
     /**
      * The size of the hashed array with the entries.
      */
@@ -90,6 +91,23 @@ public final class HashMap<K, V> implements Map<K, V> {
         this.values = new ArrayCollection<V>(theValues);
     }
 
+    public HashMap(final Map<K, V> map) {
+        this.keyAndValueCardinality = map.getKeyAndValueCardinality();
+        this.entries = new ArrayCollection<Entry<K, V>>(map);
+        hashedEntriesSize = map.size() * HASHING_RATIO;
+        Object[] theHashedEntries = new Object[hashedEntriesSize];
+        ModifiableCollection<Entry<K, V>> theEntries =
+                new ModifiableArrayCollection<Entry<K, V>>(getElementCardinality());
+        ModifiableCollection<K> theKeys = new ModifiableArrayCollection<K>(
+                keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS);
+        ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
+        HashUtilities.populateMapFromEntries(theEntries, theHashedEntries, theKeys, theValues, keyAndValueCardinality,
+                entries);
+        this.hashedEntries = theHashedEntries;
+        this.keys = new ArrayCollection<K>(theKeys);
+        this.values = new ArrayCollection<V>(theValues);
+    }
+
     @Override
     public boolean contains(final Entry<K, V> entry) {
         if (hashedEntriesSize == 0) {
@@ -132,7 +150,7 @@ public final class HashMap<K, V> implements Map<K, V> {
         }
         int index = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[index] != null) {
-            K k = hashedEntries[index].key();
+            K k = ((Entry<K, V>) hashedEntries[index]).key();
             if (Objects.equals(k, key)) {
                 return index;
             }
@@ -156,7 +174,7 @@ public final class HashMap<K, V> implements Map<K, V> {
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        return hashedEntries[index].value();
+        return ((Entry<K, V>) hashedEntries[index]).value();
     }
 
     @Override
@@ -166,9 +184,9 @@ public final class HashMap<K, V> implements Map<K, V> {
                         : DISTINCT_ELEMENTS);
         int index = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[index] != null) {
-            K k = hashedEntries[index].key();
+            K k = ((Entry<K, V>) hashedEntries[index]).key();
             if (Objects.equals(k, key)) {
-                result.add(hashedEntries[index].value());
+                result.add(((Entry<K, V>) hashedEntries[index]).value());
             }
             index = Math.floorMod(index + 1, hashedEntriesSize);
         }

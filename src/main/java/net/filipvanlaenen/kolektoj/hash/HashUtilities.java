@@ -43,21 +43,22 @@ final class HashUtilities {
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
     static <K, V> void populateMapFromEntries(final ModifiableCollection<Entry<K, V>> theEntries,
-            final Entry<K, V>[] theHashedEntries, final ModifiableCollection<K> theKeys,
+            final Object[] theHashedEntries, final ModifiableCollection<K> theKeys,
             final ModifiableCollection<V> theValues, final KeyAndValueCardinality keyAndValueCardinality,
-            final Entry<K, V>... entries) throws IllegalArgumentException {
+            final Object... entries) throws IllegalArgumentException {
         int hashedEntriesSize = theHashedEntries.length;
-        for (Entry<K, V> entry : entries) {
+        for (Object entry : entries) {
             if (entry == null) {
                 throw new IllegalArgumentException("Map entries can't be null.");
             }
-            K key = entry.key();
+            K key = ((Entry<K, V>) entry).key();
             if (keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES
-                    || keyAndValueCardinality == DUPLICATE_KEYS_WITH_DISTINCT_VALUES && !theEntries.contains(entry)
+                    || keyAndValueCardinality == DUPLICATE_KEYS_WITH_DISTINCT_VALUES
+                            && !theEntries.contains((Entry<K, V>) entry)
                     || keyAndValueCardinality == DISTINCT_KEYS && !theKeys.contains(key)) {
-                theEntries.add(entry);
+                theEntries.add((Entry<K, V>) entry);
                 theKeys.add(key);
-                theValues.add(entry.value());
+                theValues.add(((Entry<K, V>) entry).value());
                 int i = HashUtilities.hash(key, hashedEntriesSize);
                 while (theHashedEntries[i] != null) {
                     i = Math.floorMod(i + 1, hashedEntriesSize);
