@@ -1,5 +1,6 @@
 package net.filipvanlaenen.kolektoj;
 
+import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.stream.Stream;
@@ -33,7 +34,7 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
      * @return A new empty collection.
      */
     static Collection<Object> empty() {
-        return new ArrayCollection<Object>(EmptyArrays.OBJECTS);
+        return new ArrayCollection<Object>();
     }
 
     /**
@@ -144,12 +145,16 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
      *
      * @return An array containing the elements of this collection.
      */
-    E[] toArray();
+    Object[] toArray();
 
-    default void validateElements(E[] elements) throws IllegalArgumentException {
-        if (elements.length == 0 && elements != EmptyArrays.OBJECTS
-                && elements.getClass().equals(EmptyArrays.OBJECTS.getClass())) {
-            throw new IllegalArgumentException("Cannot construct an empty collection from an empty variable argument.");
+    default E[] toArray(E[] array) {
+        int size = size();
+        E[] result = array.length >= size ? array
+                : (E[]) Array.newInstance((Class<E[]>) array.getClass().getComponentType(), size);
+        System.arraycopy(toArray(), 0, array, 0, size);
+        for (int i = size; i < array.length; i++) {
+            array[i] = null;
         }
+        return result;
     }
 }

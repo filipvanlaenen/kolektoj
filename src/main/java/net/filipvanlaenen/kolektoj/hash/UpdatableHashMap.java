@@ -210,7 +210,7 @@ public final class UpdatableHashMap<K, V> implements UpdatableMap<K, V> {
     }
 
     @Override
-    public Entry<K, V>[] toArray() {
+    public Object[] toArray() {
         return entries.toArray();
     }
 

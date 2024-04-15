@@ -80,7 +80,8 @@ public final class ArrayUtilities {
      * @return True if the first <code>size</code> elements of the <code>source</code> array contain an elements equal
      *         to the <code>element</code>, and false otherwise.
      */
-    static <E> boolean contains(final E[] elements, final int size, final E element, final Comparator<E> comparator) {
+    static <E> boolean contains(final Object[] elements, final int size, final E element,
+            final Comparator<E> comparator) {
         int index = findIndex(elements, size, element, comparator);
         return index >= 0 && Objects.equals(element, elements[index]);
     }
@@ -129,7 +130,7 @@ public final class ArrayUtilities {
      * @return True if the first <code>size</code> elements of the <code>source</code> array contain all the elements of
      *         the <code>collection</code>, and false otherwise.
      */
-    static <E> boolean containsAll(final E[] source, final int size, final Collection<?> collection,
+    static <E> boolean containsAll(final Object[] source, final int size, final Collection<?> collection,
             final Comparator<E> comparator) {
         if (collection.size() > size) {
             return false;
@@ -142,14 +143,14 @@ public final class ArrayUtilities {
             while (above > below + 1) {
                 int middle = (below + above) / 2;
                 // TODO: Return false if cast doesn't work.
-                int comparison = comparator.compare((E) element, source[middle]);
+                int comparison = comparator.compare((E) element, (E) source[middle]);
                 if (comparison == 0) {
                     if (!matches[middle]) {
                         matches[middle] = true;
                         found = true;
                         break;
                     } else {
-                        while (middle > 0 && comparator.compare(source[middle - 1], source[middle]) == 0) {
+                        while (middle > 0 && comparator.compare((E) source[middle - 1], (E) source[middle]) == 0) {
                             middle--;
                             if (!matches[middle]) {
                                 matches[middle] = true;
@@ -157,7 +158,8 @@ public final class ArrayUtilities {
                                 break;
                             }
                         }
-                        while (middle + 1 < size && comparator.compare(source[middle], source[middle + 1]) == 0) {
+                        while (middle + 1 < size
+                                && comparator.compare((E) source[middle], (E) source[middle + 1]) == 0) {
                             middle++;
                             if (!matches[middle]) {
                                 matches[middle] = true;
@@ -195,12 +197,12 @@ public final class ArrayUtilities {
      * @return An index where an element can be found in the first <code>size</code> elements of a sorted array, or -1
      *         if it's absent.
      */
-    static <E> int findIndex(final E[] elements, final int size, final E element, final Comparator<E> comparator) {
+    static <E> int findIndex(final Object[] elements, final int size, final E element, final Comparator<E> comparator) {
         int below = -1;
         int above = size;
         while (above > below + 1) {
             int middle = (below + above) / 2;
-            int comparison = comparator.compare(element, elements[middle]);
+            int comparison = comparator.compare(element, (E) elements[middle]);
             if (comparison == 0) {
                 return middle;
             } else if (comparison < 0) {
@@ -223,12 +225,13 @@ public final class ArrayUtilities {
      * @param last       The index of the last element in the array that should be partitioned.
      * @return The index of the pivot element.
      */
-    private static <E> int partition(final E[] array, final Comparator<E> comparator, final int first, final int last) {
-        E pivot = array[last];
+    private static <E> int partition(final Object[] array, final Comparator<E> comparator, final int first,
+            final int last) {
+        E pivot = (E) array[last];
         int index = first - 1;
         for (int j = first; j < last; j++) {
             // EQMU: Changing the conditional boundary below produces an equivalent mutant.
-            if (comparator.compare(array[j], pivot) <= 0) {
+            if (comparator.compare((E) array[j], pivot) <= 0) {
                 swap(array, ++index, j);
             }
         }
@@ -245,8 +248,8 @@ public final class ArrayUtilities {
      * @param comparator The comparator to use.
      * @return The array sorted using the comparator.
      */
-    public static <E> E[] quicksort(final E[] source, final Comparator<E> comparator) {
-        E[] result = source.clone();
+    public static <E> Object[] quicksort(final Object[] source, final Comparator<E> comparator) {
+        Object[] result = source.clone();
         quicksort(result, comparator, 0, result.length - 1);
         return result;
     }
@@ -260,7 +263,7 @@ public final class ArrayUtilities {
      * @param first      The index of the first element in the array that should be sorted.
      * @param last       The index of the last element in the array that should be sorted.
      */
-    private static <E> void quicksort(final E[] array, final Comparator<E> comparator, final int first,
+    private static <E> void quicksort(final Object[] array, final Comparator<E> comparator, final int first,
             final int last) {
         // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (first < last) {

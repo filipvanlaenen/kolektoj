@@ -38,7 +38,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     /**
      * A sorted array with the entries.
      */
-    private final Entry<K, V>[] entries;
+    private final Object[] entries;
     /**
      * The key and value cardinality.
      */
@@ -126,7 +126,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         }
         size = this.entries.length;
 
-        sortedTree = SortedTree.fromSortedArray(comparator, keyAndValueCardinality, compact(this.entries));
+        sortedTree = SortedTree.fromSortedEntryArray(comparator, keyAndValueCardinality, compact(this.entries));
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
         ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
@@ -138,19 +138,19 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         this.values = new ArrayCollection<V>(theValues);
     }
 
-    private Entry<K, Collection<V>>[] compact(Entry<K, V>[] entries) {
+    private Object[] compact(Object[] entries) {
         int originalLength = entries.length;
         ElementCardinality cardinality =
                 keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS;
         Entry<K, ModifiableCollection<V>>[] firstPass = createModifiableCollectionEntryArray(originalLength);
         int j = -1;
         for (int i = 0; i < originalLength; i++) {
-            if (i == 0 || !Objects.equals(entries[i].key(), firstPass[j].key())) {
+            if (i == 0 || !Objects.equals(((Entry<K, V>) entries[i]).key(), firstPass[j].key())) {
                 j++;
-                firstPass[j] = new Entry<K, ModifiableCollection<V>>(entries[i].key(),
+                firstPass[j] = new Entry<K, ModifiableCollection<V>>(((Entry<K, V>) entries[i]).key(),
                         new ModifiableArrayCollection<V>(cardinality));
             }
-            firstPass[j].value().add(entries[i].value());
+            firstPass[j].value().add(((Entry<K, V>) entries[i]).value());
         }
         int resultLength = j + 1;
         Entry<K, Collection<V>>[] result = createCollectionEntryArray(originalLength);
@@ -261,7 +261,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public Entry<K, V>[] toArray() {
+    public Object[] toArray() {
         return entries.clone();
     }
 }

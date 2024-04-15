@@ -29,7 +29,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
     /**
      * An array with the elements.
      */
-    private E[] elements;
+    private Object[] elements;
     /**
      * The size of the collection.
      */
@@ -42,7 +42,9 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
      * @param source The collection to create a new collection from.
      */
     public ModifiableArrayCollection(final Collection<E> source) {
-        this(source.getElementCardinality(), source.toArray());
+        this.elementCardinality = source.getElementCardinality();
+        this.elements = source.toArray();
+        size = this.elements.length;
     }
 
     /**
@@ -51,7 +53,9 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
      * @param elements The elements of the modifiable array collection.
      */
     public ModifiableArrayCollection(final E... elements) {
-        this(DUPLICATE_ELEMENTS, elements);
+        this.elementCardinality = DUPLICATE_ELEMENTS;
+        this.elements = elements.clone();
+        size = this.elements.length;
     }
 
     /**
@@ -143,7 +147,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
         if (elements.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
         } else {
-            return elements[0];
+            return (E) elements[0];
         }
     }
 
@@ -203,7 +207,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
     public boolean removeIf(final Predicate<? super E> predicate) {
         boolean[] retain = new boolean[size];
         for (int i = 0; i < size; i++) {
-            retain[i] = !predicate.test(elements[i]);
+            retain[i] = !predicate.test((E) elements[i]);
         }
         return retainAndResize(retain);
     }
@@ -273,8 +277,8 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
     }
 
     @Override
-    public E[] toArray() {
-        E[] result = createNewArray(size);
+    public Object[] toArray() {
+        Object[] result = new Object[size];
         System.arraycopy(elements, 0, result, 0, size);
         return result;
     }

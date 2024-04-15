@@ -14,6 +14,7 @@ import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.UpdatableSortedMap;
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection;
 
 /**
@@ -30,7 +31,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
     /**
      * A sorted array with the entries.
      */
-    private final Entry<K, V>[] entries;
+    private final Object[] entries;
     /**
      * The key and value cardinality.
      */
@@ -137,7 +138,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
-            return entries[0];
+            return (Entry<K, V>) entries[0];
         }
     }
 
@@ -147,7 +148,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        return entries[index].value();
+        return ((Entry<K, V>) entries[index]).value();
     }
 
     @Override
@@ -158,16 +159,16 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         }
         ModifiableCollection<V> result = new ModifiableArrayCollection<V>(
                 keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS,
-                entries[index].value());
+                ((Entry<K, V>) entries[index]).value());
         if (!keyAndValueCardinality.equals(DISTINCT_KEYS)) {
             int i = index - 1;
-            while (i >= 0 && Objects.equals(key, entries[i].key())) {
-                result.add(entries[i].value());
+            while (i >= 0 && Objects.equals(key, ((Entry<K, V>) entries[i]).key())) {
+                result.add(((Entry<K, V>) entries[i]).value());
                 i--;
             }
             i = index + 1;
-            while (i < entries.length && Objects.equals(key, entries[i].key())) {
-                result.add(entries[i].value());
+            while (i < entries.length && Objects.equals(key, ((Entry<K, V>) entries[i]).key())) {
+                result.add(((Entry<K, V>) entries[i]).value());
                 i++;
             }
         }
@@ -207,7 +208,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
     }
 
     @Override
-    public Entry<K, V>[] toArray() {
+    public Object[] toArray() {
         return entries.clone();
     }
 
@@ -217,7 +218,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        V oldValue = entries[index].value();
+        V oldValue = ((Entry<K, V>) entries[index]).value();
         entries[index] = new Entry<K, V>(key, value);
         values.remove(oldValue);
         values.add(value);

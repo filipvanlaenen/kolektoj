@@ -209,7 +209,7 @@ public final class HashMap<K, V> implements Map<K, V> {
     }
 
     @Override
-    public Entry<K, V>[] toArray() {
+    public Object[] toArray() {
         return entries.toArray();
     }
 }

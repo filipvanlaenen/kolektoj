@@ -138,8 +138,10 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
      */
     @Test
     public void toArrayShouldProduceAnArrayWithTheElementsOfTheCollection() {
-        Integer[] actual = collection12.toArray();
-        assertTrue(actual.length == 2 && (actual[0] == 1 || actual[1] == 1) && (actual[0] == 2 || actual[1] == 2));
+        Object[] actual = collection12.toArray();
+        assertEquals(2, actual.length);
+        assertTrue((int) actual[0] == 1 || (int) actual[1] == 1);
+        assertTrue((int) actual[0] == 2 || (int) actual[1] == 2);
     }
 
     /**

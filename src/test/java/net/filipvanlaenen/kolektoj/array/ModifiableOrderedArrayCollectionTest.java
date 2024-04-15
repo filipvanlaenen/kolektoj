@@ -94,8 +94,8 @@ public final class ModifiableOrderedArrayCollectionTest
     @Test
     public void toArrayShouldProduceAnArrayWithTheElementsOfTheCollectionInTheCorrectOrder() {
         ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>(1, 2);
-        Integer[] actual = collection.toArray();
-        Integer[] expected = new Integer[] {1, 2};
+        Object[] actual = collection.toArray();
+        Object[] expected = new Object[] {1, 2};
         assertArrayEquals(expected, actual);
     }
 

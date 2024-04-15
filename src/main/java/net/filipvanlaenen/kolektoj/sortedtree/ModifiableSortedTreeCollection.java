@@ -25,7 +25,7 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     /**
      * A cached array with the elements.
      */
-    private E[] cachedArray;
+    private Object[] cachedArray;
     /**
      * A boolean flag indicating whether the cachedArray field is dirty.
      */
@@ -51,7 +51,11 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
      * @param comparator The comparator by which to sort the elements.
      */
     public ModifiableSortedTreeCollection(final Comparator<E> comparator, final Collection<E> source) {
-        this(source.getElementCardinality(), comparator, source.toArray());
+        this.comparator = comparator;
+        this.elementCardinality = source.getElementCardinality();
+        this.cachedArray = ArrayUtilities.quicksort(source.toArray(), comparator);
+        sortedTree = SortedTree.fromSortedElementArray(comparator, elementCardinality, this.cachedArray);
+        cachedArrayDirty = false;
     }
 
     /**
@@ -82,7 +86,7 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
         } else {
             this.cachedArray = ArrayUtilities.quicksort(elements, comparator);
         }
-        sortedTree = SortedTree.fromSortedArray(comparator, elementCardinality, this.cachedArray);
+        sortedTree = SortedTree.fromSortedElementArray(comparator, elementCardinality, this.cachedArray);
         cachedArrayDirty = elements.length != size();
     }
 
@@ -196,7 +200,7 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     }
 
     @Override
-    public E[] toArray() {
+    public Object[] toArray() {
         if (cachedArrayDirty) {
             Class<E> elementType = (Class<E>) cachedArray.getClass().getComponentType();
             cachedArray = (E[]) Array.newInstance(elementType, size());

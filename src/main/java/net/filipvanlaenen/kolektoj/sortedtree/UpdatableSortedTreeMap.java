@@ -36,7 +36,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     /**
      * A sorted array with the entries.
      */
-    private Entry<K, V>[] cachedArray;
+    private Object[] cachedArray;
     /**
      * A boolean flag indicating whether the cachedArray field is dirty.
      */
@@ -111,7 +111,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
             cachedArrayDirty = false;
         }
         size = this.cachedArray.length;
-        sortedTree = SortedTree.fromSortedArray(comparator, keyAndValueCardinality, compact(this.cachedArray));
+        sortedTree = SortedTree.fromSortedEntryArray(comparator, keyAndValueCardinality, compact(this.cachedArray));
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
         ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
@@ -123,19 +123,19 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         this.values = new ModifiableArrayCollection<V>(theValues);
     }
 
-    private Entry<K, ModifiableCollection<V>>[] compact(final Entry<K, V>[] entries) {
+    private Entry<K, ModifiableCollection<V>>[] compact(final Object[] entries) {
         int originalLength = entries.length;
         ElementCardinality cardinality =
                 keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS;
         Entry<K, ModifiableCollection<V>>[] firstPass = createModifiableCollectionEntryArray(originalLength);
         int j = -1;
         for (int i = 0; i < originalLength; i++) {
-            if (i == 0 || !Objects.equals(entries[i].key(), firstPass[j].key())) {
+            if (i == 0 || !Objects.equals(((Entry<K, V>) entries[i]).key(), firstPass[j].key())) {
                 j++;
-                firstPass[j] = new Entry<K, ModifiableCollection<V>>(entries[i].key(),
+                firstPass[j] = new Entry<K, ModifiableCollection<V>>(((Entry<K, V>) entries[i]).key(),
                         new ModifiableArrayCollection<V>(cardinality));
             }
-            firstPass[j].value().add(entries[i].value());
+            firstPass[j].value().add(((Entry<K, V>) entries[i]).value());
         }
         int resultLength = j + 1;
         Entry<K, ModifiableCollection<V>>[] result = createModifiableCollectionEntryArray(resultLength);
@@ -238,7 +238,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     }
 
     @Override
-    public Entry<K, V>[] toArray() {
+    public Object[] toArray() {
         if (cachedArrayDirty) {
             Class<Entry<K, V>> elementType = (Class<Entry<K, V>>) cachedArray.getClass().getComponentType();
             cachedArray = (Entry<K, V>[]) Array.newInstance(elementType, size);

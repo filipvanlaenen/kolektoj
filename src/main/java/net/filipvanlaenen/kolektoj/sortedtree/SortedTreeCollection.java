@@ -31,7 +31,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
     /**
      * An array with the elements.
      */
-    private final E[] elements;
+    private final Object[] elements;
     /**
      * The size of the collection.
      */
@@ -49,7 +49,11 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
      * @param comparator The comparator by which to sort the elements.
      */
     public SortedTreeCollection(final Comparator<E> comparator, final Collection<E> source) {
-        this(source.getElementCardinality(), comparator, source.toArray());
+        this.comparator = comparator;
+        this.elementCardinality = source.getElementCardinality();
+        this.elements = ArrayUtilities.quicksort(source.toArray(), comparator);
+        sortedTree = SortedTree.fromSortedElementArray(comparator, elementCardinality, this.elements);
+        this.size = this.elements.length;
     }
 
     /**
@@ -73,7 +77,6 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
      */
     public SortedTreeCollection(final ElementCardinality elementCardinality, final Comparator<E> comparator,
             final E... elements) {
-        validateElements(elements);
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;
         if (elementCardinality == DISTINCT_ELEMENTS) {
@@ -81,7 +84,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
         } else {
             this.elements = ArrayUtilities.quicksort(elements, comparator);
         }
-        sortedTree = SortedTree.fromSortedArray(comparator, elementCardinality, this.elements);
+        sortedTree = SortedTree.fromSortedElementArray(comparator, elementCardinality, this.elements);
         this.size = this.elements.length;
     }
 
@@ -110,7 +113,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
             throw new IndexOutOfBoundsException(
                     "Cannot return an element at a position beyond the size of the collection.");
         } else {
-            return elements[index];
+            return (E) elements[index];
         }
     }
 
@@ -136,7 +139,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
     }
 
     @Override
-    public E[] toArray() {
+    public Object[] toArray() {
         return elements.clone();
     }
 }

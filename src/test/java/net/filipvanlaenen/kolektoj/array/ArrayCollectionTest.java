@@ -81,8 +81,10 @@ public class ArrayCollectionTest {
     @Test
     public void toArrayShouldProduceAnArrayWithTheElementsOfTheCollection() {
         ArrayCollection<Integer> collection = new ArrayCollection<Integer>(1, 2);
-        Integer[] actual = collection.toArray();
-        assertTrue(actual.length == 2 && (actual[0] == 1 || actual[1] == 1) && (actual[0] == 2 || actual[1] == 2));
+        Object[] actual = collection.toArray();
+        assertEquals(2, actual.length);
+        assertTrue((int) actual[0] == 1 || (int) actual[1] == 1);
+        assertTrue((int) actual[0] == 2 || (int) actual[1] == 2);
     }
 
     /**

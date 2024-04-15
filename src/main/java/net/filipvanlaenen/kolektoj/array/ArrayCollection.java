@@ -3,6 +3,7 @@ package net.filipvanlaenen.kolektoj.array;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
+import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Spliterator;
 
@@ -21,7 +22,7 @@ public final class ArrayCollection<E> implements Collection<E> {
     /**
      * An array with the elements.
      */
-    private final E[] elements;
+    private final Object[] elements;
 
     /**
      * Constructs a collection from another collection, with the same elements and the same element cardinality.
@@ -29,7 +30,8 @@ public final class ArrayCollection<E> implements Collection<E> {
      * @param source The collection to create a new collection from.
      */
     public ArrayCollection(final Collection<E> source) throws IllegalArgumentException {
-        this(source.getElementCardinality(), source.toArray());
+        this.elementCardinality = source.getElementCardinality();
+        this.elements = source.toArray();
     }
 
     /**
@@ -39,7 +41,8 @@ public final class ArrayCollection<E> implements Collection<E> {
      * @param elements The elements of the collection.
      */
     public ArrayCollection(final E... elements) throws IllegalArgumentException {
-        this(DUPLICATE_ELEMENTS, elements);
+        this.elementCardinality = DUPLICATE_ELEMENTS;
+        this.elements = elements.clone();
     }
 
     /**
@@ -50,7 +53,6 @@ public final class ArrayCollection<E> implements Collection<E> {
      */
     public ArrayCollection(final ElementCardinality elementCardinality, final E... elements)
             throws IllegalArgumentException {
-        validateElements(elements);
         this.elementCardinality = elementCardinality;
         if (elementCardinality == DISTINCT_ELEMENTS) {
             this.elements = ArrayUtilities.cloneDistinctElements(elements);
@@ -74,7 +76,7 @@ public final class ArrayCollection<E> implements Collection<E> {
         if (elements.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
         } else {
-            return elements[0];
+            return (E) elements[0];
         }
     }
 
@@ -99,7 +101,7 @@ public final class ArrayCollection<E> implements Collection<E> {
     }
 
     @Override
-    public E[] toArray() {
+    public Object[] toArray() {
         return elements.clone();
     }
 }

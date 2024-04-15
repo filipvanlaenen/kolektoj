@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableOrderedCollection} interface.
@@ -29,7 +30,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     /**
      * An array with the elements.
      */
-    private E[] elements;
+    private Object[] elements;
     /**
      * The size of the collection.
      */
@@ -41,7 +42,9 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
      * @param elements The elements of the modifiable array collection.
      */
     public ModifiableOrderedArrayCollection(final E... elements) {
-        this(DUPLICATE_ELEMENTS, elements);
+        this.elementCardinality = DUPLICATE_ELEMENTS;
+        this.elements = elements.clone();
+        size = this.elements.length;
     }
 
     /**
@@ -57,6 +60,12 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         } else {
             this.elements = elements.clone();
         }
+        size = this.elements.length;
+    }
+
+    public ModifiableOrderedArrayCollection(final OrderedCollection<E> source) {
+        this.elementCardinality = source.getElementCardinality();
+        this.elements = source.toArray();
         size = this.elements.length;
     }
 
@@ -105,13 +114,13 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         if (collection.isEmpty()) {
             return false;
         }
-        E[] newElements = collection.toArray();
+        Object[] newElements = collection.toArray();
         if (elementCardinality == DISTINCT_ELEMENTS) {
             newElements = ArrayUtilities.cloneDistinctElements(newElements);
             boolean[] retain = new boolean[newElements.length];
             int numberOfDistinctNewElements = 0;
             for (int i = 0; i < retain.length; i++) {
-                if (!contains(newElements[i])) {
+                if (!contains((E) newElements[i])) {
                     retain[i] = true;
                     numberOfDistinctNewElements++;
                 }
@@ -119,7 +128,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
             if (numberOfDistinctNewElements == 0) {
                 return false;
             }
-            E[] distinctNewElements = createNewArray(numberOfDistinctNewElements);
+            Object[] distinctNewElements = new Object[numberOfDistinctNewElements];
             for (int i = 0, j = 0; i < numberOfDistinctNewElements; i++, j++) {
                 while (!retain[j]) {
                     j++;
@@ -196,7 +205,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         if (elements.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
         } else {
-            return elements[0];
+            return (E) elements[0];
         }
     }
 
@@ -206,7 +215,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
             throw new IndexOutOfBoundsException(
                     "Cannot return an element at a position beyond the size of the collection.");
         } else {
-            return elements[index];
+            return (E) elements[index];
         }
     }
 
@@ -260,7 +269,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
             throw new IndexOutOfBoundsException(
                     "Cannot remove an element at a position beyond the size of the collection.");
         } else {
-            E result = elements[index];
+            E result = (E) elements[index];
             System.arraycopy(elements, index + 1, elements, index, size - index - 1);
             size--;
             // EQMU: Changing the conditional boundary below produces an equivalent mutant.
@@ -278,7 +287,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     public boolean removeIf(final Predicate<? super E> predicate) {
         boolean[] retain = new boolean[size];
         for (int i = 0; i < size; i++) {
-            retain[i] = !predicate.test(elements[i]);
+            retain[i] = !predicate.test((E) elements[i]);
         }
         return retainAndResize(retain);
     }
@@ -350,8 +359,8 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     }
 
     @Override
-    public E[] toArray() {
-        E[] result = createNewArray(size);
+    public Object[] toArray() {
+        Object[] result = createNewArray(size);
         System.arraycopy(elements, 0, result, 0, size);
         return result;
     }

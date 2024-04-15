@@ -15,6 +15,7 @@ import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
@@ -44,7 +45,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     /**
      * A hashed array with the entries.
      */
-    private Entry<K, V>[] hashedEntries;
+    private Object[] hashedEntries;
     /**
      * The size of the hashed array with the entries.
      */
@@ -232,7 +233,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         }
         int index = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[index] != null) {
-            K k = hashedEntries[index].key();
+            K k = ((Entry<K, V>) hashedEntries[index]).key();
             if (Objects.equals(k, key)) {
                 return index;
             }
@@ -256,7 +257,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        return hashedEntries[index].value();
+        return ((Entry<K, V>) hashedEntries[index]).value();
     }
 
     @Override
@@ -266,9 +267,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
                         : DISTINCT_ELEMENTS);
         int index = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[index] != null) {
-            K k = hashedEntries[index].key();
+            K k = ((Entry<K, V>) hashedEntries[index]).key();
             if (Objects.equals(k, key)) {
-                result.add(hashedEntries[index].value());
+                result.add(((Entry<K, V>) hashedEntries[index]).value());
             }
             index = Math.floorMod(index + 1, hashedEntriesSize);
         }
@@ -304,7 +305,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        Entry<K, V> entry = hashedEntries[index];
+        Entry<K, V> entry = (Entry<K, V>) hashedEntries[index];
         V value = entry.value();
         entries.remove(entry);
         hashedEntries[index] = null;
@@ -328,7 +329,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             if (index == -1) {
                 break;
             }
-            Entry<K, V> entry = hashedEntries[index];
+            Entry<K, V> entry = (Entry<K, V>) hashedEntries[index];
             entries.remove(entry);
             hashedEntries[index] = null;
             if (hashedEntries[Math.floorMod(index + 1, hashedEntriesSize)] != null) {
@@ -352,9 +353,9 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     public boolean removeIf(final Predicate<Entry<? extends K, ? extends V>> predicate) {
         int size = entries.size();
         boolean[] retain = new boolean[size];
-        Entry<K, V>[] entriesArray = entries.toArray();
+        Object[] entriesArray = entries.toArray();
         for (int i = 0; i < size; i++) {
-            retain[i] = !predicate.test(entriesArray[i]);
+            retain[i] = !predicate.test((Entry<K, V>) entriesArray[i]);
         }
         return retainAndRehash(entriesArray, retain);
     }
@@ -382,7 +383,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     public boolean retainAll(final Map<? extends K, ? extends V> map) {
         int size = entries.size();
         boolean[] retain = new boolean[size];
-        Entry<K, V>[] entriesArray = entries.toArray();
+        Object[] entriesArray = entries.toArray();
         for (Entry<? extends K, ? extends V> entry : map) {
             for (int i = 0; i < size; i++) {
                 if (!retain[i] && Objects.equals(entry, entriesArray[i])) {
@@ -401,12 +402,12 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
      * @param retain       The retention array.
      * @return True if at least one entry was removed.
      */
-    private boolean retainAndRehash(final Entry<K, V>[] entriesArray, final boolean[] retain) {
+    private boolean retainAndRehash(final Object[] entriesArray, final boolean[] retain) {
         int size = retain.length;
         boolean result = false;
         for (int i = 0; i < size; i++) {
             if (!retain[i]) {
-                Entry<K, V> entry = entriesArray[i];
+                Entry<K, V> entry = (Entry<K, V>) entriesArray[i];
                 int index = findFirstIndexForEntry(entry);
                 entries.remove(entry);
                 hashedEntries[index] = null;
@@ -439,7 +440,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     }
 
     @Override
-    public Entry<K, V>[] toArray() {
+    public Object[] toArray() {
         return entries.toArray();
     }
 
@@ -449,7 +450,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        Entry<K, V> oldEntry = hashedEntries[index];
+        Entry<K, V> oldEntry = (Entry<K, V>) hashedEntries[index];
         V oldValue = oldEntry.value();
         if (value != oldValue) {
             Entry<K, V> newEntry = new Entry<K, V>(key, value);

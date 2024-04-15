@@ -340,9 +340,10 @@ public abstract class MapTestBase<T extends Map<Integer, String>> {
     @Test
     public void toArrayShouldProduceAnArrayWithTheEntriesOfTheMap() {
         Map<Integer, String> map = createMap(ENTRY1, ENTRY2);
-        Entry<Integer, String>[] actual = map.toArray();
-        assertTrue(actual.length == 2 && (actual[0] == ENTRY1 || actual[1] == ENTRY1)
-                && (actual[0] == ENTRY2 || actual[1] == ENTRY2));
+        Object[] actual = map.toArray();
+        assertEquals(2, actual.length);
+        assertTrue(actual[0] == ENTRY1 || actual[1] == ENTRY1);
+        assertTrue(actual[0] == ENTRY2 || actual[1] == ENTRY2);
     }
 
     /**

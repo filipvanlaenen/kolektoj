@@ -12,7 +12,7 @@ public final class ArrayIterator<E> implements Iterator<E> {
     /**
      * An array with the elements.
      */
-    private final E[] elements;
+    private final Object[] elements;
     /**
      * The index of the iterator.
      */
@@ -23,7 +23,7 @@ public final class ArrayIterator<E> implements Iterator<E> {
      *
      * @param elements An array with the elements to iterate over.
      */
-    public ArrayIterator(final E[] elements) {
+    public ArrayIterator(final Object[] elements) {
         this.elements = elements.clone();
     }
 
@@ -35,7 +35,7 @@ public final class ArrayIterator<E> implements Iterator<E> {
     @Override
     public E next() {
         if (hasNext()) {
-            return elements[index++];
+            return (E) elements[index++];
         }
         throw new NoSuchElementException();
     }

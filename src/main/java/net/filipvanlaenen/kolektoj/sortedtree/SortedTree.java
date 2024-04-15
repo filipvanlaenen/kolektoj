@@ -101,41 +101,41 @@ class SortedTree<K, C> {
         return (Node<K, C>[]) Array.newInstance(getNodeElementType(foo), length);
     }
 
-    private void createNodes(final Entry<K, C>[] sortedArray) {
+    private void createEntryNodes(final Object[] sortedArray) {
         size = sortedArray.length;
         if (size > 0) {
-            root = createNodes(sortedArray, 0, size - 1);
+            root = createEntryNodes(sortedArray, 0, size - 1);
         }
     }
 
-    private Node<K, C> createNodes(final Entry<K, C>[] sortedArray, final int firstIndex, final int lastIndex) {
+    private Node<K, C> createEntryNodes(final Object[] sortedArray, final int firstIndex, final int lastIndex) {
         int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
-        Entry<K, C> entry = sortedArray[middleIndex];
+        Entry<K, C> entry = (Entry<K, C>) sortedArray[middleIndex];
         Node<K, C> node = new Node<K, C>(entry.key(), entry.value());
         if (middleIndex > firstIndex) {
-            node.setLeftChild(createNodes(sortedArray, firstIndex, middleIndex - 1));
+            node.setLeftChild(createEntryNodes(sortedArray, firstIndex, middleIndex - 1));
         }
         if (middleIndex < lastIndex) {
-            node.setRightChild(createNodes(sortedArray, middleIndex + 1, lastIndex));
+            node.setRightChild(createEntryNodes(sortedArray, middleIndex + 1, lastIndex));
         }
         return node;
     }
 
-    private void createNodes(final K[] sortedArray) {
+    private void createElementNodes(final Object[] sortedArray) {
         size = sortedArray.length;
         if (size > 0) {
-            root = createNodes(sortedArray, 0, size - 1);
+            root = createElementNodes(sortedArray, 0, size - 1);
         }
     }
 
-    private Node<K, C> createNodes(final K[] sortedArray, final int firstIndex, final int lastIndex) {
+    private Node<K, C> createElementNodes(final Object[] sortedArray, final int firstIndex, final int lastIndex) {
         int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
-        Node<K, C> node = new Node<K, C>(sortedArray[middleIndex]);
+        Node<K, C> node = new Node<K, C>((K) sortedArray[middleIndex]);
         if (middleIndex > firstIndex) {
-            node.setLeftChild(createNodes(sortedArray, firstIndex, middleIndex - 1));
+            node.setLeftChild(createElementNodes(sortedArray, firstIndex, middleIndex - 1));
         }
         if (middleIndex < lastIndex) {
-            node.setRightChild(createNodes(sortedArray, middleIndex + 1, lastIndex));
+            node.setRightChild(createElementNodes(sortedArray, middleIndex + 1, lastIndex));
         }
         return node;
     }
@@ -192,17 +192,17 @@ class SortedTree<K, C> {
         }
     }
 
-    static <K> SortedTree<K, K> fromSortedArray(final Comparator<K> comparator,
-            final ElementCardinality elementCardinality, final K[] sortedArray) {
+    static <K> SortedTree<K, K> fromSortedElementArray(final Comparator<K> comparator,
+            final ElementCardinality elementCardinality, final Object[] sortedArray) {
         SortedTree<K, K> sortedTree = new SortedTree<K, K>(comparator, elementCardinality);
-        sortedTree.createNodes(sortedArray);
+        sortedTree.createElementNodes(sortedArray);
         return sortedTree;
     }
 
-    static <K, C> SortedTree<K, C> fromSortedArray(final Comparator<K> comparator,
-            final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, C>[] sortedArray) {
+    static <K, C> SortedTree<K, C> fromSortedEntryArray(final Comparator<K> comparator,
+            final KeyAndValueCardinality keyAndValueCardinality, final Object[] sortedArray) {
         SortedTree<K, C> sortedTree = new SortedTree<K, C>(comparator, DISTINCT_ELEMENTS);
-        sortedTree.createNodes(sortedArray);
+        sortedTree.createEntryNodes(sortedArray);
         return sortedTree;
     }
 

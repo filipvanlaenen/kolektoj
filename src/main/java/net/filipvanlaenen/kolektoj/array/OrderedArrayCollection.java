@@ -22,7 +22,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
     /**
      * An array with the elements.
      */
-    private final E[] elements;
+    private final Object[] elements;
 
     /**
      * Constructs an ordered collection with the given elements. The element cardinality is defaulted to
@@ -31,7 +31,8 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
      * @param elements The elements of the collection.
      */
     public OrderedArrayCollection(final E... elements) {
-        this(DUPLICATE_ELEMENTS, elements);
+        this.elementCardinality = DUPLICATE_ELEMENTS;
+        this.elements = elements.clone();
     }
 
     /**
@@ -41,7 +42,6 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
      * @param elements           The elements of the collection.
      */
     public OrderedArrayCollection(final ElementCardinality elementCardinality, final E... elements) {
-        validateElements(elements);
         this.elementCardinality = elementCardinality;
         if (elementCardinality == DISTINCT_ELEMENTS) {
             this.elements = ArrayUtilities.cloneDistinctElements(elements);
@@ -56,7 +56,8 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
      * @param source The ordered collection to create a new ordered collection from.
      */
     public OrderedArrayCollection(final OrderedCollection<E> source) {
-        this(source.getElementCardinality(), source.toArray());
+        this.elementCardinality = source.getElementCardinality();
+        this.elements = source.toArray();
     }
 
     @Override
@@ -74,7 +75,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
         if (elements.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
         } else {
-            return elements[0];
+            return (E) elements[0];
         }
     }
 
@@ -84,7 +85,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
             throw new IndexOutOfBoundsException(
                     "Cannot return an element at a position beyond the size of the collection.");
         } else {
-            return elements[index];
+            return (E) elements[index];
         }
     }
 
@@ -111,7 +112,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
     }
 
     @Override
-    public E[] toArray() {
+    public Object[] toArray() {
         return elements.clone();
     }
 }

@@ -24,7 +24,7 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
     /**
      * The elements of the spliterator.
      */
-    private final E[] elements;
+    private final Object[] elements;
     /**
      * The spliterator's current position.
      */
@@ -36,7 +36,7 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
      * @param elements                  The elements for the spliterator.
      * @param additionalCharacteristics The characteristics for the spliterator in addition to SIZED and SUBSIZED.
      */
-    public ArraySpliterator(final E[] elements, final int additionalCharacteristics) {
+    public ArraySpliterator(final Object[] elements, final int additionalCharacteristics) {
         this(elements, additionalCharacteristics, null);
     }
 
@@ -47,7 +47,8 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
      * @param additionalCharacteristics The characteristics for the spliterator in addition to SIZED and SUBSIZED.
      * @param comparator                The comparator for the spliterator.
      */
-    public ArraySpliterator(final E[] elements, final int additionalCharacteristics, final Comparator<E> comparator) {
+    public ArraySpliterator(final Object[] elements, final int additionalCharacteristics,
+            final Comparator<E> comparator) {
         this.elements = elements.clone();
         this.characteristics = SIZED | SUBSIZED | additionalCharacteristics;
         this.comparator = comparator;
@@ -63,7 +64,7 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
      * @param characteristics The characteristics for the spliterator in addition to SIZED and SUBSIZED.
      * @param comparator      The comparator for the spliterator.
      */
-    private ArraySpliterator(final E[] elements, final int from, final int to, final int characteristics,
+    private ArraySpliterator(final Object[] elements, final int from, final int to, final int characteristics,
             final Comparator<E> comparator) {
         int size = to - from;
         Class<E[]> clazz = (Class<E[]>) elements.getClass();
@@ -91,7 +92,7 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
     @Override
     public boolean tryAdvance(final Consumer<? super E> action) {
         if (index < elements.length) {
-            action.accept(elements[index++]);
+            action.accept((E) elements[index++]);
             return true;
         }
         return false;

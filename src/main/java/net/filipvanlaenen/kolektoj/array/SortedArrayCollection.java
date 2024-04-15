@@ -27,7 +27,7 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
     /**
      * An array with the elements.
      */
-    private final E[] elements;
+    private final Object[] elements;
 
     /**
      * Constructs a new sorted array collection from another collection, with the elements sorted using the given
@@ -37,7 +37,9 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
      * @param comparator The comparator by which to sort the elements.
      */
     public SortedArrayCollection(final Comparator<E> comparator, final Collection<E> source) {
-        this(source.getElementCardinality(), comparator, source.toArray());
+        this.comparator = comparator;
+        this.elementCardinality = source.getElementCardinality();
+        this.elements = ArrayUtilities.quicksort(source.toArray(), comparator);
     }
 
     /**
@@ -48,7 +50,9 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
      * @param elements   The elements of the collection.
      */
     public SortedArrayCollection(final Comparator<E> comparator, final E... elements) {
-        this(DUPLICATE_ELEMENTS, comparator, elements);
+        this.comparator = comparator;
+        this.elementCardinality = DUPLICATE_ELEMENTS;
+        this.elements = ArrayUtilities.quicksort(elements, comparator);
     }
 
     /**
@@ -61,7 +65,6 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
      */
     public SortedArrayCollection(final ElementCardinality elementCardinality, final Comparator<E> comparator,
             final E... elements) {
-        validateElements(elements);
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;
         if (elementCardinality == DISTINCT_ELEMENTS) {
@@ -86,7 +89,7 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
         if (elements.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
         } else {
-            return elements[0];
+            return (E) elements[0];
         }
     }
 
@@ -96,7 +99,7 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
             throw new IndexOutOfBoundsException(
                     "Cannot return an element at a position beyond the size of the collection.");
         } else {
-            return elements[index];
+            return (E) elements[index];
         }
     }
 
@@ -123,7 +126,7 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
     }
 
     @Override
-    public E[] toArray() {
+    public Object[] toArray() {
         return elements.clone();
     }
 }
