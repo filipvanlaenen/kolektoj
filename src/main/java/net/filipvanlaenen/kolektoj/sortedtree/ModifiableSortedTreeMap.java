@@ -32,10 +32,6 @@ import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
  */
 public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<K, V> {
     /**
-     * The comparator to use for comparing the keys in this sorted map.
-     */
-    private final Comparator<K> comparator;
-    /**
      * A sorted array with the entries.
      */
     private Object[] cachedArray;
@@ -51,10 +47,6 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
      * The comparator to use for comparing entries using the keys only in this sorted map.
      */
     private final Comparator<Entry<K, V>> entryByKeyComparator;
-    /**
-     * The comparator to use for comparing entries using the keys and the values in this sorted map.
-     */
-    private final Comparator<Entry<K, V>> entryByKeyAndValueComparator;
     /**
      * A sorted collection with the keys.
      */
@@ -101,26 +93,10 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
             }
         }
 
-        this.comparator = comparator;
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
             public int compare(Entry<K, V> e1, Entry<K, V> e2) {
                 return comparator.compare(e1.key(), e2.key());
-            }
-        };
-        this.entryByKeyAndValueComparator = new Comparator<Entry<K, V>>() {
-            @Override
-            public int compare(Entry<K, V> e1, Entry<K, V> e2) {
-                int keyComparison = comparator.compare(e1.key(), e2.key());
-                if (keyComparison == 0) {
-                    if (Objects.equals(e1.value(), e2.value())) {
-                        return 0;
-                    } else {
-                        return 1;
-                    }
-                } else {
-                    return keyComparison;
-                }
             }
         };
         this.keyAndValueCardinality = keyAndValueCardinality;

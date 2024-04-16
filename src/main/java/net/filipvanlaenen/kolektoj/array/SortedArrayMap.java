@@ -24,10 +24,6 @@ import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection;
  */
 public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     /**
-     * The comparator to use for comparing the keys in this sorted map.
-     */
-    private final Comparator<K> comparator;
-    /**
      * A sorted array with the entries.
      */
     private final Object[] entries;
@@ -72,7 +68,6 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
      */
     public SortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
             final Entry<K, V>... entries) throws IllegalArgumentException {
-        this.comparator = comparator;
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
             public int compare(Entry<K, V> e1, Entry<K, V> e2) {

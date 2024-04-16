@@ -30,10 +30,6 @@ import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
  */
 public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K, V> {
     /**
-     * The comparator to use for comparing the keys in this sorted map.
-     */
-    private final Comparator<K> comparator;
-    /**
      * A sorted array with the entries.
      */
     private Object[] cachedArray;
@@ -95,7 +91,6 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
             }
         }
 
-        this.comparator = comparator;
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
             public int compare(final Entry<K, V> e1, final Entry<K, V> e2) {

@@ -14,7 +14,6 @@ import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.UpdatableSortedMap;
-import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection;
 
 /**
@@ -24,10 +23,6 @@ import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection;
  * @param <V> The value type.
  */
 public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K, V> {
-    /**
-     * The comparator to use for comparing the keys in this updatable sorted map.
-     */
-    private final Comparator<K> comparator;
     /**
      * A sorted array with the entries.
      */
@@ -73,7 +68,6 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
      */
     public UpdatableSortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
             final Entry<K, V>... entries) throws IllegalArgumentException {
-        this.comparator = comparator;
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
             public int compare(Entry<K, V> e1, Entry<K, V> e2) {

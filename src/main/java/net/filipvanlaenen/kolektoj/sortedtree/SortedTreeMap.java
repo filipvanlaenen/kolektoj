@@ -15,7 +15,6 @@ import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.SortedMap;
-import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
@@ -32,10 +31,6 @@ import net.filipvanlaenen.kolektoj.array.SortedArrayCollection;
  */
 public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     /**
-     * The comparator to use for comparing the keys in this sorted map.
-     */
-    private final Comparator<K> comparator;
-    /**
      * A sorted array with the entries.
      */
     private final Object[] entries;
@@ -47,10 +42,6 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
      * The comparator to use for comparing entries using the keys only in this sorted map.
      */
     private final Comparator<Entry<K, V>> entryByKeyComparator;
-    /**
-     * The comparator to use for comparing entries using the keys and the values in this sorted map.
-     */
-    private final Comparator<Entry<K, V>> entryByKeyAndValueComparator;
     /**
      * A sorted collection with the keys.
      */
@@ -95,26 +86,10 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
                 throw new IllegalArgumentException("Map entries can't be null.");
             }
         }
-        this.comparator = comparator;
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
             public int compare(Entry<K, V> e1, Entry<K, V> e2) {
                 return comparator.compare(e1.key(), e2.key());
-            }
-        };
-        this.entryByKeyAndValueComparator = new Comparator<Entry<K, V>>() {
-            @Override
-            public int compare(Entry<K, V> e1, Entry<K, V> e2) {
-                int keyComparison = comparator.compare(e1.key(), e2.key());
-                if (keyComparison == 0) {
-                    if (Objects.equals(e1.value(), e2.value())) {
-                        return 0;
-                    } else {
-                        return 1;
-                    }
-                } else {
-                    return keyComparison;
-                }
             }
         };
         this.keyAndValueCardinality = keyAndValueCardinality;

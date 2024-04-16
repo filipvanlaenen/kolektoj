@@ -3,7 +3,6 @@ package net.filipvanlaenen.kolektoj.array;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
-import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Spliterator;
 
