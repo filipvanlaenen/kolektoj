@@ -5,7 +5,6 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICAT
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
-import java.lang.reflect.Array;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
@@ -88,7 +87,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         }
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
-            public int compare(Entry<K, V> e1, Entry<K, V> e2) {
+            public int compare(final Entry<K, V> e1, final Entry<K, V> e2) {
                 return comparator.compare(e1.key(), e2.key());
             }
         };
@@ -113,22 +112,23 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         this.values = new ArrayCollection<V>(theValues);
     }
 
-    private Object[] compact(Object[] entries) {
-        int originalLength = entries.length;
+    private Object[] compact(final Object[] originalEntries) {
+        int originalLength = originalEntries.length;
         ElementCardinality cardinality =
                 keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS;
-        Entry<K, ModifiableCollection<V>>[] firstPass = createModifiableCollectionEntryArray(originalLength);
+        Entry<K, ModifiableCollection<V>>[] firstPass =
+                (Entry<K, ModifiableCollection<V>>[]) new Object[originalLength];
         int j = -1;
         for (int i = 0; i < originalLength; i++) {
-            if (i == 0 || !Objects.equals(((Entry<K, V>) entries[i]).key(), firstPass[j].key())) {
+            if (i == 0 || !Objects.equals(((Entry<K, V>) originalEntries[i]).key(), firstPass[j].key())) {
                 j++;
-                firstPass[j] = new Entry<K, ModifiableCollection<V>>(((Entry<K, V>) entries[i]).key(),
+                firstPass[j] = new Entry<K, ModifiableCollection<V>>(((Entry<K, V>) originalEntries[i]).key(),
                         new ModifiableArrayCollection<V>(cardinality));
             }
-            firstPass[j].value().add(((Entry<K, V>) entries[i]).value());
+            firstPass[j].value().add(((Entry<K, V>) originalEntries[i]).value());
         }
         int resultLength = j + 1;
-        Entry<K, Collection<V>>[] result = createCollectionEntryArray(originalLength);
+        Entry<K, Collection<V>>[] result = (Entry<K, Collection<V>>[]) new Object[originalLength];
         for (int i = 0; i < resultLength; i++) {
             result[i] = new Entry<K, Collection<V>>(firstPass[i].key(), new ArrayCollection<V>(firstPass[i].value()));
         }
@@ -136,7 +136,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public boolean contains(Entry<K, V> element) {
+    public boolean contains(final Entry<K, V> element) {
         Node<K, Collection<V>> node = sortedTree.getNode(element.key());
         if (node == null) {
             return false;
@@ -146,7 +146,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public boolean containsAll(Collection<?> collection) {
+    public boolean containsAll(final Collection<?> collection) {
         if (collection.size() > size()) {
             return false;
         }
@@ -154,25 +154,13 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public boolean containsKey(K key) {
+    public boolean containsKey(final K key) {
         return keys.contains(key);
     }
 
     @Override
-    public boolean containsValue(V value) {
+    public boolean containsValue(final V value) {
         return values.contains(value);
-    }
-
-    private Entry<K, Collection<V>>[] createCollectionEntryArray(final int length, Entry<K, Collection<V>>... foo) {
-        Class<Entry<K, Collection<V>>> elementType = (Class<Entry<K, Collection<V>>>) foo.getClass().getComponentType();
-        return (Entry<K, Collection<V>>[]) Array.newInstance(elementType, length);
-    }
-
-    private Entry<K, ModifiableCollection<V>>[] createModifiableCollectionEntryArray(final int length,
-            Entry<K, ModifiableCollection<V>>... foo) {
-        Class<Entry<K, ModifiableCollection<V>>> elementType =
-                (Class<Entry<K, ModifiableCollection<V>>>) foo.getClass().getComponentType();
-        return (Entry<K, ModifiableCollection<V>>[]) Array.newInstance(elementType, length);
     }
 
     @Override
@@ -186,7 +174,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public V get(K key) throws IllegalArgumentException {
+    public V get(final K key) throws IllegalArgumentException {
         Node<K, Collection<V>> node = sortedTree.getNode(key);
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
@@ -195,7 +183,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public Collection<V> getAll(K key) throws IllegalArgumentException {
+    public Collection<V> getAll(final K key) throws IllegalArgumentException {
         Node<K, Collection<V>> node = sortedTree.getNode(key);
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");

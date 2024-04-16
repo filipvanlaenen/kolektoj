@@ -70,13 +70,13 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
             final Entry<K, V>... entries) throws IllegalArgumentException {
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
-            public int compare(Entry<K, V> e1, Entry<K, V> e2) {
+            public int compare(final Entry<K, V> e1, final Entry<K, V> e2) {
                 return comparator.compare(e1.key(), e2.key());
             }
         };
         this.entryByKeyAndValueComparator = new Comparator<Entry<K, V>>() {
             @Override
-            public int compare(Entry<K, V> e1, Entry<K, V> e2) {
+            public int compare(final Entry<K, V> e1, final Entry<K, V> e2) {
                 int keyComparison = comparator.compare(e1.key(), e2.key());
                 if (keyComparison == 0) {
                     if (Objects.equals(e1.value(), e2.value())) {
@@ -108,22 +108,22 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
     }
 
     @Override
-    public boolean contains(Entry<K, V> entry) {
+    public boolean contains(final Entry<K, V> entry) {
         return ArrayUtilities.contains(entries, entries.length, entry, entryByKeyAndValueComparator);
     }
 
     @Override
-    public boolean containsAll(Collection<?> collection) {
+    public boolean containsAll(final Collection<?> collection) {
         return ArrayUtilities.containsAll(entries, entries.length, collection, entryByKeyAndValueComparator);
     }
 
     @Override
-    public boolean containsKey(K key) {
+    public boolean containsKey(final K key) {
         return keys.contains(key);
     }
 
     @Override
-    public boolean containsValue(V value) {
+    public boolean containsValue(final V value) {
         return values.contains(value);
     }
 
@@ -137,7 +137,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
     }
 
     @Override
-    public V get(K key) throws IllegalArgumentException {
+    public V get(final K key) throws IllegalArgumentException {
         int index = ArrayUtilities.findIndex(entries, entries.length, new Entry<K, V>(key, null), entryByKeyComparator);
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
@@ -146,7 +146,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
     }
 
     @Override
-    public Collection<V> getAll(K key) throws IllegalArgumentException {
+    public Collection<V> getAll(final K key) throws IllegalArgumentException {
         int index = ArrayUtilities.findIndex(entries, entries.length, new Entry<K, V>(key, null), entryByKeyComparator);
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
@@ -207,7 +207,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
     }
 
     @Override
-    public V update(K key, V value) throws IllegalArgumentException {
+    public V update(final K key, final V value) throws IllegalArgumentException {
         int index = ArrayUtilities.findIndex(entries, entries.length, new Entry<K, V>(key, null), entryByKeyComparator);
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
