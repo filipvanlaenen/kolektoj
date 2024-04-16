@@ -168,6 +168,28 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     }
 
     /**
+     * Verifies that <code>toArray</code> produces an updated array if removeIf changed the collection.
+     */
+    @Test
+    public void toArrayShouldProduceAnUpdatedArrayIfRemoveIfChangedTheCollection() {
+        ModifiableCollection<Integer> collection = createModifiableCollection(DISTINCT_ELEMENTS, 1, 2);
+        collection.removeIf(x -> x == 1);
+        assertEquals(1, collection.toArray().length);
+    }
+
+    /**
+     * Verifies that <code>toArray</code> produces an updated array even if the last removeIf didn't change the
+     * collection.
+     */
+    @Test
+    public void toArrayShouldProduceAnUpdatedArrayEvenIfTheLastRemoveIfDidNotChangeTheCollection() {
+        ModifiableCollection<Integer> collection = createModifiableCollection(DISTINCT_ELEMENTS, 1, 2);
+        collection.removeIf(x -> x == 1);
+        collection.removeIf(x -> x == 1);
+        assertEquals(1, collection.toArray().length);
+    }
+
+    /**
      * Verifies that <code>toArray</code> produces an updated array even if the last retainAll didn't change the
      * collection.
      */

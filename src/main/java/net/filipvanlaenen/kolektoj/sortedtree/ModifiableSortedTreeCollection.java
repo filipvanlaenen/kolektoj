@@ -3,7 +3,6 @@ package net.filipvanlaenen.kolektoj.sortedtree;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
-import java.lang.reflect.Array;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Spliterator;
@@ -52,8 +51,8 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
      */
     public ModifiableSortedTreeCollection(final Comparator<E> comparator, final Collection<E> source) {
         this.comparator = comparator;
-        this.elementCardinality = source.getElementCardinality();
-        this.cachedArray = ArrayUtilities.quicksort(source.toArray(), comparator);
+        elementCardinality = source.getElementCardinality();
+        cachedArray = ArrayUtilities.quicksort(source.toArray(), comparator);
         sortedTree = SortedTree.fromSortedElementArray(comparator, elementCardinality, this.cachedArray);
         cachedArrayDirty = false;
     }
@@ -82,12 +81,12 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;
         if (elementCardinality == DISTINCT_ELEMENTS) {
-            this.cachedArray = ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(elements), comparator);
+            cachedArray = ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(elements), comparator);
         } else {
-            this.cachedArray = ArrayUtilities.quicksort(elements, comparator);
+            cachedArray = ArrayUtilities.quicksort(elements, comparator);
         }
-        sortedTree = SortedTree.fromSortedElementArray(comparator, elementCardinality, this.cachedArray);
-        cachedArrayDirty = elements.length != size();
+        sortedTree = SortedTree.fromSortedElementArray(comparator, elementCardinality, cachedArray);
+        cachedArrayDirty = false;
     }
 
     @Override
@@ -202,8 +201,7 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     @Override
     public Object[] toArray() {
         if (cachedArrayDirty) {
-            Class<E> elementType = (Class<E>) cachedArray.getClass().getComponentType();
-            cachedArray = (E[]) Array.newInstance(elementType, size());
+            cachedArray = new Object[size()];
             Node<E, E>[] compactedArray = sortedTree.toArray();
             for (int i = 0; i < size(); i++) {
                 cachedArray[i] = compactedArray[i].getKey();
