@@ -137,13 +137,18 @@ public final class ArrayUtilities {
         }
         boolean[] matches = new boolean[size];
         for (Object element : collection) {
+            E elementAsE = null;
+            try {
+                elementAsE = (E) element;
+            } catch (ClassCastException cce) {
+                return false;
+            }
             boolean found = false;
             int below = -1;
             int above = size;
             while (above > below + 1) {
                 int middle = (below + above) / 2;
-                // TODO: Return false if cast doesn't work.
-                int comparison = comparator.compare((E) element, (E) source[middle]);
+                int comparison = comparator.compare(elementAsE, (E) source[middle]);
                 if (comparison == 0) {
                     if (!matches[middle]) {
                         matches[middle] = true;
