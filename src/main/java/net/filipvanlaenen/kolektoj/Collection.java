@@ -141,12 +141,22 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
     }
 
     /**
-     * Returns the content of this collection as an array.
+     * Returns the content of this collection as an array. For ordered and sorted collections, the order of the elements
+     * is preserved.
      *
      * @return An array containing the elements of this collection.
      */
     Object[] toArray();
 
+    /**
+     * Puts the content of this collection into the array, or creates a new array of the same type with the content of
+     * this collection. A new array is created if the provided array is too small. If the provided array is larger than
+     * the size of the collection, the remaining places will be set to <code>null</code>. For ordered and sorted
+     * collections, the order of the elements is preserved.
+     *
+     * @param array An array to put the content of this collection in, or to use as the prototype for cloning.
+     * @return A new array of the same type, or the provided array, containing the content of this collection.
+     */
     default E[] toArray(E[] array) {
         int size = size();
         E[] result = array.length >= size ? array
