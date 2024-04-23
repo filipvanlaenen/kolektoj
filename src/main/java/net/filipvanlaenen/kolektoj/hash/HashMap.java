@@ -91,6 +91,11 @@ public final class HashMap<K, V> implements Map<K, V> {
         this.values = new ArrayCollection<V>(theValues);
     }
 
+    /**
+     * Constructs a map from another map, with the same entries and the same key and value cardinality.
+     *
+     * @param map The map to create a new map from.
+     */
     public HashMap(final Map<K, V> map) {
         this.keyAndValueCardinality = map.getKeyAndValueCardinality();
         this.entries = new ArrayCollection<Entry<K, V>>(map);
