@@ -66,7 +66,8 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     /**
      * Constructor taking the entries as its parameter.
      *
-     * @param entries The entries for the map.
+     * @param comparator The comparator by which to sort the keys.
+     * @param entries    The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
     public ModifiableSortedTreeMap(final Comparator<K> comparator, final Entry<K, V>... entries)
@@ -78,6 +79,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
      * Constructor taking the key and value cardinality and the entries as its parameter.
      *
      * @param keyAndValueCardinality The key and value cardinality.
+     * @param comparator             The comparator by which to sort the keys.
      * @param entries                The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
@@ -258,13 +260,14 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        ModifiableCollection<V> values = node.getContent();
-        V value = values.get();
-        values.remove(value);
-        if (values.isEmpty()) {
+        ModifiableCollection<V> keyValues = node.getContent();
+        V value = keyValues.get();
+        keyValues.remove(value);
+        if (keyValues.isEmpty()) {
             sortedTree.remove(key);
         }
         keys.remove(key);
+        values.remove(value);
         size--;
         cachedArrayDirty = true;
         return value;

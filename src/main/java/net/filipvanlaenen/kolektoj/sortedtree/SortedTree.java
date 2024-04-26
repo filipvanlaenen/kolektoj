@@ -192,16 +192,16 @@ class SortedTree<K, C> {
         }
     }
 
-    static <K> SortedTree<K, K> fromSortedElementArray(final Comparator<K> comparator,
+    static <L> SortedTree<L, L> fromSortedElementArray(final Comparator<L> comparator,
             final ElementCardinality elementCardinality, final Object[] sortedArray) {
-        SortedTree<K, K> sortedTree = new SortedTree<K, K>(comparator, elementCardinality);
+        SortedTree<L, L> sortedTree = new SortedTree<L, L>(comparator, elementCardinality);
         sortedTree.createElementNodes(sortedArray);
         return sortedTree;
     }
 
-    static <K, C> SortedTree<K, C> fromSortedEntryArray(final Comparator<K> comparator,
+    static <L, D> SortedTree<L, D> fromSortedEntryArray(final Comparator<L> comparator,
             final KeyAndValueCardinality keyAndValueCardinality, final Object[] sortedArray) {
-        SortedTree<K, C> sortedTree = new SortedTree<K, C>(comparator, DISTINCT_ELEMENTS);
+        SortedTree<L, D> sortedTree = new SortedTree<L, D>(comparator, DISTINCT_ELEMENTS);
         sortedTree.createEntryNodes(sortedArray);
         return sortedTree;
     }
