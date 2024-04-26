@@ -254,8 +254,20 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
 
     @Override
     public V remove(final K key) throws IllegalArgumentException {
-        // TODO Auto-generated method stub
-        return null;
+        Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
+        if (node == null) {
+            throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
+        }
+        ModifiableCollection<V> values = node.getContent();
+        V value = values.get();
+        values.remove(value);
+        if (values.isEmpty()) {
+            sortedTree.remove(key);
+        }
+        keys.remove(key);
+        size--;
+        cachedArrayDirty = true;
+        return value;
     }
 
     @Override
