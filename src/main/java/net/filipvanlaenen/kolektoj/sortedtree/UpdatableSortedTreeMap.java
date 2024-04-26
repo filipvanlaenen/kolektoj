@@ -65,7 +65,8 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     /**
      * Constructor taking the entries as its parameter.
      *
-     * @param entries The entries for the map.
+     * @param comparator The comparator by which to sort the keys.
+     * @param entries    The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
     public UpdatableSortedTreeMap(final Comparator<K> comparator, final Entry<K, V>... entries)
@@ -77,6 +78,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
      * Constructor taking the key and value cardinality and the entries as its parameter.
      *
      * @param keyAndValueCardinality The key and value cardinality.
+     * @param comparator             The comparator by which to sort the keys.
      * @param entries                The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
