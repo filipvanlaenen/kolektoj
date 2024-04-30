@@ -275,20 +275,94 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
 
     @Override
     public boolean removeAll(final Map<? extends K, ? extends V> map) {
-        // TODO: Auto-generated method stub
-        return false;
+        boolean result = false;
+        for (Entry<? extends K, ? extends V> e : map) {
+            K key = e.key();
+            Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
+            ModifiableCollection<V> keyValues = node.getContent();
+            V value = e.value();
+            if (keyValues.contains(value)) {
+                keyValues.remove(value);
+                if (keyValues.isEmpty()) {
+                    sortedTree.remove(key);
+                }
+                keys.remove(key);
+                values.remove(value);
+                size--;
+                cachedArrayDirty = true;
+                result = true;
+            }
+        }
+        return result;
     }
 
     @Override
     public boolean removeIf(final Predicate<Entry<? extends K, ? extends V>> predicate) {
-        // TODO: Auto-generated method stub
-        return false;
+        boolean result = false;
+        boolean[] remove = new boolean[size];
+        Object[] array = toArray();
+        for (int i = 0; i < size; i++) {
+            if (predicate.test((Entry<K, V>) array[i])) {
+                result = true;
+                remove[i] = true;
+            }
+        }
+        for (int i = 0; i < remove.length; i++) {
+            if (remove[i]) {
+                Entry<K, V> e = (Entry<K, V>) array[i];
+                K key = e.key();
+                Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
+                ModifiableCollection<V> keyValues = node.getContent();
+                V value = e.value();
+                if (keyValues.contains(value)) {
+                    keyValues.remove(value);
+                    if (keyValues.isEmpty()) {
+                        sortedTree.remove(key);
+                    }
+                    keys.remove(key);
+                    values.remove(value);
+                    size--;
+                    cachedArrayDirty = true;
+                }
+            }
+        }
+        return result;
     }
 
     @Override
     public boolean retainAll(final Map<? extends K, ? extends V> map) {
-        // TODO: Auto-generated method stub
-        return false;
+        boolean result = false;
+        boolean[] retain = new boolean[size];
+        Object[] array = toArray();
+        for (Entry<? extends K, ? extends V> entry : map) {
+            for (int i = 0; i < size; i++) {
+                if (!retain[i] && Objects.equals(entry.key(), ((Entry<K, V>) array[i]).key())
+                        && Objects.equals(entry.value(), ((Entry<K, V>) array[i]).value())) {
+                    retain[i] = true;
+                    break;
+                }
+            }
+        }
+        for (int i = 0; i < retain.length; i++) {
+            if (!retain[i]) {
+                Entry<K, V> e = (Entry<K, V>) array[i];
+                K key = e.key();
+                Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
+                ModifiableCollection<V> keyValues = node.getContent();
+                V value = e.value();
+                if (keyValues.contains(value)) {
+                    keyValues.remove(value);
+                    if (keyValues.isEmpty()) {
+                        sortedTree.remove(key);
+                    }
+                    keys.remove(key);
+                    values.remove(value);
+                    size--;
+                    cachedArrayDirty = true;
+                }
+            }
+        }
+        return result;
     }
 
     @Override
