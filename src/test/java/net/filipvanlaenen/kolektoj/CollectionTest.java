@@ -1,8 +1,8 @@
 package net.filipvanlaenen.kolektoj;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 
 import org.junit.jupiter.api.Test;
@@ -82,5 +82,44 @@ public class CollectionTest {
         Collection<Integer> collection1 = Collection.of(1, 2);
         Collection<Integer> collection2 = Collection.of(1, 2);
         assertTrue(collection1.containsSame(collection2));
+    }
+
+    /**
+     * Verifies that <code>toArray</code> with a prototype returns an array containing the elements of the collection.
+     */
+    @Test
+    public void toArrayWithPrototypeShouldReturnANewArrayWithTheContentOfTheCollection() {
+        Collection<Integer> collection = Collection.of(1);
+        Integer[] actual = collection.toArray(EmptyArrays.INTEGERS);
+        Integer[] expected = new Integer[] {1};
+        assertArrayEquals(expected, actual);
+    }
+
+    /**
+     * Verifies that <code>toArray</code> fills the provided array with the elements of the collection if it's large
+     * enough.
+     */
+    @Test
+    public void toArrayWithPrototypeShouldFillTheArrayWithTheContentOfTheCollection() {
+        Collection<Integer> collection = Collection.of(1);
+        Integer[] prototype = new Integer[] {0};
+        Integer[] actual = collection.toArray(prototype);
+        assertSame(prototype, actual);
+        Integer[] expected = new Integer[] {1};
+        assertArrayEquals(expected, actual);
+    }
+
+    /**
+     * Verifies that <code>toArray</code> fills the provided array with the elements of the collection if it's large
+     * enough and sets the rest of the array to <code>null</code>.
+     */
+    @Test
+    public void toArrayWithPrototypeShouldFillTheArrayWithTheContentOfTheCollectionAndNullTheRest() {
+        Collection<Integer> collection = Collection.of(1);
+        Integer[] prototype = new Integer[] {0, 0};
+        Integer[] actual = collection.toArray(prototype);
+        assertSame(prototype, actual);
+        Integer[] expected = new Integer[] {1, null};
+        assertArrayEquals(expected, actual);
     }
 }
