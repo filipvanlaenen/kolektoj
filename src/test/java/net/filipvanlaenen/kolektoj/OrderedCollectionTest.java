@@ -41,12 +41,50 @@ public class OrderedCollectionTest {
     }
 
     /**
+     * Verifies that a sequence with zero integers is empty.
+     */
+    @Test
+    public void createSequenceFromIndexOfLengthZeroShouldReturnEmptyCollection() {
+        assertTrue(OrderedCollection.createSequence(i -> i, 0).isEmpty());
+    }
+
+    /**
+     * Verifies that a sequence with one integer can be generated using the index to generate the elements.
+     */
+    @Test
+    public void createSequenceShouldCreateSequenceWithOneIntegerFromIndex() {
+        OrderedCollection<Integer> expected = OrderedCollection.of(0);
+        OrderedCollection<Integer> actual = OrderedCollection.createSequence(i -> i, 1);
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
      * Verifies that a sequence with three integers can be generated using the index to generate the elements.
      */
     @Test
     public void createSequenceShouldCreateSequenceWithThreeIntegersFromIndex() {
         OrderedCollection<Integer> expected = OrderedCollection.of(0, 1, 2);
         OrderedCollection<Integer> actual = OrderedCollection.createSequence(i -> i, THREE);
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies that an empty sequence is created if the requested number of times is zero.
+     */
+    @Test
+    public void createSequenceShouldCreateEmptySequenceFromFirstElementIfTimesIsZero() {
+        OrderedCollection<Integer> actual = OrderedCollection.createSequence(1, i -> i + 1, 0);
+        assertTrue(actual.isEmpty());
+    }
+
+    /**
+     * Verifies that a sequence with one integer can be generated using the first element to generate the following
+     * elements.
+     */
+    @Test
+    public void createSequenceShouldCreateSequenceWithOneIntegerFromFirstElement() {
+        OrderedCollection<Integer> expected = OrderedCollection.of(1);
+        OrderedCollection<Integer> actual = OrderedCollection.createSequence(1, i -> i + 1, 1);
         assertTrue(actual.containsSame(expected));
     }
 
@@ -62,12 +100,11 @@ public class OrderedCollectionTest {
     }
 
     /**
-     * Verifies that an empty sequence is created if the requested number of times is zero.
+     * Verifies that an empty collection is returned if a condition evaluates to false for the first index.
      */
     @Test
-    public void createSequenceShouldCreateEmptySequenceFromFirstElementIfTimesIsZero() {
-        OrderedCollection<Integer> actual = OrderedCollection.createSequence(1, i -> i + 1, 0);
-        assertTrue(actual.isEmpty());
+    public void createSequenceShouldReturnEmptyCollectionIfPredicateEvaluatesFalseForFirstIndex() {
+        assertTrue(OrderedCollection.createSequence(i -> i, i -> i < 0).isEmpty());
     }
 
     /**
@@ -79,6 +116,14 @@ public class OrderedCollectionTest {
         OrderedCollection<Integer> expected = OrderedCollection.of(0, 1, 2);
         OrderedCollection<Integer> actual = OrderedCollection.createSequence(i -> i, i -> i < THREE);
         assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies that an empty collection is generated if the predicate evaluates to false for the first element.
+     */
+    @Test
+    public void createSequenceShouldReturnEmptyCollectionIfPredicateEvaluatesToFalseForFirstElement() {
+        assertTrue(OrderedCollection.createSequence(1, i -> i + 1, i -> i <= 0).isEmpty());
     }
 
     /**
