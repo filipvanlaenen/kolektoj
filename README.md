@@ -40,26 +40,26 @@ The following collection properties have been identified:
 
 ![Overview](Overview.png)
 
-The table below shows the various implementations of the interfaces.
+The table below shows the various implementations of the interfaces using different backing mechanisms.
 
-| Interface                   | Array                            | Hash              | Linked List                    | Sorted Tree                       |
-|-----------------------------|----------------------------------|-------------------|--------------------------------|-----------------------------------|
-| Collection                  | ArrayCollection                  |                   |                                | *SortedTreeCollection*¹           |
-| ModifiableCollection        | ModifiableArrayCollection        |                   | ModifiableLinkedListCollection | *ModifiableSortedTreeCollection*¹ |
-| OrderedCollection           | OrderedArrayCollection           | —²                |                                | *SortedTreeCollection*¹           |
-| ModifiableOrderedCollection | ModifiableOrderedArrayCollection | —²                |                                | —²                                |
-| SortedCollection            | SortedArrayCollection            | —²                |                                | SortedTreeCollection              |
-| ModifiableSortedCollection  |                                  | —²                |                                | ModifiableSortedTreeCollection    |
-| Map                         |                                  | HashMap           |                                | *SortedTreeMap*¹                  |
-| UpdatableMap                |                                  | UpdatableHashMap  |                                | *UpdatableSortedTreeMap*¹         |
-| ModifiableMap               |                                  | ModifiableHashMap |                                | *ModifiableSortedTreeMap*¹        |
-| SortedMap                   | SortedArrayMap                   | —²                |                                | SortedTreeMap                     |
-| UpdatableSortedMap          | UpdatableSortedArrayMap          | —²                |                                | UpdatableSortedTreeMap            |
-| ModifiableSortedMap         |                                  | —²                |                                | ModifiableSortedTreeMap           |
+| Interface                   | Array                            | Hash                     | Linked List                           | Sorted Tree                       |
+|-----------------------------|----------------------------------|--------------------------|---------------------------------------|-----------------------------------|
+| Collection                  | ArrayCollection                  | HashCollection           | LinkedListCollection                  | —¹                                |
+| ModifiableCollection        | ModifiableArrayCollection        | ModifiableHashCollection | ModifiableLinkedListCollection        | —¹                                |
+| OrderedCollection           | OrderedArrayCollection           | —²                       | OrderedLinkedListCollection           | —¹                                |
+| ModifiableOrderedCollection | ModifiableOrderedArrayCollection | —²                       | ModifiableOrderedLinkedListCollection | —²                                |
+| SortedCollection            | SortedArrayCollection            | —²                       |                                       | SortedTreeCollection              |
+| ModifiableSortedCollection  | ModifiableSortedArrayCollection  | —²                       |                                       | ModifiableSortedTreeCollection    |
+| Map                         |                                  | HashMap                  |                                       | —¹                                |
+| UpdatableMap                |                                  | UpdatableHashMap         |                                       | —¹                                |
+| ModifiableMap               |                                  | ModifiableHashMap        |                                       | —¹                                |
+| SortedMap                   | SortedArrayMap                   | —²                       |                                       | SortedTreeMap                     |
+| UpdatableSortedMap          | UpdatableSortedArrayMap          | —²                       |                                       | UpdatableSortedTreeMap            |
+| ModifiableSortedMap         | ModifiableSortedArrayMap         | —²                       |                                       | ModifiableSortedTreeMap           |
 
-¹ This implementation of the interface automatically provides functionality for a more specialized interface.
+¹ The implementation of this interface using a sorted tree would automatically provide sorting functionality.
 
-² The nature of this implementation conflicts with the functionality of this interface.
+² The nature of this backing mechanism fundamentally conflicts with the functionality of this interface.
 
 ## Comparison with the Java Platform Collections Framework
 
