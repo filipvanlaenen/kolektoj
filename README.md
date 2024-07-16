@@ -246,4 +246,5 @@ The following projects use Kolektoj:
 * [BLTXMLEPJ](https://github.com/filipvanlaenen/bltxmlepj)
 * [Laconic Logging](https://github.com/filipvanlaenen/laconic)
 * [Nombraj Kolektoj](https://github.com/filipvanlaenen/nombrajkolektoj)
+* [SHecC](https://github.com/filipvanlaenen/shecc)
 * [TSVGJ](https://github.com/filipvanlaenen/tsvgj)
