@@ -122,20 +122,28 @@ The table below shows how the methods defined on the
 [java.util.List&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html) interface map
 to Kolektoj methods.
 
-| JDK 21 Method                                           | Kolektoj Class                    | Kolektoj Method                                                    |
-|---------------------------------------------------------|-----------------------------------|--------------------------------------------------------------------|
-| boolean add(int index, E element)                       | ModifiableOrderedCollection&lt;E> | boolean addAt(int index, E element)                                |
-| boolean addAll(int index, Collection&lt;? extends E> c) | ModifiableOrderedCollection&lt;E> | boolean addAllAt(int index, Collection&lt;? extends E> collection) |
-| E get(int index)                                        | OrderedCollection&lt;E>           | E getAt(int index)                                                 |
-| int indexOf(Object o)                                   |                                   |                                                                    |
-| int lastIndexOf(Object o)                               |                                   |                                                                    |
-| ListIterator&lt;E> listIterator()                       |                                   |                                                                    |
-| ListIterator&lt;E> listIterator(int index)              |                                   |                                                                    |
-| E remove(int index)                                     | ModifiableOrderedCollection&lt;E> | E removeAt(int index)                                              |
-| default void replaceAll(UnaryOperator&lt;E> operator)   |                                   |                                                                    |
-| E set(int index, E element)                             |                                   |                                                                    |
-| default void sort(Comparator&lt;? super E> c)           |                                   |                                                                    |
-| List&lt;E> subList(int fromIndex, int toIndex)          |                                   |                                                                    |
+| JDK 21 Method                                                   | Kolektoj Class                    | Kolektoj Method                                                    |
+|-----------------------------------------------------------------|-----------------------------------|--------------------------------------------------------------------|
+| boolean add(int index, E element)                               | ModifiableOrderedCollection&lt;E> | boolean addAt(int index, E element)                                |
+| boolean addAll(int index, Collection&lt;? extends E> c)         | ModifiableOrderedCollection&lt;E> | boolean addAllAt(int index, Collection&lt;? extends E> collection) |
+| default void addFirst(E e)                                      |                                   |                                                                    |
+| default void addLast(E e)                                       |                                   |                                                                    |
+| static &lt;E> List&lt;E> copyOf(Collection&lt;? extends E> coll)|                                   |                                                                    |
+| E get(int index)                                                | OrderedCollection&lt;E>           | E getAt(int index)                                                 |
+| default E getFirst()                                            |                                   |                                                                    |
+| default E getLast()                                             |                                   |                                                                    |
+| int indexOf(Object o)                                           |                                   |                                                                    |
+| int lastIndexOf(Object o)                                       |                                   |                                                                    |
+| ListIterator&lt;E> listIterator()                               |                                   |                                                                    |
+| ListIterator&lt;E> listIterator(int index)                      |                                   |                                                                    |
+| E remove(int index)                                             | ModifiableOrderedCollection&lt;E> | E removeAt(int index)                                              |
+| default E removeFirst()                                         |                                   |                                                                    |
+| default E removeLast()                                          |                                   |                                                                    |
+| default void replaceAll(UnaryOperator&lt;E> operator)           |                                   |                                                                    |
+| default List<E> reversed()                                      |                                   |                                                                    |
+| E set(int index, E element)                                     |                                   |                                                                    |
+| default void sort(Comparator&lt;? super E> c)                   |                                   |                                                                    |
+| List&lt;E> subList(int fromIndex, int toIndex)                  |                                   |                                                                    |
 
 #### java.util.Set&lt;E>
 
