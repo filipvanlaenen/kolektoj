@@ -100,8 +100,6 @@ interface map to Kolektoj methods.
 | void clear()                                              | ModifiableCollection&lt;E> | void clear()                                             |
 | boolean contains(Object o)                                | Collection&lt;E>           | boolean contains(E element)                              |
 | boolean containsAll(Collection&lt;?> c)                   | Collection&lt;E>           | boolean containsAll(Collection&lt;?> c)                  |
-| boolean equals(Object o)                                  |                            |                                                          |
-| int hashCode()                                            |                            |                                                          |
 | boolean isEmpty()                                         | Collection&lt;E>           | default boolean isEmpty()                                |
 | Iterator&lt;E> iterator()                                 | Collection&lt;E>           | Iterator&lt;E> iterator()                                |
 | default Stream&lt;E> parallelStream()                     |                            |                                                          |
