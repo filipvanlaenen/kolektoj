@@ -8,8 +8,8 @@ The aim of this project is to provide a clean Java collections framework.
 * [Collection Properties](#collection-properties)
 * [Overview](#overview)
 * [Comparison with the Java Platform Collections Framework](#comparison-with-the-java-platform-collections-framework)
-  * [JDK 17 Interfaces](#jdk-17-interfaces)
-  * [JDK 17 Classes](#jdk-17-classes)
+  * [JDK 21 Interfaces](#jdk-21-interfaces)
+  * [JDK 21 Classes](#jdk-21-classes)
 * [Getting Started](#getting-started)
 * [Projects Using Kolektoj](#projects-using-kolektoj)
 
@@ -64,36 +64,36 @@ The table below shows the various implementations of the interfaces using differ
 ## Comparison with the Java Platform Collections Framework
 
 The comparison below is based on the Java Platform
-[Collections Framework Overview](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/doc-files/coll-overview.html)
-for JDK 17.
+[Collections Framework Overview](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/doc-files/coll-overview.html)
+for JDK 21.
 
-### JDK 17 Interfaces
+### JDK 21 Interfaces
 
-The Java Platform Collections Framework contains the following interfaces in JDK 17:
+The Java Platform Collections Framework contains the following interfaces in JDK 21:
 
 * [java.util.Collection&lt;E>](#javautilcollectione)
+* java.util.Deque
 * [java.util.List&lt;E>](#javautilliste)
-* [java.util.Set&lt;E>](#javautilsete)
 * [java.util.Map&lt;E>](#javautilmape)
+* java.util.NavigableMap
+* java.util.NavigableSet
+* java.util.Queue
+* [java.util.Set&lt;E>](#javautilsete)
+* java.util.SortedMap
+* java.util.SortedSet
 * java.util.concurrent.BlockingDeque
 * java.util.concurrent.BlockingQueue
 * java.util.concurrent.ConcurrentMap
 * java.util.concurrent.ConcurrentNavigableMap
-* java.util.Deque
-* java.util.NavigableMap
-* java.util.NavigableSet
-* java.util.Queue
-* java.util.SortedMap
-* java.util.SortedSet
 * java.util.concurrent.TransferQueue
 
 #### java.util.Collection&lt;E>
 
 The table below shows how the methods defined on the
-[java.util.Collection&lt;E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html)
+[java.util.Collection&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html)
 interface map to Kolektoj methods.
 
-| JDK 17 Method                                             | Kolektoj Class             | Kolektoj Method                                          |
+| JDK 21 Method                                             | Kolektoj Class             | Kolektoj Method                                          |
 |-----------------------------------------------------------|----------------------------|----------------------------------------------------------|
 | boolean add(E e)                                          | ModifiableCollection&lt;E> | boolean add(E element)                                   |
 | boolean addAll(Collection&lt;? extends E> c)              | ModifiableCollection&lt;E> | boolean addAll(Collection&lt;? extends E> collection)    |
@@ -119,10 +119,10 @@ interface map to Kolektoj methods.
 #### java.util.List&lt;E>
 
 The table below shows how the methods defined on the
-[java.util.List&lt;E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html) interface map
+[java.util.List&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html) interface map
 to Kolektoj methods.
 
-| JDK 17 Method                                           | Kolektoj Class                    | Kolektoj Method                                                    |
+| JDK 21 Method                                           | Kolektoj Class                    | Kolektoj Method                                                    |
 |---------------------------------------------------------|-----------------------------------|--------------------------------------------------------------------|
 | boolean add(int index, E element)                       | ModifiableOrderedCollection&lt;E> | boolean addAt(int index, E element)                                |
 | boolean addAll(int index, Collection&lt;? extends E> c) | ModifiableOrderedCollection&lt;E> | boolean addAllAt(int index, Collection&lt;? extends E> collection) |
@@ -139,16 +139,16 @@ to Kolektoj methods.
 
 #### java.util.Set&lt;E>
 
-The [java.util.Set&lt;E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html) interface
+The [java.util.Set&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html) interface
 extends the java.util.Collection&lt;E> interface directly, but does not add any new methods to it.
 
 #### java.util.Map&lt;E>
 
 The table below shows how the methods defined on the
-[java.util.Map&lt;E>](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html) interface map
+[java.util.Map&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html) interface map
 to Kolektoj methods.
 
-| JDK 17 Method                                                                                       | Kolektoj Class      | Kolektoj Method                                                 |
+| JDK 21 Method                                                                                       | Kolektoj Class      | Kolektoj Method                                                 |
 |-----------------------------------------------------------------------------------------------------|---------------------|-----------------------------------------------------------------|
 | void clear()                                                                                        | ModifiableMap&lt;E> | void clear()                                                    |
 | default V compute(K key, BiFunction&lt;? super K,? super V,? extends V> remappingFunction)          |                     |                                                                 |
@@ -176,9 +176,9 @@ to Kolektoj methods.
 | int size()                                                                                          | Collection&lt;E>    | int size()                                                      |
 | Collection&lt;V> values()                                                                           | Map&lt;E>           | Collection<V> getValues()                                       |
 
-### JDK 17 Classes
+### JDK 21 Classes
 
-The Java Platform Collections Framework contains the following classes in JDK 17:
+The Java Platform Collections Framework contains the following classes in JDK 21:
 
 * AbstractCollection
 * AbstractList
