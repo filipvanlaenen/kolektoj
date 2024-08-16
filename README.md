@@ -136,6 +136,7 @@ to Kolektoj methods.
 | int lastIndexOf(Object o)                                       |                                   |                                                                    |
 | ListIterator&lt;E> listIterator()                               |                                   |                                                                    |
 | ListIterator&lt;E> listIterator(int index)                      |                                   |                                                                    |
+| static &lt;E> List&lt;E> of(…)                                  |                                   |                                                                    |
 | E remove(int index)                                             | ModifiableOrderedCollection&lt;E> | E removeAt(int index)                                              |
 | default E removeFirst()                                         |                                   |                                                                    |
 | default E removeLast()                                          |                                   |                                                                    |
@@ -164,6 +165,8 @@ to Kolektoj methods.
 | default V computeIfPresent(K key, BiFunction&lt;? super K,? super V,? extends V> remappingFunction) |                     |                                                                 |
 | boolean containsKey(Object key)                                                                     | Map&lt;E>           | boolean containsKey(K key)                                      |
 | boolean containsValue(Object value)                                                                 | Map&lt;E>           | boolean containsValue(V value)                                  |
+| static &lt;K,V> Map&lt;K,V> copyOf(Map&lt;? extends K,? extends V> map)                             |                     |                                                                 |
+| static &lt;K,V> Map.Entry&lt;K,V> entry(K k, V v)                                                   |                     |                                                                 |
 | Set&lt;Map.Entry&lt;K,V>> entrySet()                                                                | Map&lt;E>           | extends Collection&lt;Entry&lt;K, V>>                           |
 | boolean equals(Object o)                                                                            |                     |                                                                 |
 | default void forEach(BiConsumer&lt;? super K,? super V> action)                                     |                     |                                                                 |
@@ -173,6 +176,8 @@ to Kolektoj methods.
 | boolean isEmpty()                                                                                   | Collection&lt;E>    | default boolean isEmpty()                                       |
 | Set&lt;K> keySet()                                                                                  | Map&lt;E>           | Collection<K> getKeys()                                         |
 | default V merge(K key, V value, BiFunction&lt;? super V,? super V,? extends V> remappingFunction)   |                     |                                                                 |
+| static &lt;K,V> Map&lt;K,V> of(…)                                                                   |                     |                                                                 |
+| static &lt;K,V> Map&lt;K,V> ofEntries(Map.Entry&lt;? extends K,? extends V>... entries)             |                     |                                                                 |
 | V put(K key, V value)                                                                               | ModifiableMap&lt;E> | default V put(K key, V value)                                   |
 | void putAll(Map&lt;? extends K,? extends V> m)                                                      | ModifiableMap&lt;E> | default void putAll(Map&lt;? extends K, ? extends V> map)       |
 | default V putIfAbsent(K key, V value)                                                               |                     |                                                                 |
