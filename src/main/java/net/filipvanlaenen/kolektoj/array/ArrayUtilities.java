@@ -137,18 +137,18 @@ public final class ArrayUtilities {
         }
         boolean[] matches = new boolean[size];
         for (Object element : collection) {
-            E elementAsE = null;
-            try {
-                elementAsE = (E) element;
-            } catch (ClassCastException cce) {
-                return false;
-            }
+            E elementAsE = (E) element;
             boolean found = false;
             int below = -1;
             int above = size;
             while (above > below + 1) {
                 int middle = (below + above) / 2;
-                int comparison = comparator.compare(elementAsE, (E) source[middle]);
+                int comparison = 0;
+                try {
+                    comparison = comparator.compare(elementAsE, (E) source[middle]);
+                } catch (ClassCastException cce) {
+                    return false;
+                }
                 if (comparison == 0) {
                     if (!matches[middle]) {
                         matches[middle] = true;

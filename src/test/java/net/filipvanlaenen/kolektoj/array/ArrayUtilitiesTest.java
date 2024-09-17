@@ -204,11 +204,31 @@ public class ArrayUtilitiesTest {
     }
 
     /**
+     * Verifies that containsAll returns true if a sorted collection with duplicate elements is compared to itself. The
+     * method is tested through the containsAll method in the SortedArrayCollection class.
+     */
+    @Test
+    public void containsAllShouldReturnTrueForSortedCollectionWithDuplicateElementsWhenComparedToItself() {
+        SortedCollection<Integer> sortedCollection =
+                new SortedArrayCollection<Integer>(COMPARATOR, 1, 1, 2, 2, THREE, THREE);
+        assertTrue(sortedCollection.containsAll(sortedCollection));
+    }
+
+    /**
      * Verifies that containsAll returns false if a sorted collection contains another element. The method is tested
      * through the containsAll method in the SortedArrayCollection class.
      */
     @Test
     public void containsAllShouldReturnFalseWhenComparedToSortedCollectionWithAnotherElement() {
         assertFalse(SORTED_COLLECTION123.containsAll(new SortedArrayCollection<Integer>(COMPARATOR, 0, 1, 2)));
+    }
+
+    /**
+     * Verifies that containsAll returns false if the other collection contains an element of a different type. The
+     * method is tested through the containsAll method in the SortedArrayCollection class.
+     */
+    @Test
+    public void containsAllShouldReturnFalseWhenComparedToCollectionWithElementOfDifferentType() {
+        assertFalse(SORTED_COLLECTION123.containsAll(new ArrayCollection<Object>("Foo")));
     }
 }
