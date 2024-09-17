@@ -11,6 +11,7 @@ import java.util.Objects;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 
 /**
@@ -21,6 +22,10 @@ public class ArrayUtilitiesTest {
      * The magic number three.
      */
     private static final int THREE = 3;
+    /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
     /**
      * Collection with the integers 1, 2 and 3.
      */
@@ -129,6 +134,8 @@ public class ArrayUtilitiesTest {
     @Test
     public void containsShouldReturnTrueForAnElementInTheSortedCollection() {
         assertTrue(SORTED_COLLECTION123.contains(1));
+        assertTrue(SORTED_COLLECTION123.contains(2));
+        assertTrue(SORTED_COLLECTION123.contains(THREE));
     }
 
     /**
@@ -147,6 +154,7 @@ public class ArrayUtilitiesTest {
     @Test
     public void containsShouldReturnFalseForAnElementNotInTheSortedCollection() {
         assertFalse(SORTED_COLLECTION123.contains(0));
+        assertFalse(SORTED_COLLECTION123.contains(FOUR));
     }
 
     /**
@@ -210,9 +218,9 @@ public class ArrayUtilitiesTest {
     @Test
     public void containsAllShouldReturnTrueForSortedCollectionWithDuplicateElementsWhenComparedToItself() {
         SortedCollection<Integer> sortedCollection112233 =
-                new SortedArrayCollection<Integer>(COMPARATOR, 1, 1, 2, 2, THREE, THREE);
+                new SortedArrayCollection<Integer>(COMPARATOR, 1, 2, THREE, 1, 2, THREE);
         SortedCollection<Integer> sortedCollection111222333 =
-                new SortedArrayCollection<Integer>(COMPARATOR, 1, 1, 1, 2, 2, 2, THREE, THREE, THREE);
+                new SortedArrayCollection<Integer>(COMPARATOR, 1, 2, THREE, 1, 2, THREE, 1, 2, THREE);
         assertTrue(sortedCollection112233.containsAll(sortedCollection112233));
         assertTrue(sortedCollection111222333.containsAll(sortedCollection111222333));
         assertFalse(sortedCollection112233.containsAll(sortedCollection111222333));
@@ -235,5 +243,17 @@ public class ArrayUtilitiesTest {
     @Test
     public void containsAllShouldReturnFalseWhenComparedToCollectionWithElementOfDifferentType() {
         assertFalse(SORTED_COLLECTION123.containsAll(new ArrayCollection<Object>("Foo")));
+    }
+
+    /**
+     * Verifies that findIndex returns the correct index for the given element. The method is tested through the get
+     * method in the SortedArrayMap class.
+     */
+    @Test
+    public void findIndexShouldReturnCorrectIndexForGivenElement() {
+        SortedArrayMap<Integer, String> map = new SortedArrayMap<Integer, String>(COMPARATOR,
+                new Entry<Integer, String>(1, "one"), new Entry<Integer, String>(2, "two"));
+        assertEquals("one", map.get(1));
+        assertEquals("two", map.get(2));
     }
 }

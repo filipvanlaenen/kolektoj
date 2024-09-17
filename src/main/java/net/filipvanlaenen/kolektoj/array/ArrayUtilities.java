@@ -83,7 +83,7 @@ public final class ArrayUtilities {
     static <E> boolean contains(final Object[] elements, final int size, final E element,
             final Comparator<E> comparator) {
         int index = findIndex(elements, size, element, comparator);
-        return index >= 0 && Objects.equals(element, elements[index]);
+        return index >= 0;
     }
 
     /**
@@ -179,7 +179,6 @@ public final class ArrayUtilities {
                         }
                     }
                 } else if (comparison < 0) {
-                    // EQMU: Changing the conditional boundary above produces an equivalent mutant.
                     above = middle;
                 } else {
                     below = middle;
@@ -237,7 +236,6 @@ public final class ArrayUtilities {
         E pivot = (E) array[last];
         int index = first - 1;
         for (int j = first; j < last; j++) {
-            // EQMU: Changing the conditional boundary below produces an equivalent mutant.
             if (comparator.compare((E) array[j], pivot) <= 0) {
                 swap(array, ++index, j);
             }
@@ -272,7 +270,6 @@ public final class ArrayUtilities {
      */
     private static <E> void quicksort(final Object[] array, final Comparator<E> comparator, final int first,
             final int last) {
-        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
         if (first < last) {
             int pivotIndex = partition(array, comparator, first, last);
             quicksort(array, comparator, first, pivotIndex - 1);
