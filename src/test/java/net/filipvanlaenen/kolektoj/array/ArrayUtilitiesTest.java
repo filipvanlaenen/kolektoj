@@ -5,9 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Comparator;
+import java.util.Objects;
+
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.SortedCollection;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.ArrayUtilities} class.
@@ -25,6 +29,36 @@ public class ArrayUtilitiesTest {
      * Collection with the integers 1, 2, 3 and null.
      */
     private static final Collection<Integer> COLLECTION123NULL = new ArrayCollection<Integer>(1, 2, 3, null);
+    /**
+     * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
+     * value.
+     */
+    private static final Comparator<Integer> COMPARATOR = new Comparator<Integer>() {
+        @Override
+        public int compare(final Integer i1, final Integer i2) {
+            if (Objects.equals(i1, i2)) {
+                return 0;
+            } else if (i1 == null) {
+                return -1;
+            } else if (i2 == null) {
+                return 1;
+            } else if (i1 < i2) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    };
+    /**
+     * Sorted collection with the integers 1, 2 and 3.
+     */
+    private static final SortedCollection<Integer> SORTED_COLLECTION123 =
+            new SortedArrayCollection<Integer>(COMPARATOR, 1, 2, 3);
+    /**
+     * Sorted collection with the integers 1, 2, 3 and null.
+     */
+    private static final SortedCollection<Integer> SORTED_COLLECTION123NULL =
+            new SortedArrayCollection<Integer>(COMPARATOR, 1, 2, 3, null);
 
     /**
      * Verifies that cloneDistinctElements removes duplicate elements. The method is tested through the constructor for
@@ -89,7 +123,43 @@ public class ArrayUtilitiesTest {
     }
 
     /**
-     * Verifies that containsAll returns false is the other collection is larger. The method is tested through the
+     * Verifies that contains returns true for an element in the sorted collection. The method is tested through the
+     * contains method in the SortedArrayCollection class.
+     */
+    @Test
+    public void containsShouldReturnTrueForAnElementInTheSortedCollection() {
+        assertTrue(SORTED_COLLECTION123.contains(1));
+    }
+
+    /**
+     * Verifies that contains returns true for null if it's in the sorted collection. The method is tested through the
+     * contains method in the SortedArrayCollection class.
+     */
+    @Test
+    public void containsShouldReturnTrueForNullIfInTheSortedCollection() {
+        assertTrue(SORTED_COLLECTION123NULL.contains(null));
+    }
+
+    /**
+     * Verifies that contains returns false for an element not in the sorted collection. The method is tested through
+     * the contains method in the SortedArrayCollection class.
+     */
+    @Test
+    public void containsShouldReturnFalseForAnElementNotInTheSortedCollection() {
+        assertFalse(SORTED_COLLECTION123.contains(0));
+    }
+
+    /**
+     * Verifies that contains returns false for null if it isn't in the sorted collection. The method is tested through
+     * the contains method in the SortedArrayCollection class.
+     */
+    @Test
+    public void containsShouldReturnFalseForNullIfNotInTheTheSortedCollection() {
+        assertFalse(SORTED_COLLECTION123.contains(null));
+    }
+
+    /**
+     * Verifies that containsAll returns false if the other collection is larger. The method is tested through the
      * containsAll method in the ArrayCollection class.
      */
     @Test
@@ -113,5 +183,32 @@ public class ArrayUtilitiesTest {
     @Test
     public void containsAllShouldReturnFalseWhenComparedToCollectionWithAnotherElement() {
         assertFalse(COLLECTION123.containsAll(new ArrayCollection<Integer>(0, 1, 2)));
+    }
+
+    /**
+     * Verifies that containsAll returns false if the other sorted collection is larger. The method is tested through
+     * the containsAll method in the SortedArrayCollection class.
+     */
+    @Test
+    public void containsAllShouldReturnFalseIfTheOtherSortedCollectionIsLarger() {
+        assertFalse(SORTED_COLLECTION123.containsAll(SORTED_COLLECTION123NULL));
+    }
+
+    /**
+     * Verifies that containsAll returns true if a sorted collection is compared to itself. The method is tested through
+     * the containsAll method in the SortedArrayCollection class.
+     */
+    @Test
+    public void containsAllShouldReturnTrueForSortedCollectionWhenComparedToItself() {
+        assertTrue(SORTED_COLLECTION123.containsAll(SORTED_COLLECTION123));
+    }
+
+    /**
+     * Verifies that containsAll returns false if a sorted collection contains another element. The method is tested
+     * through the containsAll method in the SortedArrayCollection class.
+     */
+    @Test
+    public void containsAllShouldReturnFalseWhenComparedToSortedCollectionWithAnotherElement() {
+        assertFalse(SORTED_COLLECTION123.containsAll(new SortedArrayCollection<Integer>(COMPARATOR, 0, 1, 2)));
     }
 }
