@@ -177,7 +177,6 @@ public final class ArrayUtilities {
                         if (found) {
                             break;
                         }
-                        return false;
                     }
                 } else if (comparison < 0) {
                     // EQMU: Changing the conditional boundary above produces an equivalent mutant.
