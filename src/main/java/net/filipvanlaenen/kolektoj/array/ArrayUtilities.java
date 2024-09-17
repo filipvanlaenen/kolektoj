@@ -163,18 +163,21 @@ public final class ArrayUtilities {
                                 break;
                             }
                         }
-                        while (middle + 1 < size
-                                && comparator.compare((E) source[middle], (E) source[middle + 1]) == 0) {
-                            middle++;
-                            if (!matches[middle]) {
-                                matches[middle] = true;
-                                found = true;
-                                break;
+                        if (!found) {
+                            while (middle + 1 < size
+                                    && comparator.compare((E) source[middle], (E) source[middle + 1]) == 0) {
+                                middle++;
+                                if (!matches[middle]) {
+                                    matches[middle] = true;
+                                    found = true;
+                                    break;
+                                }
                             }
                         }
                         if (found) {
                             break;
                         }
+                        return false;
                     }
                 } else if (comparison < 0) {
                     // EQMU: Changing the conditional boundary above produces an equivalent mutant.

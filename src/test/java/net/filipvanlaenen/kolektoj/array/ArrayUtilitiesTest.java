@@ -209,9 +209,14 @@ public class ArrayUtilitiesTest {
      */
     @Test
     public void containsAllShouldReturnTrueForSortedCollectionWithDuplicateElementsWhenComparedToItself() {
-        SortedCollection<Integer> sortedCollection =
+        SortedCollection<Integer> sortedCollection112233 =
                 new SortedArrayCollection<Integer>(COMPARATOR, 1, 1, 2, 2, THREE, THREE);
-        assertTrue(sortedCollection.containsAll(sortedCollection));
+        SortedCollection<Integer> sortedCollection111222333 =
+                new SortedArrayCollection<Integer>(COMPARATOR, 1, 1, 1, 2, 2, 2, THREE, THREE, THREE);
+        assertTrue(sortedCollection112233.containsAll(sortedCollection112233));
+        assertTrue(sortedCollection111222333.containsAll(sortedCollection111222333));
+        assertFalse(sortedCollection112233.containsAll(sortedCollection111222333));
+        assertTrue(sortedCollection111222333.containsAll(sortedCollection112233));
     }
 
     /**
