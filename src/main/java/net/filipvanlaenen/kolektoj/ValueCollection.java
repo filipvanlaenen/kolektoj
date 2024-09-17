@@ -4,8 +4,9 @@ import java.util.Iterator;
 import java.util.Spliterator;
 
 /**
- * Class wrapping around the default collection implementation, but with the modification that the equals method returns
- * true if the collection values are equal.
+ * Class wrapping around the default collection implementation, but with the modification that the <code>equals</code>
+ * method returns <code>true</code> if the collection values are equal. Value collections can be used as fields in
+ * record classes.
  *
  * @param <E> The element type.
  */
