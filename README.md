@@ -255,6 +255,7 @@ Be sure to update to the appropriate version number.
 The following projects use Kolektoj:
 * [ASAPOP](https://github.com/filipvanlaenen/asapop)
 * [BLTXMLEPJ](https://github.com/filipvanlaenen/bltxmlepj)
+* [IACAJ](https://github.com/filipvanlaenen/iacaj)
 * [Laconic Logging](https://github.com/filipvanlaenen/laconic)
 * [Nombraj Kolektoj](https://github.com/filipvanlaenen/nombrajkolektoj)
 * [SHecC](https://github.com/filipvanlaenen/shecc)
