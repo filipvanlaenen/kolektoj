@@ -34,7 +34,7 @@ public final class OrderedValueCollection<E> implements OrderedCollection<E> {
      *
      * @return A new empty ordered value collection.
      */
-    static OrderedValueCollection<Object> empty() {
+    public static OrderedValueCollection<Object> empty() {
         return new OrderedValueCollection<Object>(OrderedCollection.empty());
     }
 
@@ -45,7 +45,7 @@ public final class OrderedValueCollection<E> implements OrderedCollection<E> {
      * @param elements The elements for the new ordered value collection.
      * @return A new ordered value collection with the specified elements.
      */
-    static <E> OrderedValueCollection<E> of(final E... elements) {
+    public static <E> OrderedValueCollection<E> of(final E... elements) {
         return new OrderedValueCollection<E>(OrderedCollection.of(elements));
     }
 
@@ -57,7 +57,7 @@ public final class OrderedValueCollection<E> implements OrderedCollection<E> {
      * @param elements           The elements for the new ordered value collection.
      * @return A new ordered value collection with the specified element cardinality and the elements.
      */
-    static <E> OrderedValueCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
+    public static <E> OrderedValueCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
         return new OrderedValueCollection<E>(OrderedCollection.of(elementCardinality, elements));
     }
 

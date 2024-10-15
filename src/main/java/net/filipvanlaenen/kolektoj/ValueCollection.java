@@ -30,7 +30,7 @@ public final class ValueCollection<E> implements Collection<E> {
      *
      * @return A new empty value collection.
      */
-    static ValueCollection<Object> empty() {
+    public static ValueCollection<Object> empty() {
         return new ValueCollection<Object>(Collection.empty());
     }
 
@@ -41,7 +41,7 @@ public final class ValueCollection<E> implements Collection<E> {
      * @param elements The elements for the new value collection.
      * @return A new value collection with the specified elements.
      */
-    static <E> ValueCollection<E> of(final E... elements) {
+    public static <E> ValueCollection<E> of(final E... elements) {
         return new ValueCollection<E>(Collection.of(elements));
     }
 
@@ -53,7 +53,7 @@ public final class ValueCollection<E> implements Collection<E> {
      * @param elements           The elements for the new value collection.
      * @return A new value collection with the specified element cardinality and the elements.
      */
-    static <E> ValueCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
+    public static <E> ValueCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
         return new ValueCollection<E>(Collection.of(elementCardinality, elements));
     }
 
