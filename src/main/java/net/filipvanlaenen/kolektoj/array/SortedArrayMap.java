@@ -70,6 +70,14 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
      */
     public SortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
             final Entry<K, V>... entries) throws IllegalArgumentException {
+        if (entries == null) {
+            throw new IllegalArgumentException("Map entries can't be null.");
+        }
+        for (Entry<K, V> entry : entries) {
+            if (entry == null) {
+                throw new IllegalArgumentException("Map entries can't be null.");
+            }
+        }
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
             public int compare(final Entry<K, V> e1, final Entry<K, V> e2) {
@@ -151,7 +159,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     public Collection<V> getAll(final K key) throws IllegalArgumentException {
         int index = ArrayUtilities.findIndex(entries, entries.length, new Entry<K, V>(key, null), entryByKeyComparator);
         if (index == -1) {
-            throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
+            throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
         }
         ModifiableCollection<V> result = new ModifiableArrayCollection<V>(
                 keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS,
