@@ -2,9 +2,9 @@ package net.filipvanlaenen.kolektoj.hash;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
-import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
@@ -12,7 +12,6 @@ import java.util.Spliterator;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
-import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
@@ -77,7 +76,7 @@ public final class HashMap<K, V> implements Map<K, V> {
         this.keyAndValueCardinality = keyAndValueCardinality;
         hashedEntriesSize = entries.length * HASHING_RATIO;
         Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) entries.getClass();
-        Entry<K, V>[] theHashedEntries = (Entry<K, V>[]) Array.newInstance(clazz.getComponentType(), hashedEntriesSize);
+        Object[] theHashedEntries = new Object[hashedEntriesSize];
         ModifiableCollection<Entry<K, V>> theEntries =
                 new ModifiableArrayCollection<Entry<K, V>>(getElementCardinality());
         ModifiableCollection<K> theKeys = new ModifiableArrayCollection<K>(
@@ -97,20 +96,7 @@ public final class HashMap<K, V> implements Map<K, V> {
      * @param map The map to create a new map from.
      */
     public HashMap(final Map<K, V> map) {
-        this.keyAndValueCardinality = map.getKeyAndValueCardinality();
-        this.entries = new ArrayCollection<Entry<K, V>>(map);
-        hashedEntriesSize = map.size() * HASHING_RATIO;
-        Object[] theHashedEntries = new Object[hashedEntriesSize];
-        ModifiableCollection<Entry<K, V>> theEntries =
-                new ModifiableArrayCollection<Entry<K, V>>(getElementCardinality());
-        ModifiableCollection<K> theKeys = new ModifiableArrayCollection<K>(
-                keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS);
-        ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
-        HashUtilities.populateMapFromEntries(theEntries, theHashedEntries, theKeys, theValues, keyAndValueCardinality,
-                entries);
-        this.hashedEntries = theHashedEntries;
-        this.keys = new ArrayCollection<K>(theKeys);
-        this.values = new ArrayCollection<V>(theValues);
+        this(map.getKeyAndValueCardinality(), (Entry<K, V>[]) map.toArray());
     }
 
     @Override
