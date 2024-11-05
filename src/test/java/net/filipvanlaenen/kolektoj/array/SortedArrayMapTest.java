@@ -35,19 +35,19 @@ public final class SortedArrayMapTest
     };
 
     @Override
-    protected SortedArrayMap<Integer, String> createMap(Entry<Integer, String>... entries) {
+    protected SortedArrayMap<Integer, String> createMap(final Entry<Integer, String>... entries) {
         return new SortedArrayMap<Integer, String>(COMPARATOR, entries);
     }
 
     @Override
-    protected SortedArrayMap<Integer, String> createMap(KeyAndValueCardinality keyAndValueCardinality,
-            Entry<Integer, String>... entries) {
+    protected SortedArrayMap<Integer, String> createMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Entry<Integer, String>... entries) {
         return new SortedArrayMap<Integer, String>(keyAndValueCardinality, COMPARATOR, entries);
     }
 
     @Override
     protected SortedArrayMap<KeyWithCollidingHash, Integer> createCollidingKeyHashMap(
-            Entry<KeyWithCollidingHash, Integer>... entries) {
+            final Entry<KeyWithCollidingHash, Integer>... entries) {
         return new SortedArrayMap<KeyWithCollidingHash, Integer>(KEY_WITH_COLLIDING_HASH_COMPARATOR, entries);
     }
 }
