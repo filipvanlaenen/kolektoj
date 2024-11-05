@@ -36,10 +36,6 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
      */
     private final Comparator<Entry<K, V>> entryByKeyComparator;
     /**
-     * The comparator to use for comparing entries using the keys and the values in this sorted map.
-     */
-    private final Comparator<Entry<K, V>> entryByKeyAndValueComparator;
-    /**
      * A sorted collection with the keys.
      */
     private final SortedCollection<K> keys;
@@ -84,21 +80,6 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
                 return comparator.compare(e1.key(), e2.key());
             }
         };
-        this.entryByKeyAndValueComparator = new Comparator<Entry<K, V>>() {
-            @Override
-            public int compare(final Entry<K, V> e1, final Entry<K, V> e2) {
-                int keyComparison = comparator.compare(e1.key(), e2.key());
-                if (keyComparison == 0) {
-                    if (Objects.equals(e1.value(), e2.value())) {
-                        return 0;
-                    } else {
-                        return 1;
-                    }
-                } else {
-                    return keyComparison;
-                }
-            }
-        };
         this.keyAndValueCardinality = keyAndValueCardinality;
         if (keyAndValueCardinality == DISTINCT_KEYS) {
             this.entries =
@@ -124,7 +105,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        return ArrayUtilities.containsAll(entries, entries.length, collection, entryByKeyAndValueComparator);
+        return ArrayUtilities.containsAll(entries, entries.length, collection, entryByKeyComparator);
     }
 
     @Override
