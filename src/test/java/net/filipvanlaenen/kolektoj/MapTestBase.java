@@ -360,6 +360,21 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
     }
 
     /**
+     * Verifies that when you try to use getAll with a key in the map that has all the values, a collection with all the
+     * values is returned.
+     */
+    @Test
+    public void getAllShouldReturnAllValuesForSingleKey() {
+        Map<Integer, String> map = createMap(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, ENTRY1,
+                new Entry<Integer, String>(1, "one"), ENTRY1BIS);
+        Collection<String> actual = map.getAll(1);
+        assertEquals(THREE, actual.size());
+        assertTrue(actual.contains("one"));
+        assertTrue(actual.contains("bis"));
+        assertEquals(DUPLICATE_ELEMENTS, actual.getElementCardinality());
+    }
+
+    /**
      * Verifies that the collection returned by getKeys has distinct elements as its cardinality for a map with distinct
      * keys.
      */
