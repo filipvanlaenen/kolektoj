@@ -119,7 +119,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
 
     @Override
     public boolean contains(final Entry<K, V> entry) {
-        return ArrayUtilities.contains(entries, entries.length, entry, entryByKeyAndValueComparator);
+        return ArrayUtilities.contains(entries, entries.length, entry, entryByKeyComparator);
     }
 
     @Override
