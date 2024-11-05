@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Spliterator;
 
 import org.junit.jupiter.api.Test;
 
@@ -510,5 +511,31 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
         }
         assertFalse(map.containsKey(new KeyWithCollidingHash(-1)));
         assertTrue(map.containsKey(null));
+    }
+
+    /**
+     * Verifies that the spliterator has the distinct flag not set for maps with duplicate keys and duplicate values.
+     */
+    @Test
+    public void spliteratorShouldNotSetDistinctFlagForMapWithDuplicateKeysAndDuplicateValues() {
+        assertFalse(
+                createMap(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES).spliterator().hasCharacteristics(Spliterator.DISTINCT));
+    }
+
+    /**
+     * Verifies that the spliterator has the distinct flag set for maps with duplicate keys and distinct entries.
+     */
+    @Test
+    public void spliteratorShouldSetDistinctFlagForMapWithDuplicateKeysAndDistinctValues() {
+        assertTrue(
+                createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES).spliterator().hasCharacteristics(Spliterator.DISTINCT));
+    }
+
+    /**
+     * Verifies that the spliterator has the distinct flag set for maps with distinct keys.
+     */
+    @Test
+    public void spliteratorShouldSetDistinctFlagForMapWithDistinctKeys() {
+        assertTrue(createMap(DISTINCT_KEYS).spliterator().hasCharacteristics(Spliterator.DISTINCT));
     }
 }

@@ -373,7 +373,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     @Override
     public Spliterator<Entry<K, V>> spliterator() {
         int characteristics = Spliterator.ORDERED | Spliterator.SORTED
-                | (keyAndValueCardinality == DISTINCT_KEYS ? Spliterator.DISTINCT : 0);
+                | (keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? 0 : Spliterator.DISTINCT);
         return new ArraySpliterator<Entry<K, V>>(toArray(), characteristics, entryByKeyComparator);
     }
 
