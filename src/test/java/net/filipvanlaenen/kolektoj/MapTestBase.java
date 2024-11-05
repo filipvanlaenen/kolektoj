@@ -2,20 +2,29 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Comparator;
+import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
+import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.Map} interface.
  *
  * @param <T> The subclass type to be tested.
  */
-public abstract class MapTestBase<T extends Map<Integer, String>> {
+public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map<KeyWithCollidingHash, Integer>> {
     /**
      * The magic number three.
      */
@@ -58,6 +67,50 @@ public abstract class MapTestBase<T extends Map<Integer, String>> {
     private final Map<Integer, String> map123null = createMap(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
 
     /**
+     * Class with colliding hash codes.
+     */
+    public static final class KeyWithCollidingHash {
+        private final int value;
+
+        public KeyWithCollidingHash(final int value) {
+            this.value = value;
+        }
+
+        @Override
+        public boolean equals(final Object other) {
+            return other != null && getValue() == ((KeyWithCollidingHash) other).getValue();
+        }
+
+        private int getValue() {
+            return value;
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+    }
+
+    /**
+     * A comparator returning that all KeyWithCollidingHash objects are equal.
+     */
+    protected static final Comparator<KeyWithCollidingHash> KEY_WITH_COLLIDING_HASH_COMPARATOR =
+            new Comparator<KeyWithCollidingHash>() {
+                @Override
+                public int compare(final KeyWithCollidingHash k1, final KeyWithCollidingHash k2) {
+                    if (Objects.equals(k1, k2)) {
+                        return 0;
+                    } else if (k1 == null) {
+                        return -1;
+                    } else if (k2 == null) {
+                        return 1;
+                    } else {
+                        return k2.getValue() - k1.getValue();
+                    }
+                }
+            };
+
+    /**
      * Creates a map containing the provided entries.
      *
      * @param entries The entries to be included in the map.
@@ -73,6 +126,14 @@ public abstract class MapTestBase<T extends Map<Integer, String>> {
      * @return A map containing the provided entries with the key and value cardinality.
      */
     protected abstract T createMap(KeyAndValueCardinality keyAndValueCardinality, Entry<Integer, String>... entries);
+
+    /**
+     * Creates a map using keys with colliding hashes containing the provided entries.
+     *
+     * @param entries The entries to be included in the map.
+     * @return A map containing the provided entries.
+     */
+    protected abstract TC createCollidingKeyHashMap(Entry<KeyWithCollidingHash, Integer>... entries);
 
     /**
      * Verifies that trying to pass null as an argument to the constructor throws IllegalArgumentException.
@@ -395,5 +456,59 @@ public abstract class MapTestBase<T extends Map<Integer, String>> {
     @Test
     public void containsAllShouldReturnFalseWhenAMapContainsOtherEntries() {
         assertFalse(map123.containsAll(map123null));
+    }
+
+    /**
+     * Verifies that contains returns the correct result, both true for presence and false for absence, when the hash
+     * code for the keys collides.
+     */
+    @Test
+    public void containsReturnsCorrectResultForCollidingKeyHashCodes() {
+        Entry<KeyWithCollidingHash, Integer>[] entries = new Entry[SIX];
+        for (int i = 0; i < entries.length; i++) {
+            entries[i] = new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(i), i);
+        }
+        Map<KeyWithCollidingHash, Integer> map = createCollidingKeyHashMap(entries);
+        for (Entry<KeyWithCollidingHash, Integer> entry : entries) {
+            assertTrue(map.contains(entry));
+        }
+        assertFalse(map.contains(new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(-1), -1)));
+    }
+
+    /**
+     * Verifies that containsKey returns the correct result, both true for presence and false for absence, when the hash
+     * code for the keys collides.
+     */
+    @Test
+    public void containsKeyReturnsCorrectResultForCollidingKeyHashCodes() {
+        Entry<KeyWithCollidingHash, Integer>[] entries = new Entry[SIX];
+        for (int i = 0; i < entries.length; i++) {
+            entries[i] = new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(i), i);
+        }
+        Map<KeyWithCollidingHash, Integer> map = createCollidingKeyHashMap(entries);
+        for (Entry<KeyWithCollidingHash, Integer> entry : entries) {
+            assertTrue(map.containsKey(entry.key()));
+        }
+        assertFalse(map.containsKey(new KeyWithCollidingHash(-1)));
+        assertFalse(map.containsKey(null));
+    }
+
+    /**
+     * Verifies that containsKey returns the correct result, both true for presence and false for absence, when the hash
+     * code for the keys collides and contains null.
+     */
+    @Test
+    public void containsKeyReturnsCorrectResultForCollidingKeyHashCodesWithNull() {
+        Entry<KeyWithCollidingHash, Integer>[] entries = new Entry[SIX];
+        for (int i = 0; i < entries.length - 1; i++) {
+            entries[i] = new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(i), i);
+        }
+        entries[entries.length - 1] = new Entry<KeyWithCollidingHash, Integer>(null, -1);
+        Map<KeyWithCollidingHash, Integer> map = createCollidingKeyHashMap(entries);
+        for (Entry<KeyWithCollidingHash, Integer> entry : entries) {
+            assertTrue(map.containsKey(entry.key()));
+        }
+        assertFalse(map.containsKey(new KeyWithCollidingHash(-1)));
+        assertTrue(map.containsKey(null));
     }
 }

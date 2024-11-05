@@ -2,21 +2,26 @@ package net.filipvanlaenen.kolektoj.hash;
 
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
+import net.filipvanlaenen.kolektoj.MapTestBase;
+import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
-import net.filipvanlaenen.kolektoj.hash.HashMapTestBase.KeyWithCollidingHash;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.hash.ModifiableHashMap} class.
  */
 public final class ModifiableHashMapTest
-        extends HashMapTestBase<ModifiableHashMap<Integer, String>, ModifiableHashMap<KeyWithCollidingHash, Integer>> {
+        extends MapTestBase<ModifiableHashMap<Integer, String>, ModifiableHashMap<KeyWithCollidingHash, Integer>> {
     /**
      * The magic number three.
      */
@@ -226,8 +231,8 @@ public final class ModifiableHashMapTest
     @Test
     public void mapShouldContainValueForKeysWithCollidingHashValuesAfterHavingItAdded() {
         ModifiableMap<KeyWithCollidingHash, Integer> map = new ModifiableHashMap<KeyWithCollidingHash, Integer>();
-        KeyWithCollidingHash key1 = new KeyWithCollidingHash();
-        KeyWithCollidingHash key2 = new KeyWithCollidingHash();
+        KeyWithCollidingHash key1 = new KeyWithCollidingHash(1);
+        KeyWithCollidingHash key2 = new KeyWithCollidingHash(2);
         map.add(key1, 1);
         map.add(key2, 2);
         assertEquals(1, map.get(key1));
@@ -334,8 +339,8 @@ public final class ModifiableHashMapTest
     public void mapShouldContainValueForKeysWithCollidingHashValuesAfterHavingItAddedAsAMap() {
         ModifiableMap<KeyWithCollidingHash, Integer> map1 = new ModifiableHashMap<KeyWithCollidingHash, Integer>();
         ModifiableMap<KeyWithCollidingHash, Integer> map2 = new ModifiableHashMap<KeyWithCollidingHash, Integer>();
-        KeyWithCollidingHash key1 = new KeyWithCollidingHash();
-        KeyWithCollidingHash key2 = new KeyWithCollidingHash();
+        KeyWithCollidingHash key1 = new KeyWithCollidingHash(1);
+        KeyWithCollidingHash key2 = new KeyWithCollidingHash(2);
         map2.add(key1, 1);
         map2.add(key2, 2);
         map1.addAll(map2);
