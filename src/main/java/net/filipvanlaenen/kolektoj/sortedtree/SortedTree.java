@@ -395,6 +395,14 @@ class SortedTree<K, C> {
         return size != originalSize;
     }
 
+    /**
+     * Removes all nodes from this tree with keys that satisfy the given predicate, and returns whether it decreased the
+     * size of the tree.
+     *
+     * @param predicate The predicate to be applied to each key in the tree.
+     * @return True if the size of the tree decreased after removing the nodes with keys that satisfied the given
+     *         predicate.
+     */
     boolean removeIf(final Predicate<? super K> predicate) {
         Node<K, C>[] removeArray = createNodeArray(size);
         int removeArraySize = markForRemoval(removeArray, 0, root, predicate);

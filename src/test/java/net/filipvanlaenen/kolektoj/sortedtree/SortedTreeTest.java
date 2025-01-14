@@ -312,4 +312,30 @@ public class SortedTreeTest {
         tree.remove(1);
         assertEquals(2, tree.getSize());
     }
+
+    /**
+     * Verifies that removeIf with a predicate that never matches returns false.
+     */
+    @Test
+    public void removeIfShouldReturnFalseWhenNoMatch() {
+        assertFalse(createTree(THREE).removeIf(k -> k == 0));
+    }
+
+    /**
+     * Verifies that removeIf with a predicate that matches returns true.
+     */
+    @Test
+    public void removeIfShouldReturnTrueWhenMatch() {
+        assertTrue(createTree(THREE).removeIf(k -> k % 2 == 0));
+    }
+
+    /**
+     * Verifies that removeIf with a predicate that matches removes a node from the tree.
+     */
+    @Test
+    public void removeIfShouldRemoveNodeWithMatchingKey() {
+        SortedTree<Integer, String> tree = createTree(THREE);
+        tree.removeIf(k -> k == 2);
+        assertFalse(tree.containsKey(2));
+    }
 }
