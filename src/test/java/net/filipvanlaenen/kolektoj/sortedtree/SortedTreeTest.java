@@ -368,4 +368,25 @@ public class SortedTreeTest {
         tree.retainAllKeys(Collection.of(1, 2));
         assertFalse(tree.containsKey(THREE));
     }
+
+    /**
+     * Verifies that toArray returns an empty array for an empty tree.
+     */
+    @Test
+    public void toArrayShouldReturnAnEmptyArrayForAnEmptyTree() {
+        assertEquals(0, EMPTY_TREE.toArray().length);
+    }
+
+    /**
+     * Verifies that toArray returns an array with three elements for a small tree.
+     */
+    @Test
+    public void toArrayShouldReturnASmallArrayForASmallTree() {
+        Node<Integer, String>[] nodeArray = SMALL_TREE.toArray();
+        for (int i = 1; i <= THREE; i++) {
+            Node<Integer, String> node = nodeArray[i - 1];
+            assertEquals(i, node.getKey());
+            assertEquals(Integer.toString(i), node.getContent());
+        }
+    }
 }
