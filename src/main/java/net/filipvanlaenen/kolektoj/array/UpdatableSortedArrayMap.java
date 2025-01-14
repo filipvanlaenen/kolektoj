@@ -199,7 +199,11 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
 
     @Override
     public V update(final K key, final V value) throws IllegalArgumentException {
-        int index = ArrayUtilities.findIndex(entries, entries.length, new Entry<K, V>(key, null), entryByKeyComparator);
+        Entry<K, V> newEntry = new Entry<K, V>(key, value);
+        if (contains(newEntry)) {
+            return value;
+        }
+        int index = ArrayUtilities.findIndex(entries, entries.length, newEntry, entryByKeyComparator);
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
