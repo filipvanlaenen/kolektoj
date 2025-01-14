@@ -11,8 +11,8 @@ import net.filipvanlaenen.kolektoj.UpdatableMapTestBase;
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.UpdatableSortedArrayMap} class.
  */
-public final class UpdatableSortedArrayMapTest extends
-        UpdatableMapTestBase<UpdatableSortedArrayMap<Integer, String>, UpdatableSortedArrayMap<KeyWithCollidingHash, Integer>> {
+public final class UpdatableSortedArrayMapTest extends UpdatableMapTestBase<UpdatableSortedArrayMap<Integer, String>,
+        UpdatableSortedArrayMap<KeyWithCollidingHash, Integer>> {
     /**
      * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
      * value.
