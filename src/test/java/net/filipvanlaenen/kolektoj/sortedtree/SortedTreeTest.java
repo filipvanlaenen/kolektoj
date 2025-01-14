@@ -132,6 +132,30 @@ public class SortedTreeTest {
     }
 
     /**
+     * Verifies that containsAllKeys returns true when all keys are present in the tree.
+     */
+    @Test
+    public void containsAllKeysShouldReturnTrueIfAllKeysArePresent() {
+        assertTrue(SMALL_TREE.containsAllKeys(Collection.of(1, 2, THREE)));
+    }
+
+    /**
+     * Verifies that containsAllKeys returns false on an empty tree.
+     */
+    @Test
+    public void containsAllKeysShouldReturnFalseEmptyKey() {
+        assertFalse(EMPTY_TREE.containsAllKeys(Collection.of(1)));
+    }
+
+    /**
+     * Verifies that containsAllKeys returns false when at least one key is absent in the tree.
+     */
+    @Test
+    public void containsAllKeysShouldReturnFalseAKeyIsAbsent() {
+        assertFalse(SMALL_TREE.containsAllKeys(Collection.of(1, TWENTY)));
+    }
+
+    /**
      * Verifies that an empty tree doesn't contain an element.
      */
     @Test

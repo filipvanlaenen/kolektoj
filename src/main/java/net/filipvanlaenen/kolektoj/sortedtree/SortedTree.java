@@ -454,6 +454,7 @@ class SortedTree<K, C> {
      *   leftChild      middleChild
      * </PRE>
      *
+     * @param node The node to rotate around.
      * @return The right child that should replace the current node.
      */
     private Node<K, C> rotateLeft(final Node<K, C> node) {
@@ -484,6 +485,7 @@ class SortedTree<K, C> {
      *                          middleChild      rightChild
      * </PRE>
      *
+     * @param node The node to rotate around.
      * @return The left child that should replace the current node.
      */
     private Node<K, C> rotateRight(final Node<K, C> node) {
@@ -507,7 +509,9 @@ class SortedTree<K, C> {
     }
 
     /**
-     * Updates the height of this node.
+     * Updates the height of the given node.
+     *
+     * @param node The node for which the height should be updated.
      */
     private void updateNodeHeight(final Node<K, C> node) {
         int leftHeight = getNodeHeight(node.getLeftChild());
