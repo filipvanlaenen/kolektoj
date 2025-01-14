@@ -41,19 +41,19 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
     /**
      * An entry with key 1 and value one.
      */
-    private static final Entry<Integer, String> ENTRY1 = new Entry<Integer, String>(1, "one");
+    protected static final Entry<Integer, String> ENTRY1 = new Entry<Integer, String>(1, "one");
     /**
      * An entry with key 1 and value bis.
      */
-    private static final Entry<Integer, String> ENTRY1BIS = new Entry<Integer, String>(1, "bis");
+    protected static final Entry<Integer, String> ENTRY1BIS = new Entry<Integer, String>(1, "bis");
     /**
      * An entry with key 2 and value two.
      */
-    private static final Entry<Integer, String> ENTRY2 = new Entry<Integer, String>(2, "two");
+    protected static final Entry<Integer, String> ENTRY2 = new Entry<Integer, String>(2, "two");
     /**
      * An entry with key 3 and value three.
      */
-    private static final Entry<Integer, String> ENTRY3 = new Entry<Integer, String>(3, "three");
+    protected static final Entry<Integer, String> ENTRY3 = new Entry<Integer, String>(3, "three");
     /**
      * An empty map.
      */

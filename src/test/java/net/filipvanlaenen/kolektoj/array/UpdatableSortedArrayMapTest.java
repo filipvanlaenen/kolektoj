@@ -3,16 +3,16 @@ package net.filipvanlaenen.kolektoj.array;
 import java.util.Comparator;
 import java.util.Objects;
 
-import net.filipvanlaenen.kolektoj.MapTestBase;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
 import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
+import net.filipvanlaenen.kolektoj.UpdatableMapTestBase;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.UpdatableSortedArrayMap} class.
  */
 public final class UpdatableSortedArrayMapTest extends
-        MapTestBase<UpdatableSortedArrayMap<Integer, String>, UpdatableSortedArrayMap<KeyWithCollidingHash, Integer>> {
+        UpdatableMapTestBase<UpdatableSortedArrayMap<Integer, String>, UpdatableSortedArrayMap<KeyWithCollidingHash, Integer>> {
     /**
      * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
      * value.
