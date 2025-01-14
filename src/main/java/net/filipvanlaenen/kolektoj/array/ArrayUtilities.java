@@ -83,7 +83,27 @@ public final class ArrayUtilities {
     static <E> boolean contains(final Object[] elements, final int size, final E element,
             final Comparator<E> comparator) {
         int index = findIndex(elements, size, element, comparator);
-        return index >= 0;
+        if (index < 0) {
+            return false;
+        }
+        if (Objects.equals(element, elements[index])) {
+            return true;
+        }
+        int lowerIndex = index - 1;
+        while (lowerIndex >= 0 && comparator.compare(element, (E) elements[lowerIndex]) == 0) {
+            if (Objects.equals(element, elements[lowerIndex])) {
+                return true;
+            }
+            lowerIndex--;
+        }
+        int higherIndex = index + 1;
+        while (higherIndex < size && comparator.compare(element, (E) elements[higherIndex]) == 0) {
+            if (Objects.equals(element, elements[higherIndex])) {
+                return true;
+            }
+            higherIndex++;
+        }
+        return false;
     }
 
     /**
@@ -192,16 +212,16 @@ public final class ArrayUtilities {
     }
 
     /**
-     * Returns an index where an element can be found in the first <code>size</code> elements of a sorted array, or -1
-     * if it's absent.
+     * Returns an index where an element can be found in the first <code>size</code> elements of a sorted array such
+     * that the comparator returns zero, or -1 if it's absent.
      *
      * @param <E>        The element type.
      * @param elements   The array that should contain the elements.
      * @param size       The number of elements to check in the source array.
      * @param element    The element.
      * @param comparator The comparator to use.
-     * @return An index where an element can be found in the first <code>size</code> elements of a sorted array, or -1
-     *         if it's absent.
+     * @return An index where an element can be found in the first <code>size</code> elements of a sorted array such
+     *         that the comparator returns zero, or -1 if it's absent.
      */
     static <E> int findIndex(final Object[] elements, final int size, final E element, final Comparator<E> comparator) {
         int below = -1;

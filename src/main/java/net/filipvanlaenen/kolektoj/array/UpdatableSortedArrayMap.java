@@ -14,6 +14,7 @@ import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.UpdatableSortedMap;
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection;
 
 /**
@@ -70,6 +71,14 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
      */
     public UpdatableSortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
             final Entry<K, V>... entries) throws IllegalArgumentException {
+        if (entries == null) {
+            throw new IllegalArgumentException("Map entries can't be null.");
+        }
+        for (Entry<K, V> entry : entries) {
+            if (entry == null) {
+                throw new IllegalArgumentException("Map entries can't be null.");
+            }
+        }
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
             public int compare(final Entry<K, V> e1, final Entry<K, V> e2) {
@@ -111,7 +120,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
 
     @Override
     public boolean contains(final Entry<K, V> entry) {
-        return ArrayUtilities.contains(entries, entries.length, entry, entryByKeyAndValueComparator);
+        return ArrayUtilities.contains(entries, entries.length, entry, entryByKeyComparator);
     }
 
     @Override
@@ -151,7 +160,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
     public Collection<V> getAll(final K key) throws IllegalArgumentException {
         int index = ArrayUtilities.findIndex(entries, entries.length, new Entry<K, V>(key, null), entryByKeyComparator);
         if (index == -1) {
-            throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
+            throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
         }
         ModifiableCollection<V> result = new ModifiableArrayCollection<V>(
                 keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS,
@@ -199,7 +208,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
     @Override
     public Spliterator<Entry<K, V>> spliterator() {
         int characteristics = Spliterator.ORDERED | Spliterator.SORTED
-                | (keyAndValueCardinality == DISTINCT_KEYS ? Spliterator.DISTINCT : 0);
+                | (keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? 0 : Spliterator.DISTINCT);
         return new ArraySpliterator<Entry<K, V>>(entries, characteristics, entryByKeyComparator);
     }
 
