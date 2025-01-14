@@ -278,4 +278,38 @@ public class SortedTreeTest {
         assertNull(LARGE_TREE.getNode(0));
         assertNull(LARGE_TREE.getNode(HUNDRED));
     }
+
+    /**
+     * Verifies that removing an element from an empty tree returns false.
+     */
+    @Test
+    public void removeShouldReturnFalseOnAnEmptyTree() {
+        assertFalse(createEmptyTree().remove(1));
+    }
+
+    /**
+     * Verifies that trying to remove an absent key returns false.
+     */
+    @Test
+    public void removeShouldReturnFalseOnAbsentKey() {
+        assertFalse(createTree(1).remove(2));
+    }
+
+    /**
+     * Verifies that trying to remove a present key returns true.
+     */
+    @Test
+    public void removeShouldReturnTrueOnPresentKey() {
+        assertTrue(createTree(1).remove(1));
+    }
+
+    /**
+     * Verifies that the size decreases after removing a present key.
+     */
+    @Test
+    public void removeShouldDecreaseSizeForPresentKey() {
+        SortedTree<Integer, String> tree = createTree(THREE);
+        tree.remove(1);
+        assertEquals(2, tree.getSize());
+    }
 }

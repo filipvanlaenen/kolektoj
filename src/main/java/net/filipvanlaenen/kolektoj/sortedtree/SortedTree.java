@@ -264,10 +264,23 @@ class SortedTree<K, C> {
         return (Class<K>) keys.getClass().getComponentType();
     }
 
+    /**
+     * Returns a node with the given key.
+     *
+     * @param key The key.
+     * @return A node with the given key.
+     */
     Node<K, C> getNode(final K key) {
         return getNode(root, key);
     }
 
+    /**
+     * Returns a node with the given key starting from the provided node.
+     *
+     * @param node The start node to search from.
+     * @param key  The key.
+     * @return A node with the given key.
+     */
     private Node<K, C> getNode(final Node<K, C> node, final K key) {
         if (node == null) {
             return null;
@@ -363,6 +376,12 @@ class SortedTree<K, C> {
         return node;
     }
 
+    /**
+     * Removes a node with the given key from the tree.
+     *
+     * @param key The key.
+     * @return True if a node was removed.
+     */
     boolean remove(final K key) {
         if (root == null) {
             return false;
