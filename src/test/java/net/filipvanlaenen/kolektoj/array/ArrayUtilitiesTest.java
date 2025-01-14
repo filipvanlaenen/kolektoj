@@ -307,4 +307,18 @@ public class ArrayUtilitiesTest {
         SortedArrayCollection<Integer> collection = new SortedArrayCollection<Integer>(COMPARATOR, array);
         assertEquals(ONE_MILLION, collection.size());
     }
+
+    /**
+     * Verifies that quicksort can handle a large array of one million elements that is reverse-sorted. The method is
+     * tested through the constructor of the SortedArrayCollection class.
+     */
+    @Test
+    public void quicksortShouldHandleALargeReverseSortedArray() {
+        Integer[] array = new Integer[ONE_MILLION];
+        for (int i = 0; i < ONE_MILLION; i++) {
+            array[i] = ONE_MILLION - i;
+        }
+        SortedArrayCollection<Integer> collection = new SortedArrayCollection<Integer>(COMPARATOR, array);
+        assertEquals(ONE_MILLION, collection.size());
+    }
 }
