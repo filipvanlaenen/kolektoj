@@ -19,6 +19,26 @@ import net.filipvanlaenen.kolektoj.SortedCollection;
  */
 public class ArrayUtilitiesTest {
     /**
+     * Entry 1.
+     */
+    private static final Entry<Integer, String> ENTRY1 = new Entry<Integer, String>(1, "one");
+    /**
+     * Entry 1 bis.
+     */
+    private static final Entry<Integer, String> ENTRY1BIS = new Entry<Integer, String>(1, "bis");
+    /**
+     * Entry 1 ter.
+     */
+    private static final Entry<Integer, String> ENTRY1TER = new Entry<Integer, String>(1, "ter");
+    /**
+     * Entry 1 quater.
+     */
+    private static final Entry<Integer, String> ENTRY1QUATER = new Entry<Integer, String>(1, "quater");
+    /**
+     * Entry 2.
+     */
+    private static final Entry<Integer, String> ENTRY2 = new Entry<Integer, String>(2, "two");
+    /**
      * The magic number three.
      */
     private static final int THREE = 3;
@@ -255,10 +275,23 @@ public class ArrayUtilitiesTest {
      */
     @Test
     public void findIndexShouldReturnCorrectIndexForGivenElement() {
-        SortedArrayMap<Integer, String> map = new SortedArrayMap<Integer, String>(COMPARATOR,
-                new Entry<Integer, String>(1, "one"), new Entry<Integer, String>(2, "two"));
+        SortedArrayMap<Integer, String> map = new SortedArrayMap<Integer, String>(COMPARATOR, ENTRY1, ENTRY2);
         assertEquals("one", map.get(1));
         assertEquals("two", map.get(2));
+    }
+
+    /**
+     * Verifies that findIndex returns the correct index for the given element. The method is tested through the
+     * contains method in the SortedArrayMap class.
+     */
+    @Test
+    public void findIndexShouldReturnCorrectIndexForGivenElementWithDuplicateKeys() {
+        SortedArrayMap<Integer, String> map =
+                new SortedArrayMap<Integer, String>(COMPARATOR, ENTRY1, ENTRY1BIS, ENTRY1TER);
+        assertTrue(map.contains(ENTRY1));
+        assertTrue(map.contains(ENTRY1BIS));
+        assertTrue(map.contains(ENTRY1TER));
+        assertFalse(map.contains(ENTRY1QUATER));
     }
 
     /**

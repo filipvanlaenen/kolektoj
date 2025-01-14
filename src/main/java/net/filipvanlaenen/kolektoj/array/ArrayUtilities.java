@@ -232,7 +232,6 @@ public final class ArrayUtilities {
             if (comparison == 0) {
                 return middle;
             } else if (comparison < 0) {
-                // EQMU: Changing the conditional boundary above produces an equivalent mutant.
                 above = middle;
             } else {
                 below = middle;
