@@ -8,6 +8,8 @@ import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.kolektoj.Collection;
+
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.SortedTree} class.
  */
@@ -337,5 +339,33 @@ public class SortedTreeTest {
         SortedTree<Integer, String> tree = createTree(THREE);
         tree.removeIf(k -> k == 2);
         assertFalse(tree.containsKey(2));
+    }
+
+    /**
+     * Verifies that retainAllKeys should return true when not all nodes in the tree are retained.
+     */
+    @Test
+    public void retainAllKeysShouldReturnTrueIfNotAllNodesWereRetained() {
+        SortedTree<Integer, String> tree = createTree(THREE);
+        assertTrue(tree.retainAllKeys(Collection.of(1, 2)));
+    }
+
+    /**
+     * Verifies that retainAllKeys should return false when all nodes in the tree are retained.
+     */
+    @Test
+    public void retainAllKeysShouldReturnFalseIfAllNodesWereRetained() {
+        SortedTree<Integer, String> tree = createTree(THREE);
+        assertFalse(tree.retainAllKeys(Collection.of(1, 2, THREE)));
+    }
+
+    /**
+     * Verifies that retainAllKeys doesn't retain a node with an absent key.
+     */
+    @Test
+    public void retainAllKeysShouldNotRetainANodeWithAnAbsentKey() {
+        SortedTree<Integer, String> tree = createTree(THREE);
+        tree.retainAllKeys(Collection.of(1, 2));
+        assertFalse(tree.containsKey(THREE));
     }
 }

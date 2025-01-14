@@ -412,6 +412,14 @@ class SortedTree<K, C> {
         return removeArraySize > 0;
     }
 
+    /**
+     * Retains all nodes in a tree with keys in this collection and removes all other, and returns whether it decreased
+     * the size of the tree.
+     *
+     * @param collection A collection with keys for which the nodes should be retained in this tree.
+     * @return True if the size of the tree decreased after retaining only the nodes with keys present in the provided
+     *         collection.
+     */
     boolean retainAllKeys(final Collection<? extends K> keys) {
         boolean[] matched = new boolean[size];
         for (Object element : keys) {
