@@ -181,7 +181,7 @@ to Kolektoj methods.
 | default V putIfAbsent(K key, V value)                                                               |                     |                                                                 |
 | V remove(Object key)                                                                                | ModifiableMap&lt;E> | V remove(K key)                                                 |
 | default boolean remove(Object key, Object value)                                                    |                     |                                                                 |
-| default V replace(K key, V value)                                                                   | ModifiableMap&lt;E> | V update(K key, V value)                                        |
+| default V replace(K key, V value)                                                                   | UpdatableMap&lt;E>  | V update(K key, V value)                                        |
 | default boolean replace(K key, V oldValue, V newValue)                                              |                     |                                                                 |
 | default void replaceAll(BiFunction&lt;? super K,? super V,? extends V> function)                    |                     |                                                                 |
 | int size()                                                                                          | Collection&lt;E>    | int size()                                                      |
