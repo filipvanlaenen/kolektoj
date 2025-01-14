@@ -23,7 +23,8 @@ import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.Map} interface.
  *
- * @param <T> The subclass type to be tested.
+ * @param <T>  The subclass type to be tested.
+ * @param <TC> The subclass type to be tested, but with a key type with colliding hash values.
  */
 public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map<KeyWithCollidingHash, Integer>> {
     /**
@@ -71,8 +72,16 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      * Class with colliding hash codes.
      */
     public static final class KeyWithCollidingHash {
+        /**
+         * The value for the key.
+         */
         private final int value;
 
+        /**
+         * Constructor taking the key value as its parameter.
+         *
+         * @param value The key value.
+         */
         public KeyWithCollidingHash(final int value) {
             this.value = value;
         }
@@ -82,6 +91,11 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
             return other != null && getValue() == ((KeyWithCollidingHash) other).getValue();
         }
 
+        /**
+         * Returns the key value.
+         *
+         * @return The key value.
+         */
         private int getValue() {
             return value;
         }

@@ -13,10 +13,11 @@ import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.UpdatableMap} interface.
  *
- * @param <T> The subclass type to be tested.
+ * @param <T>  The subclass type to be tested.
+ * @param <TC> The subclass type to be tested, but with a key type with colliding hash values.
  */
-public abstract class UpdatableMapTestBase<T extends UpdatableMap<Integer, String>, TC extends UpdatableMap<KeyWithCollidingHash, Integer>>
-        extends MapTestBase<T, TC> {
+public abstract class UpdatableMapTestBase<T extends UpdatableMap<Integer, String>,
+        TC extends UpdatableMap<KeyWithCollidingHash, Integer>> extends MapTestBase<T, TC> {
     /**
      * The magic number four.
      */
