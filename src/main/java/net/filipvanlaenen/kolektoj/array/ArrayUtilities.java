@@ -233,6 +233,16 @@ public final class ArrayUtilities {
      */
     private static <E> int partition(final Object[] array, final Comparator<E> comparator, final int first,
             final int last) {
+        int middle = (first + last) / 2;
+        if (comparator.compare((E) array[middle], (E) array[first]) < 0) {
+            swap(array, first, middle);
+        }
+        if (comparator.compare((E) array[last], (E) array[first]) < 0) {
+            swap(array, first, last);
+        }
+        if (comparator.compare((E) array[middle], (E) array[last]) < 0) {
+            swap(array, middle, last);
+        }
         E pivot = (E) array[last];
         int index = first - 1;
         for (int j = first; j < last; j++) {

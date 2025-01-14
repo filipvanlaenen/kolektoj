@@ -27,6 +27,10 @@ public class ArrayUtilitiesTest {
      */
     private static final int FOUR = 4;
     /**
+     * The magic number one million.
+     */
+    private static final int ONE_MILLION = 1000000;
+    /**
      * Collection with the integers 1, 2 and 3.
      */
     private static final Collection<Integer> COLLECTION123 = new ArrayCollection<Integer>(1, 2, 3);
@@ -255,5 +259,19 @@ public class ArrayUtilitiesTest {
                 new Entry<Integer, String>(1, "one"), new Entry<Integer, String>(2, "two"));
         assertEquals("one", map.get(1));
         assertEquals("two", map.get(2));
+    }
+
+    /**
+     * Verifies that quicksort can handle a large array of one million elements that is already sorted. The method is
+     * tested through the constructor of the SortedArrayCollection class.
+     */
+    @Test
+    public void quicksortShouldHandleALargeSortedArray() {
+        Integer[] array = new Integer[ONE_MILLION];
+        for (int i = 0; i < ONE_MILLION; i++) {
+            array[i] = i;
+        }
+        SortedArrayCollection<Integer> collection = new SortedArrayCollection<Integer>(COMPARATOR, array);
+        assertEquals(ONE_MILLION, collection.size());
     }
 }

@@ -46,5 +46,4 @@ public final class SortedArrayCollectionTest extends OrderedCollectionTestBase<S
     protected SortedArrayCollection<Integer> createOrderedCollection(final SortedArrayCollection<Integer> collection) {
         return new SortedArrayCollection<Integer>(COMPARATOR, collection);
     }
-
 }
