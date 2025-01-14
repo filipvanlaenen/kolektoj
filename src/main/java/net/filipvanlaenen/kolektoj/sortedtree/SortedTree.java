@@ -22,8 +22,14 @@ class SortedTree<K, C> {
      * The key comparator to sort the nodes of the tree.
      */
     private final Comparator<K> comparator;
+    /**
+     * The cardinality of the elements.
+     */
     private final ElementCardinality elementCardinality;
-    private final Class<K> keyType = getKeyType();
+    /**
+     * The class of the key.
+     */
+    private final Class<K> keyClass = getKeyType();
     /**
      * The root node of the tree.
      */
@@ -33,11 +39,24 @@ class SortedTree<K, C> {
      */
     private int size;
 
+    /**
+     * Constructor taking the comparator and the element cardinality as its arguments.
+     *
+     * @param comparator         The comparator to sort the keys.
+     * @param elementCardinality The element cardinality.
+     */
     SortedTree(final Comparator<K> comparator, final ElementCardinality elementCardinality) {
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;
     }
 
+    /**
+     * Adds a node to the tree with the given key and content.
+     *
+     * @param key     The key for the node.
+     * @param content The content for the node.
+     * @return True if a new node was created and added to the tree.
+     */
     boolean add(final K key, final C content) {
         Node<K, C> newNode = new Node<K, C>(key, content);
         int originalSize = size;
@@ -60,6 +79,9 @@ class SortedTree<K, C> {
         return getNodeHeight(node.getRightChild()) - getNodeHeight(node.getLeftChild());
     }
 
+    /**
+     * Resets the tree to be empty.
+     */
     void clear() {
         root = null;
         size = 0;
@@ -86,13 +108,19 @@ class SortedTree<K, C> {
         }
         boolean[] matched = new boolean[size];
         for (Object key : collection) {
-            if (!(keyType.isInstance(key) && findAndMarkMatch(root, matched, 0, (K) key))) {
+            if (!(keyClass.isInstance(key) && findAndMarkMatch(root, matched, 0, (K) key))) {
                 return false;
             }
         }
         return true;
     }
 
+    /**
+     * Returns whether the tree contains a node with the given key.
+     *
+     * @param key The key.
+     * @return True if the tree contains a node with the given key.
+     */
     boolean containsKey(final K key) {
         return getNode(key) != null;
     }
@@ -226,8 +254,14 @@ class SortedTree<K, C> {
         }
     }
 
-    private Class<K> getKeyType(final K... foo) {
-        return (Class<K>) foo.getClass().getComponentType();
+    /**
+     * Returns a class object with the class for the keys.
+     *
+     * @param keys A variable argument array with the key type as its component type.
+     * @return A class object with the class for the keys.
+     */
+    private Class<K> getKeyType(final K... keys) {
+        return (Class<K>) keys.getClass().getComponentType();
     }
 
     Node<K, C> getNode(final K key) {
@@ -256,10 +290,20 @@ class SortedTree<K, C> {
         return node == null ? 0 : node.getHeight();
     }
 
+    /**
+     * Returns the root node of the tree.
+     *
+     * @return The root node of the tree.
+     */
     Node<K, C> getRootNode() {
         return root;
     }
 
+    /**
+     * Returns the size of the tree.
+     *
+     * @return The size of the tree.
+     */
     int getSize() {
         return size;
     }
@@ -344,7 +388,7 @@ class SortedTree<K, C> {
     boolean retainAllKeys(final Collection<? extends K> keys) {
         boolean[] matched = new boolean[size];
         for (Object element : keys) {
-            if (keyType.isInstance(element)) {
+            if (keyClass.isInstance(element)) {
                 findAndMarkMatch(root, matched, 0, (K) element);
             }
         }

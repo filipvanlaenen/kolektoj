@@ -47,27 +47,27 @@ public class SortedTreeTest {
     /**
      * An empty tree to run unit tests on.
      */
-    private static final SortedTree<Integer, Integer> EMPTY_TREE = createEmptyTree();
+    private static final SortedTree<Integer, String> EMPTY_TREE = createEmptyTree();
     /**
      * A tiny tree to run unit tests on, containing only one element.
      */
-    private static final SortedTree<Integer, Integer> TINY_TREE = createTree(1);
+    private static final SortedTree<Integer, String> TINY_TREE = createTree(1);
     /**
      * A small tree to run unit tests on, containing three elements.
      */
-    private static final SortedTree<Integer, Integer> SMALL_TREE = createTree(THREE);
+    private static final SortedTree<Integer, String> SMALL_TREE = createTree(THREE);
     /**
      * A large tree to run unit tests on, containing twenty elements.
      */
-    private static final SortedTree<Integer, Integer> LARGE_TREE = createTree(TWENTY);
+    private static final SortedTree<Integer, String> LARGE_TREE = createTree(TWENTY);
 
     /**
      * Factory method to create an empty tree.
      *
      * @return An empty tree.
      */
-    private static SortedTree<Integer, Integer> createEmptyTree() {
-        return new SortedTree<Integer, Integer>(COMPARATOR, DISTINCT_ELEMENTS);
+    private static SortedTree<Integer, String> createEmptyTree() {
+        return new SortedTree<Integer, String>(COMPARATOR, DISTINCT_ELEMENTS);
     }
 
     /**
@@ -76,19 +76,64 @@ public class SortedTreeTest {
      * @param size The size of the tree.
      * @return A tree with the given size.
      */
-    private static SortedTree<Integer, Integer> createTree(final int size) {
-        SortedTree<Integer, Integer> tree = createEmptyTree();
+    private static SortedTree<Integer, String> createTree(final int size) {
+        SortedTree<Integer, String> tree = createEmptyTree();
         for (int key = 1; key <= size; key++) {
-            tree.add(key, key + 1);
+            tree.add(key, Integer.toString(key));
         }
         return tree;
+    }
+
+    /**
+     * Verifies that adding an element to an empty tree returns true.
+     */
+    @Test
+    public void addShouldReturnTrueOnAnEmptyTree() {
+        assertTrue(createEmptyTree().add(1, "1"));
+    }
+
+    /**
+     * Verifies that trying to add an element that is already present returns false.
+     */
+    @Test
+    public void addShouldReturnFalseOnATreeWithDistinct() {
+        assertFalse(createTree(1).add(1, "1"));
+    }
+
+    /**
+     * Verifies that adding an element to an empty tree increases the size to one.
+     */
+    @Test
+    public void addShouldIncreaseSizeToOneForEmptyTree() {
+        SortedTree<Integer, String> tree = createTree(1);
+        assertEquals(1, tree.getSize());
+    }
+
+    /**
+     * Verifies that clearing a tree sets its size to zero.
+     */
+    @Test
+    public void clearShouldSetSizeToZero() {
+        SortedTree<Integer, String> tree = createTree(1);
+        tree.clear();
+        assertEquals(0, tree.getSize());
+    }
+
+    /**
+     * Verifies that clearing a tree sets its root node to <code>null</code>.
+     */
+    @Test
+    public void clearShouldSetRootNodeToNull() {
+        SortedTree<Integer, String> tree = createTree(1);
+        tree.clear();
+        assertNull(tree.getRootNode());
     }
 
     /**
      * Verifies that an empty tree doesn't contain an element.
      */
     @Test
-    public void containsShouldReturnFalseForEmptyTree() {
+    public void containsKeyShouldReturnFalseForEmptyTree() {
         assertFalse(EMPTY_TREE.containsKey(1));
     }
 
@@ -96,7 +141,7 @@ public class SortedTreeTest {
      * Verifies that a tiny tree contains its element.
      */
     @Test
-    public void containsShouldReturnTrueForKeyInTinyTree() {
+    public void containsKeyShouldReturnTrueForKeyInTinyTree() {
         assertTrue(TINY_TREE.containsKey(1));
     }
 
@@ -104,7 +149,7 @@ public class SortedTreeTest {
      * Verifies that a tiny tree doesn't contain elements it doesn't contain.
      */
     @Test
-    public void containsShouldReturnFalseForKeyAbsentInTinyTree() {
+    public void containsKeyShouldReturnFalseForKeyAbsentInTinyTree() {
         assertFalse(TINY_TREE.containsKey(0));
         assertFalse(TINY_TREE.containsKey(HUNDRED));
     }
@@ -113,7 +158,7 @@ public class SortedTreeTest {
      * Verifies that a small tree contains its element.
      */
     @Test
-    public void containsShouldReturnTrueForKeysInSmallTree() {
+    public void containsKeyShouldReturnTrueForKeysInSmallTree() {
         for (int key = 1; key <= THREE; key++) {
             assertTrue(SMALL_TREE.containsKey(key));
         }
@@ -123,7 +168,7 @@ public class SortedTreeTest {
      * Verifies that a small tree doesn't contain elements it doesn't contain.
      */
     @Test
-    public void containsShouldReturnFalseForKeysAbsentInSmallTree() {
+    public void containsKeyShouldReturnFalseForKeysAbsentInSmallTree() {
         assertFalse(SMALL_TREE.containsKey(0));
         assertFalse(SMALL_TREE.containsKey(HUNDRED));
     }
@@ -132,7 +177,7 @@ public class SortedTreeTest {
      * Verifies that a large tree contains its element.
      */
     @Test
-    public void containsShouldReturnTrueForKeysInLargeTree() {
+    public void containsKeyShouldReturnTrueForKeysInLargeTree() {
         for (int key = 1; key <= TWENTY; key++) {
             assertTrue(LARGE_TREE.containsKey(key));
         }
@@ -142,7 +187,7 @@ public class SortedTreeTest {
      * Verifies that a large tree doesn't contain elements it doesn't contain.
      */
     @Test
-    public void containsShouldReturnFalseForKeysAbsentInLargeTree() {
+    public void containsKeyShouldReturnFalseForKeysAbsentInLargeTree() {
         assertFalse(LARGE_TREE.containsKey(0));
         assertFalse(LARGE_TREE.containsKey(HUNDRED));
     }
@@ -159,10 +204,10 @@ public class SortedTreeTest {
      * Verifies that <code>getRootNode</code> returns the root node for a tiny tree.
      */
     @Test
-    public void getNodeShouldReturnNodeWithKeyAndValueForTinyTree() {
-        Node<Integer, Integer> node = TINY_TREE.getRootNode();
+    public void getRootNodeShouldReturnNodeWithKeyAndValueForTinyTree() {
+        Node<Integer, String> node = TINY_TREE.getRootNode();
         assertEquals(1, node.getKey());
-        assertEquals(2, node.getContent());
+        assertEquals("1", node.getContent());
     }
 
     /**
@@ -177,10 +222,10 @@ public class SortedTreeTest {
      * Verifies that <code>getNode</code> with the correct key returns the root node for a tiny tree.
      */
     @Test
-    public void getNodeWithKeyShouldReturnNodeWithKeyAndValueForTinyTree() {
-        Node<Integer, Integer> node = TINY_TREE.getNode(1);
+    public void getNodeWithKeyShouldReturnRootNodeForTinyTree() {
+        Node<Integer, String> node = TINY_TREE.getNode(1);
         assertEquals(1, node.getKey());
-        assertEquals(2, node.getContent());
+        assertEquals("1", node.getContent());
     }
 
     /**
@@ -198,9 +243,9 @@ public class SortedTreeTest {
     @Test
     public void getNodeWithKeyShouldReturnNodeWithKeyAndValueForSmallTree() {
         for (int key = 1; key <= THREE; key++) {
-            Node<Integer, Integer> node = SMALL_TREE.getNode(key);
+            Node<Integer, String> node = SMALL_TREE.getNode(key);
             assertEquals(key, node.getKey());
-            assertEquals(key + 1, node.getContent());
+            assertEquals(Integer.toString(key), node.getContent());
         }
     }
 
@@ -219,9 +264,9 @@ public class SortedTreeTest {
     @Test
     public void getNodeWithKeyShouldReturnNodeWithKeyAndValueForLargeTree() {
         for (int key = 1; key <= TWENTY; key++) {
-            Node<Integer, Integer> node = LARGE_TREE.getNode(key);
+            Node<Integer, String> node = LARGE_TREE.getNode(key);
             assertEquals(key, node.getKey());
-            assertEquals(key + 1, node.getContent());
+            assertEquals(Integer.toString(key), node.getContent());
         }
     }
 
