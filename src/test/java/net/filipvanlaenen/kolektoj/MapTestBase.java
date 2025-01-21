@@ -207,6 +207,16 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
     }
 
     /**
+     * Verifies that contains returns false for an entry in a map with duplicate keys when the key isn't presented with
+     * the entry's values.
+     */
+    @Test
+    public void containsShouldReturnFalseForAnEntryInAMapWithDuplicateKeysWhenKeyMatchesButNotValue() {
+        Map<Integer, String> map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY1BIS, ENTRY3);
+        assertFalse(map123.contains(new Entry<Integer, String>(1, "ter")));
+    }
+
+    /**
      * Verifies that containsKey returns false for a empty map.
      */
     @Test
