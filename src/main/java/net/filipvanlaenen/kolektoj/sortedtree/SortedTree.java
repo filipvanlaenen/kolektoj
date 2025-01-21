@@ -10,10 +10,10 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
-import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
@@ -109,13 +109,17 @@ class SortedTree<K, C> {
     }
 
     /**
-     * Compacts and array with K,V-entries into a new array with K,Collection<V>-entries, collecting entries with the
+     * Compacts an array with K,V-entries into a new array with K,Collection<V>-entries, collecting entries with the
      * same K together.
      *
-     * @param kvEntries An array with the K,V-entries.
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param kvEntries              An array with the K,V-entries.
+     * @param modifiable             Whether the collection should be modifiable or not.
      * @return An array with K,Collection<V>-entries.
      */
-    static <K, V> Object[] compact(final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, V>[] kvEntries,
+    static <L, W> Object[] compact(final KeyAndValueCardinality keyAndValueCardinality, final Entry<L, W>[] kvEntries,
             final boolean modifiable) {
         int kvLength = kvEntries.length;
         ElementCardinality cardinality =
@@ -123,22 +127,22 @@ class SortedTree<K, C> {
         Object[] firstPass = new Object[kvLength];
         int j = -1;
         for (int i = 0; i < kvLength; i++) {
-            if (i == 0 || !Objects.equals(((Entry<K, V>) kvEntries[i]).key(),
-                    ((Entry<K, ModifiableCollection<V>>) firstPass[j]).key())) {
+            if (i == 0 || !Objects.equals(((Entry<L, W>) kvEntries[i]).key(),
+                    ((Entry<L, ModifiableCollection<W>>) firstPass[j]).key())) {
                 j++;
-                firstPass[j] = new Entry<K, ModifiableCollection<V>>(((Entry<K, V>) kvEntries[i]).key(),
-                        new ModifiableArrayCollection<V>(cardinality));
+                firstPass[j] = new Entry<L, ModifiableCollection<W>>(((Entry<L, W>) kvEntries[i]).key(),
+                        new ModifiableArrayCollection<W>(cardinality));
             }
-            ((Entry<K, ModifiableCollection<V>>) firstPass[j]).value().add(((Entry<K, V>) kvEntries[i]).value());
+            ((Entry<L, ModifiableCollection<W>>) firstPass[j]).value().add(((Entry<L, W>) kvEntries[i]).value());
         }
         int resultLength = j + 1;
         Object[] result = new Object[resultLength];
         for (int i = 0; i < resultLength; i++) {
-            result[i] = new Entry<K, Collection<V>>(((Entry<K, ModifiableCollection<V>>) firstPass[i]).key(),
+            result[i] = new Entry<L, Collection<W>>(((Entry<L, ModifiableCollection<W>>) firstPass[i]).key(),
                     modifiable
-                            ? new ModifiableArrayCollection<V>(
-                                    ((Entry<K, ModifiableCollection<V>>) firstPass[i]).value())
-                            : new ArrayCollection<V>(((Entry<K, ModifiableCollection<V>>) firstPass[i]).value()));
+                            ? new ModifiableArrayCollection<W>(
+                                    ((Entry<L, ModifiableCollection<W>>) firstPass[i]).value())
+                            : new ArrayCollection<W>(((Entry<L, ModifiableCollection<W>>) firstPass[i]).value()));
         }
         return result;
     }
@@ -458,7 +462,7 @@ class SortedTree<K, C> {
      * Retains all nodes in a tree with keys in this collection and removes all other, and returns whether it decreased
      * the size of the tree.
      *
-     * @param collection A collection with keys for which the nodes should be retained in this tree.
+     * @param keys A collection with keys for which the nodes should be retained in this tree.
      * @return True if the size of the tree decreased after retaining only the nodes with keys present in the provided
      *         collection.
      */
@@ -548,6 +552,32 @@ class SortedTree<K, C> {
         Node<K, C>[] array = createNodeArray(size);
         addNodesToArray(array, root, 0);
         return array.clone();
+    }
+
+    /**
+     * Uncompacts an array with K,Collection<V>-entries into a new array with K,V-entries.
+     *
+     * @param <L>            The key type.
+     * @param <W>            The value type.
+     * @param <D>            The value collection type.
+     * @param compactedArray An array with the K,Collection<V>-entries.
+     * @return An array with K,V-entries.
+     */
+    static <L, W, D extends Collection<W>> Entry<L, W>[] uncompact(final Node<L, D>[] compactedArray) {
+        int size = 0;
+        for (Node<L, D> node : compactedArray) {
+            size += node.getSize();
+        }
+        Entry<L, W>[] result = (Entry<L, W>[]) new Object[size];
+        int i = 0;
+        for (Node<L, D> node : compactedArray) {
+            L key = node.getKey();
+            for (W value : node.getContent()) {
+                result[i] = new Entry<L, W>(key, value);
+                i++;
+            }
+        }
+        return result;
     }
 
     /**

@@ -11,8 +11,8 @@ import net.filipvanlaenen.kolektoj.ModifiableSortedMapTestBase;
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeMap} class.
  */
-public final class ModifiableSortedTreeMapTest extends
-        ModifiableSortedMapTestBase<ModifiableSortedTreeMap<Integer, String>, ModifiableSortedTreeMap<KeyWithCollidingHash, Integer>> {
+public final class ModifiableSortedTreeMapTest extends ModifiableSortedMapTestBase<
+        ModifiableSortedTreeMap<Integer, String>, ModifiableSortedTreeMap<KeyWithCollidingHash, Integer>> {
     /**
      * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
      * value.
@@ -47,7 +47,7 @@ public final class ModifiableSortedTreeMapTest extends
 
     @Override
     protected ModifiableSortedTreeMap<KeyWithCollidingHash, Integer> createCollidingKeyHashMap(
-            Entry<KeyWithCollidingHash, Integer>... entries) {
+            final Entry<KeyWithCollidingHash, Integer>... entries) {
         return new ModifiableSortedTreeMap<KeyWithCollidingHash, Integer>(KEY_WITH_COLLIDING_HASH_COMPARATOR, entries);
     }
 }

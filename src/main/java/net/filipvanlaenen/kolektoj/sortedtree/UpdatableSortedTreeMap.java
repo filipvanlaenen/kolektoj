@@ -5,7 +5,6 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICAT
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
-import java.lang.reflect.Array;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Spliterator;
@@ -91,7 +90,6 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
                 throw new IllegalArgumentException("Map entries can't be null.");
             }
         }
-
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
             public int compare(final Entry<K, V> e1, final Entry<K, V> e2) {
@@ -204,17 +202,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     @Override
     public Object[] toArray() {
         if (cachedArrayDirty) {
-            Class<Entry<K, V>> elementType = (Class<Entry<K, V>>) cachedArray.getClass().getComponentType();
-            cachedArray = (Entry<K, V>[]) Array.newInstance(elementType, size);
-            Node<K, ModifiableCollection<V>>[] compactedArray = sortedTree.toArray();
-            int i = 0;
-            for (Node<K, ModifiableCollection<V>> node : compactedArray) {
-                K key = node.getKey();
-                for (V value : node.getContent()) {
-                    cachedArray[i] = new Entry<K, V>(key, value);
-                    i++;
-                }
-            }
+            cachedArray = SortedTree.uncompact(sortedTree.toArray());
             cachedArrayDirty = false;
         }
         return cachedArray.clone();
