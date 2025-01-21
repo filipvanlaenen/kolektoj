@@ -8,7 +8,6 @@ import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_K
 import java.lang.reflect.Array;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
@@ -32,7 +31,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     /**
      * A sorted array with the entries.
      */
-    private Object[] cachedArray;
+    private Entry<K, V>[] cachedArray;
     /**
      * A boolean flag indicating whether the cachedArray field is dirty.
      */
@@ -101,14 +100,15 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         };
         this.keyAndValueCardinality = keyAndValueCardinality;
         if (keyAndValueCardinality == DISTINCT_KEYS) {
-            cachedArray = ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(entries), entryByKeyComparator);
+            cachedArray = (Entry<K, V>[]) ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(entries),
+                    entryByKeyComparator);
             cachedArrayDirty = cachedArray.length != entries.length;
         } else {
-            cachedArray = ArrayUtilities.quicksort(entries, entryByKeyComparator);
+            cachedArray = (Entry<K, V>[]) ArrayUtilities.quicksort(entries, entryByKeyComparator);
             cachedArrayDirty = false;
         }
         size = this.cachedArray.length;
-        sortedTree = SortedTree.fromSortedEntryArray(comparator, keyAndValueCardinality, compact(this.cachedArray));
+        sortedTree = SortedTree.fromSortedEntryArray(comparator, keyAndValueCardinality, this.cachedArray, true);
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
         ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
@@ -120,29 +120,6 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         this.values = new ModifiableArrayCollection<V>(theValues);
     }
 
-    private Entry<K, ModifiableCollection<V>>[] compact(final Object[] entries) {
-        int originalLength = entries.length;
-        ElementCardinality cardinality =
-                keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS;
-        Entry<K, ModifiableCollection<V>>[] firstPass = createModifiableCollectionEntryArray(originalLength);
-        int j = -1;
-        for (int i = 0; i < originalLength; i++) {
-            if (i == 0 || !Objects.equals(((Entry<K, V>) entries[i]).key(), firstPass[j].key())) {
-                j++;
-                firstPass[j] = new Entry<K, ModifiableCollection<V>>(((Entry<K, V>) entries[i]).key(),
-                        new ModifiableArrayCollection<V>(cardinality));
-            }
-            firstPass[j].value().add(((Entry<K, V>) entries[i]).value());
-        }
-        int resultLength = j + 1;
-        Entry<K, ModifiableCollection<V>>[] result = createModifiableCollectionEntryArray(resultLength);
-        for (int i = 0; i < resultLength; i++) {
-            result[i] = new Entry<K, ModifiableCollection<V>>(firstPass[i].key(),
-                    new ModifiableArrayCollection<V>(firstPass[i].value()));
-        }
-        return result;
-    }
-
     @Override
     public boolean contains(final Entry<K, V> element) {
         Node<K, ModifiableCollection<V>> node = sortedTree.getNode(element.key());
@@ -151,10 +128,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        if (collection.size() > size()) {
-            return false;
-        }
-        return ArrayUtilities.containsAll(toArray(), size(), collection);
+        return ArrayUtilities.containsAll(toArray(), size, collection);
     }
 
     @Override
@@ -165,13 +139,6 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     @Override
     public boolean containsValue(final V value) {
         return values.contains(value);
-    }
-
-    private Entry<K, ModifiableCollection<V>>[] createModifiableCollectionEntryArray(final int length,
-            final Entry<K, ModifiableCollection<V>>... foo) {
-        Class<Entry<K, ModifiableCollection<V>>> elementType =
-                (Class<Entry<K, ModifiableCollection<V>>>) foo.getClass().getComponentType();
-        return (Entry<K, ModifiableCollection<V>>[]) Array.newInstance(elementType, length);
     }
 
     @Override
@@ -230,7 +197,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     @Override
     public Spliterator<Entry<K, V>> spliterator() {
         int characteristics = Spliterator.ORDERED | Spliterator.SORTED
-                | (keyAndValueCardinality == DISTINCT_KEYS ? Spliterator.DISTINCT : 0);
+                | (keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? 0 : Spliterator.DISTINCT);
         return new ArraySpliterator<Entry<K, V>>(toArray(), characteristics, entryByKeyComparator);
     }
 

@@ -7,7 +7,6 @@ import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_K
 
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
@@ -32,7 +31,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     /**
      * A sorted array with the entries.
      */
-    private final Object[] entries;
+    private final Entry<K, V>[] entries;
     /**
      * The key and value cardinality.
      */
@@ -95,13 +94,13 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         };
         this.keyAndValueCardinality = keyAndValueCardinality;
         if (keyAndValueCardinality == DISTINCT_KEYS) {
-            this.entries =
-                    ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(entries), entryByKeyComparator);
+            this.entries = (Entry<K, V>[]) ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(entries),
+                    entryByKeyComparator);
         } else {
-            this.entries = ArrayUtilities.quicksort(entries, entryByKeyComparator);
+            this.entries = (Entry<K, V>[]) ArrayUtilities.quicksort(entries, entryByKeyComparator);
         }
         size = this.entries.length;
-        sortedTree = SortedTree.fromSortedEntryArray(comparator, keyAndValueCardinality, compact(this.entries));
+        sortedTree = SortedTree.fromSortedEntryArray(comparator, keyAndValueCardinality, this.entries, false);
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
         ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
@@ -111,37 +110,6 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         }
         this.keys = new SortedArrayCollection<K>(comparator, theKeys);
         this.values = new ArrayCollection<V>(theValues);
-    }
-
-    /**
-     * Compacts and array with K,V-entries into a new array with K,Collection<V>-entries, collecting entries with the
-     * same K together.
-     *
-     * @param kvEntries An array with the K,V-entries.
-     * @return An array with K,Collection<V>-entries.
-     */
-    private Object[] compact(final Object[] kvEntries) {
-        int kvLength = kvEntries.length;
-        ElementCardinality cardinality =
-                keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS;
-        Object[] firstPass = new Object[kvLength];
-        int j = -1;
-        for (int i = 0; i < kvLength; i++) {
-            if (i == 0 || !Objects.equals(((Entry<K, V>) kvEntries[i]).key(),
-                    ((Entry<K, ModifiableCollection<V>>) firstPass[j]).key())) {
-                j++;
-                firstPass[j] = new Entry<K, ModifiableCollection<V>>(((Entry<K, V>) kvEntries[i]).key(),
-                        new ModifiableArrayCollection<V>(cardinality));
-            }
-            ((Entry<K, ModifiableCollection<V>>) firstPass[j]).value().add(((Entry<K, V>) kvEntries[i]).value());
-        }
-        int resultLength = j + 1;
-        Object[] result = new Object[resultLength];
-        for (int i = 0; i < resultLength; i++) {
-            result[i] = new Entry<K, Collection<V>>(((Entry<K, ModifiableCollection<V>>) firstPass[i]).key(),
-                    new ArrayCollection<V>(((Entry<K, ModifiableCollection<V>>) firstPass[i]).value()));
-        }
-        return result;
     }
 
     @Override

@@ -1,15 +1,21 @@
 package net.filipvanlaenen.kolektoj.sortedtree;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
 import java.lang.reflect.Array;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
+import net.filipvanlaenen.kolektoj.array.ArrayCollection;
+import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
 /**
  * A class implementing an AVL tree.
@@ -99,6 +105,41 @@ class SortedTree<K, C> {
         result = collectUnmatchedForRemoval(removeArray, result, node.getLeftChild(), matched, index + 1);
         int leftSize = node.getLeftChild() == null ? 0 : node.getLeftChild().getSize();
         result = collectUnmatchedForRemoval(removeArray, result, node.getRightChild(), matched, index + leftSize + 1);
+        return result;
+    }
+
+    /**
+     * Compacts and array with K,V-entries into a new array with K,Collection<V>-entries, collecting entries with the
+     * same K together.
+     *
+     * @param kvEntries An array with the K,V-entries.
+     * @return An array with K,Collection<V>-entries.
+     */
+    static <K, V> Object[] compact(final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, V>[] kvEntries,
+            final boolean modifiable) {
+        int kvLength = kvEntries.length;
+        ElementCardinality cardinality =
+                keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS;
+        Object[] firstPass = new Object[kvLength];
+        int j = -1;
+        for (int i = 0; i < kvLength; i++) {
+            if (i == 0 || !Objects.equals(((Entry<K, V>) kvEntries[i]).key(),
+                    ((Entry<K, ModifiableCollection<V>>) firstPass[j]).key())) {
+                j++;
+                firstPass[j] = new Entry<K, ModifiableCollection<V>>(((Entry<K, V>) kvEntries[i]).key(),
+                        new ModifiableArrayCollection<V>(cardinality));
+            }
+            ((Entry<K, ModifiableCollection<V>>) firstPass[j]).value().add(((Entry<K, V>) kvEntries[i]).value());
+        }
+        int resultLength = j + 1;
+        Object[] result = new Object[resultLength];
+        for (int i = 0; i < resultLength; i++) {
+            result[i] = new Entry<K, Collection<V>>(((Entry<K, ModifiableCollection<V>>) firstPass[i]).key(),
+                    modifiable
+                            ? new ModifiableArrayCollection<V>(
+                                    ((Entry<K, ModifiableCollection<V>>) firstPass[i]).value())
+                            : new ArrayCollection<V>(((Entry<K, ModifiableCollection<V>>) firstPass[i]).value()));
+        }
         return result;
     }
 
@@ -227,10 +268,11 @@ class SortedTree<K, C> {
         return sortedTree;
     }
 
-    static <L, D> SortedTree<L, D> fromSortedEntryArray(final Comparator<L> comparator,
-            final KeyAndValueCardinality keyAndValueCardinality, final Object[] sortedArray) {
+    static <L, D, W> SortedTree<L, D> fromSortedEntryArray(final Comparator<L> comparator,
+            final KeyAndValueCardinality keyAndValueCardinality, final Entry<L, W>[] sortedArray,
+            final boolean modifiable) {
         SortedTree<L, D> sortedTree = new SortedTree<L, D>(comparator, DISTINCT_ELEMENTS);
-        sortedTree.createEntryNodes(sortedArray);
+        sortedTree.createEntryNodes(compact(keyAndValueCardinality, sortedArray, modifiable));
         return sortedTree;
     }
 
