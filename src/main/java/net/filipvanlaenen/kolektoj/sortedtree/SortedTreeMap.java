@@ -156,10 +156,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        if (collection.size() > size()) {
-            return false;
-        }
-        return ArrayUtilities.containsAll(toArray(), size(), collection);
+        return ArrayUtilities.containsAll(entries, size, collection);
     }
 
     @Override
