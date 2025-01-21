@@ -213,7 +213,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
     @Test
     public void containsShouldReturnFalseForAnEntryInAMapWithDuplicateKeysWhenKeyMatchesButNotValue() {
         Map<Integer, String> map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY1BIS, ENTRY3);
-        assertFalse(map123.contains(new Entry<Integer, String>(1, "ter")));
+        assertFalse(map.contains(new Entry<Integer, String>(1, "ter")));
     }
 
     /**
