@@ -101,7 +101,6 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
             this.entries = ArrayUtilities.quicksort(entries, entryByKeyComparator);
         }
         size = this.entries.length;
-
         sortedTree = SortedTree.fromSortedEntryArray(comparator, keyAndValueCardinality, compact(this.entries));
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
@@ -114,23 +113,30 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         this.values = new ArrayCollection<V>(theValues);
     }
 
-    private Object[] compact(final Object[] originalEntries) {
-        int originalLength = originalEntries.length;
+    /**
+     * Compacts and array with K,V-entries into a new array with K,Collection<V>-entries, collecting entries with the
+     * same K together.
+     *
+     * @param kvEntries An array with the K,V-entries.
+     * @return An array with K,Collection<V>-entries.
+     */
+    private Object[] compact(final Object[] kvEntries) {
+        int kvLength = kvEntries.length;
         ElementCardinality cardinality =
                 keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS;
-        Object[] firstPass = new Object[originalLength];
+        Object[] firstPass = new Object[kvLength];
         int j = -1;
-        for (int i = 0; i < originalLength; i++) {
-            if (i == 0 || !Objects.equals(((Entry<K, V>) originalEntries[i]).key(),
+        for (int i = 0; i < kvLength; i++) {
+            if (i == 0 || !Objects.equals(((Entry<K, V>) kvEntries[i]).key(),
                     ((Entry<K, ModifiableCollection<V>>) firstPass[j]).key())) {
                 j++;
-                firstPass[j] = new Entry<K, ModifiableCollection<V>>(((Entry<K, V>) originalEntries[i]).key(),
+                firstPass[j] = new Entry<K, ModifiableCollection<V>>(((Entry<K, V>) kvEntries[i]).key(),
                         new ModifiableArrayCollection<V>(cardinality));
             }
-            ((Entry<K, ModifiableCollection<V>>) firstPass[j]).value().add(((Entry<K, V>) originalEntries[i]).value());
+            ((Entry<K, ModifiableCollection<V>>) firstPass[j]).value().add(((Entry<K, V>) kvEntries[i]).value());
         }
         int resultLength = j + 1;
-        Object[] result = new Object[originalLength];
+        Object[] result = new Object[resultLength];
         for (int i = 0; i < resultLength; i++) {
             result[i] = new Entry<K, Collection<V>>(((Entry<K, ModifiableCollection<V>>) firstPass[i]).key(),
                     new ArrayCollection<V>(((Entry<K, ModifiableCollection<V>>) firstPass[i]).value()));
@@ -189,7 +195,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     public Collection<V> getAll(final K key) throws IllegalArgumentException {
         Node<K, Collection<V>> node = sortedTree.getNode(key);
         if (node == null) {
-            throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
+            throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
         }
         return node.getContent();
     }
@@ -222,7 +228,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     @Override
     public Spliterator<Entry<K, V>> spliterator() {
         int characteristics = Spliterator.ORDERED | Spliterator.SORTED
-                | (keyAndValueCardinality == DISTINCT_KEYS ? Spliterator.DISTINCT : 0);
+                | (keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? 0 : Spliterator.DISTINCT);
         return new ArraySpliterator<Entry<K, V>>(entries, characteristics, entryByKeyComparator);
     }
 
