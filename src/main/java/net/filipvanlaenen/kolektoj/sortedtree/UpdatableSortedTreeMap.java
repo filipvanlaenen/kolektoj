@@ -202,7 +202,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     @Override
     public Object[] toArray() {
         if (cachedArrayDirty) {
-            cachedArray = SortedTree.uncompact(sortedTree.toArray());
+            cachedArray = SortedTree.uncompact(sortedTree.toArray(), cachedArray);
             cachedArrayDirty = false;
         }
         return cachedArray.clone();

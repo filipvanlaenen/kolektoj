@@ -354,7 +354,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     @Override
     public Object[] toArray() {
         if (cachedArrayDirty) {
-            cachedArray = SortedTree.uncompact(sortedTree.toArray());
+            cachedArray = SortedTree.uncompact(sortedTree.toArray(), cachedArray);
             cachedArrayDirty = false;
         }
         return cachedArray.clone();
