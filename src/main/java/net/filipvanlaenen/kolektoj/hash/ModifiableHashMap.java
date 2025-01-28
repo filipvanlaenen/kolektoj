@@ -15,6 +15,7 @@ import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
@@ -99,6 +100,16 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         this.hashedEntries = theHashedEntries;
         this.keys = theKeys;
         this.values = theValues;
+    }
+
+    /**
+     * Constructs a modifiable hash map from another map, with the same entries and the same key and value cardinality.
+     *
+     * @param map The map to create a new modifiable map from.
+     */
+    public ModifiableHashMap(final Map<K, V> map) {
+        this(map.getKeyAndValueCardinality());
+        addAll(map);
     }
 
     @Override

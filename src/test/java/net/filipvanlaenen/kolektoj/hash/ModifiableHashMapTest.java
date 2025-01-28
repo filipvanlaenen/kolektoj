@@ -107,6 +107,15 @@ public final class ModifiableHashMapTest
     }
 
     /**
+     * Verifies that a map can be constructed from another map.
+     */
+    @Test
+    public void constructorShouldCreateMapFromAnotherMap() {
+        ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>(MAP123);
+        assertTrue(map.containsSame(MAP123));
+    }
+    
+    /**
      * Verifies that adding an element to an empty map returns true.
      */
     @Test
