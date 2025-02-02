@@ -70,6 +70,11 @@ public final class HashMap<K, V> implements Map<K, V> {
      */
     public HashMap(final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, V>... entries)
             throws IllegalArgumentException {
+        this(keyAndValueCardinality, (Object[]) entries);
+    }
+
+    public HashMap(final KeyAndValueCardinality keyAndValueCardinality, final Object[] entries)
+            throws IllegalArgumentException {
         if (entries == null) {
             throw new IllegalArgumentException("Map entries can't be null.");
         }
@@ -96,7 +101,7 @@ public final class HashMap<K, V> implements Map<K, V> {
      * @param map The map to create a new map from.
      */
     public HashMap(final Map<K, V> map) {
-        this(map.getKeyAndValueCardinality(), (Entry<K, V>[]) map.toArray());
+        this(map.getKeyAndValueCardinality(), map.toArray());
     }
 
     @Override
