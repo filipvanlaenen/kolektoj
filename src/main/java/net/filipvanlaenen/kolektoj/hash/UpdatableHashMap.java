@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.UpdatableMap;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
@@ -89,6 +90,15 @@ public final class UpdatableHashMap<K, V> implements UpdatableMap<K, V> {
         this.hashedEntries = theHashedEntries;
         this.keys = new ArrayCollection<K>(theKeys);
         this.values = theValues;
+    }
+    
+    /**
+     * Constructs a map from another map, with the same entries and the same key and value cardinality.
+     *
+     * @param map The map to create a new map from.
+     */
+    public UpdatableHashMap(final Map<K, V> map) {
+        this(map.getKeyAndValueCardinality(), (Entry<K, V>[]) map.toArray());
     }
 
     @Override
