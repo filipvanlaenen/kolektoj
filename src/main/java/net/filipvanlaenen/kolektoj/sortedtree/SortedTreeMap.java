@@ -10,9 +10,11 @@ import java.util.Iterator;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.SortedMap;
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
@@ -31,7 +33,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     /**
      * A sorted array with the entries.
      */
-    private final Entry<K, V>[] entries;
+    private final Object[] entries;
     /**
      * The key and value cardinality.
      */
@@ -78,10 +80,15 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
      */
     public SortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
             final Entry<K, V>... entries) throws IllegalArgumentException {
+        this(keyAndValueCardinality, comparator, (Object[]) entries);
+    }
+
+    private SortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
+            final Object[] entries) throws IllegalArgumentException {
         if (entries == null) {
             throw new IllegalArgumentException("Map entries can't be null.");
         }
-        for (Entry<K, V> entry : entries) {
+        for (Object entry : entries) {
             if (entry == null) {
                 throw new IllegalArgumentException("Map entries can't be null.");
             }
@@ -104,12 +111,22 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
         ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
-        for (Entry<K, V> entry : entries) {
+        for (Object object : entries) {
+            Entry<K, V> entry = (Entry<K, V>) object;
             theKeys.add(entry.key());
             theValues.add(entry.value());
         }
         this.keys = new SortedArrayCollection<K>(comparator, theKeys);
         this.values = new ArrayCollection<V>(theValues);
+    }
+
+    /**
+     * Constructs a map from another map, with the same entries and the same key and value cardinality.
+     *
+     * @param map The map to create a new map from.
+     */
+    public SortedTreeMap(final Comparator<K> comparator, final Map<K, V> map) {
+        this(map.getKeyAndValueCardinality(), comparator, map.toArray());
     }
 
     @Override

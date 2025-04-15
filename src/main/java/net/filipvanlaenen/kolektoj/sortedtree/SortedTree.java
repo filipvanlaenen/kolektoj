@@ -119,7 +119,7 @@ class SortedTree<K, C> {
      * @param modifiable             Whether the collection should be modifiable or not.
      * @return An array with K,Collection<V>-entries.
      */
-    static <L, W> Object[] compact(final KeyAndValueCardinality keyAndValueCardinality, final Entry<L, W>[] kvEntries,
+    static <L, W> Object[] compact(final KeyAndValueCardinality keyAndValueCardinality, final Object[] kvEntries,
             final boolean modifiable) {
         int kvLength = kvEntries.length;
         ElementCardinality cardinality =
@@ -273,8 +273,7 @@ class SortedTree<K, C> {
     }
 
     static <L, D, W> SortedTree<L, D> fromSortedEntryArray(final Comparator<L> comparator,
-            final KeyAndValueCardinality keyAndValueCardinality, final Entry<L, W>[] sortedArray,
-            final boolean modifiable) {
+            final KeyAndValueCardinality keyAndValueCardinality, final Object[] sortedArray, final boolean modifiable) {
         SortedTree<L, D> sortedTree = new SortedTree<L, D>(comparator, DISTINCT_ELEMENTS);
         sortedTree.createEntryNodes(compact(keyAndValueCardinality, sortedArray, modifiable));
         return sortedTree;

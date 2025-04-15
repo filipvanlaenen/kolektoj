@@ -70,7 +70,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         this(keyAndValueCardinality, comparator, (Object[]) entries);
     }
 
-    public SortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
+    private SortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
             final Object[] entries) throws IllegalArgumentException {
         if (entries == null) {
             throw new IllegalArgumentException("Map entries can't be null.");
