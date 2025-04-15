@@ -73,7 +73,7 @@ public final class HashMap<K, V> implements Map<K, V> {
         this(keyAndValueCardinality, (Object[]) entries);
     }
 
-    public HashMap(final KeyAndValueCardinality keyAndValueCardinality, final Object[] entries)
+    private HashMap(final KeyAndValueCardinality keyAndValueCardinality, final Object[] entries)
             throws IllegalArgumentException {
         if (entries == null) {
             throw new IllegalArgumentException("Map entries can't be null.");
