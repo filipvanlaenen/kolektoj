@@ -111,10 +111,11 @@ public interface OrderedCollection<E> extends Collection<E> {
     /**
      * Returns a new empty ordered collection.
      *
+     * @param <E> The element type.
      * @return A new empty ordered collection.
      */
-    static OrderedCollection<Object> empty() {
-        return new OrderedArrayCollection<Object>();
+    static <E> OrderedCollection<E> empty() {
+        return new OrderedArrayCollection<E>();
     }
 
     /**
