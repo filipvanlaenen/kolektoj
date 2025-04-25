@@ -128,6 +128,15 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         this.values = new ModifiableArrayCollection<V>(theValues);
     }
 
+    /**
+     * Constructs a map from another map, with the same entries and the same key and value cardinality.
+     *
+     * @param map The map to create a new map from.
+     */
+    public ModifiableSortedTreeMap(final Comparator<K> comparator, final Map<K, V> map) {
+        this(map.getKeyAndValueCardinality(), comparator, map.toArray());
+    }
+
     @Override
     public boolean add(final K key, final V value) {
         Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
