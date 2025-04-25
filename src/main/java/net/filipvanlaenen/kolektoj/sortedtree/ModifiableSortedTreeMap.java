@@ -85,10 +85,15 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
      */
     public ModifiableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
             final Entry<K, V>... entries) throws IllegalArgumentException {
+        this(keyAndValueCardinality, comparator, (Object[]) entries);
+    }
+
+    private ModifiableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
+            final Object[] entries) throws IllegalArgumentException {
         if (entries == null) {
             throw new IllegalArgumentException("Map entries can't be null.");
         }
-        for (Entry<K, V> entry : entries) {
+        for (Object entry : entries) {
             if (entry == null) {
                 throw new IllegalArgumentException("Map entries can't be null.");
             }
@@ -114,7 +119,8 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
         ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
-        for (Entry<K, V> entry : entries) {
+        for (Object object : entries) {
+            Entry<K, V> entry = (Entry<K, V>) object;
             theKeys.add(entry.key());
             theValues.add(entry.value());
         }
