@@ -117,6 +117,19 @@ public class ModifiableMapTest {
     }
 
     /**
+     * Verifies that a map constructed with a default value is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithDefaultValuesCorrectly() {
+        ModifiableMap<Integer, String> actual = ModifiableMap.<Integer, String>of("", 1, 2, THREE);
+        assertEquals(DISTINCT_KEYS, actual.getKeyAndValueCardinality());
+        assertEquals(THREE, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
+    }
+
+    /**
      * Verifies that a map constructed with entries and key and value cardinality is constructed correctly.
      */
     @Test
