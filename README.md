@@ -78,6 +78,8 @@ The Java Platform Collections Framework contains the following interfaces in JDK
 * java.util.NavigableMap
 * java.util.NavigableSet
 * java.util.Queue
+* [java.util.SequencedCollection&lt;E>](#javautilsequencedcollectione)
+* [java.util.SequencedSet&lt;E>](#javautilsequencedsete)
 * [java.util.Set&lt;E>](#javautilsete)
 * java.util.SortedMap
 * java.util.SortedSet
@@ -124,30 +126,18 @@ to Kolektoj methods.
 |-----------------------------------------------------------------|-----------------------------------|--------------------------------------------------------------------|
 | boolean add(int index, E element)                               | ModifiableOrderedCollection&lt;E> | boolean addAt(int index, E element)                                |
 | boolean addAll(int index, Collection&lt;? extends E> c)         | ModifiableOrderedCollection&lt;E> | boolean addAllAt(int index, Collection&lt;? extends E> collection) |
-| default void addFirst(E e)                                      |                                   |                                                                    |
-| default void addLast(E e)                                       |                                   |                                                                    |
 | static &lt;E> List&lt;E> copyOf(Collection&lt;? extends E> coll)|                                   |                                                                    |
 | E get(int index)                                                | OrderedCollection&lt;E>           | E getAt(int index)                                                 |
-| default E getFirst()                                            |                                   |                                                                    |
-| default E getLast()                                             |                                   |                                                                    |
 | int indexOf(Object o)                                           |                                   |                                                                    |
 | int lastIndexOf(Object o)                                       |                                   |                                                                    |
 | ListIterator&lt;E> listIterator()                               |                                   |                                                                    |
 | ListIterator&lt;E> listIterator(int index)                      |                                   |                                                                    |
 | static &lt;E> List&lt;E> of(…)                                  |                                   |                                                                    |
 | E remove(int index)                                             | ModifiableOrderedCollection&lt;E> | E removeAt(int index)                                              |
-| default E removeFirst()                                         |                                   |                                                                    |
-| default E removeLast()                                          |                                   |                                                                    |
 | default void replaceAll(UnaryOperator&lt;E> operator)           |                                   |                                                                    |
-| default List<E> reversed()                                      |                                   |                                                                    |
 | E set(int index, E element)                                     |                                   |                                                                    |
 | default void sort(Comparator&lt;? super E> c)                   |                                   |                                                                    |
 | List&lt;E> subList(int fromIndex, int toIndex)                  |                                   |                                                                    |
-
-#### java.util.Set&lt;E>
-
-The [java.util.Set&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html) interface
-extends the java.util.Collection&lt;E> interface directly, but does not add any new methods to it.
 
 #### java.util.Map&lt;E>
 
@@ -186,6 +176,34 @@ to Kolektoj methods.
 | default void replaceAll(BiFunction&lt;? super K,? super V,? extends V> function)                    |                     |                                                                 |
 | int size()                                                                                          | Collection&lt;E>    | int size()                                                      |
 | Collection&lt;V> values()                                                                           | Map&lt;E>           | Collection<V> getValues()                                       |
+
+#### java.util.SequencedCollection&lt;E>
+
+The table below shows how the methods defined on the
+[java.util.SequencedCollection&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedCollection.html)
+interface map to Kolektoj methods.
+
+| JDK 21 Method                                                   | Kolektoj Class                    | Kolektoj Method                                                    |
+|-----------------------------------------------------------------|-----------------------------------|--------------------------------------------------------------------|
+| default void addFirst(E e)                                      |                                   |                                                                    |
+| default void addLast(E e)                                       |                                   |                                                                    |
+| default E getFirst()                                            |                                   |                                                                    |
+| default E getLast()                                             |                                   |                                                                    |
+| default E removeFirst()                                         |                                   |                                                                    |
+| default E removeLast()                                          |                                   |                                                                    |
+| default List<E> reversed()                                      |                                   |                                                                    |
+
+#### java.util.SequencedSet&lt;E>
+
+The
+[java.util.SequencedSet&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedSet.html)
+interface extends the java.util.SequencedCollection&lt;E> and java.util.Set&lt;E> interfaces directly, but does not add
+any new methods to them.
+
+#### java.util.Set&lt;E>
+
+The [java.util.Set&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html) interface
+extends the java.util.Collection&lt;E> interface directly, but does not add any new methods to it.
 
 ### JDK 21 Classes
 
