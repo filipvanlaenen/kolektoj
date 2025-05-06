@@ -141,6 +141,42 @@ public interface UpdatableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
     }
 
     /**
+     * Returns a new updatable map with the specified keys with a default value and key and value cardinality.
+     *
+     * @param <K>                    The key type.
+     * @param <V>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param defaultValue           The default value for the entries.
+     * @param keys                   The keys for the new map.
+     * @return A new updatable map with the specified entries.
+     */
+    static <K, V> UpdatableMap<K, V> of(final KeyAndValueCardinality keyAndValueCardinality, final V defaultValue,
+            final K... keys) {
+        ModifiableMap<K, V> map = ModifiableMap.<K, V>of(keyAndValueCardinality);
+        for (K key : keys) {
+            map.add(key, defaultValue);
+        }
+        return new UpdatableHashMap<K, V>(map);
+    }
+
+    /**
+     * Returns a new updatable map with the specified keys with a default value.
+     *
+     * @param <K>          The key type.
+     * @param <V>          The value type.
+     * @param defaultValue The default value for the entries.
+     * @param keys         The keys for the new map.
+     * @return A new updatable map with the specified entries.
+     */
+    static <K, V> UpdatableMap<K, V> of(final V defaultValue, final K... keys) {
+        ModifiableMap<K, V> map = ModifiableMap.<K, V>empty();
+        for (K key : keys) {
+            map.add(key, defaultValue);
+        }
+        return new UpdatableHashMap<K, V>(map);
+    }
+
+    /**
      * Updates the key with the given value, and returns the value that was previously mapped to the key. Throws an
      * exception if the map doesn't contain an entry with the key.
      *

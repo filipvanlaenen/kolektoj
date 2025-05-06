@@ -54,6 +54,26 @@ public interface ModifiableSortedMap<K, V>
     }
 
     /**
+     * Returns a new modifiable sorted map with the specified keys with a default value and key and value cardinality.
+     *
+     * @param <K>                    The key type.
+     * @param <V>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param comparator             The comparator by which to sort the keys.
+     * @param defaultValue           The default value for the entries.
+     * @param keys                   The keys for the new map.
+     * @return A new modifiable sorted map with the specified entries.
+     */
+    static <K, V> ModifiableSortedMap<K, V> of(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<K> comparator, final V defaultValue, final K... keys) {
+        ModifiableSortedMap<K, V> map = ModifiableSortedMap.<K, V>of(keyAndValueCardinality, comparator);
+        for (K key : keys) {
+            map.add(key, defaultValue);
+        }
+        return map;
+    }
+
+    /**
      * Returns a new modifiable sorted map containing an entry with the key and the value.
      *
      * @param <K>        The key type.
@@ -151,5 +171,23 @@ public interface ModifiableSortedMap<K, V>
         return new ModifiableSortedTreeMap<K, V>(comparator, new Entry<K, V>(key1, value1),
                 new Entry<K, V>(key2, value2), new Entry<K, V>(key3, value3), new Entry<K, V>(key4, value4),
                 new Entry<K, V>(key5, value5));
+    }
+
+    /**
+     * Returns a new modifiable sorted map with the specified keys with a default value.
+     *
+     * @param <K>          The key type.
+     * @param <V>          The value type.
+     * @param comparator   The comparator by which to sort the keys.
+     * @param defaultValue The default value for the entries.
+     * @param keys         The keys for the new map.
+     * @return A new modifiable sorted map with the specified entries.
+     */
+    static <K, V> ModifiableSortedMap<K, V> of(final Comparator<K> comparator, final V defaultValue, final K... keys) {
+        ModifiableSortedMap<K, V> map = ModifiableSortedMap.<K, V>empty(comparator);
+        for (K key : keys) {
+            map.add(key, defaultValue);
+        }
+        return map;
     }
 }

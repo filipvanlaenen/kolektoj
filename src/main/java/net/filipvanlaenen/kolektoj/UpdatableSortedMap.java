@@ -38,6 +38,24 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
     }
 
     /**
+     * Returns a new updatable sorted map with the specified keys with a default value.
+     *
+     * @param <K>          The key type.
+     * @param <V>          The value type.
+     * @param comparator   The comparator by which to sort the keys.
+     * @param defaultValue The default value for the entries.
+     * @param keys         The keys for the new map.
+     * @return A new updatable sorted map with the specified entries.
+     */
+    static <K, V> UpdatableSortedMap<K, V> of(final Comparator<K> comparator, final V defaultValue, final K... keys) {
+        ModifiableMap<K, V> map = ModifiableMap.<K, V>empty();
+        for (K key : keys) {
+            map.add(key, defaultValue);
+        }
+        return new UpdatableSortedTreeMap<K, V>(comparator, map);
+    }
+
+    /**
      * Returns a new updatable sorted map with the specified entries and key and value cardinality.
      *
      * @param <K>                    The key type.
@@ -50,6 +68,26 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
     static <K, V> UpdatableSortedMap<K, V> of(final KeyAndValueCardinality keyAndValueCardinality,
             final Comparator<K> comparator, final Entry<K, V>... entries) {
         return new UpdatableSortedTreeMap<K, V>(keyAndValueCardinality, comparator, entries);
+    }
+
+    /**
+     * Returns a new updatable sorted map with the specified keys with a default value and key and value cardinality.
+     *
+     * @param <K>                    The key type.
+     * @param <V>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param comparator             The comparator by which to sort the keys.
+     * @param defaultValue           The default value for the entries.
+     * @param keys                   The keys for the new map.
+     * @return A new updatable sorted map with the specified entries.
+     */
+    static <K, V> UpdatableSortedMap<K, V> of(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<K> comparator, final V defaultValue, final K... keys) {
+        ModifiableMap<K, V> map = ModifiableMap.<K, V>of(keyAndValueCardinality);
+        for (K key : keys) {
+            map.add(key, defaultValue);
+        }
+        return new UpdatableSortedTreeMap<K, V>(comparator, map);
     }
 
     /**

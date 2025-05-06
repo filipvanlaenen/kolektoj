@@ -141,6 +141,42 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, UpdatableM
     }
 
     /**
+     * Returns a new modifiable map with the specified keys with a default value and key and value cardinality.
+     *
+     * @param <K>                    The key type.
+     * @param <V>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param defaultValue           The default value for the entries.
+     * @param keys                   The keys for the new map.
+     * @return A new modifiable map with the specified entries.
+     */
+    static <K, V> ModifiableMap<K, V> of(final KeyAndValueCardinality keyAndValueCardinality, final V defaultValue,
+            final K... keys) {
+        ModifiableMap<K, V> map = ModifiableMap.<K, V>of(keyAndValueCardinality);
+        for (K key : keys) {
+            map.add(key, defaultValue);
+        }
+        return map;
+    }
+
+    /**
+     * Returns a new modifiable map with the specified keys with a default value.
+     *
+     * @param <K>          The key type.
+     * @param <V>          The value type.
+     * @param defaultValue The default value for the entries.
+     * @param keys         The keys for the new map.
+     * @return A new modifiable map with the specified entries.
+     */
+    static <K, V> ModifiableMap<K, V> of(final V defaultValue, final K... keys) {
+        ModifiableMap<K, V> map = ModifiableMap.<K, V>empty();
+        for (K key : keys) {
+            map.add(key, defaultValue);
+        }
+        return map;
+    }
+
+    /**
      * Adds an entry to this map with the given key and value, and returns whether it increased the size of the map.
      *
      * @param key   The key.
