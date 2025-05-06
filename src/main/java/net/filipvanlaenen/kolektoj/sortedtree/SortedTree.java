@@ -219,11 +219,11 @@ class SortedTree<K, C> {
         } else if (comparator.compare(element, node.getKey()) < 0) {
             node.setLeftChild(deleteNodeAndUpdateSize(element, node.getLeftChild()));
             updateNodeHeight(node);
-            return node;
+            return rebalanceNode(node);
         } else if (comparator.compare(element, node.getKey()) > 0) {
             node.setRightChild(deleteNodeAndUpdateSize(element, node.getRightChild()));
             updateNodeHeight(node);
-            return node;
+            return rebalanceNode(node);
         } else if (node.getLeftChild() == null && node.getRightChild() == null) {
             size--;
             return null;
@@ -238,7 +238,7 @@ class SortedTree<K, C> {
             node.setKey(inOrderSuccessor.getKey());
             node.setRightChild(deleteNodeAndUpdateSize(inOrderSuccessor.getKey(), node.getRightChild()));
             updateNodeHeight(node);
-            return node;
+            return rebalanceNode(node);
         }
     }
 
@@ -297,6 +297,10 @@ class SortedTree<K, C> {
         } else {
             return getAt(node.getLeftChild(), index);
         }
+    }
+
+    int getHeight() {
+        return getNodeHeight(root);
     }
 
     /**
@@ -373,17 +377,17 @@ class SortedTree<K, C> {
         } else if (comparator.compare(key, node.getKey()) < 0) {
             node.setLeftChild(insertNodeAndUpdateSize(node.getLeftChild(), key, newNode));
             updateNodeHeight(node);
-            return node;
+            return rebalanceNode(node);
         } else if (comparator.compare(key, node.getKey()) > 0) {
             node.setRightChild(insertNodeAndUpdateSize(node.getRightChild(), key, newNode));
             updateNodeHeight(node);
-            return node;
+            return rebalanceNode(node);
         } else if (elementCardinality == DISTINCT_ELEMENTS) {
             return node;
         } else {
             node.setRightChild(insertNodeAndUpdateSize(node.getRightChild(), key, newNode));
             updateNodeHeight(node);
-            return node;
+            return rebalanceNode(node);
         }
     }
 
