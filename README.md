@@ -76,13 +76,13 @@ The Java Platform Collections Framework contains the following interfaces in JDK
 * [java.util.List&lt;E>](#javautilliste)
 * [java.util.Map&lt;E>](#javautilmape)
 * java.util.NavigableMap
-* java.util.NavigableSet
+* [java.util.NavigableSet&lt;E>](#javautilnavigablesete)
 * java.util.Queue
 * [java.util.SequencedCollection&lt;E>](#javautilsequencedcollectione)
 * [java.util.SequencedSet&lt;E>](#javautilsequencedsete)
 * [java.util.Set&lt;E>](#javautilsete)
 * java.util.SortedMap
-* java.util.SortedSet
+* [java.util.SortedSet&lt;E>](#javautilsortedsete)
 * java.util.concurrent.BlockingDeque
 * java.util.concurrent.BlockingQueue
 * java.util.concurrent.ConcurrentMap
@@ -177,21 +177,41 @@ to Kolektoj methods.
 | int size()                                                                                          | Collection&lt;E>    | int size()                                                      |
 | Collection&lt;V> values()                                                                           | Map&lt;E>           | Collection<V> getValues()                                       |
 
+#### java.util.NavigableSet&lt;E>
+
+The table below shows how the methods defined on the
+[java.util.NavigableSet&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/NavigableSet.html)
+interface map to Kolektoj methods.
+
+| JDK 21 Method                                                                                     | Kolektoj Class | Kolektoj Method |
+|---------------------------------------------------------------------------------------------------|----------------|-----------------|
+| E ceiling(E e)                                                                                    |                |                 |
+| Iterator&lt;E> descendingIterator()                                                               |                |                 |
+| NavigableSet&lt;E> descendingSet()                                                                |                |                 |
+| E floor(E e)                                                                                      |                |                 |
+| NavigableSet&lt;E> headSet(E toElement, boolean inclusive)                                        |                |                 |
+| E higher(E e)                                                                                     |                |                 |
+| E lower(E e)                                                                                      |                |                 |
+| E pollFirst()                                                                                     |                |                 |
+| E pollLast()                                                                                      |                |                 |
+| NavigableSet&lt;E> subSet(E fromElement, boolean fromInclusive, E toElement, boolean toInclusive) |                |                 |
+| NavigableSet&lt;E> tailSet(E fromElement, boolean inclusive)                                      |                |                 |
+
 #### java.util.SequencedCollection&lt;E>
 
 The table below shows how the methods defined on the
 [java.util.SequencedCollection&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedCollection.html)
 interface map to Kolektoj methods.
 
-| JDK 21 Method                                                   | Kolektoj Class                    | Kolektoj Method                                                    |
-|-----------------------------------------------------------------|-----------------------------------|--------------------------------------------------------------------|
-| default void addFirst(E e)                                      |                                   |                                                                    |
-| default void addLast(E e)                                       |                                   |                                                                    |
-| default E getFirst()                                            |                                   |                                                                    |
-| default E getLast()                                             |                                   |                                                                    |
-| default E removeFirst()                                         |                                   |                                                                    |
-| default E removeLast()                                          |                                   |                                                                    |
-| default List<E> reversed()                                      |                                   |                                                                    |
+| JDK 21 Method                 | Kolektoj Class | Kolektoj Method |
+|-------------------------------|----------------|-----------------|
+| default void addFirst(E e)    |                |                 |
+| default void addLast(E e)     |                |                 |
+| default E getFirst()          |                |                 |
+| default E getLast()           |                |                 |
+| default E removeFirst()       |                |                 |
+| default E removeLast()        |                |                 |
+| default List&lt;E> reversed() |                |                 |
 
 #### java.util.SequencedSet&lt;E>
 
@@ -204,6 +224,21 @@ any new methods to them.
 
 The [java.util.Set&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html) interface
 extends the java.util.Collection&lt;E> interface directly, but does not add any new methods to it.
+
+#### java.util.SortedSet&lt;E>
+
+The table below shows how the methods defined on the
+[java.util.SortedSet&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SortedSet.html)
+interface map to Kolektoj methods.
+
+| JDK 21 Method                                      | Kolektoj Class | Kolektoj Method |
+|----------------------------------------------------|----------------|-----------------|
+| Comparator&lt;? super E> comparator()              |                |                 |
+| E first()                                          |                |                 |
+| SortedSet&lt;E> headSet(E toElement)               |                |                 |
+| E last()                                           |                |                 |
+| SortedSet&lt;E> subSet(E fromElement, E toElement) |                |                 |
+| SortedSet&lt;E> tailSet(E fromElement)             |                |                 |
 
 ### JDK 21 Classes
 
