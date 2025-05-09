@@ -55,4 +55,24 @@ public interface ModifiableSortedCollection<E> extends ModifiableCollection<E>, 
      * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
      */
     E removeAt(int index) throws IndexOutOfBoundsException;
+
+    /**
+     * Removes the greatest element of this collection.
+     *
+     * @return The element that was removed.
+     * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
+     */
+    default E removeGreatest() throws IndexOutOfBoundsException {
+        return removeAt(size() - 1);
+    }
+
+    /**
+     * Removes the least element of this collection.
+     *
+     * @return The element that was removed.
+     * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
+     */
+    default E removeLeast() throws IndexOutOfBoundsException {
+        return removeAt(0);
+    }
 }
