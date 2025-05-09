@@ -203,15 +203,19 @@ The table below shows how the methods defined on the
 [java.util.SequencedCollection&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedCollection.html)
 interface map to Kolektoj methods.
 
-| JDK 21 Method                 | Kolektoj Class          | Kolektoj Method      |
-|-------------------------------|-------------------------|----------------------|
-| default void addFirst(E e)    |                         |                      |
-| default void addLast(E e)     |                         |                      |
-| default E getFirst()          | OrderedCollection&lt;E> | default E getFirst() |
-| default E getLast()           | OrderedCollection&lt;E> | default E getLast()  |
-| default E removeFirst()       |                         |                      |
-| default E removeLast()        |                         |                      |
-| default List&lt;E> reversed() |                         |                      |
+| JDK 21 Method                 | Kolektoj Class                    | Kolektoj Method                  |
+|-------------------------------|-----------------------------------|----------------------------------|
+| default void addFirst(E e)    | ModifiableOrderedCollection&lt;E> | default void addFirst(E e)       |
+| default void addLast(E e)     | ModifiableOrderedCollection&lt;E> | default void addLast(E e)        |
+| default E getFirst()          | OrderedCollection&lt;E>           | default E getFirst()             |
+|                               | SortedCollection&lt;E>            | default E getLeast()             |
+| default E getLast()           | OrderedCollection&lt;E>           | default E getLast()              |
+|                               | SortedCollection&lt;E>            | default E getGreatest()          |
+| default E removeFirst()       | ModifiableOrderedCollection&lt;E> | default void removeFirst(E e)    |
+|                               | ModifiableSortedCollection&lt;E>  | default void removeLeast(E e)    |
+| default E removeLast()        | ModifiableOrderedCollection&lt;E> | default void removeLast(E e)     |
+|                               | ModifiableSortedCollection&lt;E>  | default void removeGreatest(E e) |
+| default List&lt;E> reversed() |                                   |                                  |
 
 #### java.util.SequencedSet&lt;E>
 
