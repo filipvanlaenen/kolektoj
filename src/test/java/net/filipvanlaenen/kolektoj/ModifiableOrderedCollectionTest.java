@@ -12,6 +12,15 @@ import org.junit.jupiter.api.Test;
  */
 public class ModifiableOrderedCollectionTest {
     /**
+     * The magic number three.
+     */
+    private static final int THREE = 3;
+    /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+
+    /**
      * Verifies that an empty modifiable ordered collection is empty.
      */
     @Test
@@ -34,5 +43,51 @@ public class ModifiableOrderedCollectionTest {
     @Test
     public void ofWithElementCardinalityShouldReturnACollectionWithTheElementCardinality() {
         assertEquals(DISTINCT_ELEMENTS, ModifiableOrderedCollection.of(DISTINCT_ELEMENTS, 1).getElementCardinality());
+    }
+
+    /**
+     * Verifies that addFirst adds an element to the start of an ordered collection.
+     */
+    @Test
+    public void addFirstShouldAddElementToStart() {
+        OrderedCollection<Integer> expected = OrderedCollection.of(FOUR, 1, 2, THREE);
+        ModifiableOrderedCollection<Integer> actual = ModifiableOrderedCollection.of(1, 2, THREE);
+        assertTrue(actual.addFirst(FOUR));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies that addFirst doesn't add an element to the start of an ordered collection with distinct elements if the
+     * element is already present.
+     */
+    @Test
+    public void addFirstShouldNotAddDuplicateElementToStart() {
+        OrderedCollection<Integer> expected = OrderedCollection.of(1, 2, THREE);
+        ModifiableOrderedCollection<Integer> actual = ModifiableOrderedCollection.of(DISTINCT_ELEMENTS, 1, 2, THREE);
+        assertFalse(actual.addFirst(THREE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies that addLast adds an element to the end of an ordered collection.
+     */
+    @Test
+    public void addLastShouldAddElementToStart() {
+        OrderedCollection<Integer> expected = OrderedCollection.of(1, 2, THREE, FOUR);
+        ModifiableOrderedCollection<Integer> actual = ModifiableOrderedCollection.of(1, 2, THREE);
+        assertTrue(actual.addLast(FOUR));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies that addLast doesn't add an element to the end of an ordered collection with distinct elements if the
+     * element is already present.
+     */
+    @Test
+    public void addLastShouldNotAddDuplicateElementToStart() {
+        OrderedCollection<Integer> expected = OrderedCollection.of(1, 2, THREE);
+        ModifiableOrderedCollection<Integer> actual = ModifiableOrderedCollection.of(DISTINCT_ELEMENTS, 1, 2, THREE);
+        assertFalse(actual.addLast(1));
+        assertTrue(actual.containsSame(expected));
     }
 }
