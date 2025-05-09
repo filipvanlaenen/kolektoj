@@ -45,4 +45,24 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
             final E... elements) {
         return new SortedArrayCollection<E>(elementCardinality, comparator, elements);
     }
+
+    /**
+     * Returns the greatest element in the collection.
+     *
+     * @return The greatest element in the collection.
+     * @throws IndexOutOfBoundsException Thrown if the collection is empty.
+     */
+    default E getGreatest() throws IndexOutOfBoundsException {
+        return getFirst();
+    }
+
+    /**
+     * Returns the least element in the collection.
+     *
+     * @return The least element in the collection.
+     * @throws IndexOutOfBoundsException Thrown if the collection is empty.
+     */
+    default E getLeast() throws IndexOutOfBoundsException {
+        return getLast();
+    }
 }
