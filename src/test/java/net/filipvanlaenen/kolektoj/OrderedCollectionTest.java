@@ -136,4 +136,20 @@ public class OrderedCollectionTest {
         OrderedCollection<Integer> actual = OrderedCollection.createSequence(1, i -> i + 1, i -> i <= THREE);
         assertTrue(actual.containsSame(expected));
     }
+
+    /**
+     * Verifies that getFirst returns the first element.
+     */
+    @Test
+    public void getFirstShouldReturnTheFirstElement() {
+        assertEquals(1, OrderedCollection.of(1, 2, THREE).getFirst());
+    }
+
+    /**
+     * Verifies that getLast returns the last element.
+     */
+    @Test
+    public void getLastShouldReturnTheLastElement() {
+        assertEquals(THREE, OrderedCollection.of(1, 2, THREE).getLast());
+    }
 }

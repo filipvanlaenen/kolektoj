@@ -203,15 +203,15 @@ The table below shows how the methods defined on the
 [java.util.SequencedCollection&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedCollection.html)
 interface map to Kolektoj methods.
 
-| JDK 21 Method                 | Kolektoj Class | Kolektoj Method |
-|-------------------------------|----------------|-----------------|
-| default void addFirst(E e)    |                |                 |
-| default void addLast(E e)     |                |                 |
-| default E getFirst()          |                |                 |
-| default E getLast()           |                |                 |
-| default E removeFirst()       |                |                 |
-| default E removeLast()        |                |                 |
-| default List&lt;E> reversed() |                |                 |
+| JDK 21 Method                 | Kolektoj Class          | Kolektoj Method      |
+|-------------------------------|-------------------------|----------------------|
+| default void addFirst(E e)    |                         |                      |
+| default void addLast(E e)     |                         |                      |
+| default E getFirst()          | OrderedCollection&lt;E> | default E getFirst() |
+| default E getLast()           | OrderedCollection&lt;E> | default E getLast()  |
+| default E removeFirst()       |                         |                      |
+| default E removeLast()        |                         |                      |
+| default List&lt;E> reversed() |                         |                      |
 
 #### java.util.SequencedSet&lt;E>
 
@@ -231,14 +231,14 @@ The table below shows how the methods defined on the
 [java.util.SortedSet&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SortedSet.html)
 interface map to Kolektoj methods.
 
-| JDK 21 Method                                      | Kolektoj Class | Kolektoj Method |
-|----------------------------------------------------|----------------|-----------------|
-| Comparator&lt;? super E> comparator()              |                |                 |
-| E first()                                          |                |                 |
-| SortedSet&lt;E> headSet(E toElement)               |                |                 |
-| E last()                                           |                |                 |
-| SortedSet&lt;E> subSet(E fromElement, E toElement) |                |                 |
-| SortedSet&lt;E> tailSet(E fromElement)             |                |                 |
+| JDK 21 Method                                      | Kolektoj Class          | Kolektoj Method      |
+|----------------------------------------------------|-------------------------|----------------------|
+| Comparator&lt;? super E> comparator()              |                         |                      |
+| E first()                                          | OrderedCollection&lt;E> | default E getFirst() |
+| SortedSet&lt;E> headSet(E toElement)               |                         |                      |
+| E last()                                           | OrderedCollection&lt;E> | default E getLast()  |
+| SortedSet&lt;E> subSet(E fromElement, E toElement) |                         |                      |
+| SortedSet&lt;E> tailSet(E fromElement)             |                         |                      |
 
 ### JDK 21 Classes
 

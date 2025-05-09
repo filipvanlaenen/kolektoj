@@ -149,4 +149,24 @@ public interface OrderedCollection<E> extends Collection<E> {
      * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
      */
     E getAt(int index) throws IndexOutOfBoundsException;
+
+    /**
+     * Returns the first element in the collection.
+     *
+     * @return The first element in the collection.
+     * @throws IndexOutOfBoundsException Thrown if the collection is empty.
+     */
+    default E getFirst() throws IndexOutOfBoundsException {
+        return getAt(0);
+    }
+
+    /**
+     * Returns the last element in the collection.
+     *
+     * @return The last element in the collection.
+     * @throws IndexOutOfBoundsException Thrown if the collection is empty.
+     */
+    default E getLast() throws IndexOutOfBoundsException {
+        return getAt(size() - 1);
+    }
 }
