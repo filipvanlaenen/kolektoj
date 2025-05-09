@@ -90,4 +90,26 @@ public class ModifiableOrderedCollectionTest {
         assertFalse(actual.addLast(1));
         assertTrue(actual.containsSame(expected));
     }
+
+    /**
+     * Verifies that removeFirst removes the first element of an ordered collection.
+     */
+    @Test
+    public void removeFirstShouldRemoveElementAtStart() {
+        OrderedCollection<Integer> expected = OrderedCollection.of(2, THREE);
+        ModifiableOrderedCollection<Integer> actual = ModifiableOrderedCollection.of(1, 2, THREE);
+        assertEquals(1, actual.removeFirst());
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies that removeLast removes the last element of an ordered collection.
+     */
+    @Test
+    public void removeLastShouldRemoveElementAtEnd() {
+        OrderedCollection<Integer> expected = OrderedCollection.of(1, 2);
+        ModifiableOrderedCollection<Integer> actual = ModifiableOrderedCollection.of(1, 2, THREE);
+        assertEquals(THREE, actual.removeLast());
+        assertTrue(actual.containsSame(expected));
+    }
 }
