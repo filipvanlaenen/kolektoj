@@ -63,6 +63,28 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
     boolean addAllAt(int index, Collection<? extends E> collection) throws IndexOutOfBoundsException;
 
     /**
+     * Adds an element to the start of this collection and returns whether it increased the size of the collection.
+     *
+     * @param element The element to be added to the start of this collection.
+     * @return True if the size of the collection increased after adding the element.
+     * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
+     */
+    default boolean addFirst(final E element) throws IndexOutOfBoundsException {
+        return addAt(0, element);
+    }
+
+    /**
+     * Adds an element to the end of this collection and returns whether it increased the size of the collection.
+     *
+     * @param element The element to be added to the end of this collection.
+     * @return True if the size of the collection increased after adding the element.
+     * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
+     */
+    default boolean addLast(final E element) throws IndexOutOfBoundsException {
+        return addAt(size(), element);
+    }
+
+    /**
      * Removes an element from this collection at a given position.
      *
      * @param index The position of the element that should be removed.
@@ -70,4 +92,24 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
      * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
      */
     E removeAt(int index) throws IndexOutOfBoundsException;
+
+    /**
+     * Removes the element at the start of this collection.
+     *
+     * @return The element that was removed.
+     * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
+     */
+    default E removeFirst() throws IndexOutOfBoundsException {
+        return removeAt(0);
+    }
+
+    /**
+     * Removes the element at the end of this collection.
+     *
+     * @return The element that was removed.
+     * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
+     */
+    default E removeLast() throws IndexOutOfBoundsException {
+        return removeAt(size() - 1);
+    }
 }
