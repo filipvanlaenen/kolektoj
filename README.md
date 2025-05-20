@@ -74,15 +74,15 @@ The Java Platform Collections Framework contains the following interfaces in JDK
 * [java.util.Collection&lt;E>](#javautilcollectione)
 * java.util.Deque
 * [java.util.List&lt;E>](#javautilliste)
-* [java.util.Map&lt;E>](#javautilmape)
+* [java.util.Map&lt;K,V>](#javautilmapkv)
 * java.util.NavigableMap
 * [java.util.NavigableSet&lt;E>](#javautilnavigablesete)
 * java.util.Queue
 * [java.util.SequencedCollection&lt;E>](#javautilsequencedcollectione)
-* [java.util.SequencedMap&lt;E>](#javautilsequencedmape)
+* [java.util.SequencedMap&lt;K,V>](#javautilsequencedmapkv)
 * [java.util.SequencedSet&lt;E>](#javautilsequencedsete)
 * [java.util.Set&lt;E>](#javautilsete)
-* [java.util.SortedMap&lt;E>](#javautilsortedmape)
+* [java.util.SortedMap&lt;K,V>](#javautilsortedmapkv)
 * [java.util.SortedSet&lt;E>](#javautilsortedsete)
 * java.util.concurrent.BlockingDeque
 * java.util.concurrent.BlockingQueue
@@ -140,10 +140,10 @@ to Kolektoj methods.
 | default void sort(Comparator&lt;? super E> c)                   |                                   |                                                                    |
 | List&lt;E> subList(int fromIndex, int toIndex)                  |                                   |                                                                    |
 
-#### java.util.Map&lt;E>
+#### java.util.Map&lt;K,V>
 
 The table below shows how the methods defined on the
-[java.util.Map&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html) interface map
+[java.util.Map&lt;K,V>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html) interface map
 to Kolektoj methods.
 
 | JDK 21 Method                                                                                       | Kolektoj Class      | Kolektoj Method                                                 |
@@ -218,10 +218,10 @@ interface map to Kolektoj methods.
 |                               | ModifiableSortedCollection&lt;E>  | default E removeGreatest(E e) |
 | default List&lt;E> reversed() |                                   |                               |
 
-#### java.util.SequencedMap&lt;E>
+#### java.util.SequencedMap&lt;K,V>
 
 The table below shows how the methods defined on the
-[java.util.SequencedMap&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedMap.html)
+[java.util.SequencedMap&lt;K,V>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedMap.html)
 interface map to Kolektoj methods.
 
 | JDK 21 Method                                                  | Kolektoj Class | Kolektoj Method |
@@ -249,10 +249,10 @@ any new methods to them.
 The [java.util.Set&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html) interface
 extends the java.util.Collection&lt;E> interface directly, but does not add any new methods to it.
 
-#### java.util.SortedMap&lt;E>
+#### java.util.SortedMap&lt;K,V>
 
 The table below shows how the methods defined on the
-[java.util.SortedMap&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SortedMap.html)
+[java.util.SortedMap&lt;K,V>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SortedMap.html)
 interface map to Kolektoj methods.
 
 | JDK 21 Method                                | Kolektoj Class | Kolektoj Method |
