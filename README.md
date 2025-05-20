@@ -75,7 +75,7 @@ The Java Platform Collections Framework contains the following interfaces in JDK
 * java.util.Deque
 * [java.util.List&lt;E>](#javautilliste)
 * [java.util.Map&lt;K,V>](#javautilmapkv)
-* java.util.NavigableMap
+* [java.util.NavigableMap&lt;K,V>](#javautilnavigablemapkv)
 * [java.util.NavigableSet&lt;E>](#javautilnavigablesete)
 * java.util.Queue
 * [java.util.SequencedCollection&lt;E>](#javautilsequencedcollectione)
@@ -177,6 +177,30 @@ to Kolektoj methods.
 | default void replaceAll(BiFunction&lt;? super K,? super V,? extends V> function)                    |                     |                                                                 |
 | int size()                                                                                          | Collection&lt;E>    | int size()                                                      |
 | Collection&lt;V> values()                                                                           | Map&lt;E>           | Collection<V> getValues()                                       |
+
+#### java.util.NavigableMap&lt;K,V>
+
+The table below shows how the methods defined on the
+[java.util.NavigableMap&lt;K,V>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/NavigableMap.html)
+interface map to Kolektoj methods.
+
+| JDK 21 Method                                                                               | Kolektoj Class | Kolektoj Method |
+|---------------------------------------------------------------------------------------------|----------------|-----------------|
+| Map.Entry&lt;K,V> ceilingEntry(K key)                                                       |                |                 |
+| K ceilingKey(K key)                                                                         |                |                 |
+| NavigableSet&lt;K> descendingKeySet()                                                       |                |                 |
+| NavigableMap&lt;K,V> descendingMap()                                                        |                |                 |
+| Map.Entry&lt;K,V> floorEntry(K key)                                                         |                |                 |
+| K floorKey(K key)                                                                           |                |                 |
+| NavigableMap&lt;K,V> headMap(K toKey, boolean inclusive)                                    |                |                 |
+| Map.Entry&lt;K,V> higherEntry(K key)                                                        |                |                 |
+| K higherKey(K key)                                                                          |                |                 |
+| Map.Entry&lt;K,V> lowerEntry(K key)                                                         |                |                 |
+| K lowerKey(K key)                                                                           |                |                 |
+| NavigableSet&lt;K> navigableKeySet()                                                        |                |                 |
+| NavigableMap&lt;K,V> subMap(K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) |                |                 |
+| NavigableMap&lt;K,V>                                                                        |                |                 |
+| tailMap(K fromKey, boolean inclusive)                                                       |                |                 |
 
 #### java.util.NavigableSet&lt;E>
 
