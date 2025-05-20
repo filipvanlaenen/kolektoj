@@ -79,6 +79,7 @@ The Java Platform Collections Framework contains the following interfaces in JDK
 * [java.util.NavigableSet&lt;E>](#javautilnavigablesete)
 * java.util.Queue
 * [java.util.SequencedCollection&lt;E>](#javautilsequencedcollectione)
+* [java.util.SequencedMap&lt;E>](#javautilsequencedmape)
 * [java.util.SequencedSet&lt;E>](#javautilsequencedsete)
 * [java.util.Set&lt;E>](#javautilsete)
 * java.util.SortedMap
@@ -216,6 +217,25 @@ interface map to Kolektoj methods.
 | default E removeLast()        | ModifiableOrderedCollection&lt;E> | default E removeLast(E e)     |
 |                               | ModifiableSortedCollection&lt;E>  | default E removeGreatest(E e) |
 | default List&lt;E> reversed() |                                   |                               |
+
+#### java.util.SequencedMap&lt;E>
+
+The table below shows how the methods defined on the
+[java.util.SequencedMap&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedMap.html)
+interface map to Kolektoj methods.
+
+| JDK 21 Method                                                  | Kolektoj Class | Kolektoj Method |
+|----------------------------------------------------------------|----------------|-----------------|
+| default Map.Entry&lt;K,V> firstEntry()                         |                |                 |
+| default Map.Entry&lt;K,V> lastEntry()                          |                |                 |
+| default Map.Entry&lt;K,V> pollFirstEntry()                     |                |                 |
+| default Map.Entry&lt;K,V> pollLastEntry()                      |                |                 |
+| default V putFirst(K k, V v)                                   |                |                 |
+| default V putLast(K k, V v)                                    |                |                 |
+| SequencedMap&lt;K,V> reversed()                                |                |                 |
+| default SequencedSet&lt;Map.Entry&lt;K,V>> sequencedEntrySet() |                |                 |
+| default SequencedSet&lt;K> sequencedKeySet()                   |                |                 |
+| default SequencedCollection&lt;V> sequencedValues()            |                |                 |
 
 #### java.util.SequencedSet&lt;E>
 
