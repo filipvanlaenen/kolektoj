@@ -82,7 +82,7 @@ The Java Platform Collections Framework contains the following interfaces in JDK
 * [java.util.SequencedMap&lt;E>](#javautilsequencedmape)
 * [java.util.SequencedSet&lt;E>](#javautilsequencedsete)
 * [java.util.Set&lt;E>](#javautilsete)
-* java.util.SortedMap
+* [java.util.SortedMap&lt;E>](#javautilsortedmape)
 * [java.util.SortedSet&lt;E>](#javautilsortedsete)
 * java.util.concurrent.BlockingDeque
 * java.util.concurrent.BlockingQueue
@@ -248,6 +248,21 @@ any new methods to them.
 
 The [java.util.Set&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html) interface
 extends the java.util.Collection&lt;E> interface directly, but does not add any new methods to it.
+
+#### java.util.SortedMap&lt;E>
+
+The table below shows how the methods defined on the
+[java.util.SortedMap&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SortedMap.html)
+interface map to Kolektoj methods.
+
+| JDK 21 Method                                | Kolektoj Class | Kolektoj Method |
+|----------------------------------------------|----------------|-----------------|
+| Comparator&lt;? super K> comparator()        |                |                 |
+| K firstKey()                                 |                |                 |
+| SortedMap&lt;K,V> headMap(K toKey)           |                |                 |
+| K lastKey()                                  |                |                 |
+| SortedMap&lt;K,V> subMap(K fromKey, K toKey) |                |                 |
+| SortedMap&lt;K,V> tailMap(K fromKey)         |                |                 |
 
 #### java.util.SortedSet&lt;E>
 
