@@ -77,7 +77,7 @@ The Java Platform Collections Framework contains the following interfaces in JDK
 * [java.util.Map&lt;K,V>](#javautilmapkv)
 * [java.util.NavigableMap&lt;K,V>](#javautilnavigablemapkv)
 * [java.util.NavigableSet&lt;E>](#javautilnavigablesete)
-* java.util.Queue
+* [java.util.Queue&lt;E>](#javautilqueuee)
 * [java.util.SequencedCollection&lt;E>](#javautilsequencedcollectione)
 * [java.util.SequencedMap&lt;K,V>](#javautilsequencedmapkv)
 * [java.util.SequencedSet&lt;E>](#javautilsequencedsete)
@@ -201,6 +201,20 @@ interface map to Kolektoj methods.
 | NavigableMap&lt;K,V> subMap(K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) |                |                 |
 | NavigableMap&lt;K,V>                                                                        |                |                 |
 | tailMap(K fromKey, boolean inclusive)                                                       |                |                 |
+
+#### java.util.Queue&lt;E>
+
+The table below shows how the methods defined on the
+[java.util.Queue&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Queue.html) interface map
+to Kolektoj methods.
+
+| JDK 21 Method      | Kolektoj Class | Kolektoj Method |
+|--------------------|----------------|-----------------|
+| E element()        |                |                 |
+| boolean offer(E e) |                |                 |
+| E peek()           |                |                 |
+| E poll()           |                |                 |
+| E remove()         |                |                 |
 
 #### java.util.NavigableSet&lt;E>
 
