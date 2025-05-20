@@ -38,26 +38,37 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
     }
 
     /**
+     * Returns a new collection cloned from the provided collection.
+     *
+     * @param <F>        The element type.
+     * @param collection The original collection.
+     * @return A new collection cloned from the provided collection.
+     */
+    static <F> Collection<F> of(final Collection<F> collection) {
+        return new ArrayCollection<F>(collection);
+    }
+
+    /**
      * Returns a new collection with the specified elements.
      *
-     * @param <E>      The element type.
+     * @param <F>      The element type.
      * @param elements The elements for the new collection.
      * @return A new collection with the specified elements.
      */
-    static <E> Collection<E> of(final E... elements) {
-        return new ArrayCollection<E>(elements);
+    static <F> Collection<F> of(final F... elements) {
+        return new ArrayCollection<F>(elements);
     }
 
     /**
      * Returns a new collection with the specified element cardinality and the elements.
      *
-     * @param <E>                The element type.
+     * @param <F>                The element type.
      * @param elementCardinality The element cardinality.
      * @param elements           The elements for the new collection.
      * @return A new collection with the specified element cardinality and the elements.
      */
-    static <E> Collection<E> of(final ElementCardinality elementCardinality, final E... elements) {
-        return new ArrayCollection<E>(elementCardinality, elements);
+    static <F> Collection<F> of(final ElementCardinality elementCardinality, final F... elements) {
+        return new ArrayCollection<F>(elementCardinality, elements);
     }
 
     /**
