@@ -72,7 +72,7 @@ for JDK 21.
 The Java Platform Collections Framework contains the following interfaces in JDK 21:
 
 * [java.util.Collection&lt;E>](#javautilcollectione)
-* java.util.Deque
+* [java.util.Deque&lt;E>](#javautildequee)
 * [java.util.List&lt;E>](#javautilliste)
 * [java.util.Map&lt;K,V>](#javautilmapkv)
 * [java.util.NavigableMap&lt;K,V>](#javautilnavigablemapkv)
@@ -116,6 +116,26 @@ interface map to Kolektoj methods.
 | Object[] toArray()                                        | Collection&lt;E>           | Object[] toArray()                                       |
 | default &lt;T> T[] toArray(IntFunction&lt;T[]> generator) |                            |                                                          |
 | &lt;T> T[] toArray(T[] a)                                 | Collection&lt;E>           | E[] toArray(E[] array)                                   |
+
+#### java.util.Deque&lt;E>
+
+The table below shows how the methods defined on the
+[java.util.Deque&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Deque.html) interface map
+to Kolektoj methods.
+
+| JDK 21 Method                           | Kolektoj Class | Kolektoj Method |
+|-----------------------------------------|----------------|-----------------|
+| Iterator<E> descendingIterator()        |                |                 |
+| boolean offerFirst(E e)                 |                |                 |
+| boolean offerLast(E e)                  |                |                 |
+| E peekFirst()                           |                |                 |
+| E peekLast()                            |                |                 |
+| E pollFirst()                           |                |                 |
+| E pollLast()                            |                |                 |
+| E pop()                                 |                |                 |
+| void push(E e)                          |                |                 |
+| boolean removeFirstOccurrence(Object o) |                |                 |
+| boolean removeLastOccurrence(Object o)  |                |                 |
 
 #### java.util.List&lt;E>
 
