@@ -11,34 +11,45 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
     /**
      * Returns a new empty modifiable ordered collection.
      *
-     * @param <E> The element type.
+     * @param <F> The element type.
      * @return A new empty modifiable ordered collection.
      */
-    static <E> ModifiableOrderedCollection<E> empty() {
-        return new ModifiableOrderedArrayCollection<E>();
-    }
-
-    /**
-     * Returns a new modifiable ordered collection with the specified elements.
-     *
-     * @param <E>      The element type.
-     * @param elements The elements for the new modifiable ordered collection.
-     * @return A new modifiable ordered collection with the specified elements.
-     */
-    static <E> ModifiableOrderedCollection<E> of(final E... elements) {
-        return new ModifiableOrderedArrayCollection<E>(elements);
+    static <F> ModifiableOrderedCollection<F> empty() {
+        return new ModifiableOrderedArrayCollection<F>();
     }
 
     /**
      * Returns a new modifiable ordered collection with the specified element cardinality and the elements.
      *
-     * @param <E>                The element type.
+     * @param <F>                The element type.
      * @param elementCardinality The element cardinality.
      * @param elements           The elements for the new modifiable ordered collection.
      * @return A new modifiable ordered collection with the specified element cardinality and the elements.
      */
-    static <E> ModifiableOrderedCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
-        return new ModifiableOrderedArrayCollection<E>(elementCardinality, elements);
+    static <F> ModifiableOrderedCollection<F> of(final ElementCardinality elementCardinality, final F... elements) {
+        return new ModifiableOrderedArrayCollection<F>(elementCardinality, elements);
+    }
+
+    /**
+     * Returns a new modifiable ordered collection with the specified elements.
+     *
+     * @param <F>      The element type.
+     * @param elements The elements for the new modifiable ordered collection.
+     * @return A new modifiable ordered collection with the specified elements.
+     */
+    static <F> ModifiableOrderedCollection<F> of(final F... elements) {
+        return new ModifiableOrderedArrayCollection<F>(elements);
+    }
+
+    /**
+     * Returns a new modifiable ordered collection cloned from the provided ordered collection.
+     *
+     * @param <F>        The element type.
+     * @param collection The original ordered collection.
+     * @return A new modifiable ordered collection cloned from the provided ordered collection.
+     */
+    static <F> ModifiableOrderedCollection<F> of(final OrderedCollection<? extends F> collection) {
+        return new ModifiableOrderedArrayCollection<F>(collection);
     }
 
     /**

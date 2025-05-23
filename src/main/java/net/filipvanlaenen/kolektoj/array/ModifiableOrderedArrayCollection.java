@@ -69,7 +69,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
      *
      * @param source The ordered collection to create a new modifiable ordered array collection from.
      */
-    public ModifiableOrderedArrayCollection(final OrderedCollection<E> source) {
+    public ModifiableOrderedArrayCollection(final OrderedCollection<? extends E> source) {
         this.elementCardinality = source.getElementCardinality();
         this.elements = source.toArray();
         size = this.elements.length;
