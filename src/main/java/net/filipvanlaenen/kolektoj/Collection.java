@@ -44,7 +44,7 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
      * @param collection The original collection.
      * @return A new collection cloned from the provided collection.
      */
-    static <F> Collection<F> of(final Collection<F> collection) {
+    static <F> Collection<F> of(final Collection<? extends F> collection) {
         return new ArrayCollection<F>(collection);
     }
 

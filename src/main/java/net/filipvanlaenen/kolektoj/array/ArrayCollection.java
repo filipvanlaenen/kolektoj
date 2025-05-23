@@ -28,7 +28,7 @@ public final class ArrayCollection<E> implements Collection<E> {
      *
      * @param source The collection to create a new collection from.
      */
-    public ArrayCollection(final Collection<E> source) throws IllegalArgumentException {
+    public ArrayCollection(final Collection<? extends E> source) throws IllegalArgumentException {
         this.elementCardinality = source.getElementCardinality();
         this.elements = source.toArray();
     }

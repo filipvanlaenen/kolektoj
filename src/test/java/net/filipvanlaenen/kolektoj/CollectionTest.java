@@ -45,6 +45,16 @@ public class CollectionTest {
     }
 
     /**
+     * Verifies that the of factory method using a collection clones a collection.
+     */
+    @Test
+    public void ofWithCollectionShoudlReturnAClone() {
+        Collection<Integer> collection = Collection.<Integer>of(1, 2, THREE);
+        Collection<Number> clone = Collection.<Number>of(collection);
+        assertTrue(clone.containsSame(collection));
+    }
+
+    /**
      * Verifies that the collection produces a stream that reduces to the correct sum.
      */
     @Test
