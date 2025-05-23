@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,6 +39,16 @@ public class OrderedCollectionTest {
     @Test
     public void ofWithElementCardinalityShouldReturnACollectionWithTheElementCardinality() {
         assertEquals(DISTINCT_ELEMENTS, OrderedCollection.of(DISTINCT_ELEMENTS, 1).getElementCardinality());
+    }
+
+    /**
+     * Verifies that the of factory method using a collection clones a collection.
+     */
+    @Test
+    public void ofWithCollectionShoudlReturnAClone() {
+        OrderedCollection<Integer> collection = OrderedCollection.<Integer>of(1, 2, THREE);
+        OrderedCollection<Number> clone = OrderedCollection.<Number>of(collection);
+        assertArrayEquals(collection.toArray(), clone.toArray());
     }
 
     /**

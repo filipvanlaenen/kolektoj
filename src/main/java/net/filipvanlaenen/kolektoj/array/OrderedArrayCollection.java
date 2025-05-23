@@ -55,7 +55,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
      *
      * @param source The ordered collection to create a new ordered collection from.
      */
-    public OrderedArrayCollection(final OrderedCollection<E> source) {
+    public OrderedArrayCollection(final OrderedCollection<? extends E> source) {
         this.elementCardinality = source.getElementCardinality();
         this.elements = source.toArray();
     }
