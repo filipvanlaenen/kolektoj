@@ -21,6 +21,17 @@ public interface ModifiableCollection<E> extends Collection<E> {
     }
 
     /**
+     * Returns a new modifiable collection cloned from the provided collection.
+     *
+     * @param <F>        The element type.
+     * @param collection The original collection.
+     * @return A new modifiable collection cloned from the provided collection.
+     */
+    static <F> ModifiableCollection<F> of(final Collection<? extends F> collection) {
+        return new ModifiableArrayCollection<F>(collection);
+    }
+
+    /**
      * Returns a new modifiable collection with the specified elements.
      *
      * @param <E>      The element type.

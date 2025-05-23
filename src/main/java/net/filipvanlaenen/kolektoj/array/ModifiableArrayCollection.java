@@ -41,7 +41,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
      *
      * @param source The collection to create a new collection from.
      */
-    public ModifiableArrayCollection(final Collection<E> source) {
+    public ModifiableArrayCollection(final Collection<? extends E> source) {
         this.elementCardinality = source.getElementCardinality();
         this.elements = source.toArray();
         size = this.elements.length;

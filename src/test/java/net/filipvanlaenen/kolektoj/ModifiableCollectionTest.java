@@ -12,6 +12,11 @@ import org.junit.jupiter.api.Test;
  */
 public class ModifiableCollectionTest {
     /**
+     * The magic number three.
+     */
+    private static final int THREE = 3;
+
+    /**
      * Verifies that an empty modifiable collection is empty.
      */
     @Test
@@ -33,5 +38,15 @@ public class ModifiableCollectionTest {
     @Test
     public void ofWithElementCardinalityShouldReturnACollectionWithTheElementCardinality() {
         assertEquals(DISTINCT_ELEMENTS, ModifiableCollection.of(DISTINCT_ELEMENTS, 1).getElementCardinality());
+    }
+
+    /**
+     * Verifies that the of factory method using a collection clones a collection.
+     */
+    @Test
+    public void ofWithCollectionShoudlReturnAClone() {
+        Collection<Integer> collection = Collection.<Integer>of(1, 2, THREE);
+        ModifiableCollection<Number> clone = ModifiableCollection.<Number>of(collection);
+        assertTrue(clone.containsSame(collection));
     }
 }
