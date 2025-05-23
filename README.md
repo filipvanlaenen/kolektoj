@@ -149,8 +149,8 @@ to Kolektoj methods.
 | boolean addAll(int index, Collection&lt;? extends E> c)         | ModifiableOrderedCollection&lt;E> | boolean addAllAt(int index, Collection&lt;? extends E> collection) |
 | static &lt;E> List&lt;E> copyOf(Collection&lt;? extends E> coll)|                                   |                                                                    |
 | E get(int index)                                                | OrderedCollection&lt;E>           | E getAt(int index)                                                 |
-| int indexOf(Object o)                                           |                                   |                                                                    |
-| int lastIndexOf(Object o)                                       |                                   |                                                                    |
+| int indexOf(Object o)                                           | OrderedCollection&lt;E>           | int firstIndexOf(E element)                                        |
+| int lastIndexOf(Object o)                                       | OrderedCollection&lt;E>           | int lastIndexOf(E element)                                         |
 | ListIterator&lt;E> listIterator()                               |                                   |                                                                    |
 | ListIterator&lt;E> listIterator(int index)                      |                                   |                                                                    |
 | static &lt;E> List&lt;E> of(…)                                  |                                   |                                                                    |
