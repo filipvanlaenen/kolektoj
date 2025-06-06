@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,6 +15,11 @@ import org.junit.jupiter.api.Test;
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.SortedCollection} class.
  */
 public class SortedCollectionTest {
+    /**
+     * The magic number three.
+     */
+    private static final int THREE = 3;
+
     /**
      * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
      * value.
@@ -62,5 +68,15 @@ public class SortedCollectionTest {
     @Test
     public void ofWithElementCardinalityShouldReturnACollectionWithTheElementCardinality() {
         assertEquals(DISTINCT_ELEMENTS, SortedCollection.of(DISTINCT_ELEMENTS, COMPARATOR, 1).getElementCardinality());
+    }
+
+    /**
+     * Verifies that the of factory method using a collection clones a collection.
+     */
+    @Test
+    public void ofWithCollectionShoudlReturnAClone() {
+        Collection<Integer> collection = Collection.<Integer>of(1, 2, THREE);
+        SortedCollection<Integer> clone = SortedCollection.<Integer>of(COMPARATOR, collection);
+        assertArrayEquals(collection.toArray(), clone.toArray());
     }
 }

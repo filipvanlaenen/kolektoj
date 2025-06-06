@@ -20,7 +20,7 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
     /**
      * The comparator of the spliterator.
      */
-    private final Comparator<E> comparator;
+    private final Comparator<? super E> comparator;
     /**
      * The elements of the spliterator.
      */
@@ -45,13 +45,13 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
      *
      * @param elements                  The elements for the spliterator.
      * @param additionalCharacteristics The characteristics for the spliterator in addition to SIZED and SUBSIZED.
-     * @param comparator                The comparator for the spliterator.
+     * @param comparator2               The comparator for the spliterator.
      */
     public ArraySpliterator(final Object[] elements, final int additionalCharacteristics,
-            final Comparator<E> comparator) {
+            final Comparator<? super E> comparator2) {
         this.elements = elements.clone();
         this.characteristics = SIZED | SUBSIZED | additionalCharacteristics;
-        this.comparator = comparator;
+        this.comparator = comparator2;
     }
 
     /**
@@ -65,7 +65,7 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
      * @param comparator      The comparator for the spliterator.
      */
     private ArraySpliterator(final Object[] elements, final int from, final int to, final int characteristics,
-            final Comparator<E> comparator) {
+            final Comparator<? super E> comparator) {
         int size = to - from;
         Class<E[]> clazz = (Class<E[]>) elements.getClass();
         this.elements = (E[]) Array.newInstance(clazz.getComponentType(), size);
@@ -85,7 +85,7 @@ public final class ArraySpliterator<E> implements Spliterator<E> {
     }
 
     @Override
-    public Comparator<E> getComparator() {
+    public Comparator<? super E> getComparator() {
         return comparator;
     }
 

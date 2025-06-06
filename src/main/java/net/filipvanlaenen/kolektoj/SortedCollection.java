@@ -13,37 +13,51 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
     /**
      * Returns a new empty sorted collection.
      *
+     * @param <F>        The element type.
      * @param comparator The comparator by which to sort the elements.
      * @return A new empty sorted collection.
      */
-    static SortedCollection<Object> empty(final Comparator<Object> comparator) {
-        return new SortedArrayCollection<Object>(comparator);
+    static <F> SortedCollection<F> empty(final Comparator<? super F> comparator) {
+        return new SortedArrayCollection<F>(comparator);
+    }
+
+    /**
+     * Returns a new sorted collection cloned from the provided collection.
+     *
+     * @param <F>        The element type.
+     * @param comparator The comparator by which to sort the elements.
+     * @param collection The original collection.
+     * @return A new sorted collection cloned from the provided collection.
+     */
+    static <F> SortedCollection<F> of(final Comparator<? super F> comparator,
+            final Collection<? extends F> collection) {
+        return new SortedArrayCollection<F>(comparator, collection);
     }
 
     /**
      * Returns a new sorted collection with the specified elements.
      *
-     * @param <E>        The element type.
+     * @param <F>        The element type.
      * @param comparator The comparator by which to sort the elements.
      * @param elements   The elements for the new sorted collection.
      * @return A new sorted collection with the specified elements.
      */
-    static <E> SortedCollection<E> of(final Comparator<E> comparator, final E... elements) {
-        return new SortedArrayCollection<E>(comparator, elements);
+    static <F> SortedCollection<F> of(final Comparator<? super F> comparator, final F... elements) {
+        return new SortedArrayCollection<F>(comparator, elements);
     }
 
     /**
      * Returns a new sorted collection with the specified element cardinality and the elements.
      *
-     * @param <E>                The element type.
+     * @param <F>                The element type.
      * @param elementCardinality The element cardinality.
      * @param comparator         The comparator by which to sort the elements.
      * @param elements           The elements for the new sorted collection.
      * @return A new sorted collection with the specified element cardinality and the elements.
      */
-    static <E> SortedCollection<E> of(final ElementCardinality elementCardinality, final Comparator<E> comparator,
-            final E... elements) {
-        return new SortedArrayCollection<E>(elementCardinality, comparator, elements);
+    static <F> SortedCollection<F> of(final ElementCardinality elementCardinality,
+            final Comparator<? super F> comparator, final F... elements) {
+        return new SortedArrayCollection<F>(elementCardinality, comparator, elements);
     }
 
     /**

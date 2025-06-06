@@ -27,7 +27,7 @@ class SortedTree<K, C> {
     /**
      * The key comparator to sort the nodes of the tree.
      */
-    private final Comparator<K> comparator;
+    private final Comparator<? super K> comparator;
     /**
      * The cardinality of the elements.
      */
@@ -51,7 +51,7 @@ class SortedTree<K, C> {
      * @param comparator         The comparator to sort the keys.
      * @param elementCardinality The element cardinality.
      */
-    SortedTree(final Comparator<K> comparator, final ElementCardinality elementCardinality) {
+    SortedTree(final Comparator<? super K> comparator, final ElementCardinality elementCardinality) {
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;
     }
@@ -265,7 +265,7 @@ class SortedTree<K, C> {
         }
     }
 
-    static <L> SortedTree<L, L> fromSortedElementArray(final Comparator<L> comparator,
+    static <L> SortedTree<L, L> fromSortedElementArray(final Comparator<? super L> comparator,
             final ElementCardinality elementCardinality, final Object[] sortedArray) {
         SortedTree<L, L> sortedTree = new SortedTree<L, L>(comparator, elementCardinality);
         sortedTree.createElementNodes(sortedArray);

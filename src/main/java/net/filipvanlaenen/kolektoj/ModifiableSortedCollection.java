@@ -13,38 +13,51 @@ public interface ModifiableSortedCollection<E> extends ModifiableCollection<E>, 
     /**
      * Returns a new empty modifiable sorted collection.
      *
-     * @param <E>        The element type.
+     * @param <F>        The element type.
      * @param comparator The comparator by which to sort the elements.
      * @return A new empty modifiable sorted ordered collection.
      */
-    static <E> ModifiableSortedCollection<E> empty(final Comparator<E> comparator) {
-        return new ModifiableSortedTreeCollection<E>(comparator);
+    static <F> ModifiableSortedCollection<F> empty(final Comparator<? super F> comparator) {
+        return new ModifiableSortedTreeCollection<F>(comparator);
+    }
+
+    /**
+     * Returns a new modifiable sorted collection cloned from the provided collection.
+     *
+     * @param <F>        The element type.
+     * @param comparator The comparator by which to sort the elements.
+     * @param collection The original collection.
+     * @return A new sorted modifiable collection cloned from the provided collection.
+     */
+    static <F> ModifiableSortedCollection<F> of(final Comparator<? super F> comparator,
+            final Collection<? extends F> collection) {
+        return new ModifiableSortedTreeCollection<F>(comparator, collection);
     }
 
     /**
      * Returns a new modifiable sorted collection with the specified elements.
      *
-     * @param <E>        The element type.
+     * @param <F>        The element type.
      * @param comparator The comparator by which to sort the elements.
      * @param elements   The elements for the new modifiable sorted collection.
      * @return A new modifiable sorted collection with the specified elements.
      */
-    static <E> ModifiableSortedCollection<E> of(final Comparator<E> comparator, final E... elements) {
-        return new ModifiableSortedTreeCollection<E>(comparator, elements);
+    static <F> ModifiableSortedCollection<F> of(final Comparator<? super F> comparator, final F... elements) {
+        return new ModifiableSortedTreeCollection<F>(comparator, elements);
     }
 
     /**
      * Returns a new modifiable sorted collection with the specified element cardinality and the elements.
      *
-     * @param <E>                The element type.
+     * @param <F>                The element type.
      * @param elementCardinality The element cardinality.
      * @param comparator         The comparator by which to sort the elements.
      * @param elements           The elements for the new modifiable sorted collection.
      * @return A new modifiable sorted collection with the specified element cardinality and the elements.
      */
-    static <E> ModifiableSortedCollection<E> of(final ElementCardinality elementCardinality,
-            final Comparator<E> comparator, final E... elements) {
-        return new ModifiableSortedTreeCollection<E>(elementCardinality, comparator, elements);
+    static <F> ModifiableSortedCollection<F> of(final ElementCardinality elementCardinality,
+            final Comparator<? super F> comparator, final F... elements) {
+        return new ModifiableSortedTreeCollection<F>(elementCardinality, comparator, elements);
     }
 
     /**
