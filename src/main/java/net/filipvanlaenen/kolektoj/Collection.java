@@ -31,10 +31,11 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
     /**
      * Returns a new empty collection.
      *
+     * @param <F> The element type.
      * @return A new empty collection.
      */
-    static Collection<Object> empty() {
-        return new ArrayCollection<Object>();
+    static <F> Collection<F> empty() {
+        return new ArrayCollection<F>();
     }
 
     /**

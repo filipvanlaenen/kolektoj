@@ -28,33 +28,45 @@ public final class ValueCollection<E> implements Collection<E> {
     /**
      * Returns a new empty value collection.
      *
+     * @param <F> The element type.
      * @return A new empty value collection.
      */
-    public static ValueCollection<Object> empty() {
-        return new ValueCollection<Object>(Collection.empty());
+    public static <F> ValueCollection<F> empty() {
+        return new ValueCollection<F>(Collection.empty());
+    }
+
+    /**
+     * Returns a new value collection cloned from the provided collection.
+     *
+     * @param <F>        The element type.
+     * @param collection The original collection.
+     * @return A new value collection cloned from the provided collection.
+     */
+    static <F> ValueCollection<F> of(final Collection<? extends F> collection) {
+        return new ValueCollection<F>(Collection.of(collection));
     }
 
     /**
      * Returns a new value collection with the specified elements.
      *
-     * @param <E>      The element type.
+     * @param <F>      The element type.
      * @param elements The elements for the new value collection.
      * @return A new value collection with the specified elements.
      */
-    public static <E> ValueCollection<E> of(final E... elements) {
-        return new ValueCollection<E>(Collection.of(elements));
+    public static <F> ValueCollection<F> of(final F... elements) {
+        return new ValueCollection<F>(Collection.of(elements));
     }
 
     /**
      * Returns a new value collection with the specified element cardinality and the elements.
      *
-     * @param <E>                The element type.
+     * @param <F>                The element type.
      * @param elementCardinality The element cardinality.
      * @param elements           The elements for the new value collection.
      * @return A new value collection with the specified element cardinality and the elements.
      */
-    public static <E> ValueCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
-        return new ValueCollection<E>(Collection.of(elementCardinality, elements));
+    public static <F> ValueCollection<F> of(final ElementCardinality elementCardinality, final F... elements) {
+        return new ValueCollection<F>(Collection.of(elementCardinality, elements));
     }
 
     @Override

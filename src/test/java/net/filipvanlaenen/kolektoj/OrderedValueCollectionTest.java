@@ -113,6 +113,14 @@ public class OrderedValueCollectionTest {
     }
 
     /**
+     * Verifies that the of factory method using a collection clones to a value collection that compares equal.
+     */
+    @Test
+    public void ofWithCollectionShoudlReturnAClone() {
+        assertEquals(ORDERED_VALUE_COLLECTION, OrderedValueCollection.<Number>of(OrderedCollection.<Integer>of(1)));
+    }
+
+    /**
      * Verifies that the <code>contains</code> method is wired correctly to the internal collection.
      */
     @Test

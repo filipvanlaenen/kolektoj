@@ -32,33 +32,45 @@ public final class OrderedValueCollection<E> implements OrderedCollection<E> {
     /**
      * Returns a new empty ordered value collection.
      *
+     * @param <F> The element type.
      * @return A new empty ordered value collection.
      */
-    public static OrderedValueCollection<Object> empty() {
-        return new OrderedValueCollection<Object>(OrderedCollection.empty());
+    public static <F> OrderedValueCollection<F> empty() {
+        return new OrderedValueCollection<F>(OrderedCollection.empty());
     }
 
     /**
      * Returns a new ordered value collection with the specified elements.
      *
-     * @param <E>      The element type.
+     * @param <F>      The element type.
      * @param elements The elements for the new ordered value collection.
      * @return A new ordered value collection with the specified elements.
      */
-    public static <E> OrderedValueCollection<E> of(final E... elements) {
-        return new OrderedValueCollection<E>(OrderedCollection.of(elements));
+    public static <F> OrderedValueCollection<F> of(final F... elements) {
+        return new OrderedValueCollection<F>(OrderedCollection.of(elements));
     }
 
     /**
      * Returns a new ordered value collection with the specified element cardinality and the elements.
      *
-     * @param <E>                The element type.
+     * @param <F>                The element type.
      * @param elementCardinality The element cardinality.
      * @param elements           The elements for the new ordered value collection.
      * @return A new ordered value collection with the specified element cardinality and the elements.
      */
-    public static <E> OrderedValueCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
-        return new OrderedValueCollection<E>(OrderedCollection.of(elementCardinality, elements));
+    public static <F> OrderedValueCollection<F> of(final ElementCardinality elementCardinality, final F... elements) {
+        return new OrderedValueCollection<F>(OrderedCollection.of(elementCardinality, elements));
+    }
+
+    /**
+     * Returns a new ordered value collection cloned from the provided ordered collection.
+     *
+     * @param <F>        The element type.
+     * @param collection The original ordered collection.
+     * @return A new ordered value collection cloned from the provided ordered collection.
+     */
+    static <F> OrderedValueCollection<F> of(final OrderedCollection<? extends F> collection) {
+        return new OrderedValueCollection<F>(OrderedCollection.of(collection));
     }
 
     @Override

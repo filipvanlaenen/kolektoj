@@ -98,6 +98,14 @@ public class ValueCollectionTest {
     }
 
     /**
+     * Verifies that the of factory method using a collection clones a value collection that compares equal.
+     */
+    @Test
+    public void ofWithCollectionShoudlReturnAClone() {
+        assertEquals(VALUE_COLLECTION, ValueCollection.<Number>of(Collection.<Integer>of(1)));
+    }
+
+    /**
      * Verifies that the <code>contains</code> method is wired correctly to the internal collection.
      */
     @Test
