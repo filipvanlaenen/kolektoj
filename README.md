@@ -166,37 +166,35 @@ The table below shows how the methods defined on the
 [java.util.Map&lt;K,V>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html) interface map
 to Kolektoj methods.
 
-| JDK 21 Method                                                                                       | Kolektoj Class      | Kolektoj Method                                                 |
-|-----------------------------------------------------------------------------------------------------|---------------------|-----------------------------------------------------------------|
-| void clear()                                                                                        | ModifiableMap&lt;E> | void clear()                                                    |
-| default V compute(K key, BiFunction&lt;? super K,? super V,? extends V> remappingFunction)          |                     |                                                                 |
-| default V computeIfAbsent(K key, Function&lt;? super K,? extends V> mappingFunction)                |                     |                                                                 |
-| default V computeIfPresent(K key, BiFunction&lt;? super K,? super V,? extends V> remappingFunction) |                     |                                                                 |
-| boolean containsKey(Object key)                                                                     | Map&lt;E>           | boolean containsKey(K key)                                      |
-| boolean containsValue(Object value)                                                                 | Map&lt;E>           | boolean containsValue(V value)                                  |
-| static &lt;K,V> Map&lt;K,V> copyOf(Map&lt;? extends K,? extends V> map)                             |                     |                                                                 |
-| static &lt;K,V> Map.Entry&lt;K,V> entry(K k, V v)                                                   |                     |                                                                 |
-| Set&lt;Map.Entry&lt;K,V>> entrySet()                                                                | Map&lt;E>           | extends Collection&lt;Entry&lt;K, V>>                           |
-| boolean equals(Object o)                                                                            |                     |                                                                 |
-| default void forEach(BiConsumer&lt;? super K,? super V> action)                                     |                     |                                                                 |
-| V get(Object key)                                                                                   | Map&lt;E>           | V get(K key)                                                    |
-| default V getOrDefault(Object key, V defaultValue)                                                  | Map&lt;E>           | default V get(K key, V defaultValue)                            |
-| int hashCode()                                                                                      |                     |                                                                 |
-| boolean isEmpty()                                                                                   | Collection&lt;E>    | default boolean isEmpty()                                       |
-| Set&lt;K> keySet()                                                                                  | Map&lt;E>           | Collection<K> getKeys()                                         |
-| default V merge(K key, V value, BiFunction&lt;? super V,? super V,? extends V> remappingFunction)   |                     |                                                                 |
-| static &lt;K,V> Map&lt;K,V> of(…)                                                                   |                     |                                                                 |
-| static &lt;K,V> Map&lt;K,V> ofEntries(Map.Entry&lt;? extends K,? extends V>... entries)             |                     |                                                                 |
-| V put(K key, V value)                                                                               | ModifiableMap&lt;E> | default V put(K key, V value)                                   |
-| void putAll(Map&lt;? extends K,? extends V> m)                                                      | ModifiableMap&lt;E> | default void putAll(Map&lt;? extends K, ? extends V> map)       |
-| default V putIfAbsent(K key, V value)                                                               |                     |                                                                 |
-| V remove(Object key)                                                                                | ModifiableMap&lt;E> | V remove(K key)                                                 |
-| default boolean remove(Object key, Object value)                                                    |                     |                                                                 |
-| default V replace(K key, V value)                                                                   | UpdatableMap&lt;E>  | V update(K key, V value)                                        |
-| default boolean replace(K key, V oldValue, V newValue)                                              |                     |                                                                 |
-| default void replaceAll(BiFunction&lt;? super K,? super V,? extends V> function)                    |                     |                                                                 |
-| int size()                                                                                          | Collection&lt;E>    | int size()                                                      |
-| Collection&lt;V> values()                                                                           | Map&lt;E>           | Collection<V> getValues()                                       |
+| JDK 21 Method                                                                                       | Kolektoj Class               | Kolektoj Method                                                     |
+|-----------------------------------------------------------------------------------------------------|------------------------------|---------------------------------------------------------------------|
+| void clear()                                                                                        | ModifiableMap&lt;K,V>        | void clear()                                                        |
+| default V compute(K key, BiFunction&lt;? super K,? super V,? extends V> remappingFunction)          |                              |                                                                     |
+| default V computeIfAbsent(K key, Function&lt;? super K,? extends V> mappingFunction)                |                              |                                                                     |
+| default V computeIfPresent(K key, BiFunction&lt;? super K,? super V,? extends V> remappingFunction) |                              |                                                                     |
+| boolean containsKey(Object key)                                                                     | Map&lt;K,V>                  | boolean containsKey(K key)                                          |
+| boolean containsValue(Object value)                                                                 | Map&lt;K,V>                  | boolean containsValue(V value)                                      |
+| static &lt;K,V> Map&lt;K,V> copyOf(Map&lt;? extends K,? extends V> map)                             | Map&lt;L,W>                  | static &lt;L,W> Map&lt;L,W> of(Map&lt;? extends L,? extends W> map) |
+| static &lt;K,V> Map.Entry&lt;K,V> entry(K k, V v)                                                   |                              |                                                                     |
+| Set&lt;Map.Entry&lt;K,V>> entrySet()                                                                | Map&lt;K,V>                  | through the extension of Collection&lt;Entry&lt;K,V>>               |
+| default void forEach(BiConsumer&lt;? super K,? super V> action)                                     |                              |                                                                     |
+| V get(Object key)                                                                                   | Map&lt;K,V>                  | V get(K key)                                                        |
+| default V getOrDefault(Object key, V defaultValue)                                                  | Map&lt;K,V>                  | default V get(K key, V defaultValue)                                |
+| boolean isEmpty()                                                                                   | Collection&lt;Entry&lt;K,V>> | default boolean isEmpty()                                           |
+| Set&lt;K> keySet()                                                                                  | Map&lt;K,V>                  | Collection<K> getKeys()                                             |
+| default V merge(K key, V value, BiFunction&lt;? super V,? super V,? extends V> remappingFunction)   |                              |                                                                     |
+| static &lt;K,V> Map&lt;K,V> of(…)                                                                   | Map&lt;L,W>                  | static &lt;L,W> Map&lt;L,W> of(…)                                   |
+| static &lt;K,V> Map&lt;K,V> ofEntries(Map.Entry&lt;? extends K,? extends V>... entries)             | Map&lt;L,W>                  | static &lt;L,W> Map&lt;L,W> of(&lt;Entry&lt;L,W>>...)               |
+| V put(K key, V value)                                                                               | ModifiableMap&lt;K,V>        | default V put(K key, V value)                                       |
+| void putAll(Map&lt;? extends K,? extends V> m)                                                      | ModifiableMap&lt;K,V>        | default void putAll(Map&lt;? extends K, ? extends V> map)           |
+| default V putIfAbsent(K key, V value)                                                               |                              |                                                                     |
+| V remove(Object key)                                                                                | ModifiableMap&lt;K,V>        | V remove(K key)                                                     |
+| default boolean remove(Object key, Object value)                                                    |                              |                                                                     |
+| default V replace(K key, V value)                                                                   | UpdatableMap&lt;K,V>         | V update(K key, V value)                                            |
+| default boolean replace(K key, V oldValue, V newValue)                                              |                              |                                                                     |
+| default void replaceAll(BiFunction&lt;? super K,? super V,? extends V> function)                    |                              |                                                                     |
+| int size()                                                                                          | Collection&lt;Entry&lt;K,V>> | int size()                                                          |
+| Collection&lt;V> values()                                                                           | Map&lt;K,V>                  | Collection<V> getValues()                                           |
 
 #### java.util.NavigableMap&lt;K,V>
 
