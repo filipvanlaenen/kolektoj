@@ -84,7 +84,7 @@ public final class Collectors {
             ModifiableOrderedCollection<E>> toModifiableOrderedCollection() {
         return new SimpleCollector<>(ModifiableOrderedLinkedListCollection::new,
                 ModifiableOrderedLinkedListCollection::addLast, (a, b) -> {
-                    a.addAllAt(a.size(), b);
+                    a.addAllLast(b);
                     return a;
                 }, a -> ModifiableOrderedCollection.of(a), Set.of());
     }
@@ -100,7 +100,7 @@ public final class Collectors {
             E> Collector<E, ModifiableOrderedLinkedListCollection<E>, OrderedCollection<E>> toOrderedCollection() {
         return new SimpleCollector<>(ModifiableOrderedLinkedListCollection::new,
                 ModifiableOrderedLinkedListCollection::addLast, (a, b) -> {
-                    a.addAllAt(a.size(), b);
+                    a.addAllLast(b);
                     return a;
                 }, a -> OrderedCollection.of(a), Set.of());
     }
