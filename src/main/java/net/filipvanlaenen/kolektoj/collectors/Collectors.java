@@ -16,20 +16,31 @@ import net.filipvanlaenen.kolektoj.linkedlist.ModifiableLinkedListCollection;
 import net.filipvanlaenen.kolektoj.linkedlist.ModifiableOrderedLinkedListCollection;
 
 /**
- * Collector for the {@link net.filipvanlaenen.kolektoj.array.Collection} type.
+ * A utility class providing various collectors.
  */
 public final class Collectors {
     /**
      * A simple implementation of the Collector interface using a record.
      *
-     * @param <E> The type of elements to be collected.
-     * @param <A> The type of the accumulator.
-     * @param <R> The type of the result.
+     * @param supplier        The supplier for the collector.
+     * @param accumulator     The accumulator for the collector.
+     * @param combiner        The combiner for the collector.
+     * @param finisher        The finisher for the collector.
+     * @param characteristics The characteristics of the collector.
+     * @param <E>             The type of elements to be collected.
+     * @param <A>             The type of the accumulator.
+     * @param <R>             The type of the result.
      */
     private record SimpleCollector<E, A, R>(Supplier<A> supplier, BiConsumer<A, E> accumulator,
             BinaryOperator<A> combiner, Function<A, R> finisher, Set<Characteristics> characteristics)
             implements Collector<E, A, R> {
     };
+
+    /**
+     * Private constructor to avoid instantiation of this utility class.
+     */
+    private Collectors() {
+    }
 
     /**
      * Returns a collector that accumulates the input elements into a new
@@ -53,7 +64,8 @@ public final class Collectors {
      * @param <E> The element type.
      * @return A collector to produce a new {@link net.filipvanlaenen.kolektoj.ModifiableCollection}.
      */
-    public static <E> Collector<E, ModifiableLinkedListCollection<E>, Collection<E>> toModifiableCollection() {
+    public static <
+            E> Collector<E, ModifiableLinkedListCollection<E>, ModifiableCollection<E>> toModifiableCollection() {
         return new SimpleCollector<>(ModifiableLinkedListCollection::new, ModifiableLinkedListCollection::add,
                 (a, b) -> {
                     a.addAll(b);
