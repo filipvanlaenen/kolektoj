@@ -149,6 +149,9 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             }
             if (index == 0) {
                 head = new Node<E>(element, head);
+                if (tail == null) {
+                    tail = head;
+                }
             } else if (index == size) {
                 Node<E> newNode = new Node<E>(element, null);
                 tail.setNext(newNode);

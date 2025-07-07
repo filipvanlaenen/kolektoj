@@ -84,29 +84,6 @@ public final class ModifiableOrderedArrayCollectionTest
     }
 
     /**
-     * Verifies that after adding an element at the last position to a collection, the new element is in the last
-     * position.
-     */
-    @Test
-    public void addAtLastPositionOnACollectionShouldPlaceElementAtLastPosition() {
-        ModifiableOrderedCollection<Integer> collection = createNewCollection();
-        collection.addAt(THREE, 0);
-        assertEquals(0, collection.getAt(THREE));
-    }
-
-    /**
-     * Verifies that adding beyond the stride doesn't lead to an exception.
-     */
-    @Test
-    public void addAtManyTimesShouldNotProduceAnException() {
-        ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>();
-        for (int i = 0; i < SIX; i++) {
-            collection.addAt(0, i);
-        }
-        assertEquals(0, collection.getAt(SIX - 1));
-    }
-
-    /**
      * Verifies that after adding an element at position 0 to an empty collection, the collection has size 1.
      */
     @Test

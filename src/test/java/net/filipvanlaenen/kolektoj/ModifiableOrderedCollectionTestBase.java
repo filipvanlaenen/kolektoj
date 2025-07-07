@@ -75,6 +75,29 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that after adding an element at the last position to a collection, the new element is in the last
+     * position.
+     */
+    @Test
+    public void addAtLastPositionOnACollectionShouldPlaceElementAtLastPosition() {
+        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.addAt(THREE, 0);
+        assertEquals(0, collection.getAt(THREE));
+    }
+
+    /**
+     * Verifies that adding beyond the stride doesn't lead to an exception.
+     */
+    @Test
+    public void addAtManyTimesShouldNotProduceAnException() {
+        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection();
+        for (int i = 0; i < SIX; i++) {
+            collection.addAt(0, i);
+        }
+        assertEquals(0, collection.getAt(SIX - 1));
+    }
+
+    /**
      * Verifies that when you get an element from a collection by its index, the correct element is returned.
      */
     @Test
