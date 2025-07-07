@@ -12,15 +12,15 @@ import java.util.Spliterator;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
-import net.filipvanlaenen.kolektoj.ModifiableCollectionTestBase;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
+import net.filipvanlaenen.kolektoj.ModifiableOrderedCollectionTestBase;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection} class.
  */
 public final class ModifiableOrderedArrayCollectionTest
-        extends ModifiableCollectionTestBase<ModifiableOrderedArrayCollection<Integer>> {
+        extends ModifiableOrderedCollectionTestBase<ModifiableOrderedArrayCollection<Integer>> {
     /**
      * The magic number three.
      */
@@ -49,13 +49,18 @@ public final class ModifiableOrderedArrayCollectionTest
 
     @Override
     protected ModifiableOrderedArrayCollection<Integer> createModifiableCollection(final Integer... integers) {
-        return new ModifiableOrderedArrayCollection<Integer>(integers);
+        return createModifiableOrderedCollection(integers);
     }
 
     @Override
     protected ModifiableOrderedArrayCollection<Integer> createModifiableCollection(
             final ElementCardinality elementCardinality, final Integer... integers) {
         return new ModifiableOrderedArrayCollection<Integer>(elementCardinality, integers);
+    }
+
+    @Override
+    protected ModifiableOrderedArrayCollection<Integer> createModifiableOrderedCollection(final Integer... integers) {
+        return new ModifiableOrderedArrayCollection<Integer>(integers);
     }
 
     /**
@@ -65,14 +70,6 @@ public final class ModifiableOrderedArrayCollectionTest
      */
     private static ModifiableOrderedArrayCollection<Integer> createNewCollection() {
         return new ModifiableOrderedArrayCollection<Integer>(1, 2, THREE);
-    }
-
-    /**
-     * Verifies that when you get an element from a collection at an index, the correct element is returned.
-     */
-    @Test
-    public void getAtShouldReturnTheElementAtTheIndexInTheCollection() {
-        assertEquals(2, COLLECTION123.getAt(1));
     }
 
     /**
@@ -350,4 +347,5 @@ public final class ModifiableOrderedArrayCollectionTest
     public void spliteratorShouldSetOrderedFlag() {
         assertTrue(COLLECTION123.spliterator().hasCharacteristics(Spliterator.ORDERED));
     }
+
 }
