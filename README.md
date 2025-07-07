@@ -187,11 +187,11 @@ to Kolektoj methods.
 | static &lt;K,V> Map&lt;K,V> ofEntries(Map.Entry&lt;? extends K,? extends V>... entries)             | Map&lt;L,W>                  | static &lt;L,W> Map&lt;L,W> of(&lt;Entry&lt;L,W>>...)               |
 | V put(K key, V value)                                                                               | ModifiableMap&lt;K,V>        | default V put(K key, V value)                                       |
 | void putAll(Map&lt;? extends K,? extends V> m)                                                      | ModifiableMap&lt;K,V>        | default void putAll(Map&lt;? extends K, ? extends V> map)           |
-| default V putIfAbsent(K key, V value)                                                               |                              |                                                                     |
+| default V putIfAbsent(K key, V value)                                                               | ModifiableMap&lt;K,V>        | boolean add(K key, V value)                                         |
 | V remove(Object key)                                                                                | ModifiableMap&lt;K,V>        | V remove(K key)                                                     |
-| default boolean remove(Object key, Object value)                                                    |                              |                                                                     |
+| default boolean remove(Object key, Object value)                                                    | ModifiableMap&lt;K,V>        | boolean remove(K key, V value)                                      |
 | default V replace(K key, V value)                                                                   | UpdatableMap&lt;K,V>         | V update(K key, V value)                                            |
-| default boolean replace(K key, V oldValue, V newValue)                                              |                              |                                                                     |
+| default boolean replace(K key, V oldValue, V newValue)                                              | UpdatableMap&lt;K,V>         | boolean update(K key, V oldValue, V newValue)                       |
 | default void replaceAll(BiFunction&lt;? super K,? super V,? extends V> function)                    |                              |                                                                     |
 | int size()                                                                                          | Collection&lt;Entry&lt;K,V>> | int size()                                                          |
 | Collection&lt;V> values()                                                                           | Map&lt;K,V>                  | Collection<V> getValues()                                           |
