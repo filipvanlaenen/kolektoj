@@ -3,7 +3,6 @@ package net.filipvanlaenen.kolektoj.array;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
-import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
@@ -112,7 +111,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     }
 
     @Override
-    public boolean addAllAt(final int index, final Collection<? extends E> collection) {
+    public boolean addAllAt(final int index, final OrderedCollection<? extends E> collection) {
         if (index > elements.length) {
             throw new IndexOutOfBoundsException(
                     "Cannot add the elements of another collection at a position beyond the size of the collection.");
@@ -152,7 +151,6 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
         System.arraycopy(newElements, 0, elements, index, numberOfNewElements);
         size += numberOfNewElements;
         return true;
-
     }
 
     @Override
@@ -193,17 +191,6 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     @Override
     public boolean containsAll(final Collection<?> collection) {
         return ArrayUtilities.containsAll(elements, size, collection);
-    }
-
-    /**
-     * Creates a new element type array with a given length.
-     *
-     * @param length The length of the array.
-     * @return An array of the given length with the element type.
-     */
-    private E[] createNewArray(final int length) {
-        Class<E[]> clazz = (Class<E[]>) elements.getClass();
-        return (E[]) Array.newInstance(clazz.getComponentType(), length);
     }
 
     @Override
@@ -304,7 +291,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
      * @param newLength The new length for the array.
      */
     private void resizeTo(final int newLength) {
-        E[] newElements = createNewArray(newLength);
+        Object[] newElements = new Object[newLength];
         System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
     }
@@ -366,7 +353,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public Object[] toArray() {
-        Object[] result = createNewArray(size);
+        Object[] result = new Object[size];
         System.arraycopy(elements, 0, result, 0, size);
         return result;
     }

@@ -9,16 +9,18 @@ import java.util.Spliterator;
 import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
-import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 
 /**
- * An linked list backed implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableCollection} interface.
+ * An linked list backed implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableOrderedCollection}
+ * interface.
  *
  * @param <E> The element type.
  */
-public final class ModifiableLinkedListCollection<E> implements ModifiableCollection<E> {
+public final class ModifiableOrderedLinkedListCollection<E> implements ModifiableOrderedCollection<E> {
     /**
      * A cached array with the elements.
      */
@@ -45,7 +47,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
      *
      * @param elements The elements of the modifiable linked list collection.
      */
-    public ModifiableLinkedListCollection(final E... elements) {
+    public ModifiableOrderedLinkedListCollection(final E... elements) {
         this(DUPLICATE_ELEMENTS, elements);
     }
 
@@ -55,7 +57,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
      * @param elementCardinality The element cardinality.
      * @param elements           The elements of the modifiable linked list collection.
      */
-    public ModifiableLinkedListCollection(final ElementCardinality elementCardinality, final E... elements) {
+    public ModifiableOrderedLinkedListCollection(final ElementCardinality elementCardinality, final E... elements) {
         this.elementCardinality = elementCardinality;
         for (final E element : elements) {
             add(element);
@@ -82,6 +84,73 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
             result |= add(element);
         }
         return result;
+    }
+
+    @Override
+    public boolean addAllAt(final int index, final OrderedCollection<? extends E> collection) {
+        if (index > size) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot add the elements of another collection at a position beyond the size of the collection.");
+        }
+        if (collection.isEmpty()) {
+            return false;
+        }
+        Node<E> newListHead = null;
+        Node<E> newListTail = null;
+        for (E element : collection) {
+            if (elementCardinality != DISTINCT_ELEMENTS || !contains(element)) {
+                if (newListHead == null) {
+                    newListHead = new Node<E>(element, null);
+                    newListTail = newListHead;
+                } else {
+                    Node<E> newNode = new Node<E>(element, null);
+                    newListTail.setNext(newNode);
+                    newListTail = newNode;
+                }
+                size++;
+            }
+        }
+        if (newListHead == null) {
+            return false;
+        }
+        if (index == 0) {
+            newListTail.setNext(head);
+            head = newListHead;
+        } else {
+            Node<E> current = head;
+            for (int i = 0; i < index - 1; i++) {
+                current = current.getNext();
+            }
+            newListTail.setNext(current.getNext());
+            current.setNext(newListHead);
+        }
+        cachedArrayDirty = true;
+        return true;
+    }
+
+    @Override
+    public boolean addAt(final int index, final E element) throws IndexOutOfBoundsException {
+        if (index > size) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot add an element at a position beyond the size of the collection.");
+        } else {
+            if (elementCardinality == DISTINCT_ELEMENTS && contains(element)) {
+                return false;
+            }
+            if (index == 0) {
+                head = new Node<E>(element, head);
+            } else {
+                Node<E> current = head;
+                for (int i = 0; i < index - 1; i++) {
+                    current = current.getNext();
+                }
+                Node<E> newNode = new Node<E>(element, current.getNext());
+                current.setNext(newNode);
+            }
+            size++;
+            cachedArrayDirty = true;
+            return true;
+        }
     }
 
     @Override
@@ -137,6 +206,24 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     }
 
     @Override
+    public E getAt(final int index) throws IndexOutOfBoundsException {
+        if (index >= size) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an element at a position beyond the size of the collection.");
+        } else {
+            if (!cachedArrayDirty) {
+                return (E) cachedArray[index];
+            } else {
+                Node<E> current = head;
+                for (int i = 0; i < index; i++) {
+                    current = current.getNext();
+                }
+                return current.getElement();
+            }
+        }
+    }
+
+    @Override
     public ElementCardinality getElementCardinality() {
         return elementCardinality;
     }
@@ -170,6 +257,31 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
             next = current.getNext();
         }
         return false;
+    }
+
+    @Override
+    public E removeAt(final int index) throws IndexOutOfBoundsException {
+        if (index >= size) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot remove an element at a position beyond the size of the collection.");
+        } else {
+            E element = null;
+            if (index == 0) {
+                element = head.getElement();
+                head = head.getNext();
+            } else {
+                Node<E> current = head;
+                for (int i = 0; i < index - 1; i++) {
+                    current = current.getNext();
+                }
+                Node<E> next = current.getNext();
+                element = next.getElement();
+                current.setNext(next.getNext());
+            }
+            size--;
+            cachedArrayDirty = true;
+            return element;
+        }
     }
 
     @Override
@@ -258,7 +370,9 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
 
     @Override
     public Spliterator<E> spliterator() {
-        return new ArraySpliterator<E>(toArray(), elementCardinality == DISTINCT_ELEMENTS ? Spliterator.DISTINCT : 0);
+        int characteristics =
+                Spliterator.ORDERED | (elementCardinality == DISTINCT_ELEMENTS ? Spliterator.DISTINCT : 0);
+        return new ArraySpliterator<E>(toArray(), characteristics);
     }
 
     @Override

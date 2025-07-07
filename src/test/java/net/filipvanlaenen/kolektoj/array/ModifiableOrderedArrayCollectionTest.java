@@ -1,13 +1,16 @@
 package net.filipvanlaenen.kolektoj.array;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Spliterator;
 
 import org.junit.jupiter.api.Test;
 
-import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.ModifiableCollectionTestBase;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
@@ -193,7 +196,7 @@ public final class ModifiableOrderedArrayCollectionTest
      */
     @Test
     public void addAllAtOnAnEmptyCollectionShouldReturnTrue() {
-        assertTrue(new ModifiableOrderedArrayCollection<Integer>().addAllAt(0, Collection.of(1, 2)));
+        assertTrue(new ModifiableOrderedArrayCollection<Integer>().addAllAt(0, OrderedCollection.of(1, 2)));
     }
 
     /**
@@ -245,7 +248,7 @@ public final class ModifiableOrderedArrayCollectionTest
     @Test
     public void addAllAtShouldThrowExceptionWhenCalledBeyondCollectionSize() {
         IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class,
-                () -> new ModifiableOrderedArrayCollection<Integer>().addAllAt(1, Collection.of(1, 2)));
+                () -> new ModifiableOrderedArrayCollection<Integer>().addAllAt(1, OrderedCollection.of(1, 2)));
         assertEquals("Cannot add the elements of another collection at a position beyond the size of the collection.",
                 exception.getMessage());
     }
@@ -268,7 +271,7 @@ public final class ModifiableOrderedArrayCollectionTest
     @Test
     public void collectionShouldContainElementsAfterHavingItAddedAllAtAPosition() {
         ModifiableOrderedCollection<Integer> collection = createNewCollection();
-        collection.addAllAt(1, Collection.of(0, SIX));
+        collection.addAllAt(1, OrderedCollection.of(0, SIX));
         assertTrue(collection.contains(0));
         assertTrue(collection.contains(SIX));
     }
