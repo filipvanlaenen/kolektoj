@@ -271,6 +271,26 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that removeAll can remove the first element.
+     */
+    @Test
+    public void removeAllShouldRemoveFirstElement() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.removeAll(Collection.of(1));
+        assertArrayEquals(new Integer[] {2, THREE}, collection.toArray());
+    }
+
+    /**
+     * Verifies that removeAll can remove the last element.
+     */
+    @Test
+    public void removeAllShouldRemoveLastElement() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.removeAll(Collection.of(THREE));
+        assertArrayEquals(new Integer[] {1, 2}, collection.toArray());
+    }
+
+    /**
      * Verifies that trying to remove an element at an index beyond the size of the collection throws
      * IndexOutOfBoundsException.
      */
