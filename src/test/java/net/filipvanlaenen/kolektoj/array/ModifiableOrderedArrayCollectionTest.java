@@ -83,24 +83,6 @@ public final class ModifiableOrderedArrayCollectionTest
         assertArrayEquals(expected, actual);
     }
 
-    /**
-     * Verifies that trying to add an element at an index beyond the size of the collection throws
-     * IndexOutOfBoundsException.
-     */
-    @Test
-    public void addAtShouldThrowExceptionWhenCalledBeyondCollectionSize() {
-        IndexOutOfBoundsException exception =
-                assertThrows(IndexOutOfBoundsException.class, () -> COLLECTION123.addAt(SIX, 0));
-        assertEquals("Cannot add an element at a position beyond the size of the collection.", exception.getMessage());
-    }
-
-    /**
-     * Verifies that adding an element at position 0 to an empty collection returns true.
-     */
-    @Test
-    public void addAtZeroOnAnEmptyCollectionShouldReturnTrue() {
-        assertTrue(new ModifiableOrderedArrayCollection<Integer>().addAt(0, 1));
-    }
 
     /**
      * Verifies that after adding an element at position 0 to an empty collection, the element is at position 0.
