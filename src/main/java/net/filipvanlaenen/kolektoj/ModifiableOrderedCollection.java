@@ -74,6 +74,28 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
     boolean addAllAt(int index, OrderedCollection<? extends E> collection) throws IndexOutOfBoundsException;
 
     /**
+     * Adds elements from an ordered collection to the start of this collection and returns whether it increased the
+     * size of the collection.
+     *
+     * @param collection A collection from which to add elements to the start of this collection.
+     * @return True if the size of the collection increased after adding the elements of the collection.
+     */
+    default boolean addAllFirst(OrderedCollection<? extends E> collection) throws IndexOutOfBoundsException {
+        return addAllAt(0, collection);
+    }
+
+    /**
+     * Adds elements from an ordered collection to the end of this collection and returns whether it increased the size
+     * of the collection.
+     *
+     * @param collection A collection from which to add elements to the end of this collection.
+     * @return True if the size of the collection increased after adding the elements of the collection.
+     */
+    default boolean addAllLast(OrderedCollection<? extends E> collection) throws IndexOutOfBoundsException {
+        return addAllAt(size(), collection);
+    }
+
+    /**
      * Adds an element to the start of this collection and returns whether it increased the size of the collection.
      *
      * @param element The element to be added to the start of this collection.

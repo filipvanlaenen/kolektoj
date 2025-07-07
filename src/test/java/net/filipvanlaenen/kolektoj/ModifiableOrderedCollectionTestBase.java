@@ -212,6 +212,45 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that after adding the elements of a collection to a collection at a position, the collection contains
+     * the elements added.
+     */
+    @Test
+    public void collectionShouldContainElementsAfterHavingItAddedAllAtAPosition() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.addAllAt(1, OrderedCollection.of(0, SIX));
+        assertTrue(collection.contains(0));
+        assertTrue(collection.contains(SIX));
+    }
+
+    /**
+     * Verifies that after adding the elements of an ordered collection to a collection, the collection contains the
+     * elements added in the same order.
+     */
+    @Test
+    public void collectionShouldContainElementsInSameOrderedAfterHavingItAddedAll() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.addAllLast(OrderedCollection.of(0, SIX));
+        Object[] actual = collection.toArray();
+        Object[] expected = new Object[] {1, 2, THREE, 0, SIX};
+        assertArrayEquals(expected, actual);
+    }
+
+    /**
+     * Verifies that after adding the elements of an ordered collection to a collection at a position, the collection
+     * contains the elements added in the same order.
+     */
+    @Test
+    public void collectionShouldContainElementsInSameOrderedAfterHavingItAddedAllAtAPosition() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.addAllAt(1, OrderedCollection.of(0, SIX));
+        assertEquals(1, collection.getAt(0));
+        assertEquals(0, collection.getAt(1));
+        assertEquals(SIX, collection.getAt(2));
+        assertEquals(2, collection.getAt(THREE));
+    }
+
+    /**
      * Verifies that when you get an element from a collection by its index, the correct element is returned.
      */
     @Test

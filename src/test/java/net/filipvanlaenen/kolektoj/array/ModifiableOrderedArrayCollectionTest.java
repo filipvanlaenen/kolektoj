@@ -3,14 +3,12 @@ package net.filipvanlaenen.kolektoj.array;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollectionTestBase;
-import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection} class.
@@ -21,14 +19,6 @@ public final class ModifiableOrderedArrayCollectionTest
      * The magic number three.
      */
     private static final int THREE = 3;
-    /**
-     * The magic number four.
-     */
-    private static final int FOUR = 4;
-    /**
-     * The magic number six.
-     */
-    private static final int SIX = 6;
     /**
      * Collection with the integers 1, 2 and 3.
      */
@@ -63,45 +53,6 @@ public final class ModifiableOrderedArrayCollectionTest
      */
     private static ModifiableOrderedArrayCollection<Integer> createNewCollection() {
         return new ModifiableOrderedArrayCollection<Integer>(1, 2, THREE);
-    }
-
-    /**
-     * Verifies that after adding the elements of a collection to a collection at a position, the collection contains
-     * the elements added.
-     */
-    @Test
-    public void collectionShouldContainElementsAfterHavingItAddedAllAtAPosition() {
-        ModifiableOrderedCollection<Integer> collection = createNewCollection();
-        collection.addAllAt(1, OrderedCollection.of(0, SIX));
-        assertTrue(collection.contains(0));
-        assertTrue(collection.contains(SIX));
-    }
-
-    /**
-     * Verifies that after adding the elements of an ordered collection to a collection, the collection contains the
-     * elements added in the same order.
-     */
-    @Test
-    public void collectionShouldContainElementsInSameOrderedAfterHavingItAddedAll() {
-        ModifiableOrderedCollection<Integer> collection = createNewCollection();
-        collection.addAll(OrderedCollection.of(0, SIX));
-        assertEquals(1, collection.getAt(0));
-        assertEquals(0, collection.getAt(THREE));
-        assertEquals(SIX, collection.getAt(FOUR));
-    }
-
-    /**
-     * Verifies that after adding the elements of an ordered collection to a collection at a position, the collection
-     * contains the elements added in the same order.
-     */
-    @Test
-    public void collectionShouldContainElementsInSameOrderedAfterHavingItAddedAllAtAPosition() {
-        ModifiableOrderedCollection<Integer> collection = createNewCollection();
-        collection.addAllAt(1, OrderedCollection.of(0, SIX));
-        assertEquals(1, collection.getAt(0));
-        assertEquals(0, collection.getAt(1));
-        assertEquals(SIX, collection.getAt(2));
-        assertEquals(2, collection.getAt(THREE));
     }
 
     /**
