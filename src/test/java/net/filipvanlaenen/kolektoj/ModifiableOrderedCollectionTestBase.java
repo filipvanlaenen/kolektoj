@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +12,10 @@ import org.junit.jupiter.api.Test;
  */
 public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOrderedCollection<Integer>>
         extends ModifiableCollectionTestBase<T> {
+    /**
+     * The magic number three.
+     */
+    private static final int THREE = 3;
     /**
      * Ordered collection with the integers 1, 2 and 3.
      */
@@ -30,5 +35,17 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     @Test
     public void getAtShouldReturnCorrectElement() {
         assertEquals(2, collection123.getAt(1));
+    }
+
+    /**
+     * Verifies that when you try to get an element from a collection beyond the length, getAt throws
+     * IndexOutOfBoundsException.
+     */
+    @Test
+    public void getAtShouldThrowIndexOutOfBoundsExceptionWhenCalledBeyondSize() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> collection123.getAt(THREE));
+        assertEquals("Cannot return an element at a position beyond the size of the collection.",
+                exception.getMessage());
     }
 }

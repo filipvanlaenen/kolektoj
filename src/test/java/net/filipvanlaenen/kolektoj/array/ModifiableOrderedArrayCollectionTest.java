@@ -73,18 +73,6 @@ public final class ModifiableOrderedArrayCollectionTest
     }
 
     /**
-     * Verifies that trying to get an element at an index beyond the size of the collection throws
-     * IndexOutOfBoundsException.
-     */
-    @Test
-    public void getAtShouldThrowExceptionWhenCalledBeyondCollectionSize() {
-        IndexOutOfBoundsException exception =
-                assertThrows(IndexOutOfBoundsException.class, () -> COLLECTION123.getAt(THREE));
-        assertEquals("Cannot return an element at a position beyond the size of the collection.",
-                exception.getMessage());
-    }
-
-    /**
      * Verifies that the collection produces an array with the elements in the correct order.
      */
     @Test
