@@ -232,6 +232,17 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that after adding the elements of a collection to an empty collection at the first position, the size is
+     * increased to by the size of the added collection.
+     */
+    @Test
+    public void sizeShouldBeThreeAfterAddingCollectionWithThreeElementsToAnEmptyCollectionAtFirstPosition() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.addAllAt(THREE, createModifiableOrderedCollection(1, 2, THREE));
+        assertEquals(SIX, collection.size());
+    }
+
+    /**
      * Verifies that the spliterator has the ordered flag set.
      */
     @Test

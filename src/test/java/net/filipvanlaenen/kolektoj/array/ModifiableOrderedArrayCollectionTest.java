@@ -66,17 +66,6 @@ public final class ModifiableOrderedArrayCollectionTest
     }
 
     /**
-     * Verifies that after adding the elements of a collection to an empty collection at the first position, the size is
-     * increased to by the size of the added collection.
-     */
-    @Test
-    public void sizeShouldBeThreeAfterAddingCollectionWithThreeElementsToAnEmptyCollectionAtFirstPosition() {
-        ModifiableOrderedCollection<Integer> collection = createNewCollection();
-        collection.addAllAt(THREE, createNewCollection());
-        assertEquals(SIX, collection.size());
-    }
-
-    /**
      * Verifies that after adding the elements of a collection to a collection at a position, the collection contains
      * the elements added.
      */
