@@ -2,6 +2,8 @@ package net.filipvanlaenen.kolektoj.linkedlist;
 
 /**
  * A class implementing a node in a linked list.
+ *
+ * @param <E> The element type.
  */
 final class Node<E> {
     /**
