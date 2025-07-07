@@ -25,6 +25,14 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      */
     private static final int THREE = 3;
     /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
+     * The magic number five.
+     */
+    private static final int FIVE = 5;
+    /**
      * The magic number six.
      */
     private static final int SIX = 6;
@@ -87,6 +95,29 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     public void addAllAtOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldReturnTrue() {
         T collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1, 2, THREE);
         assertTrue(collection.addAllAt(0, collection123null));
+    }
+
+    /**
+     * Verifies that adding a collection at zero with duplicate and new elements to a collection with distinct elements
+     * increases the size correctly.
+     */
+    @Test
+    public void addAllAtOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldIncreaseSizeCorrectly() {
+        T collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1, 2, THREE);
+        collection.addAllAt(0, OrderedCollection.of(FOUR, FOUR, 1, 2, THREE, FIVE));
+        assertArrayEquals(new Integer[] {FOUR, FIVE, 1, 2, THREE}, collection.toArray());
+    }
+
+    /**
+     * Verifies that trying to add a collectiont at an index beyond the size of the collection throws
+     * IndexOutOfBoundsException.
+     */
+    @Test
+    public void addAllAtShouldThrowExceptionWhenCalledBeyondCollectionSize() {
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class,
+                () -> createModifiableOrderedCollection().addAllAt(1, OrderedCollection.of(1, 2)));
+        assertEquals("Cannot add the elements of another collection at a position beyond the size of the collection.",
+                exception.getMessage());
     }
 
     /**

@@ -1,6 +1,5 @@
 package net.filipvanlaenen.kolektoj.array;
 
-import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -26,10 +25,6 @@ public final class ModifiableOrderedArrayCollectionTest
      * The magic number four.
      */
     private static final int FOUR = 4;
-    /**
-     * The magic number five.
-     */
-    private static final int FIVE = 5;
     /**
      * The magic number six.
      */
@@ -68,30 +63,6 @@ public final class ModifiableOrderedArrayCollectionTest
      */
     private static ModifiableOrderedArrayCollection<Integer> createNewCollection() {
         return new ModifiableOrderedArrayCollection<Integer>(1, 2, THREE);
-    }
-
-    /**
-     * Verifies that adding a collection at zero with duplicate and new elements to a collection with distinct elements
-     * increases the size correctly.
-     */
-    @Test
-    public void addAllAtOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldIncreaseSizeCorrectly() {
-        ModifiableOrderedCollection<Integer> collection =
-                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, THREE);
-        collection.addAllAt(0, new OrderedArrayCollection<Integer>(FOUR, FOUR, 1, 2, THREE, FIVE));
-        assertArrayEquals(new Integer[] {FOUR, FIVE, 1, 2, THREE}, collection.toArray());
-    }
-
-    /**
-     * Verifies that trying to add a collectiont at an index beyond the size of the collection throws
-     * IndexOutOfBoundsException.
-     */
-    @Test
-    public void addAllAtShouldThrowExceptionWhenCalledBeyondCollectionSize() {
-        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class,
-                () -> new ModifiableOrderedArrayCollection<Integer>().addAllAt(1, OrderedCollection.of(1, 2)));
-        assertEquals("Cannot add the elements of another collection at a position beyond the size of the collection.",
-                exception.getMessage());
     }
 
     /**

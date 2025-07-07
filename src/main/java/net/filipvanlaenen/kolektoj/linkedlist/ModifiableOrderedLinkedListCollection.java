@@ -13,6 +13,7 @@ import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
+import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
 
 /**
  * An linked list backed implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableOrderedCollection}
@@ -64,7 +65,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
     public ModifiableOrderedLinkedListCollection(final ElementCardinality elementCardinality, final E... elements) {
         this.elementCardinality = elementCardinality;
         for (final E element : elements) {
-            add(element);
+            addLast(element);
         }
         cachedArray = elements.clone();
         cachedArrayDirty = elements.length != size;
@@ -104,7 +105,12 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         }
         Node<E> newListHead = null;
         Node<E> newListTail = null;
-        for (E element : collection) {
+        Object[] newElements = collection.toArray();
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            newElements = ArrayUtilities.cloneDistinctElements(newElements);
+        }
+        for (Object object : newElements) {
+            E element = (E) object;
             if (elementCardinality != DISTINCT_ELEMENTS || !contains(element)) {
                 if (newListHead == null) {
                     newListHead = new Node<E>(element, null);
