@@ -83,28 +83,6 @@ public final class ModifiableOrderedArrayCollectionTest
         assertArrayEquals(expected, actual);
     }
 
-
-    /**
-     * Verifies that after adding an element at position 0 to an empty collection, the element is at position 0.
-     */
-    @Test
-    public void addAtZeroOnAnEmptyCollectionShouldPutAnElementAtPositionZero() {
-        ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>();
-        collection.addAt(0, 1);
-        assertEquals(1, collection.getAt(0));
-    }
-
-    /**
-     * Verifies that after adding an element at a position to a collection, the elements after the position have been
-     * moved up.
-     */
-    @Test
-    public void addAtOneOnACollectionShouldMoveElementsOnePositionHigher() {
-        ModifiableOrderedCollection<Integer> collection = createNewCollection();
-        collection.addAt(1, 0);
-        assertEquals(2, collection.getAt(2));
-    }
-
     /**
      * Verifies that after adding an element at the last position to a collection, the new element is in the last
      * position.

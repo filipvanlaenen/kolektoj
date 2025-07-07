@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
-
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.ModifiableOrderedCollection} interface.
  *
@@ -53,6 +51,27 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     @Test
     public void addAtZeroOnAnEmptyCollectionShouldReturnTrue() {
         assertTrue(createModifiableOrderedCollection().addAt(0, 1));
+    }
+
+    /**
+     * Verifies that after adding an element at position 0 to an empty collection, the element is at position 0.
+     */
+    @Test
+    public void addAtZeroOnAnEmptyCollectionShouldPutAnElementAtPositionZero() {
+        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection();
+        collection.addAt(0, 1);
+        assertEquals(1, collection.getAt(0));
+    }
+
+    /**
+     * Verifies that after adding an element at a position to a collection, the elements after the position have been
+     * moved up.
+     */
+    @Test
+    public void addAtOneOnACollectionShouldMoveElementsOnePositionHigher() {
+        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.addAt(1, 0);
+        assertEquals(2, collection.getAt(2));
     }
 
     /**
