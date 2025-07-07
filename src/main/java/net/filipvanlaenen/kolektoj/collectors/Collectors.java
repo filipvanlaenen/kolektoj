@@ -9,6 +9,8 @@ import java.util.stream.Collector;
 import java.util.stream.Collector.Characteristics;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.linkedlist.ModifiableLinkedListCollection;
 import net.filipvanlaenen.kolektoj.linkedlist.ModifiableOrderedLinkedListCollection;
@@ -20,13 +22,13 @@ public final class Collectors {
     /**
      * A simple implementation of the Collector interface using a record.
      *
-     * @param <T> The type of elements to be collected.
+     * @param <E> The type of elements to be collected.
      * @param <A> The type of the accumulator.
      * @param <R> The type of the result.
      */
-    private record SimpleCollector<T, A, R>(Supplier<A> supplier, BiConsumer<A, T> accumulator,
+    private record SimpleCollector<E, A, R>(Supplier<A> supplier, BiConsumer<A, E> accumulator,
             BinaryOperator<A> combiner, Function<A, R> finisher, Set<Characteristics> characteristics)
-            implements Collector<T, A, R> {
+            implements Collector<E, A, R> {
     };
 
     /**
@@ -34,7 +36,7 @@ public final class Collectors {
      * {@link net.filipvanlaenen.kolektoj.Collection}.
      *
      * @param <E> The element type.
-     * @return A collector to produce a new {@link net.filipvanlaenen.kolektoj.array.Collection}.
+     * @return A collector to produce a new {@link net.filipvanlaenen.kolektoj.Collection}.
      */
     public static <E> Collector<E, ModifiableLinkedListCollection<E>, Collection<E>> toCollection() {
         return new SimpleCollector<>(ModifiableLinkedListCollection::new, ModifiableLinkedListCollection::add,
@@ -42,6 +44,37 @@ public final class Collectors {
                     a.addAll(b);
                     return a;
                 }, a -> Collection.of(a), Set.of(Characteristics.UNORDERED));
+    }
+
+    /**
+     * Returns a collector that accumulates the input elements into a new
+     * {@link net.filipvanlaenen.kolektoj.ModifiableCollection}.
+     *
+     * @param <E> The element type.
+     * @return A collector to produce a new {@link net.filipvanlaenen.kolektoj.ModifiableCollection}.
+     */
+    public static <E> Collector<E, ModifiableLinkedListCollection<E>, Collection<E>> toModifiableCollection() {
+        return new SimpleCollector<>(ModifiableLinkedListCollection::new, ModifiableLinkedListCollection::add,
+                (a, b) -> {
+                    a.addAll(b);
+                    return a;
+                }, a -> ModifiableCollection.of(a), Set.of(Characteristics.UNORDERED));
+    }
+
+    /**
+     * Returns a collector that accumulates the input elements into a new
+     * {@link net.filipvanlaenen.kolektoj.ModifiableOrderedCollection}.
+     *
+     * @param <E> The element type.
+     * @return A collector to produce a new {@link net.filipvanlaenen.kolektoj.ModifiableOrderedCollection}.
+     */
+    public static <E> Collector<E, ModifiableOrderedLinkedListCollection<E>,
+            ModifiableOrderedCollection<E>> toModifiableOrderedCollection() {
+        return new SimpleCollector<>(ModifiableOrderedLinkedListCollection::new,
+                ModifiableOrderedLinkedListCollection::addLast, (a, b) -> {
+                    a.addAllAt(a.size(), b);
+                    return a;
+                }, a -> ModifiableOrderedCollection.of(a), Set.of());
     }
 
     /**
@@ -54,8 +87,8 @@ public final class Collectors {
     public static <
             E> Collector<E, ModifiableOrderedLinkedListCollection<E>, OrderedCollection<E>> toOrderedCollection() {
         return new SimpleCollector<>(ModifiableOrderedLinkedListCollection::new,
-                ModifiableOrderedLinkedListCollection::add, (a, b) -> {
-                    a.addAll(b);
+                ModifiableOrderedLinkedListCollection::addLast, (a, b) -> {
+                    a.addAllAt(a.size(), b);
                     return a;
                 }, a -> OrderedCollection.of(a), Set.of());
     }

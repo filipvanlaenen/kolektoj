@@ -41,6 +41,10 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
      * The size of the collection.
      */
     private int size;
+    /**
+     * The tail node of the linked list.
+     */
+    private Node<E> tail;
 
     /**
      * Constructs a modifiable linked list collection with the given elements.
@@ -72,6 +76,9 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             return false;
         }
         head = new Node<E>(element, head);
+        if (tail == null) {
+            tail = head;
+        }
         size++;
         cachedArrayDirty = true;
         return true;
@@ -116,6 +123,9 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         if (index == 0) {
             newListTail.setNext(head);
             head = newListHead;
+        } else if (index == size) {
+            tail.setNext(newListHead);
+            tail = newListTail;
         } else {
             Node<E> current = head;
             for (int i = 0; i < index - 1; i++) {
@@ -139,6 +149,10 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             }
             if (index == 0) {
                 head = new Node<E>(element, head);
+            } else if (index == size) {
+                Node<E> newNode = new Node<E>(element, null);
+                tail.setNext(newNode);
+                tail = newNode;
             } else {
                 Node<E> current = head;
                 for (int i = 0; i < index - 1; i++) {
@@ -156,6 +170,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
     @Override
     public void clear() {
         head = null;
+        tail = null;
         size = 0;
         cachedArrayDirty = cachedArray.length != 0;
     }
@@ -214,11 +229,17 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             if (!cachedArrayDirty) {
                 return (E) cachedArray[index];
             } else {
-                Node<E> current = head;
-                for (int i = 0; i < index; i++) {
-                    current = current.getNext();
+                if (index == 0) {
+                    return head.getElement();
+                } else if (index == size - 1) {
+                    return tail.getElement();
+                } else {
+                    Node<E> current = head;
+                    for (int i = 0; i < index; i++) {
+                        current = current.getNext();
+                    }
+                    return current.getElement();
                 }
-                return current.getElement();
             }
         }
     }
@@ -277,6 +298,9 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
                 Node<E> next = current.getNext();
                 element = next.getElement();
                 current.setNext(next.getNext());
+                if (index == size - 1) {
+                    tail = current;
+                }
             }
             size--;
             cachedArrayDirty = true;
@@ -343,21 +367,22 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             i++;
         }
         if (head == null) {
+            tail = null;
             return true;
         }
-        Node<E> current = head;
-        Node<E> next = current.getNext();
+        tail = head;
+        Node<E> next = tail.getNext();
         i++;
         while (i < retain.length) {
             if (retain[i]) {
-                current = next;
+                tail = next;
             } else {
-                current.setNext(next.getNext());
+                tail.setNext(next.getNext());
                 size--;
                 cachedArrayDirty = true;
                 result = true;
             }
-            next = current.getNext();
+            next = tail.getNext();
             i++;
         }
         return result;
