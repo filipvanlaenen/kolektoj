@@ -326,14 +326,14 @@ The table below shows how the methods defined on the
 [java.util.SortedSet&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SortedSet.html)
 interface map to Kolektoj methods.
 
-| JDK 21 Method                                      | Kolektoj Class          | Kolektoj Method      |
-|----------------------------------------------------|-------------------------|----------------------|
-| Comparator&lt;? super E> comparator()              |                         |                      |
-| E first()                                          | OrderedCollection&lt;E> | default E getFirst() |
-| SortedSet&lt;E> headSet(E toElement)               |                         |                      |
-| E last()                                           | OrderedCollection&lt;E> | default E getLast()  |
-| SortedSet&lt;E> subSet(E fromElement, E toElement) |                         |                      |
-| SortedSet&lt;E> tailSet(E fromElement)             |                         |                      |
+| JDK 21 Method                                      | Kolektoj Class          | Kolektoj Method                          |
+|----------------------------------------------------|-------------------------|------------------------------------------|
+| Comparator&lt;? super E> comparator()              | SortedCollection&lt;E>  | Comparator&lt;? super E> getComparator() |
+| E first()                                          | OrderedCollection&lt;E> | default E getFirst()                     |
+| SortedSet&lt;E> headSet(E toElement)               |                         |                                          |
+| E last()                                           | OrderedCollection&lt;E> | default E getLast()                      |
+| SortedSet&lt;E> subSet(E fromElement, E toElement) |                         |                                          |
+| SortedSet&lt;E> tailSet(E fromElement)             |                         |                                          |
 
 ### JDK 21 Classes
 
