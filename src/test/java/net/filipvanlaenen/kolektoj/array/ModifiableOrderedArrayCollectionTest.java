@@ -3,7 +3,6 @@ package net.filipvanlaenen.kolektoj.array;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -39,11 +38,6 @@ public final class ModifiableOrderedArrayCollectionTest
      * Collection with the integers 1, 2 and 3.
      */
     private static final ModifiableOrderedCollection<Integer> COLLECTION123 = createNewCollection();
-    /**
-     * Collection with the integers 1, 2, 3 and null.
-     */
-    private static final ModifiableOrderedCollection<Integer> COLLECTION123NULL =
-            new ModifiableOrderedArrayCollection<Integer>(1, 2, 3, null);
 
     @Override
     protected ModifiableOrderedArrayCollection<Integer> createModifiableCollection(
@@ -74,27 +68,6 @@ public final class ModifiableOrderedArrayCollectionTest
      */
     private static ModifiableOrderedArrayCollection<Integer> createNewCollection() {
         return new ModifiableOrderedArrayCollection<Integer>(1, 2, THREE);
-    }
-
-    /**
-     * Verifies that adding duplicate elements at zero to a collection with distinct elements returns false.
-     */
-    @Test
-    public void addAllAtOfDuplicateElementsToCollectionWithDistinctElementsShouldReturnFalse() {
-        ModifiableOrderedCollection<Integer> collection =
-                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, THREE);
-        assertFalse(collection.addAllAt(0, COLLECTION123));
-    }
-
-    /**
-     * Verifies that adding at zero a collection with duplicate and new elements to a collection with distinct elements
-     * returns true.
-     */
-    @Test
-    public void addAllAtOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldReturnTrue() {
-        ModifiableOrderedCollection<Integer> collection =
-                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1, 2, THREE);
-        assertTrue(collection.addAllAt(0, COLLECTION123NULL));
     }
 
     /**

@@ -32,6 +32,10 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      * Ordered collection with the integers 1, 2 and 3.
      */
     private final T collection123 = createModifiableOrderedCollection(1, 2, 3);
+    /**
+     * Collection with the integers 1, 2, 3 and null.
+     */
+    private final T collection123null = createModifiableOrderedCollection(1, 2, 3, null);
 
     /**
      * Creates a modifiable ordered collection containing the provided integers with a given element cardinality.
@@ -67,6 +71,25 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that adding duplicate elements at zero to a collection with distinct elements returns false.
+     */
+    @Test
+    public void addAllAtOfDuplicateElementsToCollectionWithDistinctElementsShouldReturnFalse() {
+        T collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1, 2, THREE);
+        assertFalse(collection.addAllAt(0, collection123));
+    }
+
+    /**
+     * Verifies that adding at zero a collection with duplicate and new elements to a collection with distinct elements
+     * returns true.
+     */
+    @Test
+    public void addAllAtOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldReturnTrue() {
+        T collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1, 2, THREE);
+        assertTrue(collection.addAllAt(0, collection123null));
+    }
+
+    /**
      * Verifies that trying to add an element at an index beyond the size of the collection throws
      * IndexOutOfBoundsException.
      */
@@ -90,7 +113,7 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      */
     @Test
     public void addAtZeroOnAnEmptyCollectionShouldPutAnElementAtPositionZero() {
-        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection();
+        T collection = createModifiableOrderedCollection();
         collection.addAt(0, 1);
         assertEquals(1, collection.getAt(0));
     }
@@ -101,7 +124,7 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      */
     @Test
     public void addAtOneOnACollectionShouldMoveElementsOnePositionHigher() {
-        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection(1, 2, THREE);
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
         collection.addAt(1, 0);
         assertEquals(2, collection.getAt(2));
     }
@@ -112,7 +135,7 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      */
     @Test
     public void addAtLastPositionOnACollectionShouldPlaceElementAtLastPosition() {
-        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection(1, 2, THREE);
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
         collection.addAt(THREE, 0);
         assertEquals(0, collection.getAt(THREE));
     }
@@ -122,7 +145,7 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      */
     @Test
     public void addAtManyTimesShouldNotProduceAnException() {
-        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection();
+        T collection = createModifiableOrderedCollection();
         for (int i = 0; i < SIX; i++) {
             collection.addAt(0, i);
         }
@@ -134,7 +157,7 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      */
     @Test
     public void addAtZeroOnAnEmptyCollectionShouldIncreaseCollectionSizeToOne() {
-        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection();
+        T collection = createModifiableOrderedCollection();
         collection.addAt(0, 1);
         assertEquals(1, collection.size());
     }
@@ -144,7 +167,7 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      */
     @Test
     public void addAtZeroDuplicateElementOnCollectionWithDistinctElementsShouldReturnFalse() {
-        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1);
+        T collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1);
         assertFalse(collection.addAt(0, 1));
     }
 
@@ -153,7 +176,7 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      */
     @Test
     public void addAtZeroNewElementOnCollectionWithDistinctElementsShouldReturnTrue() {
-        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1);
+        T collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1);
         assertTrue(collection.addAt(1, 2));
     }
 
@@ -190,7 +213,7 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      */
     @Test
     public void toArrayShouldProduceAnArrayWithTheElementsOfTheCollectionInTheCorrectOrder() {
-        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection(1, 2);
+        T collection = createModifiableOrderedCollection(1, 2);
         Object[] actual = collection.toArray();
         Object[] expected = new Object[] {1, 2};
         assertArrayEquals(expected, actual);
