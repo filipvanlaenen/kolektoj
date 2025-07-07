@@ -7,8 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Spliterator;
-
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
@@ -76,17 +74,6 @@ public final class ModifiableOrderedArrayCollectionTest
      */
     private static ModifiableOrderedArrayCollection<Integer> createNewCollection() {
         return new ModifiableOrderedArrayCollection<Integer>(1, 2, THREE);
-    }
-
-    /**
-     * Verifies that the collection produces an array with the elements in the correct order.
-     */
-    @Test
-    public void toArrayShouldProduceAnArrayWithTheElementsOfTheCollectionInTheCorrectOrder() {
-        ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>(1, 2);
-        Object[] actual = collection.toArray();
-        Object[] expected = new Object[] {1, 2};
-        assertArrayEquals(expected, actual);
     }
 
     /**
@@ -240,13 +227,4 @@ public final class ModifiableOrderedArrayCollectionTest
     public void removeAtShouldReturnTheElementThatIsRemoved() {
         assertEquals(2, createNewCollection().removeAt(1));
     }
-
-    /**
-     * Verifies that the spliterator has the ordered flag set.
-     */
-    @Test
-    public void spliteratorShouldSetOrderedFlag() {
-        assertTrue(COLLECTION123.spliterator().hasCharacteristics(Spliterator.ORDERED));
-    }
-
 }

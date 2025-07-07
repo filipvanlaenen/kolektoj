@@ -1,10 +1,13 @@
 package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Spliterator;
 
 import org.junit.jupiter.api.Test;
 
@@ -156,5 +159,24 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
                 assertThrows(IndexOutOfBoundsException.class, () -> collection123.getAt(THREE));
         assertEquals("Cannot return an element at a position beyond the size of the collection.",
                 exception.getMessage());
+    }
+
+    /**
+     * Verifies that the spliterator has the ordered flag set.
+     */
+    @Test
+    public void spliteratorShouldSetOrderedFlag() {
+        assertTrue(collection123.spliterator().hasCharacteristics(Spliterator.ORDERED));
+    }
+
+    /**
+     * Verifies that the collection produces an array with the elements in the correct order.
+     */
+    @Test
+    public void toArrayShouldProduceAnArrayWithTheElementsOfTheCollectionInTheCorrectOrder() {
+        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection(1, 2);
+        Object[] actual = collection.toArray();
+        Object[] expected = new Object[] {1, 2};
+        assertArrayEquals(expected, actual);
     }
 }
