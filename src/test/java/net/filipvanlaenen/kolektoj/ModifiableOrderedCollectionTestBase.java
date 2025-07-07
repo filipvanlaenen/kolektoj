@@ -271,6 +271,26 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that trying to remove an element at an index beyond the size of the collection throws
+     * IndexOutOfBoundsException.
+     */
+    @Test
+    public void removeAtShouldThrowExceptionWhenCalledBeyondCollectionSize() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> collection123.removeAt(THREE));
+        assertEquals("Cannot remove an element at a position beyond the size of the collection.",
+                exception.getMessage());
+    }
+
+    /**
+     * Verifies that removeAt returns the element being removed.
+     */
+    @Test
+    public void removeAtShouldReturnTheElementThatIsRemoved() {
+        assertEquals(2, createModifiableOrderedCollection(1, 2, THREE).removeAt(1));
+    }
+
+    /**
      * Verifies that after adding the elements of a collection to an empty collection at the first position, the size is
      * increased to by the size of the added collection.
      */
