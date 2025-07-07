@@ -1,10 +1,14 @@
 package net.filipvanlaenen.kolektoj;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+
+import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.ModifiableOrderedCollection} interface.
@@ -25,6 +29,15 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      * Ordered collection with the integers 1, 2 and 3.
      */
     private final T collection123 = createModifiableOrderedCollection(1, 2, 3);
+
+    /**
+     * Creates a modifiable ordered collection containing the provided integers with a given element cardinality.
+     *
+     * @param elementCardinality The element cardinality for the modifiable ordered collection.
+     * @param integers           The integers to be included in the modifiable ordered collection.
+     * @return A modifiable ordered collection containing the provided integers.
+     */
+    protected abstract T createModifiableOrderedCollection(ElementCardinality elementCardinality, Integer... integers);
 
     /**
      * Creates a modifiable ordered collection containing the provided integers.
@@ -95,6 +108,34 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
             collection.addAt(0, i);
         }
         assertEquals(0, collection.getAt(SIX - 1));
+    }
+
+    /**
+     * Verifies that after adding an element at position 0 to an empty collection, the collection has size 1.
+     */
+    @Test
+    public void addAtZeroOnAnEmptyCollectionShouldIncreaseCollectionSizeToOne() {
+        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection();
+        collection.addAt(0, 1);
+        assertEquals(1, collection.size());
+    }
+
+    /**
+     * Verifies that adding a duplicate element at zero to a collection with distinct elements returns false.
+     */
+    @Test
+    public void addAtZeroDuplicateElementOnCollectionWithDistinctElementsShouldReturnFalse() {
+        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1);
+        assertFalse(collection.addAt(0, 1));
+    }
+
+    /**
+     * Verifies that adding a new element at zero to a collection with distinct elements returns true.
+     */
+    @Test
+    public void addAtZeroNewElementOnCollectionWithDistinctElementsShouldReturnTrue() {
+        ModifiableOrderedCollection<Integer> collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1);
+        assertTrue(collection.addAt(1, 2));
     }
 
     /**

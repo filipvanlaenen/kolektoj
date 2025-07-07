@@ -48,12 +48,18 @@ public final class ModifiableOrderedArrayCollectionTest
             new ModifiableOrderedArrayCollection<Integer>(1, 2, 3, null);
 
     @Override
+    protected ModifiableOrderedArrayCollection<Integer> createModifiableCollection(
+            final ElementCardinality elementCardinality, final Integer... integers) {
+        return createModifiableOrderedCollection(elementCardinality, integers);
+    }
+
+    @Override
     protected ModifiableOrderedArrayCollection<Integer> createModifiableCollection(final Integer... integers) {
         return createModifiableOrderedCollection(integers);
     }
 
     @Override
-    protected ModifiableOrderedArrayCollection<Integer> createModifiableCollection(
+    protected ModifiableOrderedArrayCollection<Integer> createModifiableOrderedCollection(
             final ElementCardinality elementCardinality, final Integer... integers) {
         return new ModifiableOrderedArrayCollection<Integer>(elementCardinality, integers);
     }
@@ -81,36 +87,6 @@ public final class ModifiableOrderedArrayCollectionTest
         Object[] actual = collection.toArray();
         Object[] expected = new Object[] {1, 2};
         assertArrayEquals(expected, actual);
-    }
-
-    /**
-     * Verifies that after adding an element at position 0 to an empty collection, the collection has size 1.
-     */
-    @Test
-    public void addAtZeroOnAnEmptyCollectionShouldIncreaseCollectionSizeToOne() {
-        ModifiableOrderedCollection<Integer> collection = new ModifiableOrderedArrayCollection<Integer>();
-        collection.addAt(0, 1);
-        assertEquals(1, collection.size());
-    }
-
-    /**
-     * Verifies that adding a duplicate element at zero to a collection with distinct elements returns false.
-     */
-    @Test
-    public void addAtZeroDuplicateElementOnCollectionWithDistinctElementsShouldReturnFalse() {
-        ModifiableOrderedCollection<Integer> collection =
-                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1);
-        assertFalse(collection.addAt(0, 1));
-    }
-
-    /**
-     * Verifies that adding a new element at zero to a collection with distinct elements returns true.
-     */
-    @Test
-    public void addAtZeroNewElementOnCollectionWithDistinctElementsShouldReturnTrue() {
-        ModifiableOrderedCollection<Integer> collection =
-                new ModifiableOrderedArrayCollection<Integer>(DISTINCT_ELEMENTS, 1);
-        assertTrue(collection.addAt(1, 2));
     }
 
     /**

@@ -8,6 +8,11 @@ import net.filipvanlaenen.kolektoj.ModifiableOrderedCollectionTestBase;
  */
 public final class ModifiableOrderedLinkedListCollectionTest
         extends ModifiableOrderedCollectionTestBase<ModifiableOrderedLinkedListCollection<Integer>> {
+    @Override
+    protected ModifiableOrderedLinkedListCollection<Integer> createModifiableCollection(
+            final ElementCardinality elementCardinality, final Integer... integers) {
+        return createModifiableOrderedCollection(elementCardinality, integers);
+    }
 
     @Override
     protected ModifiableOrderedLinkedListCollection<Integer> createModifiableCollection(final Integer... integers) {
@@ -15,7 +20,7 @@ public final class ModifiableOrderedLinkedListCollectionTest
     }
 
     @Override
-    protected ModifiableOrderedLinkedListCollection<Integer> createModifiableCollection(
+    protected ModifiableOrderedLinkedListCollection<Integer> createModifiableOrderedCollection(
             final ElementCardinality elementCardinality, final Integer... integers) {
         return new ModifiableOrderedLinkedListCollection<Integer>(elementCardinality, integers);
     }
