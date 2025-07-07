@@ -51,6 +51,22 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     protected abstract T createModifiableOrderedCollection(Integer... integers);
 
     /**
+     * Verifies that adding the elements of a collection to an empty collection at the first position returns true.
+     */
+    @Test
+    public void addAllAtOnAnEmptyCollectionShouldReturnTrue() {
+        assertTrue(createModifiableOrderedCollection().addAllAt(0, OrderedCollection.of(1, 2)));
+    }
+
+    /**
+     * Verifies that adding an empty collection at zero returns false.
+     */
+    @Test
+    public void addAllAtWithEmptyCollectionShouldReturnFalse() {
+        assertFalse(createModifiableOrderedCollection().addAllAt(0, OrderedCollection.empty()));
+    }
+
+    /**
      * Verifies that trying to add an element at an index beyond the size of the collection throws
      * IndexOutOfBoundsException.
      */

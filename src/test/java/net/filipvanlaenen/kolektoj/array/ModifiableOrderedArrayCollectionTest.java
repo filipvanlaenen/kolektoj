@@ -77,23 +77,6 @@ public final class ModifiableOrderedArrayCollectionTest
     }
 
     /**
-     * Verifies that adding the elements of a collection to an empty collection at the first position returns true.
-     */
-    @Test
-    public void addAllAtOnAnEmptyCollectionShouldReturnTrue() {
-        assertTrue(new ModifiableOrderedArrayCollection<Integer>().addAllAt(0, OrderedCollection.of(1, 2)));
-    }
-
-    /**
-     * Verifies that adding an empty collection at zero returns false.
-     */
-    @Test
-    public void addAllAtWithEmptyCollectionShouldReturnFalse() {
-        assertFalse(new ModifiableOrderedArrayCollection<Integer>().addAllAt(0,
-                new ModifiableOrderedArrayCollection<Integer>()));
-    }
-
-    /**
      * Verifies that adding duplicate elements at zero to a collection with distinct elements returns false.
      */
     @Test
