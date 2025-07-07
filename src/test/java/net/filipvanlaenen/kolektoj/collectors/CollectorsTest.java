@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.collectors.Collectors} class.
@@ -28,6 +30,27 @@ public class CollectorsTest {
     public void toModifiableCollectionShouldCollectCorrectly() {
         Collection<String> collection = Collection.of("one", "two", "three");
         ModifiableCollection<String> result = collection.stream().collect(Collectors.toModifiableCollection());
+        assertTrue(result.containsSame(collection));
+    }
+
+    /**
+     * Verifies that collecting a stream produces a modifiable ordered collection correctly.
+     */
+    @Test
+    public void toModifiableOrderedCollectionShouldCollectCorrectly() {
+        OrderedCollection<String> collection = OrderedCollection.of("one", "two", "three");
+        ModifiableOrderedCollection<String> result =
+                collection.stream().collect(Collectors.toModifiableOrderedCollection());
+        assertTrue(result.containsSame(collection));
+    }
+
+    /**
+     * Verifies that collecting a stream produces an ordered collection correctly.
+     */
+    @Test
+    public void toOrderedCollectionShouldCollectCorrectly() {
+        OrderedCollection<String> collection = OrderedCollection.of("one", "two", "three");
+        OrderedCollection<String> result = collection.stream().collect(Collectors.toOrderedCollection());
         assertTrue(result.containsSame(collection));
     }
 }
