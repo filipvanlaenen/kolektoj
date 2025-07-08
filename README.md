@@ -220,6 +220,26 @@ interface map to Kolektoj methods.
 | NavigableMap&lt;K,V>                                                                        |                |                 |
 | tailMap(K fromKey, boolean inclusive)                                                       |                |                 |
 
+#### java.util.NavigableSet&lt;E>
+
+The table below shows how the methods defined on the
+[java.util.NavigableSet&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/NavigableSet.html)
+interface map to Kolektoj methods.
+
+| JDK 21 Method                                                                                     | Kolektoj Class                   | Kolektoj Method                                                                                         |
+|---------------------------------------------------------------------------------------------------|----------------------------------|---------------------------------------------------------------------------------------------------------|
+| E ceiling(E e)                                                                                    | SortedCollection&lt;E>           | E getGreaterThanOrEqualTo(E e)                                                                          |
+| Iterator&lt;E> descendingIterator()                                                               |                                  |                                                                                                         |
+| NavigableSet&lt;E> descendingSet()                                                                |                                  |                                                                                                         |
+| E floor(E e)                                                                                      | SortedCollection&lt;E>           | E getLessThanOrEqualTo(E e)                                                                             |
+| NavigableSet&lt;E> headSet(E toElement, boolean inclusive)                                        | SortedCollection&lt;F>           | static &lt;F> SortedCollection&lt;F> of(SortedCollection&lt;? extends F> collection, Range&lt;F> range) |
+| E higher(E e)                                                                                     | SortedCollection&lt;E>           | E getGreaterThan(E e)                                                                                   |
+| E lower(E e)                                                                                      | SortedCollection&lt;E>           | E getLessThan(E e)                                                                                      |
+| E pollFirst()                                                                                     | ModifiableSortedCollection&lt;E> | default E removeLeast(E e)                                                                              |
+| E pollLast()                                                                                      | ModifiableSortedCollection&lt;E> | default E removeGreatest(E e)                                                                           |
+| NavigableSet&lt;E> subSet(E fromElement, boolean fromInclusive, E toElement, boolean toInclusive) | SortedCollection&lt;F>           | static &lt;F> SortedCollection&lt;F> of(SortedCollection&lt;? extends F> collection, Range&lt;F> range) |
+| NavigableSet&lt;E> tailSet(E fromElement, boolean inclusive)                                      | SortedCollection&lt;F>           | static &lt;F> SortedCollection&lt;F> of(SortedCollection&lt;? extends F> collection, Range&lt;F> range) |
+
 #### java.util.Queue&lt;E>
 
 The table below shows how the methods defined on the
@@ -233,26 +253,6 @@ to Kolektoj methods.
 | E peek()           |                |                 |
 | E poll()           |                |                 |
 | E remove()         |                |                 |
-
-#### java.util.NavigableSet&lt;E>
-
-The table below shows how the methods defined on the
-[java.util.NavigableSet&lt;E>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/NavigableSet.html)
-interface map to Kolektoj methods.
-
-| JDK 21 Method                                                                                     | Kolektoj Class          | Kolektoj Method                                                                                         |
-|---------------------------------------------------------------------------------------------------|-------------------------|---------------------------------------------------------------------------------------------------------|
-| E ceiling(E e)                                                                                    |                         |                                                                                                         |
-| Iterator&lt;E> descendingIterator()                                                               |                         |                                                                                                         |
-| NavigableSet&lt;E> descendingSet()                                                                |                         |                                                                                                         |
-| E floor(E e)                                                                                      |                         |                                                                                                         |
-| NavigableSet&lt;E> headSet(E toElement, boolean inclusive)                                        | SortedCollection&lt;F>  | static &lt;F> SortedCollection&lt;F> of(SortedCollection&lt;? extends F> collection, Range&lt;F> range) |
-| E higher(E e)                                                                                     |                         |                                                                                                         |
-| E lower(E e)                                                                                      |                         |                                                                                                         |
-| E pollFirst()                                                                                     |                         |                                                                                                         |
-| E pollLast()                                                                                      |                         |                                                                                                         |
-| NavigableSet&lt;E> subSet(E fromElement, boolean fromInclusive, E toElement, boolean toInclusive) | SortedCollection&lt;F>  | static &lt;F> SortedCollection&lt;F> of(SortedCollection&lt;? extends F> collection, Range&lt;F> range) |
-| NavigableSet&lt;E> tailSet(E fromElement, boolean inclusive)                                      | SortedCollection&lt;F>  | static &lt;F> SortedCollection&lt;F> of(SortedCollection&lt;? extends F> collection, Range&lt;F> range) |
 
 #### java.util.SequencedCollection&lt;E>
 
