@@ -118,6 +118,11 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
     }
 
     @Override
+    public Comparator<? super E> getComparator() {
+        return comparator;
+    }
+
+    @Override
     public ElementCardinality getElementCardinality() {
         return elementCardinality;
     }

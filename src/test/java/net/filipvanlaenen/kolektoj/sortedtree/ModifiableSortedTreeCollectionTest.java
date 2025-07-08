@@ -102,6 +102,14 @@ public final class ModifiableSortedTreeCollectionTest
     }
 
     /**
+     * Verifies that <code>getComparator</code> returns the comparator used to create the sorted collection.
+     */
+    @Test
+    public void getComparatorShouldReturnTheProvidedComparator() {
+        assertEquals(COMPARATOR, createCollection513().getComparator());
+    }
+
+    /**
      * Verifies that removing an element at an index occurs according to sorting.
      */
     @Test

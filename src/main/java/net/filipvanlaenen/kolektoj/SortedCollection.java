@@ -61,6 +61,13 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
     }
 
     /**
+     * Returns the comparator sorting this collection.
+     *
+     * @return The comparator sorting this collection
+     */
+    Comparator<? super E> getComparator();
+
+    /**
      * Returns the greatest element in the collection.
      *
      * @return The greatest element in the collection.

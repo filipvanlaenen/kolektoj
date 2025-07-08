@@ -137,6 +137,11 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     }
 
     @Override
+    public Comparator<? super E> getComparator() {
+        return comparator;
+    }
+
+    @Override
     public ElementCardinality getElementCardinality() {
         return elementCardinality;
     }
