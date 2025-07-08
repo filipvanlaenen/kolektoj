@@ -280,18 +280,18 @@ The table below shows how the methods defined on the
 [java.util.SequencedMap&lt;K,V>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedMap.html)
 interface map to Kolektoj methods.
 
-| JDK 21 Method                                                  | Kolektoj Class              | Kolektoj Method                     |
-|----------------------------------------------------------------|-----------------------------|-------------------------------------|
-| default Map.Entry&lt;K,V> firstEntry()                         | SortedMap&lt;K,V>           | Entry<K,V> getLeast()               |
-| default Map.Entry&lt;K,V> lastEntry()                          | SortedMap&lt;K,V>           | Entry<K,V> getGreatest()            |
-| default Map.Entry&lt;K,V> pollFirstEntry()                     | ModifiableSortedMap&lt;K,V> | default Entry<K,V> removeLeast()    |
-| default Map.Entry&lt;K,V> pollLastEntry()                      | ModifiableSortedMap&lt;K,V> | default Entry<K,V> removeGreatest() |
-| default V putFirst(K k, V v)                                   |                             |                                     |
-| default V putLast(K k, V v)                                    |                             |                                     |
-| SequencedMap&lt;K,V> reversed()                                |                             |                                     |
-| default SequencedSet&lt;Map.Entry&lt;K,V>> sequencedEntrySet() |                             |                                     |
-| default SequencedSet&lt;K> sequencedKeySet()                   | SortedMap&lt;K,V>           | SortedCollection<K> getKeys()       |
-| default SequencedCollection&lt;V> sequencedValues()            | SortedMap&lt;K,V>           | OrderedCollection<V> getValues()    |
+| JDK 21 Method                                                  | Kolektoj Class              | Kolektoj Method                        |
+|----------------------------------------------------------------|-----------------------------|----------------------------------------|
+| default Map.Entry&lt;K,V> firstEntry()                         | SortedMap&lt;K,V>           | Entry&lt;K,V> getLeast()               |
+| default Map.Entry&lt;K,V> lastEntry()                          | SortedMap&lt;K,V>           | Entry&lt;K,V> getGreatest()            |
+| default Map.Entry&lt;K,V> pollFirstEntry()                     | ModifiableSortedMap&lt;K,V> | default Entry&lt;K,V> removeLeast()    |
+| default Map.Entry&lt;K,V> pollLastEntry()                      | ModifiableSortedMap&lt;K,V> | default Entry&lt;K,V> removeGreatest() |
+| default V putFirst(K k, V v)                                   |                             |                                        |
+| default V putLast(K k, V v)                                    |                             |                                        |
+| SequencedMap&lt;K,V> reversed()                                |                             |                                        |
+| default SequencedSet&lt;Map.Entry&lt;K,V>> sequencedEntrySet() |                             |                                        |
+| default SequencedSet&lt;K> sequencedKeySet()                   | SortedMap&lt;K,V>           | SortedCollection&lt;K> getKeys()       |
+| default SequencedCollection&lt;V> sequencedValues()            | SortedMap&lt;K,V>           | OrderedCollection&lt;V> getValues()    |
 
 #### java.util.SequencedSet&lt;E>
 
