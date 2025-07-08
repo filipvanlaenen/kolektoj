@@ -74,7 +74,7 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
      * @throws IndexOutOfBoundsException Thrown if the collection is empty.
      */
     default E getGreatest() throws IndexOutOfBoundsException {
-        return getFirst();
+        return getLast();
     }
 
     /**
@@ -84,6 +84,6 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
      * @throws IndexOutOfBoundsException Thrown if the collection is empty.
      */
     default E getLeast() throws IndexOutOfBoundsException {
-        return getLast();
+        return getFirst();
     }
 }

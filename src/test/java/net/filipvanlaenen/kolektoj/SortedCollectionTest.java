@@ -1,10 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -71,12 +68,30 @@ public class SortedCollectionTest {
     }
 
     /**
-     * Verifies that the of factory method using a collection clones a collection.
+     * Verifies that the <code>of</code> factory method using a collection clones a collection.
      */
     @Test
     public void ofWithCollectionShoudlReturnAClone() {
         Collection<Integer> collection = Collection.<Integer>of(1, 2, THREE);
         SortedCollection<Integer> clone = SortedCollection.<Integer>of(COMPARATOR, collection);
         assertArrayEquals(collection.toArray(), clone.toArray());
+    }
+
+    /**
+     * Verifies that the <code>getGreatest</code> returns the greatest element.
+     */
+    @Test
+    public void getGreatestReturnsGreatestElement() {
+        SortedCollection<Integer> collection = SortedCollection.<Integer>of(COMPARATOR, 1, 2, THREE);
+        assertEquals(THREE, collection.getGreatest());
+    }
+
+    /**
+     * Verifies that the <code>getLeast</code> returns the greatest element.
+     */
+    @Test
+    public void getLeastReturnsLeastElement() {
+        SortedCollection<Integer> collection = SortedCollection.<Integer>of(COMPARATOR, 1, 2, THREE);
+        assertEquals(1, collection.getLeast());
     }
 }
