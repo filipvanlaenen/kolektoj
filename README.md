@@ -235,8 +235,8 @@ interface map to Kolektoj methods.
 | NavigableSet&lt;E> headSet(E toElement, boolean inclusive)                                        | SortedCollection&lt;F>           | static &lt;F> SortedCollection&lt;F> of(SortedCollection&lt;? extends F> collection, Range&lt;F> range) |
 | E higher(E e)                                                                                     | SortedCollection&lt;E>           | E getGreaterThan(E e)                                                                                   |
 | E lower(E e)                                                                                      | SortedCollection&lt;E>           | E getLessThan(E e)                                                                                      |
-| E pollFirst()                                                                                     | ModifiableSortedCollection&lt;E> | default E removeLeast(E e)                                                                              |
-| E pollLast()                                                                                      | ModifiableSortedCollection&lt;E> | default E removeGreatest(E e)                                                                           |
+| E pollFirst()                                                                                     | ModifiableSortedCollection&lt;E> | default E removeLeast()                                                                                 |
+| E pollLast()                                                                                      | ModifiableSortedCollection&lt;E> | default E removeGreatest()                                                                              |
 | NavigableSet&lt;E> subSet(E fromElement, boolean fromInclusive, E toElement, boolean toInclusive) | SortedCollection&lt;F>           | static &lt;F> SortedCollection&lt;F> of(SortedCollection&lt;? extends F> collection, Range&lt;F> range) |
 | NavigableSet&lt;E> tailSet(E fromElement, boolean inclusive)                                      | SortedCollection&lt;F>           | static &lt;F> SortedCollection&lt;F> of(SortedCollection&lt;? extends F> collection, Range&lt;F> range) |
 
@@ -280,18 +280,18 @@ The table below shows how the methods defined on the
 [java.util.SequencedMap&lt;K,V>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedMap.html)
 interface map to Kolektoj methods.
 
-| JDK 21 Method                                                  | Kolektoj Class | Kolektoj Method |
-|----------------------------------------------------------------|----------------|-----------------|
-| default Map.Entry&lt;K,V> firstEntry()                         |                |                 |
-| default Map.Entry&lt;K,V> lastEntry()                          |                |                 |
-| default Map.Entry&lt;K,V> pollFirstEntry()                     |                |                 |
-| default Map.Entry&lt;K,V> pollLastEntry()                      |                |                 |
-| default V putFirst(K k, V v)                                   |                |                 |
-| default V putLast(K k, V v)                                    |                |                 |
-| SequencedMap&lt;K,V> reversed()                                |                |                 |
-| default SequencedSet&lt;Map.Entry&lt;K,V>> sequencedEntrySet() |                |                 |
-| default SequencedSet&lt;K> sequencedKeySet()                   |                |                 |
-| default SequencedCollection&lt;V> sequencedValues()            |                |                 |
+| JDK 21 Method                                                  | Kolektoj Class              | Kolektoj Method                     |
+|----------------------------------------------------------------|-----------------------------|-------------------------------------|
+| default Map.Entry&lt;K,V> firstEntry()                         | SortedMap&lt;K,V>           | Entry<K,V> getLeast()               |
+| default Map.Entry&lt;K,V> lastEntry()                          | SortedMap&lt;K,V>           | Entry<K,V> getGreatest()            |
+| default Map.Entry&lt;K,V> pollFirstEntry()                     | ModifiableSortedMap&lt;K,V> | default Entry<K,V> removeLeast()    |
+| default Map.Entry&lt;K,V> pollLastEntry()                      | ModifiableSortedMap&lt;K,V> | default Entry<K,V> removeGreatest() |
+| default V putFirst(K k, V v)                                   |                             |                                     |
+| default V putLast(K k, V v)                                    |                             |                                     |
+| SequencedMap&lt;K,V> reversed()                                |                             |                                     |
+| default SequencedSet&lt;Map.Entry&lt;K,V>> sequencedEntrySet() |                             |                                     |
+| default SequencedSet&lt;K> sequencedKeySet()                   | SortedMap&lt;K,V>           | SortedCollection<K> getKeys()       |
+| default SequencedCollection&lt;V> sequencedValues()            | SortedMap&lt;K,V>           | OrderedCollection<V> getValues()    |
 
 #### java.util.SequencedSet&lt;E>
 
