@@ -311,14 +311,14 @@ The table below shows how the methods defined on the
 [java.util.SortedMap&lt;K,V>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SortedMap.html)
 interface map to Kolektoj methods.
 
-| JDK 21 Method                                | Kolektoj Class | Kolektoj Method |
-|----------------------------------------------|----------------|-----------------|
-| Comparator&lt;? super K> comparator()        |                |                 |
-| K firstKey()                                 |                |                 |
-| SortedMap&lt;K,V> headMap(K toKey)           |                |                 |
-| K lastKey()                                  |                |                 |
-| SortedMap&lt;K,V> subMap(K fromKey, K toKey) |                |                 |
-| SortedMap&lt;K,V> tailMap(K fromKey)         |                |                 |
+| JDK 21 Method                                | Kolektoj Class    | Kolektoj Method                                                                                    |
+|----------------------------------------------|-------------------|----------------------------------------------------------------------------------------------------|
+| Comparator&lt;? super K> comparator()        | SortedMap&lt;K,V> | Comparator&lt;? super K> getComparator()                                                           |
+| K firstKey()                                 | SortedMap&lt;K,V> | K getLeastKey()                                                                                    |
+| SortedMap&lt;K,V> headMap(K toKey)           | SortedMap&lt;L,W> | static &lt;L,W> SortedMap&lt;L,W> of(SortedMap&lt;? extends L,? extends W> map, Range&lt;L> range) |
+| K lastKey()                                  | SortedMap&lt;K,V> | K getGreatestKey()                                                                                 |
+| SortedMap&lt;K,V> subMap(K fromKey, K toKey) | SortedMap&lt;L,W> | static &lt;L,W> SortedMap&lt;L,W> of(SortedMap&lt;? extends L,? extends W> map, Range&lt;L> range) |
+| SortedMap&lt;K,V> tailMap(K fromKey)         | SortedMap&lt;L,W> | static &lt;L,W> SortedMap&lt;L,W> of(SortedMap&lt;? extends L,? extends W> map, Range&lt;L> range) |
 
 #### java.util.SortedSet&lt;E>
 
