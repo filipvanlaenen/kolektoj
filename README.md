@@ -202,23 +202,22 @@ The table below shows how the methods defined on the
 [java.util.NavigableMap&lt;K,V>](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/NavigableMap.html)
 interface map to Kolektoj methods.
 
-| JDK 21 Method                                                                               | Kolektoj Class | Kolektoj Method |
-|---------------------------------------------------------------------------------------------|----------------|-----------------|
-| Map.Entry&lt;K,V> ceilingEntry(K key)                                                       |                |                 |
-| K ceilingKey(K key)                                                                         |                |                 |
-| NavigableSet&lt;K> descendingKeySet()                                                       |                |                 |
-| NavigableMap&lt;K,V> descendingMap()                                                        |                |                 |
-| Map.Entry&lt;K,V> floorEntry(K key)                                                         |                |                 |
-| K floorKey(K key)                                                                           |                |                 |
-| NavigableMap&lt;K,V> headMap(K toKey, boolean inclusive)                                    |                |                 |
-| Map.Entry&lt;K,V> higherEntry(K key)                                                        |                |                 |
-| K higherKey(K key)                                                                          |                |                 |
-| Map.Entry&lt;K,V> lowerEntry(K key)                                                         |                |                 |
-| K lowerKey(K key)                                                                           |                |                 |
-| NavigableSet&lt;K> navigableKeySet()                                                        |                |                 |
-| NavigableMap&lt;K,V> subMap(K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) |                |                 |
-| NavigableMap&lt;K,V>                                                                        |                |                 |
-| tailMap(K fromKey, boolean inclusive)                                                       |                |                 |
+| JDK 21 Method                                                                               | Kolektoj Class    | Kolektoj Method                                                                                    |
+|---------------------------------------------------------------------------------------------|-------------------|----------------------------------------------------------------------------------------------------|
+| Map.Entry&lt;K,V> ceilingEntry(K key)                                                       | SortedMap&lt;K,V> | Entry&lt;K,V> getGreaterThanOrEqualTo(K key)                                                       |
+| K ceilingKey(K key)                                                                         | SortedMap&lt;K,V> | K getKeyGreaterThanOrEqualTo(K key)                                                                |
+| NavigableSet&lt;K> descendingKeySet()                                                       |                   |                                                                                                    |
+| NavigableMap&lt;K,V> descendingMap()                                                        |                   |                                                                                                    |
+| Map.Entry&lt;K,V> floorEntry(K key)                                                         | SortedMap&lt;K,V> | Entry&lt;K,V> getLessThanOrEqualTo(K key)                                                          |
+| K floorKey(K key)                                                                           | SortedMap&lt;K,V> | K getKeyLessThanOrEqualTo(K key)                                                                   |
+| NavigableMap&lt;K,V> headMap(K toKey, boolean inclusive)                                    | SortedMap&lt;L,W> | static &lt;L,W> SortedMap&lt;L,W> of(SortedMap&lt;? extends L,? extends W> map, Range&lt;L> range) |
+| Map.Entry&lt;K,V> higherEntry(K key)                                                        | SortedMap&lt;K,V> | Entry&lt;K,V> getGreaterThan(K key)                                                                |
+| K higherKey(K key)                                                                          | SortedMap&lt;K,V> | K getKeyGreaterThan(K key)                                                                         |
+| Map.Entry&lt;K,V> lowerEntry(K key)                                                         | SortedMap&lt;K,V> | Entry&lt;K,V> getLessThan(K key)                                                                   |
+| K lowerKey(K key)                                                                           | SortedMap&lt;K,V> | K getKeyLessThan(K key)                                                                            |
+| NavigableSet&lt;K> navigableKeySet()                                                        | SortedMap&lt;K,V> | SortedCollection&lt;K> getKeys()                                                                   |
+| NavigableMap&lt;K,V> subMap(K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) | SortedMap&lt;L,W> | static &lt;L,W> SortedMap&lt;L,W> of(SortedMap&lt;? extends L,? extends W> map, Range&lt;L> range) |
+| NavigableMap&lt;K,V> tailMap(K fromKey, boolean inclusive)                                  | SortedMap&lt;L,W> | static &lt;L,W> SortedMap&lt;L,W> of(SortedMap&lt;? extends L,? extends W> map, Range&lt;L> range) |
 
 #### java.util.NavigableSet&lt;E>
 
