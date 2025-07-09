@@ -11,6 +11,7 @@ import java.util.stream.Collector.Characteristics;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.UpdatableMap;
@@ -96,6 +97,29 @@ public final class Collectors {
                     a.addAll(b);
                     return a;
                 }, a -> ModifiableCollection.of(a), Set.of(Characteristics.UNORDERED));
+    }
+
+    /**
+     * Returns a collector that accumulates the input elements into a new
+     * {@link net.filipvanlaenen.kolektoj.ModifiableMap}.
+     *
+     * @param keyMapper   A mapper mapping an input element to a key.
+     * @param valueMapper A mapper mapping an input elements to a value.
+     * @param <E>         The input element type.
+     * @param <K>         The key type.
+     * @param <V>         The value type.
+     * @return A collector to produce a new {@link net.filipvanlaenen.kolektoj.ModifiableMap}.
+     */
+    public static <E, K, V> Collector<E, ModifiableHashMap<K, V>, ModifiableMap<K, V>> toModifiableMap(
+            final Function<? super E, ? extends K> keyMapper, final Function<? super E, ? extends V> valueMapper) {
+        return new SimpleCollector<>(ModifiableHashMap::new, (map, element) -> {
+            K k = keyMapper.apply(element);
+            V v = valueMapper.apply(element);
+            map.add(k, v);
+        }, (a, b) -> {
+            a.addAll(b);
+            return a;
+        }, a -> ModifiableMap.of(a), Set.of(Characteristics.UNORDERED));
     }
 
     /**

@@ -15,7 +15,6 @@ import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
-import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
@@ -107,7 +106,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
      *
      * @param map The map to create a new modifiable map from.
      */
-    public ModifiableHashMap(final Map<K, V> map) {
+    public ModifiableHashMap(final Map<? extends K, ? extends V> map) {
         this(map.getKeyAndValueCardinality());
         addAll(map);
     }
