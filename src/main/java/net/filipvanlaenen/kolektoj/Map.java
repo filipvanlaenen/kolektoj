@@ -45,72 +45,72 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
     /**
      * Returns a new empty map.
      *
-     * @param <K> The key type.
-     * @param <V> The value type.
+     * @param <L> The key type.
+     * @param <W> The value type.
      * @return A new empty map.
      */
-    static <K, V> Map<K, V> empty() {
-        return new HashMap<K, V>();
+    static <L, W> Map<L, W> empty() {
+        return new HashMap<L, W>();
     }
 
     /**
      * Returns a new map with the specified entries.
      *
-     * @param <K>     The key type.
-     * @param <V>     The value type.
+     * @param <L>     The key type.
+     * @param <W>     The value type.
      * @param entries The entries for the new map.
      * @return A new map with the specified entries.
      */
-    static <K, V> Map<K, V> of(final Entry<K, V>... entries) {
-        return new HashMap<K, V>(entries);
+    static <L, W> Map<L, W> of(final Entry<L, W>... entries) {
+        return new HashMap<L, W>(entries);
     }
 
     /**
      * Returns a new map with the specified entries and key and value cardinality.
      *
-     * @param <K>                    The key type.
-     * @param <V>                    The value type.
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
      * @param keyAndValueCardinality The key and value cardinality.
      * @param entries                The entries for the new map.
      * @return A new map with the specified entries.
      */
-    static <K, V> Map<K, V> of(final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, V>... entries) {
-        return new HashMap<K, V>(keyAndValueCardinality, entries);
+    static <L, W> Map<L, W> of(final KeyAndValueCardinality keyAndValueCardinality, final Entry<L, W>... entries) {
+        return new HashMap<L, W>(keyAndValueCardinality, entries);
     }
 
     /**
      * Returns a new map containing an entry with the key and the value.
      *
-     * @param <K>   The key type.
-     * @param <V>   The value type.
+     * @param <L>   The key type.
+     * @param <W>   The value type.
      * @param key   The key for the entry.
      * @param value The value for the entry.
      * @return A new map containing an entry with the key and the value.
      */
-    static <K, V> Map<K, V> of(final K key, final V value) {
-        return new HashMap<K, V>(new Entry<K, V>(key, value));
+    static <L, W> Map<L, W> of(final L key, final W value) {
+        return new HashMap<L, W>(new Entry<L, W>(key, value));
     }
 
     /**
      * Returns a new map containing two entries using the provided keys and values.
      *
-     * @param <K>    The key type.
-     * @param <V>    The value type.
+     * @param <L>    The key type.
+     * @param <W>    The value type.
      * @param key1   The first key for the entry.
      * @param value1 The first value for the entry.
      * @param key2   The second key for the entry.
      * @param value2 The second value for the entry.
      * @return A new map containing two entries using the provided keys and values.
      */
-    static <K, V> Map<K, V> of(final K key1, final V value1, final K key2, final V value2) {
-        return new HashMap<K, V>(new Entry<K, V>(key1, value1), new Entry<K, V>(key2, value2));
+    static <L, W> Map<L, W> of(final L key1, final W value1, final L key2, final W value2) {
+        return new HashMap<L, W>(new Entry<L, W>(key1, value1), new Entry<L, W>(key2, value2));
     }
 
     /**
      * Returns a new map containing three entries using the provided keys and values.
      *
-     * @param <K>    The key type.
-     * @param <V>    The value type.
+     * @param <L>    The key type.
+     * @param <W>    The value type.
      * @param key1   The first key for the entry.
      * @param value1 The first value for the entry.
      * @param key2   The second key for the entry.
@@ -119,17 +119,17 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
      * @param value3 The third value for the entry.
      * @return A new map containing three entries using the provided keys and values.
      */
-    static <K, V> Map<K, V> of(final K key1, final V value1, final K key2, final V value2, final K key3,
-            final V value3) {
-        return new HashMap<K, V>(new Entry<K, V>(key1, value1), new Entry<K, V>(key2, value2),
-                new Entry<K, V>(key3, value3));
+    static <L, W> Map<L, W> of(final L key1, final W value1, final L key2, final W value2, final L key3,
+            final W value3) {
+        return new HashMap<L, W>(new Entry<L, W>(key1, value1), new Entry<L, W>(key2, value2),
+                new Entry<L, W>(key3, value3));
     }
 
     /**
      * Returns a new map containing four entries using the provided keys and values.
      *
-     * @param <K>    The key type.
-     * @param <V>    The value type.
+     * @param <L>    The key type.
+     * @param <W>    The value type.
      * @param key1   The first key for the entry.
      * @param value1 The first value for the entry.
      * @param key2   The second key for the entry.
@@ -140,17 +140,17 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
      * @param value4 The fourth value for the entry.
      * @return A new map containing four entries using the provided keys and values.
      */
-    static <K, V> Map<K, V> of(final K key1, final V value1, final K key2, final V value2, final K key3, final V value3,
-            final K key4, final V value4) {
-        return new HashMap<K, V>(new Entry<K, V>(key1, value1), new Entry<K, V>(key2, value2),
-                new Entry<K, V>(key3, value3), new Entry<K, V>(key4, value4));
+    static <L, W> Map<L, W> of(final L key1, final W value1, final L key2, final W value2, final L key3, final W value3,
+            final L key4, final W value4) {
+        return new HashMap<L, W>(new Entry<L, W>(key1, value1), new Entry<L, W>(key2, value2),
+                new Entry<L, W>(key3, value3), new Entry<L, W>(key4, value4));
     }
 
     /**
      * Returns a new map containing five entries using the provided keys and values.
      *
-     * @param <K>    The key type.
-     * @param <V>    The value type.
+     * @param <L>    The key type.
+     * @param <W>    The value type.
      * @param key1   The first key for the entry.
      * @param value1 The first value for the entry.
      * @param key2   The second key for the entry.
@@ -163,10 +163,22 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
      * @param value5 The fifth value for the entry.
      * @return A new map containing five entries using the provided keys and values.
      */
-    static <K, V> Map<K, V> of(final K key1, final V value1, final K key2, final V value2, final K key3, final V value3,
-            final K key4, final V value4, final K key5, final V value5) {
-        return new HashMap<K, V>(new Entry<K, V>(key1, value1), new Entry<K, V>(key2, value2),
-                new Entry<K, V>(key3, value3), new Entry<K, V>(key4, value4), new Entry<K, V>(key5, value5));
+    static <L, W> Map<L, W> of(final L key1, final W value1, final L key2, final W value2, final L key3, final W value3,
+            final L key4, final W value4, final L key5, final W value5) {
+        return new HashMap<L, W>(new Entry<L, W>(key1, value1), new Entry<L, W>(key2, value2),
+                new Entry<L, W>(key3, value3), new Entry<L, W>(key4, value4), new Entry<L, W>(key5, value5));
+    }
+
+    /**
+     * Returns a new map cloned from the provided map.
+     *
+     * @param <L> The key type.
+     * @param <W> The value type.
+     * @param map The original map.
+     * @return A new map cloned from the provided map.
+     */
+    static <L, W> Map<L, W> of(final Map<? extends L, ? extends W> map) {
+        return new HashMap<L, W>(map);
     }
 
     /**

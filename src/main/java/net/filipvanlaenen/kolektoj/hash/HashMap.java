@@ -73,6 +73,13 @@ public final class HashMap<K, V> implements Map<K, V> {
         this(keyAndValueCardinality, (Object[]) entries);
     }
 
+    /**
+     * Constructor taking the key and value cardinality and the entries as an object array as its parameter.
+     *
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param entries                The entries for the map as an object array.
+     * @throws IllegalArgumentException Thrown if one of the entries is null.
+     */
     private HashMap(final KeyAndValueCardinality keyAndValueCardinality, final Object[] entries)
             throws IllegalArgumentException {
         if (entries == null) {
@@ -80,7 +87,6 @@ public final class HashMap<K, V> implements Map<K, V> {
         }
         this.keyAndValueCardinality = keyAndValueCardinality;
         hashedEntriesSize = entries.length * HASHING_RATIO;
-        Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) entries.getClass();
         Object[] theHashedEntries = new Object[hashedEntriesSize];
         ModifiableCollection<Entry<K, V>> theEntries =
                 new ModifiableArrayCollection<Entry<K, V>>(getElementCardinality());
@@ -100,7 +106,7 @@ public final class HashMap<K, V> implements Map<K, V> {
      *
      * @param map The map to create a new map from.
      */
-    public HashMap(final Map<K, V> map) {
+    public HashMap(final Map<? extends K, ? extends V> map) {
         this(map.getKeyAndValueCardinality(), map.toArray());
     }
 
