@@ -9,5 +9,5 @@ import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
  * @param <TC> The subclass type to be tested, but with a key type with colliding hash values.
  */
 public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<Integer, String>,
-        TC extends ModifiableSortedMap<KeyWithCollidingHash, Integer>> extends MapTestBase<T, TC> {
+        TC extends ModifiableSortedMap<KeyWithCollidingHash, Integer>> extends SortedMapTestBase<T, TC> {
 }
