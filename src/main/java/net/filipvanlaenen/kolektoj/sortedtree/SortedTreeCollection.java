@@ -23,7 +23,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
     /**
      * The comparator to use for comparing the elements in this collection.
      */
-    private final Comparator<E> comparator;
+    private final Comparator<? super E> comparator;
     /**
      * The element cardinality.
      */
@@ -48,7 +48,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
      * @param source     The collection to create a new ordered collection from.
      * @param comparator The comparator by which to sort the elements.
      */
-    public SortedTreeCollection(final Comparator<E> comparator, final Collection<E> source) {
+    public SortedTreeCollection(final Comparator<? super E> comparator, final Collection<E> source) {
         this.comparator = comparator;
         this.elementCardinality = source.getElementCardinality();
         this.elements = ArrayUtilities.quicksort(source.toArray(), comparator);
@@ -63,7 +63,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
      * @param comparator The comparator by which to sort the elements.
      * @param elements   The elements of the collection.
      */
-    public SortedTreeCollection(final Comparator<E> comparator, final E... elements) {
+    public SortedTreeCollection(final Comparator<? super E> comparator, final E... elements) {
         this(DUPLICATE_ELEMENTS, comparator, elements);
     }
 
@@ -75,7 +75,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
      * @param comparator         The comparator by which to sort the elements.
      * @param elements           The elements of the collection.
      */
-    public SortedTreeCollection(final ElementCardinality elementCardinality, final Comparator<E> comparator,
+    public SortedTreeCollection(final ElementCardinality elementCardinality, final Comparator<? super E> comparator,
             final E... elements) {
         this.comparator = comparator;
         this.elementCardinality = elementCardinality;

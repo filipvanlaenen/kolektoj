@@ -37,13 +37,17 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
      */
     private boolean cachedArrayDirty;
     /**
-     * The key and value cardinality.
+     * The comparator for the keys.
      */
-    private final KeyAndValueCardinality keyAndValueCardinality;
+    private final Comparator<? super K> comparator;
     /**
      * The comparator to use for comparing entries using the keys only in this sorted map.
      */
     private final Comparator<Entry<K, V>> entryByKeyComparator;
+    /**
+     * The key and value cardinality.
+     */
+    private final KeyAndValueCardinality keyAndValueCardinality;
     /**
      * A sorted collection with the keys.
      */
@@ -68,7 +72,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
      * @param entries    The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
-    public UpdatableSortedTreeMap(final Comparator<K> comparator, final Entry<K, V>... entries)
+    public UpdatableSortedTreeMap(final Comparator<? super K> comparator, final Entry<K, V>... entries)
             throws IllegalArgumentException {
         this(DISTINCT_KEYS, comparator, entries);
     }
@@ -81,13 +85,13 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
      * @param entries                The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
-    public UpdatableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
-            final Entry<K, V>... entries) throws IllegalArgumentException {
+    public UpdatableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<? super K> comparator, final Entry<K, V>... entries) throws IllegalArgumentException {
         this(keyAndValueCardinality, comparator, (Object[]) entries);
     }
 
-    private UpdatableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
-            final Object[] entries) throws IllegalArgumentException {
+    private UpdatableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<? super K> comparator, final Object[] entries) throws IllegalArgumentException {
         if (entries == null) {
             throw new IllegalArgumentException("Map entries can't be null.");
         }
@@ -96,6 +100,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
                 throw new IllegalArgumentException("Map entries can't be null.");
             }
         }
+        this.comparator = comparator;
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
             public int compare(final Entry<K, V> e1, final Entry<K, V> e2) {
@@ -130,7 +135,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
      *
      * @param map The map to create a new map from.
      */
-    public UpdatableSortedTreeMap(final Comparator<K> comparator, final Map<K, V> map) {
+    public UpdatableSortedTreeMap(final Comparator<? super K> comparator, final Map<K, V> map) {
         this(map.getKeyAndValueCardinality(), comparator, map.toArray());
     }
 
@@ -181,6 +186,11 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
             throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
         }
         return new ArrayCollection<V>(node.getContent());
+    }
+
+    @Override
+    public Comparator<? super K> getComparator() {
+        return comparator;
     }
 
     @Override

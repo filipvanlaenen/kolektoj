@@ -272,7 +272,7 @@ class SortedTree<K, C> {
         return sortedTree;
     }
 
-    static <L, D, W> SortedTree<L, D> fromSortedEntryArray(final Comparator<L> comparator,
+    static <L, D, W> SortedTree<L, D> fromSortedEntryArray(final Comparator<? super L> comparator,
             final KeyAndValueCardinality keyAndValueCardinality, final Object[] sortedArray, final boolean modifiable) {
         SortedTree<L, D> sortedTree = new SortedTree<L, D>(comparator, DISTINCT_ELEMENTS);
         sortedTree.createEntryNodes(compact(keyAndValueCardinality, sortedArray, modifiable));

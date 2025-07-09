@@ -39,13 +39,17 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
      */
     private boolean cachedArrayDirty;
     /**
-     * The key and value cardinality.
+     * The comparator for the keys.
      */
-    private final KeyAndValueCardinality keyAndValueCardinality;
+    private final Comparator<? super K> comparator;
     /**
      * The comparator to use for comparing entries using the keys only in this sorted map.
      */
     private final Comparator<Entry<K, V>> entryByKeyComparator;
+    /**
+     * The key and value cardinality.
+     */
+    private final KeyAndValueCardinality keyAndValueCardinality;
     /**
      * A sorted collection with the keys.
      */
@@ -70,7 +74,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
      * @param entries    The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
-    public ModifiableSortedTreeMap(final Comparator<K> comparator, final Entry<K, V>... entries)
+    public ModifiableSortedTreeMap(final Comparator<? super K> comparator, final Entry<K, V>... entries)
             throws IllegalArgumentException {
         this(DISTINCT_KEYS, comparator, entries);
     }
@@ -83,13 +87,13 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
      * @param entries                The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
-    public ModifiableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
-            final Entry<K, V>... entries) throws IllegalArgumentException {
+    public ModifiableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<? super K> comparator, final Entry<K, V>... entries) throws IllegalArgumentException {
         this(keyAndValueCardinality, comparator, (Object[]) entries);
     }
 
-    private ModifiableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
-            final Object[] entries) throws IllegalArgumentException {
+    private ModifiableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<? super K> comparator, final Object[] entries) throws IllegalArgumentException {
         if (entries == null) {
             throw new IllegalArgumentException("Map entries can't be null.");
         }
@@ -105,6 +109,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
                 return comparator.compare(e1.key(), e2.key());
             }
         };
+        this.comparator = comparator;
         this.keyAndValueCardinality = keyAndValueCardinality;
         if (keyAndValueCardinality == DISTINCT_KEYS) {
             cachedArray = (Entry<K, V>[]) ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(entries),
@@ -133,7 +138,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
      *
      * @param map The map to create a new map from.
      */
-    public ModifiableSortedTreeMap(final Comparator<K> comparator, final Map<K, V> map) {
+    public ModifiableSortedTreeMap(final Comparator<? super K> comparator, final Map<K, V> map) {
         this(map.getKeyAndValueCardinality(), comparator, map.toArray());
     }
 
@@ -221,6 +226,11 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
             throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
         }
         return new ArrayCollection<V>(node.getContent());
+    }
+
+    @Override
+    public Comparator<? super K> getComparator() {
+        return comparator;
     }
 
     @Override

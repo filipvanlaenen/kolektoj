@@ -25,6 +25,10 @@ import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection;
  */
 public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K, V> {
     /**
+     * The comparator for the keys.
+     */
+    private final Comparator<? super K> comparator;
+    /**
      * A sorted array with the entries.
      */
     private final Object[] entries;
@@ -52,7 +56,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
      * @param entries    The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
-    public UpdatableSortedArrayMap(final Comparator<K> comparator, final Entry<K, V>... entries)
+    public UpdatableSortedArrayMap(final Comparator<? super K> comparator, final Entry<K, V>... entries)
             throws IllegalArgumentException {
         this(DISTINCT_KEYS, comparator, entries);
     }
@@ -65,13 +69,13 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
      * @param entries                The entries for the map.
      * @throws IllegalArgumentException Thrown if one of the entries is null.
      */
-    public UpdatableSortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
-            final Entry<K, V>... entries) throws IllegalArgumentException {
+    public UpdatableSortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<? super K> comparator, final Entry<K, V>... entries) throws IllegalArgumentException {
         this(keyAndValueCardinality, comparator, (Object[]) entries);
     }
 
-    private UpdatableSortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<K> comparator,
-            final Object[] entries) throws IllegalArgumentException {
+    private UpdatableSortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<? super K> comparator, final Object[] entries) throws IllegalArgumentException {
         if (entries == null) {
             throw new IllegalArgumentException("Map entries can't be null.");
         }
@@ -80,6 +84,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
                 throw new IllegalArgumentException("Map entries can't be null.");
             }
         }
+        this.comparator = comparator;
         this.entryByKeyComparator = new Comparator<Entry<K, V>>() {
             @Override
             public int compare(final Entry<K, V> e1, final Entry<K, V> e2) {
@@ -110,7 +115,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
      *
      * @param map The map to create a new map from.
      */
-    public UpdatableSortedArrayMap(final Comparator<K> comparator, final Map<K, V> map) {
+    public UpdatableSortedArrayMap(final Comparator<? super K> comparator, final Map<K, V> map) {
         this(map.getKeyAndValueCardinality(), comparator, map.toArray());
     }
 
@@ -174,6 +179,11 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
             }
         }
         return result;
+    }
+
+    @Override
+    public Comparator<? super K> getComparator() {
+        return comparator;
     }
 
     @Override
