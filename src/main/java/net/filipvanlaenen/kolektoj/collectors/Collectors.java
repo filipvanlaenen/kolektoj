@@ -13,6 +13,7 @@ import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
+import net.filipvanlaenen.kolektoj.UpdatableMap;
 import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 import net.filipvanlaenen.kolektoj.linkedlist.ModifiableLinkedListCollection;
 import net.filipvanlaenen.kolektoj.linkedlist.ModifiableOrderedLinkedListCollection;
@@ -70,7 +71,7 @@ public final class Collectors {
      * @return A collector to produce a new {@link net.filipvanlaenen.kolektoj.Map}.
      */
     public static <E, K, V> Collector<E, ModifiableHashMap<K, V>, Map<K, V>> toMap(
-            Function<? super E, ? extends K> keyMapper, Function<? super E, ? extends V> valueMapper) {
+            final Function<? super E, ? extends K> keyMapper, final Function<? super E, ? extends V> valueMapper) {
         return new SimpleCollector<>(ModifiableHashMap::new, (map, element) -> {
             K k = keyMapper.apply(element);
             V v = valueMapper.apply(element);
@@ -127,5 +128,28 @@ public final class Collectors {
                     a.addAllLast(b);
                     return a;
                 }, a -> OrderedCollection.of(a), Set.of());
+    }
+
+    /**
+     * Returns a collector that accumulates the input elements into a new
+     * {@link net.filipvanlaenen.kolektoj.UpdatableMap}.
+     *
+     * @param keyMapper   A mapper mapping an input element to a key.
+     * @param valueMapper A mapper mapping an input elements to a value.
+     * @param <E>         The input element type.
+     * @param <K>         The key type.
+     * @param <V>         The value type.
+     * @return A collector to produce a new {@link net.filipvanlaenen.kolektoj.UpdatableMap}.
+     */
+    public static <E, K, V> Collector<E, ModifiableHashMap<K, V>, UpdatableMap<K, V>> toUpdatableMap(
+            final Function<? super E, ? extends K> keyMapper, final Function<? super E, ? extends V> valueMapper) {
+        return new SimpleCollector<>(ModifiableHashMap::new, (map, element) -> {
+            K k = keyMapper.apply(element);
+            V v = valueMapper.apply(element);
+            map.add(k, v);
+        }, (a, b) -> {
+            a.addAll(b);
+            return a;
+        }, a -> UpdatableMap.of(a), Set.of(Characteristics.UNORDERED));
     }
 }

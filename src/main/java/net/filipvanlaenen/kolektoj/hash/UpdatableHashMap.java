@@ -5,7 +5,6 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICAT
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
-import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
@@ -35,7 +34,7 @@ public final class UpdatableHashMap<K, V> implements UpdatableMap<K, V> {
     /**
      * A hashed array with the entries.
      */
-    private final Entry<K, V>[] hashedEntries;
+    private final Object[] hashedEntries;
     /**
      * The size of the hashed array with the entries.
      */
@@ -72,13 +71,24 @@ public final class UpdatableHashMap<K, V> implements UpdatableMap<K, V> {
      */
     public UpdatableHashMap(final KeyAndValueCardinality keyAndValueCardinality, final Entry<K, V>... entries)
             throws IllegalArgumentException {
+        this(keyAndValueCardinality, (Object[]) entries);
+    }
+
+    /**
+     * Constructor taking the key and value cardinality and the entries as an object array as its parameter.
+     *
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param entries                The entries for the map as an object array.
+     * @throws IllegalArgumentException Thrown if one of the entries is null.
+     */
+    private UpdatableHashMap(final KeyAndValueCardinality keyAndValueCardinality, final Object[] entries)
+            throws IllegalArgumentException {
         if (entries == null) {
             throw new IllegalArgumentException("Map entries can't be null.");
         }
         this.keyAndValueCardinality = keyAndValueCardinality;
         hashedEntriesSize = entries.length * HASHING_RATIO;
-        Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) entries.getClass();
-        Entry<K, V>[] theHashedEntries = (Entry<K, V>[]) Array.newInstance(clazz.getComponentType(), hashedEntriesSize);
+        Object[] theHashedEntries = new Object[hashedEntriesSize];
         ModifiableCollection<Entry<K, V>> theEntries =
                 new ModifiableArrayCollection<Entry<K, V>>(getElementCardinality());
         ModifiableCollection<K> theKeys = new ModifiableArrayCollection<K>(
@@ -91,14 +101,14 @@ public final class UpdatableHashMap<K, V> implements UpdatableMap<K, V> {
         this.keys = new ArrayCollection<K>(theKeys);
         this.values = theValues;
     }
-    
+
     /**
      * Constructs a map from another map, with the same entries and the same key and value cardinality.
      *
      * @param map The map to create a new map from.
      */
-    public UpdatableHashMap(final Map<K, V> map) {
-        this(map.getKeyAndValueCardinality(), (Entry<K, V>[]) map.toArray());
+    public UpdatableHashMap(final Map<? extends K, ? extends V> map) {
+        this(map.getKeyAndValueCardinality(), map.toArray());
     }
 
     @Override
@@ -143,7 +153,7 @@ public final class UpdatableHashMap<K, V> implements UpdatableMap<K, V> {
         }
         int index = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[index] != null) {
-            K k = hashedEntries[index].key();
+            K k = ((Entry<K, V>) hashedEntries[index]).key();
             if (Objects.equals(k, key)) {
                 return index;
             }
@@ -167,7 +177,7 @@ public final class UpdatableHashMap<K, V> implements UpdatableMap<K, V> {
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        return hashedEntries[index].value();
+        return ((Entry<K, V>) hashedEntries[index]).value();
     }
 
     @Override
@@ -177,9 +187,9 @@ public final class UpdatableHashMap<K, V> implements UpdatableMap<K, V> {
                         : DISTINCT_ELEMENTS);
         int index = HashUtilities.hash(key, hashedEntriesSize);
         while (hashedEntries[index] != null) {
-            K k = hashedEntries[index].key();
+            K k = ((Entry<K, V>) hashedEntries[index]).key();
             if (Objects.equals(k, key)) {
-                result.add(hashedEntries[index].value());
+                result.add(((Entry<K, V>) hashedEntries[index]).value());
             }
             index = Math.floorMod(index + 1, hashedEntriesSize);
         }
@@ -234,7 +244,7 @@ public final class UpdatableHashMap<K, V> implements UpdatableMap<K, V> {
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        Entry<K, V> oldEntry = hashedEntries[index];
+        Entry<K, V> oldEntry = (Entry<K, V>) hashedEntries[index];
         V oldValue = oldEntry.value();
         entries.remove(oldEntry);
         entries.add(newEntry);

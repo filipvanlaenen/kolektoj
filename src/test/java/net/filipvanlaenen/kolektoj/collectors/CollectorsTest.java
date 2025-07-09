@@ -9,6 +9,7 @@ import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
+import net.filipvanlaenen.kolektoj.UpdatableMap;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.collectors.Collectors} class.
@@ -73,5 +74,17 @@ public class CollectorsTest {
         OrderedCollection<String> collection = OrderedCollection.of("one", "two", "three");
         OrderedCollection<String> result = collection.stream().collect(Collectors.toOrderedCollection());
         assertTrue(result.containsSame(collection));
+    }
+
+    /**
+     * Verifies that collecting a stream produces an updatable map correctly.
+     */
+    @Test
+    public void toUpdatableMapShouldCollectCorrectly() {
+        Collection<String> collection = Collection.of("one", "two", "three");
+        UpdatableMap<Integer, String> result =
+                collection.stream().collect(Collectors.toUpdatableMap(s -> s.length(), s -> s));
+        Map<Integer, String> expected = Map.of(THREE, "one", THREE, "two", FIVE, "three");
+        assertTrue(result.containsSame(expected));
     }
 }
