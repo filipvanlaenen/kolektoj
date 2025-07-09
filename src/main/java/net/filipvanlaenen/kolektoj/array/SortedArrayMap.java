@@ -62,7 +62,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     }
 
     /**
-     * Constructor taking the key and value cardinality and the entries as its parameter.
+     * Constructor taking the key and value cardinality, the comparator and the entries as its parameter.
      *
      * @param keyAndValueCardinality The key and value cardinality.
      * @param comparator             The comparator by which to sort the keys.
@@ -74,6 +74,15 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         this(keyAndValueCardinality, comparator, (Object[]) entries);
     }
 
+    /**
+     * Constructor taking the key and value cardinality, the comparator and the entries as an object array as its
+     * parameter.
+     *
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param comparator             The comparator by which to sort the keys.
+     * @param entries                The entries for the map.
+     * @throws IllegalArgumentException Thrown if one of the entries is null.
+     */
     private SortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<? super K> comparator,
             final Object[] entries) throws IllegalArgumentException {
         if (entries == null) {
@@ -113,7 +122,8 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     /**
      * Constructs a map from another map, with the same entries and the same key and value cardinality.
      *
-     * @param map The map to create a new map from.
+     * @param comparator The comparator by which to sort the keys.
+     * @param map        The map to create a new map from.
      */
     public SortedArrayMap(final Comparator<? super K> comparator, final Map<K, V> map) {
         this(map.getKeyAndValueCardinality(), comparator, map.toArray());
