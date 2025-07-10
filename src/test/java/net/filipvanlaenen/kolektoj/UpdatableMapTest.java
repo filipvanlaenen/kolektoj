@@ -118,4 +118,14 @@ public class UpdatableMapTest {
         assertEquals(DISTINCT_KEYS, map.getKeyAndValueCardinality());
         assertEquals(2, map.size());
     }
+
+    /**
+     * Verifies that an updatable map constructed from another map is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapFromAnotherMapCorrectly() {
+        Map<Integer, String> prototype = Map.of(1, "one", 2, "two", THREE, "three");
+        UpdatableMap<Number, String> actual = UpdatableMap.of(prototype);
+        assertTrue(actual.containsSame(prototype));
+    }
 }
