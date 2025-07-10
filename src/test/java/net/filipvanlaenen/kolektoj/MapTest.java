@@ -114,6 +114,16 @@ public class MapTest {
     }
 
     /**
+     * Verifies that a map constructed from another map is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapFromAnotherMapCorrectly() {
+        Map<Integer, String> prototype = Map.of(1, "one", 2, "two", THREE, "three");
+        Map<Number, String> actual = Map.of(prototype);
+        assertTrue(actual.containsSame(prototype));
+    }
+
+    /**
      * Verifies that the element cardinality for a map with duplicate keys and values is that duplicate elements are
      * allowed.
      */
