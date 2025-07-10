@@ -311,6 +311,9 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             if (index == 0) {
                 element = head.getElement();
                 head = head.getNext();
+                if (head == null) {
+                    tail = null;
+                }
             } else {
                 Node<E> current = head;
                 for (int i = 0; i < index - 1; i++) {
