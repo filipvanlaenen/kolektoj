@@ -172,6 +172,16 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that adding in the middle is done correctly.
+     */
+    @Test
+    public void addAtInTheMiddleShouldBeDoneCorrectly() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE, FOUR);
+        collection.addAt(2, FIVE);
+        assertArrayEquals(new Integer[] {1, 2, FIVE, THREE, FOUR}, collection.toArray());
+    }
+
+    /**
      * Verifies that after adding an element at the last position to a collection, the new element is in the last
      * position.
      */
