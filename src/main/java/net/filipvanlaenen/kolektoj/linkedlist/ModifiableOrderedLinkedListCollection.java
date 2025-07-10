@@ -241,6 +241,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
                 if (index == 0) {
                     return head.getElement();
                 } else if (index == size - 1) {
+                    // EQMU: Replacing integer subtraction with addition above produces an equivalent mutant.
                     return tail.getElement();
                 } else {
                     Node<E> current = head;

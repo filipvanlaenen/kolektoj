@@ -4,6 +4,7 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -256,6 +257,20 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     @Test
     public void getAtShouldReturnCorrectElement() {
         assertEquals(2, collection123.getAt(1));
+    }
+
+    /**
+     * Verifies that <code>getAt</code> returns an element after two elements have been added to an empty collection.
+     *
+     * Note: this unit test was written to verify that the pointer to the tail is properly set by the add method in
+     * ModifiableOrderedLinkedListCollection.
+     */
+    @Test
+    public void getAtShouldReturnCorrectElementInTheMiddleAfterAddingAnotherOne() {
+        T collection = createModifiableOrderedCollection();
+        collection.add(1);
+        collection.add(2);
+        assertNotNull(collection.getAt(1));
     }
 
     /**
