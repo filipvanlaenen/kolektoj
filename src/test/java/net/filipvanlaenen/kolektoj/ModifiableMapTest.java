@@ -143,6 +143,16 @@ public class ModifiableMapTest {
     }
 
     /**
+     * Verifies that a modifiable map constructed from another map is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapFromAnotherMapCorrectly() {
+        Map<Integer, String> prototype = Map.of(1, "one", 2, "two", THREE, "three");
+        ModifiableMap<Number, String> actual = ModifiableMap.of(prototype);
+        assertTrue(actual.containsSame(prototype));
+    }
+
+    /**
      * Verifies that put returns null when the key is absent in the map.
      */
     @Test
