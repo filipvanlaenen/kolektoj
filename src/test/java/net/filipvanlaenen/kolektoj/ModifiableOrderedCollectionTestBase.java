@@ -100,10 +100,10 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
 
     /**
      * Verifies that adding a collection at zero with duplicate and new elements to a collection with distinct elements
-     * increases the size correctly.
+     * is done correctly.
      */
     @Test
-    public void addAllAtOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldIncreaseSizeCorrectly() {
+    public void addAllAtOfNewAndDuplicateElementsToCollectionWithDistinctElementsShouldBeDoneCorrectly() {
         T collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1, 2, THREE);
         collection.addAllAt(0, OrderedCollection.of(FOUR, FOUR, 1, 2, THREE, FIVE));
         assertArrayEquals(new Integer[] {FOUR, FIVE, 1, 2, THREE}, collection.toArray());

@@ -109,6 +109,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         if (elementCardinality == DISTINCT_ELEMENTS) {
             newElements = ArrayUtilities.cloneDistinctElements(newElements);
         }
+        int numberOfNewElements = 0;
         for (Object object : newElements) {
             E element = (E) object;
             if (elementCardinality != DISTINCT_ELEMENTS || !contains(element)) {
@@ -120,7 +121,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
                     newListTail.setNext(newNode);
                     newListTail = newNode;
                 }
-                size++;
+                numberOfNewElements++;
             }
         }
         if (newListHead == null) {
@@ -140,6 +141,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             newListTail.setNext(current.getNext());
             current.setNext(newListHead);
         }
+        size += numberOfNewElements;
         cachedArrayDirty = true;
         return true;
     }
