@@ -110,6 +110,16 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that adding a collection in the middle is done correctly.
+     */
+    @Test
+    public void addAllAtInTheMiddleShouldBeDoneCorrectly() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE, FOUR);
+        collection.addAllAt(2, OrderedCollection.of(FIVE, SIX));
+        assertArrayEquals(new Integer[] {1, 2, FIVE, SIX, THREE, FOUR}, collection.toArray());
+    }
+
+    /**
      * Verifies that trying to add a collectiont at an index beyond the size of the collection throws
      * IndexOutOfBoundsException.
      */
