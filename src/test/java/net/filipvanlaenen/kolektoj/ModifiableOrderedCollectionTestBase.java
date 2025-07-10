@@ -306,6 +306,14 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that trying to remove an element in the middle of the collection returns true.
+     */
+    @Test
+    public void removeShouldReturnTrueForAnElementInTheMiddleOfACollection() {
+        assertTrue(createModifiableOrderedCollection(1, 2, THREE).remove(2));
+    }
+
+    /**
      * Verifies that removeAll can remove the first element.
      */
     @Test

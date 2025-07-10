@@ -273,6 +273,9 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         }
         if (Objects.equals(head.getElement(), element)) {
             head = head.getNext();
+            if (head == null) {
+                tail = null;
+            }
             size--;
             cachedArrayDirty = true;
             return true;
@@ -282,6 +285,9 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         while (next != null) {
             if (Objects.equals(next.getElement(), element)) {
                 current.setNext(next.getNext());
+                if (tail == next) {
+                    tail = null;
+                }
                 size--;
                 cachedArrayDirty = true;
                 return true;
