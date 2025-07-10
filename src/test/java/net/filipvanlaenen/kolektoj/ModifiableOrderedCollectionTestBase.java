@@ -314,6 +314,16 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that after removing an element, the last element can be retrieved correctly.
+     */
+    @Test
+    public void removeWithTheLastElementUpdatesTheLastElementCorrectly() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.remove(THREE);
+        assertEquals(2, collection.getAt(1));
+    }
+
+    /**
      * Verifies that removeAll can remove the first element.
      */
     @Test
