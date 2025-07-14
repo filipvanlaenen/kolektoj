@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -127,5 +128,31 @@ public class UpdatableMapTest {
         Map<Integer, String> prototype = Map.of(1, "one", 2, "two", THREE, "three");
         UpdatableMap<Number, String> actual = UpdatableMap.of(prototype);
         assertTrue(actual.containsSame(prototype));
+    }
+
+    /**
+     * Verifies that an updatable map with three keys and a default value is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAnUpdatableMapWithADefaultValue() {
+        UpdatableMap<Integer, String> actual = UpdatableMap.<Integer, String>of("", 1, 2, THREE);
+        assertEquals(THREE, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
+    }
+
+    /**
+     * Verifies that an updatable map with key and value cardinality and a default value is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAnUpdatableMapWithKeyAndValueCardinalityAndADefaultValue() {
+        UpdatableMap<Integer, String> actual =
+                UpdatableMap.<Integer, String>of(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, "", 1, 1, 2, THREE);
+        assertEquals(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, actual.getKeyAndValueCardinality());
+        assertEquals(FOUR, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
     }
 }
