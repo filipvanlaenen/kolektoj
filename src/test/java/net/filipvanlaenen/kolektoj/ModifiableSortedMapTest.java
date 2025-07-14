@@ -2,8 +2,8 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -150,5 +150,32 @@ public class ModifiableSortedMapTest {
         assertEquals(2, actual.size());
         assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
         assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));
+    }
+
+    /**
+     * Verifies that a modifiable sorted map with three keys and a default values is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithADefaultValueCorrectly() {
+        ModifiableSortedMap<Integer, String> actual = ModifiableSortedMap.of(COMPARATOR, "", 1, 2, THREE);
+        assertEquals(THREE, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
+    }
+
+    /**
+     * Verifies that a modifiable sorted map with entries and key and value cardinality and a default values is
+     * constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithKeyAndValueCardinalityAndADefaultValueCorrectly() {
+        ModifiableSortedMap<Integer, String> actual =
+                ModifiableSortedMap.of(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, COMPARATOR, "", 1, 1, 2, THREE);
+        assertEquals(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, actual.getKeyAndValueCardinality());
+        assertEquals(FOUR, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
     }
 }
