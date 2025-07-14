@@ -2,6 +2,7 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -124,6 +125,21 @@ public class ModifiableMapTest {
         ModifiableMap<Integer, String> actual = ModifiableMap.<Integer, String>of("", 1, 2, THREE);
         assertEquals(DISTINCT_KEYS, actual.getKeyAndValueCardinality());
         assertEquals(THREE, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
+    }
+
+    /**
+     * Verifies that a map constructed with entries and key and value cardinality and a default value is constructed
+     * correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithKeyAndValueCardinalityAndDefaultValuesCorrectly() {
+        ModifiableMap<Integer, String> actual =
+                ModifiableMap.<Integer, String>of(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, "", 1, 1, 2, THREE);
+        assertEquals(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, actual.getKeyAndValueCardinality());
+        assertEquals(FOUR, actual.size());
         assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
         assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
         assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
