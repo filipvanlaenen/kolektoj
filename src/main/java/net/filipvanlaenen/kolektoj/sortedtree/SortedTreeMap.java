@@ -115,10 +115,10 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         };
         this.keyAndValueCardinality = keyAndValueCardinality;
         if (keyAndValueCardinality == DISTINCT_KEYS) {
-            this.entries = (Entry<K, V>[]) ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(entries),
-                    entryByKeyComparator);
+            this.entries =
+                    ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(entries), entryByKeyComparator);
         } else {
-            this.entries = (Entry<K, V>[]) ArrayUtilities.quicksort(entries, entryByKeyComparator);
+            this.entries = ArrayUtilities.quicksort(entries, entryByKeyComparator);
         }
         size = this.entries.length;
         sortedTree = SortedTree.fromSortedEntryArray(comparator, keyAndValueCardinality, this.entries, false);
