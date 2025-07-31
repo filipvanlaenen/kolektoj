@@ -93,4 +93,26 @@ public class ModifiableSortedCollectionTest {
         assertArrayEquals(collection.toArray(), clone.toArray());
         assertEquals(COMPARATOR, clone.getComparator());
     }
+
+    /**
+     * Verifies that <code>removeLeast</code> returns and removes the least element.
+     */
+    @Test
+    public void removeLeastShouldRemoveTheLeastElement() {
+        ModifiableSortedCollection<Integer> collection =
+                ModifiableSortedCollection.<Integer>of(COMPARATOR, 1, 2, THREE);
+        assertEquals(1, collection.removeLeast());
+        assertFalse(collection.contains(1));
+    }
+
+    /**
+     * Verifies that <code>removeGreatest</code> returns and removes the least element.
+     */
+    @Test
+    public void removeGreatestShouldRemoveTheGreatestElement() {
+        ModifiableSortedCollection<Integer> collection =
+                ModifiableSortedCollection.<Integer>of(COMPARATOR, 1, 2, THREE);
+        assertEquals(THREE, collection.removeGreatest());
+        assertFalse(collection.contains(THREE));
+    }
 }

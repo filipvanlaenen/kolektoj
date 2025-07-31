@@ -279,6 +279,13 @@ class SortedTree<K, C> {
         return sortedTree;
     }
 
+    /**
+     * Returns this tree's node at a given index.
+     *
+     * @param index The index.
+     * @return The node at the index.
+     * @throws IndexOutOfBoundsException If the index is larger or equal than the size.
+     */
     Node<K, C> getAt(final int index) throws IndexOutOfBoundsException {
         if (index >= size) {
             throw new IndexOutOfBoundsException(
@@ -288,14 +295,22 @@ class SortedTree<K, C> {
         }
     }
 
+    /**
+     * Returns the node at a given index for the subtree starting at the given node.
+     *
+     * @param node  The node defining the subtree.
+     * @param index The index.
+     * @return The node at the index.
+     */
     private Node<K, C> getAt(final Node<K, C> node, final int index) {
-        int leftSize = node.getLeftChild().getSize();
+        Node<K, C> leftChild = node.getLeftChild();
+        int leftSize = leftChild == null ? 0 : leftChild.getSize();
         if (leftSize < index) {
             return getAt(node.getRightChild(), index - leftSize - 1);
         } else if (leftSize == index) {
             return node;
         } else {
-            return getAt(node.getLeftChild(), index);
+            return getAt(leftChild, index);
         }
     }
 
