@@ -31,7 +31,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     /**
      * A sorted array with the entries.
      */
-    private Entry<K, V>[] cachedArray;
+    private Object[] cachedArray;
     /**
      * A boolean flag indicating whether the cachedArray field is dirty.
      */
@@ -118,11 +118,10 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         };
         this.keyAndValueCardinality = keyAndValueCardinality;
         if (keyAndValueCardinality == DISTINCT_KEYS) {
-            cachedArray = (Entry<K, V>[]) ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(entries),
-                    entryByKeyComparator);
+            cachedArray = ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(entries), entryByKeyComparator);
             cachedArrayDirty = cachedArray.length != entries.length;
         } else {
-            cachedArray = (Entry<K, V>[]) ArrayUtilities.quicksort(entries, entryByKeyComparator);
+            cachedArray = ArrayUtilities.quicksort(entries, entryByKeyComparator);
             cachedArrayDirty = false;
         }
         size = this.cachedArray.length;
@@ -145,7 +144,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
      * @param comparator The comparator by which to sort the keys.
      * @param map        The map to create a new map from.
      */
-    public UpdatableSortedTreeMap(final Comparator<? super K> comparator, final Map<K, V> map) {
+    public UpdatableSortedTreeMap(final Comparator<? super K> comparator, final Map<? extends K, ? extends V> map) {
         this(map.getKeyAndValueCardinality(), comparator, map.toArray());
     }
 

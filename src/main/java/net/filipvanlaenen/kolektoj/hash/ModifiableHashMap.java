@@ -200,17 +200,6 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     }
 
     /**
-     * Creates a new entry array with a given length.
-     *
-     * @param length The length of the array.
-     * @return An array of the given length with the entry type.
-     */
-    private Entry<K, V>[] createNewArray(final int length) {
-        Class<Entry<K, V>[]> clazz = (Class<Entry<K, V>[]>) hashedEntries.getClass();
-        return (Entry<K, V>[]) Array.newInstance(clazz.getComponentType(), length);
-    }
-
-    /**
      * Finds the index for the first occurrence of an entry.
      *
      * @param entry The entry.
@@ -377,7 +366,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
      */
     private void resizeHashedEntriesTo(final int newBaseLength) {
         hashedEntriesSize = newBaseLength * HASHING_RATIO;
-        Entry<K, V>[] hashedArray = createNewArray(hashedEntriesSize);
+        Object[] hashedArray = new Object[hashedEntriesSize];
         for (Entry<K, V> entry : entries) {
             int j = HashUtilities.hash(entry.key(), hashedEntriesSize);
             while (hashedArray[j] != null) {

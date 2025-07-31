@@ -2,8 +2,8 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -50,7 +50,7 @@ public class UpdatableSortedMapTest {
     };
 
     /**
-     * Verifies that a updatable sorted map constructed with the empty factory method is empty.
+     * Verifies that an updatable sorted map constructed with the empty factory method is empty.
      */
     @Test
     public void emptyShouldConstructAnEmptyMap() {
@@ -58,7 +58,8 @@ public class UpdatableSortedMapTest {
     }
 
     /**
-     * Verifies that a updatable sorted map constructed with one key and value contains an entry with the key and value.
+     * Verifies that an updatable sorted map constructed with one key and value contains an entry with the key and
+     * value.
      */
     @Test
     public void ofShouldConstructAMapContainingAnEntryWithTheKeyAndValue() {
@@ -68,7 +69,7 @@ public class UpdatableSortedMapTest {
     }
 
     /**
-     * Verifies that a updatable sorted map constructed with two keys and values contains two entries with the keys and
+     * Verifies that an updatable sorted map constructed with two keys and values contains two entries with the keys and
      * values.
      */
     @Test
@@ -80,7 +81,7 @@ public class UpdatableSortedMapTest {
     }
 
     /**
-     * Verifies that a updatable sorted map constructed with three keys and values contains two entries with the keys
+     * Verifies that an updatable sorted map constructed with three keys and values contains two entries with the keys
      * and values.
      */
     @Test
@@ -94,7 +95,7 @@ public class UpdatableSortedMapTest {
     }
 
     /**
-     * Verifies that a updatable sorted map constructed with four keys and values contains four entries with the keys
+     * Verifies that an updatable sorted map constructed with four keys and values contains four entries with the keys
      * and values.
      */
     @Test
@@ -109,7 +110,7 @@ public class UpdatableSortedMapTest {
     }
 
     /**
-     * Verifies that a updatable sorted map constructed with five keys and values contains five entries with the keys
+     * Verifies that an updatable sorted map constructed with five keys and values contains five entries with the keys
      * and values.
      */
     @Test
@@ -125,7 +126,7 @@ public class UpdatableSortedMapTest {
     }
 
     /**
-     * Verifies that a updatable sorted map constructed with entries is constructed correctly.
+     * Verifies that an updatable sorted map constructed with entries is constructed correctly.
      */
     @Test
     public void ofShouldConstructAMapWithEntriesCorrectly() {
@@ -138,7 +139,7 @@ public class UpdatableSortedMapTest {
     }
 
     /**
-     * Verifies that a updatable sorted map constructed with entries and key and value cardinality is constructed
+     * Verifies that an updatable sorted map constructed with entries and key and value cardinality is constructed
      * correctly.
      */
     @Test
@@ -149,5 +150,32 @@ public class UpdatableSortedMapTest {
         assertEquals(2, actual.size());
         assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
         assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));
+    }
+
+    /**
+     * Verifies that an updatable sorted map with three keys and a default values is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithADefaultValueCorrectly() {
+        UpdatableSortedMap<Integer, String> actual = UpdatableSortedMap.of(COMPARATOR, "", 1, 2, THREE);
+        assertEquals(THREE, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
+    }
+
+    /**
+     * Verifies that an updatable sorted map with entries and key and value cardinality and a default values is
+     * constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithKeyAndValueCardinalityAndADefaultValueCorrectly() {
+        UpdatableSortedMap<Integer, String> actual =
+                UpdatableSortedMap.of(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, COMPARATOR, "", 1, 1, 2, THREE);
+        assertEquals(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, actual.getKeyAndValueCardinality());
+        assertEquals(FOUR, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
     }
 }

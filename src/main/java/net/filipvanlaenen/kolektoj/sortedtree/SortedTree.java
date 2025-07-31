@@ -566,14 +566,12 @@ class SortedTree<K, C> {
      * @param compactedArray An array with the K,Collection<V>-entries.
      * @return An array with K,V-entries.
      */
-    static <L, W, D extends Collection<W>> Entry<L, W>[] uncompact(final Node<L, D>[] compactedArray,
-            final Entry<L, W>[] array) {
+    static <L, W, D extends Collection<W>> Object[] uncompact(final Node<L, D>[] compactedArray, final Object[] array) {
         int size = 0;
         for (Node<L, D> node : compactedArray) {
             size += node.getContent().size();
         }
-        Entry<L, W>[] result = array.length == size ? array
-                : (Entry<L, W>[]) Array.newInstance((Class<Entry<L, W>[]>) array.getClass().getComponentType(), size);
+        Object[] result = array.length == size ? array : new Object[size];
         int i = 0;
         for (Node<L, D> node : compactedArray) {
             L key = node.getKey();
