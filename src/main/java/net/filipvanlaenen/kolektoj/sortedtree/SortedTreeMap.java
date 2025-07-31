@@ -140,7 +140,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
      * @param comparator The comparator by which to sort the keys.
      * @param map        The map to create a new map from.
      */
-    public SortedTreeMap(final Comparator<? super K> comparator, final Map<K, V> map) {
+    public SortedTreeMap(final Comparator<? super K> comparator, final Map<? extends K, ? extends V> map) {
         this(map.getKeyAndValueCardinality(), comparator, map.toArray());
     }
 
