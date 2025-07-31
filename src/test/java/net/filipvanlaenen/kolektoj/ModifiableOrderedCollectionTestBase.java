@@ -1,12 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Spliterator;
 
@@ -356,11 +351,74 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
-     * Verifies that removeAt returns the element being removed.
+     * Verifies that <code>removeAt</code> returns the first element.
      */
     @Test
-    public void removeAtShouldReturnTheElementThatIsRemoved() {
-        assertEquals(2, createModifiableOrderedCollection(1, 2, THREE).removeAt(1));
+    public void removeAtShouldReturnTheFirstElement() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        assertEquals(1, collection.removeAt(0));
+    }
+
+    /**
+     * Verifies that <code>removeAt</code> removes the first element.
+     */
+    @Test
+    public void removeAtShouldReturnAndRemoveTheFirstElement() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.removeAt(0);
+        assertArrayEquals(new Integer[] {2, THREE}, collection.toArray());
+    }
+
+    /**
+     * Verifies that <code>removeAt</code> returns an element in the middle.
+     */
+    @Test
+    public void removeAtShouldReturnAnElementInTheMiddle() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        assertEquals(2, collection.removeAt(1));
+    }
+
+    /**
+     * Verifies that <code>removeAt</code> removes an element in the middle.
+     */
+    @Test
+    public void removeAtShouldRemoveAnElementInTheMiddle() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.removeAt(1);
+        assertArrayEquals(new Integer[] {1, THREE}, collection.toArray());
+    }
+
+    /**
+     * Verifies that <code>removeAt</code> returns the last element.
+     */
+    @Test
+    public void removeAtShouldReturnTheLastElement() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        assertEquals(THREE, collection.removeAt(2));
+    }
+
+    /**
+     * Verifies that <code>removeAt</code> removes the last element.
+     */
+    @Test
+    public void removeAtShouldReturnAndRemoveTheLastElement() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.removeAt(2);
+        assertArrayEquals(new Integer[] {1, 2}, collection.toArray());
+    }
+
+    /**
+     * Verifies that when <code>removeAt</code> has removed the last element, <code>getLast</code> returns the new last
+     * element.
+     *
+     * Note: this unit test was written to verify that the pointer to the tail is properly set by the
+     * <code>removeAt</code> method in <code>ModifiableOrderedLinkedListCollection</code>.
+     */
+    @Test
+    public void getLastShouldReturnNewLastElementAfterRemoveAtRemovedLastElement() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.removeAt(2);
+        assertEquals(2, collection.getLast());
     }
 
     /**
