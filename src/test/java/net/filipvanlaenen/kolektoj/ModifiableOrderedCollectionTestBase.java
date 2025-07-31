@@ -67,6 +67,20 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that when <code>addAllAt</code> has added elements to an empty collection, <code>getLast</code> returns
+     * the new last element.
+     *
+     * Note: this unit test was written to verify that the pointer to the tail is properly set by the
+     * <code>remove</code> method in <code>ModifiableOrderedLinkedListCollection</code>.
+     */
+    @Test
+    public void getLastShouldReturnLastElementAfterAddAllAtAddedToEmptyCollection() {
+        T collection = createModifiableOrderedCollection();
+        collection.addAllAt(0, OrderedCollection.of(1, 2));
+        assertEquals(2, collection.getLast());
+    }
+
+    /**
      * Verifies that adding an empty collection at zero returns false.
      */
     @Test
@@ -414,7 +428,6 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      * Note: this unit test was written to verify that the pointer to the tail is properly set by the
      * <code>removeAt</code> method in <code>ModifiableOrderedLinkedListCollection</code>.
      */
-
     @Test
     public void getLastShouldReturnLastElementAfterRemoveAtRemovedFirstElement() {
         T collection = createModifiableOrderedCollection(1, 2, THREE);
@@ -429,7 +442,6 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      * Note: this unit test was written to verify that the pointer to the tail is properly set by the
      * <code>remove</code> method in <code>ModifiableOrderedLinkedListCollection</code>.
      */
-
     @Test
     public void getLastShouldReturnLastElementAfterRemoveRemovedFirstElement() {
         T collection = createModifiableOrderedCollection(1, 2, THREE);
