@@ -143,4 +143,26 @@ public class SortedMapTest {
         assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
         assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));
     }
+
+    /**
+     * Verifies that a sorted map constructed from another sorted map is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructASortedMapFromAnotherSortedMapCorrectly() {
+        SortedMap<Integer, String> prototype = SortedMap.of(COMPARATOR, 1, "one", 2, "two", THREE, "three");
+        SortedMap<Integer, String> actual = SortedMap.of(prototype);
+        assertTrue(actual.containsSame(prototype));
+        assertEquals(COMPARATOR, actual.getComparator());
+    }
+
+    /**
+     * Verifies that a sorted map constructed from another map and a constructor is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructASortedMapFromAMapAndAComparatorCorrectly() {
+        Map<Integer, String> prototype = Map.of(1, "one", 2, "two", THREE, "three");
+        SortedMap<Integer, String> actual = SortedMap.of(COMPARATOR, prototype);
+        assertTrue(actual.containsSame(prototype));
+        assertEquals(COMPARATOR, actual.getComparator());
+    }
 }
