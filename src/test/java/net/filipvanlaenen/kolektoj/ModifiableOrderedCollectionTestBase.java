@@ -408,6 +408,36 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that when <code>removeAt</code> has removed the first element, <code>getLast</code> returns the new last
+     * element.
+     *
+     * Note: this unit test was written to verify that the pointer to the tail is properly set by the
+     * <code>removeAt</code> method in <code>ModifiableOrderedLinkedListCollection</code>.
+     */
+
+    @Test
+    public void getLastShouldReturnLastElementAfterRemoveAtRemovedFirstElement() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.removeAt(0);
+        assertEquals(THREE, collection.getLast());
+    }
+
+    /**
+     * Verifies that when <code>remove</code> has removed the first element, <code>getLast</code> returns the new last
+     * element.
+     *
+     * Note: this unit test was written to verify that the pointer to the tail is properly set by the
+     * <code>remove</code> method in <code>ModifiableOrderedLinkedListCollection</code>.
+     */
+
+    @Test
+    public void getLastShouldReturnLastElementAfterRemoveRemovedFirstElement() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.remove(1);
+        assertEquals(THREE, collection.getLast());
+    }
+
+    /**
      * Verifies that when <code>removeAt</code> has removed the last element, <code>getLast</code> returns the new last
      * element.
      *
