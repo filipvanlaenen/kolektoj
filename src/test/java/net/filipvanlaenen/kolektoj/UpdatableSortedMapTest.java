@@ -178,4 +178,26 @@ public class UpdatableSortedMapTest {
         assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
         assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
     }
+
+    /**
+     * Verifies that a sorted map constructed from another sorted map is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructASortedMapFromAnotherSortedMapCorrectly() {
+        SortedMap<Integer, String> prototype = SortedMap.of(COMPARATOR, 1, "one", 2, "two", THREE, "three");
+        UpdatableSortedMap<Integer, String> actual = UpdatableSortedMap.of(prototype);
+        assertTrue(actual.containsSame(prototype));
+        assertEquals(COMPARATOR, actual.getComparator());
+    }
+
+    /**
+     * Verifies that a sorted map constructed from another map and a constructor is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructASortedMapFromAMapAndAComparatorCorrectly() {
+        Map<Integer, String> prototype = Map.of(1, "one", 2, "two", THREE, "three");
+        UpdatableSortedMap<Integer, String> actual = UpdatableSortedMap.of(COMPARATOR, prototype);
+        assertTrue(actual.containsSame(prototype));
+        assertEquals(COMPARATOR, actual.getComparator());
+    }
 }
