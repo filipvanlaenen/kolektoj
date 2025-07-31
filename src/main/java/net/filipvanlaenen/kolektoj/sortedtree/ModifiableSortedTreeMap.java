@@ -242,6 +242,16 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     }
 
     @Override
+    public Entry<K, V> getGreatest() {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        } else {
+            Node<K, ModifiableCollection<V>> node = sortedTree.getGreatest();
+            return new Entry<K, V>(node.getKey(), node.getContent().get());
+        }
+    }
+
+    @Override
     public KeyAndValueCardinality getKeyAndValueCardinality() {
         return keyAndValueCardinality;
     }
@@ -249,6 +259,16 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     @Override
     public Collection<K> getKeys() {
         return keys;
+    }
+
+    @Override
+    public Entry<K, V> getLeast() {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        } else {
+            Node<K, ModifiableCollection<V>> node = sortedTree.getLeast();
+            return new Entry<K, V>(node.getKey(), node.getContent().get());
+        }
     }
 
     @Override

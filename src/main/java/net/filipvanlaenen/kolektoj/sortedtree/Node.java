@@ -103,6 +103,15 @@ class Node<K, C> {
     }
 
     /**
+     * Returns the rightmost child of the node. If the node has no right child, the node itself will be returned.
+     *
+     * @return The rightmost child of the node, or the node itself if it has no right child.
+     */
+    Node<K, C> getRightmostChild() {
+        return rightChild == null ? this : rightChild.getRightmostChild();
+    }
+
+    /**
      * Returns the size of the node.
      *
      * @return The size of the node.

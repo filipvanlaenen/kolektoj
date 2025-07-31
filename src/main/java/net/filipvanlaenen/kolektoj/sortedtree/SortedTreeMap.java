@@ -14,6 +14,7 @@ import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.SortedMap;
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
@@ -203,6 +204,16 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
+    public Entry<K, V> getGreatest() {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        } else {
+            Node<K, Collection<V>> node = sortedTree.getGreatest();
+            return new Entry<K, V>(node.getKey(), node.getContent().get());
+        }
+    }
+
+    @Override
     public KeyAndValueCardinality getKeyAndValueCardinality() {
         return keyAndValueCardinality;
     }
@@ -210,6 +221,16 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     @Override
     public Collection<K> getKeys() {
         return keys;
+    }
+
+    @Override
+    public Entry<K, V> getLeast() {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        } else {
+            Node<K, Collection<V>> node = sortedTree.getLeast();
+            return new Entry<K, V>(node.getKey(), node.getContent().get());
+        }
     }
 
     @Override

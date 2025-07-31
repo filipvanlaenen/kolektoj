@@ -288,8 +288,7 @@ class SortedTree<K, C> {
      */
     Node<K, C> getAt(final int index) throws IndexOutOfBoundsException {
         if (index >= size) {
-            throw new IndexOutOfBoundsException(
-                    "Cannot return an element at a position beyond the size of the collection.");
+            throw new IndexOutOfBoundsException("Cannot return an element at a position beyond the size of the tree.");
         } else {
             return getAt(root, index);
         }
@@ -314,6 +313,15 @@ class SortedTree<K, C> {
         }
     }
 
+    /**
+     * Returns the tree's greatest (rightmost) node.
+     *
+     * @return The tree's greatest (rightmost) node.
+     */
+    Node<K, C> getGreatest() {
+        return root.getRightmostChild();
+    }
+
     int getHeight() {
         return getNodeHeight(root);
     }
@@ -326,6 +334,15 @@ class SortedTree<K, C> {
      */
     private Class<K> getKeyType(final K... keys) {
         return (Class<K>) keys.getClass().getComponentType();
+    }
+
+    /**
+     * Returns the tree's least (leftmost) node.
+     *
+     * @return The tree's least (leftmost) node.
+     */
+    Node<K, C> getLeast() {
+        return root.getLeftmostChild();
     }
 
     /**

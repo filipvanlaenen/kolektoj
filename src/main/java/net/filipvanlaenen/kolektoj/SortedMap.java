@@ -180,4 +180,20 @@ public interface SortedMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
      * @return The comparator sorting the keys of this map
      */
     Comparator<? super K> getComparator();
+
+    /**
+     * Returns the entry with the greatest key in the map.
+     *
+     * @return The entry with the greatest key in the map.
+     * @throws IndexOutOfBoundsException Thrown if the map is empty.
+     */
+    Entry<K, V> getGreatest();
+
+    /**
+     * Returns the entry with the greatest key in the map.
+     *
+     * @return The entry with the greatest key in the map.
+     * @throws IndexOutOfBoundsException Thrown if the map is empty.
+     */
+    Entry<K, V> getLeast();
 }
