@@ -54,6 +54,48 @@ public class ModifiableOrderedCollectionTest {
     }
 
     /**
+     * Verifies that <code>addAllFirst</code> adds the elements to the start of an ordered collection.
+     */
+    @Test
+    public void addAllFirstShouldAddElementToStart() {
+        ModifiableOrderedCollection<Integer> collection = ModifiableOrderedCollection.of(1, 2);
+        assertTrue(collection.addAllFirst(OrderedCollection.of(THREE, FOUR)));
+        assertArrayEquals(new Integer[] {THREE, FOUR, 1, 2}, collection.toArray());
+    }
+
+    /**
+     * Verifies that <code>addAllFirst</code> returns <code>false</code> when trying to add duplicate elements.
+     */
+    @Test
+    public void addAllFirstShouldReturnFalseWhenAddingDuplicateElements() {
+        ModifiableOrderedCollection<Integer> collection =
+                ModifiableOrderedCollection.of(DISTINCT_ELEMENTS, 1, 2, THREE);
+        assertFalse(collection.addAllFirst(OrderedCollection.of(THREE)));
+        assertArrayEquals(new Integer[] {1, 2, THREE}, collection.toArray());
+    }
+
+    /**
+     * Verifies that <code>addAllLast</code> adds the elements to the end of an ordered collection.
+     */
+    @Test
+    public void addAllLastShouldAddElementToEnd() {
+        ModifiableOrderedCollection<Integer> collection = ModifiableOrderedCollection.of(1, 2);
+        assertTrue(collection.addAllLast(OrderedCollection.of(THREE, FOUR)));
+        assertArrayEquals(new Integer[] {1, 2, THREE, FOUR}, collection.toArray());
+    }
+
+    /**
+     * Verifies that <code>addAllLast</code> returns <code>false</code> when trying to add duplicate elements.
+     */
+    @Test
+    public void addAllLastShouldReturnFalseWhenAddingDuplicateElements() {
+        ModifiableOrderedCollection<Integer> collection =
+                ModifiableOrderedCollection.of(DISTINCT_ELEMENTS, 1, 2, THREE);
+        assertFalse(collection.addAllLast(OrderedCollection.of(1)));
+        assertArrayEquals(new Integer[] {1, 2, THREE}, collection.toArray());
+    }
+
+    /**
      * Verifies that addFirst adds an element to the start of an ordered collection.
      */
     @Test
@@ -80,7 +122,7 @@ public class ModifiableOrderedCollectionTest {
      * Verifies that addLast adds an element to the end of an ordered collection.
      */
     @Test
-    public void addLastShouldAddElementToStart() {
+    public void addLastShouldAddElementToEnd() {
         OrderedCollection<Integer> expected = OrderedCollection.of(1, 2, THREE, FOUR);
         ModifiableOrderedCollection<Integer> actual = ModifiableOrderedCollection.of(1, 2, THREE);
         assertTrue(actual.addLast(FOUR));
@@ -92,7 +134,7 @@ public class ModifiableOrderedCollectionTest {
      * element is already present.
      */
     @Test
-    public void addLastShouldNotAddDuplicateElementToStart() {
+    public void addLastShouldNotAddDuplicateElementToEnd() {
         OrderedCollection<Integer> expected = OrderedCollection.of(1, 2, THREE);
         ModifiableOrderedCollection<Integer> actual = ModifiableOrderedCollection.of(DISTINCT_ELEMENTS, 1, 2, THREE);
         assertFalse(actual.addLast(1));
