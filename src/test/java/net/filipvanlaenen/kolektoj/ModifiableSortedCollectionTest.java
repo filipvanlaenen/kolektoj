@@ -2,9 +2,7 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -83,5 +81,16 @@ public class ModifiableSortedCollectionTest {
         Collection<Integer> collection = Collection.<Integer>of(1, 2, THREE);
         ModifiableSortedCollection<Integer> clone = ModifiableSortedCollection.<Integer>of(COMPARATOR, collection);
         assertArrayEquals(collection.toArray(), clone.toArray());
+    }
+
+    /**
+     * Verifies that the <code>of</code> factory method using a sorted collection clones a sorted collection.
+     */
+    @Test
+    public void ofWithSortedCollectionShoudlReturnAClone() {
+        SortedCollection<Integer> collection = SortedCollection.<Integer>of(COMPARATOR, 1, 2, THREE);
+        ModifiableSortedCollection<Integer> clone = ModifiableSortedCollection.<Integer>of(collection);
+        assertArrayEquals(collection.toArray(), clone.toArray());
+        assertEquals(COMPARATOR, clone.getComparator());
     }
 }

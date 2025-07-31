@@ -78,6 +78,17 @@ public class SortedCollectionTest {
     }
 
     /**
+     * Verifies that the <code>of</code> factory method using a sorted collection clones a sorted collection.
+     */
+    @Test
+    public void ofWithSortedCollectionShoudlReturnAClone() {
+        SortedCollection<Integer> collection = SortedCollection.<Integer>of(COMPARATOR, 1, 2, THREE);
+        SortedCollection<Integer> clone = SortedCollection.<Integer>of(collection);
+        assertArrayEquals(collection.toArray(), clone.toArray());
+        assertEquals(COMPARATOR, clone.getComparator());
+    }
+
+    /**
      * Verifies that the <code>getGreatest</code> returns the greatest element.
      */
     @Test

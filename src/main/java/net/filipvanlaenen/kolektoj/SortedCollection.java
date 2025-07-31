@@ -61,6 +61,17 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
     }
 
     /**
+     * Returns a new sorted collection cloned from the provided sorted collection.
+     *
+     * @param <F>        The element type.
+     * @param collection The original sorted collection.
+     * @return A new sorted collection cloned from the provided sorted collection.
+     */
+    static <F> SortedCollection<F> of(final SortedCollection<F> collection) {
+        return new SortedArrayCollection<F>(collection.getComparator(), collection);
+    }
+
+    /**
      * Returns the comparator sorting this collection.
      *
      * @return The comparator sorting this collection

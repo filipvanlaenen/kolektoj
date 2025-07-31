@@ -61,6 +61,17 @@ public interface ModifiableSortedCollection<E> extends ModifiableCollection<E>, 
     }
 
     /**
+     * Returns a new modifiable sorted collection cloned from the provided sorted collection.
+     *
+     * @param <F>        The element type.
+     * @param collection The original sorted collection.
+     * @return A new modifiable sorted collection cloned from the provided sorted collection.
+     */
+    static <F> ModifiableSortedCollection<F> of(final SortedCollection<F> collection) {
+        return new ModifiableSortedTreeCollection<F>(collection.getComparator(), collection);
+    }
+
+    /**
      * Removes an element from the sorted collection at a given position.
      *
      * @param index The position of the element that should be removed.
