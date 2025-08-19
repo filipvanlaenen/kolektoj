@@ -402,6 +402,14 @@ class SortedTree<K, C> {
         return size;
     }
 
+    /**
+     * Inserts a node into a subtree, updates the size of the entire tree, and rebalances the subtree.
+     *
+     * @param node    The node defining the subtree.
+     * @param key     The key of the node to be inserted.
+     * @param newNode The node to be inserted.
+     * @return The new root node for the subtree.
+     */
     private TreeNode<K, C> insertNodeAndUpdateSize(final TreeNode<K, C> node, final K key,
             final TreeNode<K, C> newNode) {
         if (node == null) {
@@ -438,6 +446,12 @@ class SortedTree<K, C> {
         return newIndex;
     }
 
+    /**
+     * Rebalances a subtree starting from a note, and returns the new root element for that subtree.
+     *
+     * @param node The node defining the subtree to rebalance.
+     * @return The new root element for the subtree.
+     */
     private TreeNode<K, C> rebalanceNode(final TreeNode<K, C> node) {
         int balanceFactor = calculateNodeBalanceFactor(node);
         if (balanceFactor < -1) {
