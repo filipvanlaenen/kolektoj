@@ -237,6 +237,26 @@ public class SortedTreeTest {
     }
 
     /**
+     * Verifies that <code>getGreatest</code> returns the rightmost node.
+     */
+    @Test
+    public void getGreatestShouldReturnRightmostNode() {
+        TreeNode<Integer, String> node = LARGE_TREE.getGreatest();
+        assertEquals(TWENTY, node.getKey());
+        assertEquals("20", node.getContent());
+    }
+
+    /**
+     * Verifies that <code>getLeast</code> returns the leftmost node.
+     */
+    @Test
+    public void getLeastShouldReturnLeftmostNode() {
+        TreeNode<Integer, String> node = LARGE_TREE.getLeast();
+        assertEquals(1, node.getKey());
+        assertEquals("1", node.getContent());
+    }
+
+    /**
      * Verifies that <code>getNode</code> with a key returns <code>null</code> for an empty tree.
      */
     @Test
