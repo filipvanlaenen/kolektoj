@@ -150,7 +150,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
 
     @Override
     public boolean contains(final Entry<K, V> element) {
-        Node<K, ModifiableCollection<V>> node = sortedTree.getNode(element.key());
+        TreeNode<K, ModifiableCollection<V>> node = sortedTree.getNode(element.key());
         return node != null && node.getContent().contains(element.value());
     }
 
@@ -174,14 +174,14 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
-            Node<K, ModifiableCollection<V>> node = sortedTree.getRootNode();
+            TreeNode<K, ModifiableCollection<V>> node = sortedTree.getRootNode();
             return new Entry<K, V>(node.getKey(), node.getContent().get());
         }
     }
 
     @Override
     public V get(final K key) throws IllegalArgumentException {
-        Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
+        TreeNode<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
@@ -190,7 +190,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
 
     @Override
     public Collection<V> getAll(final K key) throws IllegalArgumentException {
-        Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
+        TreeNode<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
         }
@@ -207,7 +207,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
-            Node<K, ModifiableCollection<V>> node = sortedTree.getGreatest();
+            TreeNode<K, ModifiableCollection<V>> node = sortedTree.getGreatest();
             return new Entry<K, V>(node.getKey(), node.getContent().get());
         }
     }
@@ -227,7 +227,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
-            Node<K, ModifiableCollection<V>> node = sortedTree.getLeast();
+            TreeNode<K, ModifiableCollection<V>> node = sortedTree.getLeast();
             return new Entry<K, V>(node.getKey(), node.getContent().get());
         }
     }
@@ -265,7 +265,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
 
     @Override
     public V update(final K key, final V value) throws IllegalArgumentException {
-        Node<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
+        TreeNode<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }

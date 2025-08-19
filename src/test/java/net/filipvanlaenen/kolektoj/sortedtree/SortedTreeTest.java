@@ -231,7 +231,7 @@ public class SortedTreeTest {
      */
     @Test
     public void getRootNodeShouldReturnNodeWithKeyAndValueForTinyTree() {
-        Node<Integer, String> node = TINY_TREE.getRootNode();
+        TreeNode<Integer, String> node = TINY_TREE.getRootNode();
         assertEquals(1, node.getKey());
         assertEquals("1", node.getContent());
     }
@@ -249,7 +249,7 @@ public class SortedTreeTest {
      */
     @Test
     public void getNodeWithKeyShouldReturnRootNodeForTinyTree() {
-        Node<Integer, String> node = TINY_TREE.getNode(1);
+        TreeNode<Integer, String> node = TINY_TREE.getNode(1);
         assertEquals(1, node.getKey());
         assertEquals("1", node.getContent());
     }
@@ -269,7 +269,7 @@ public class SortedTreeTest {
     @Test
     public void getNodeWithKeyShouldReturnNodeWithKeyAndValueForSmallTree() {
         for (int key = 1; key <= THREE; key++) {
-            Node<Integer, String> node = SMALL_TREE.getNode(key);
+            TreeNode<Integer, String> node = SMALL_TREE.getNode(key);
             assertEquals(key, node.getKey());
             assertEquals(Integer.toString(key), node.getContent());
         }
@@ -290,7 +290,7 @@ public class SortedTreeTest {
     @Test
     public void getNodeWithKeyShouldReturnNodeWithKeyAndValueForLargeTree() {
         for (int key = 1; key <= TWENTY; key++) {
-            Node<Integer, String> node = LARGE_TREE.getNode(key);
+            TreeNode<Integer, String> node = LARGE_TREE.getNode(key);
             assertEquals(key, node.getKey());
             assertEquals(Integer.toString(key), node.getContent());
         }
@@ -406,9 +406,9 @@ public class SortedTreeTest {
      */
     @Test
     public void toArrayShouldReturnASmallArrayForASmallTree() {
-        Node<Integer, String>[] nodeArray = SMALL_TREE.toArray();
+        TreeNode<Integer, String>[] nodeArray = SMALL_TREE.toArray();
         for (int i = 1; i <= THREE; i++) {
-            Node<Integer, String> node = nodeArray[i - 1];
+            TreeNode<Integer, String> node = nodeArray[i - 1];
             assertEquals(i, node.getKey());
             assertEquals(Integer.toString(i), node.getContent());
         }

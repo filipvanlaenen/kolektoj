@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.Node} class.
+ * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.TreeNode} class.
  */
-public class NodeTest {
+public class TreeNodeTest {
     /**
      * The magic number three.
      */
@@ -16,15 +16,15 @@ public class NodeTest {
     /**
      * A node to run unit tests on.
      */
-    private static final Node<Integer, Integer> NODE12 = createTestNode12();
+    private static final TreeNode<Integer, Integer> NODE12 = createTestNode12();
 
     /**
      * Factory method to create a test node.
      *
      * @return A node with key 1 and content 2.
      */
-    private static Node<Integer, Integer> createTestNode12() {
-        return new Node<Integer, Integer>(1, 2);
+    private static TreeNode<Integer, Integer> createTestNode12() {
+        return new TreeNode<Integer, Integer>(1, 2);
     }
 
     /**
@@ -48,7 +48,7 @@ public class NodeTest {
      */
     @Test
     public void getHeightShouldBeWiredCorrectyToGetHeight() {
-        Node<Integer, Integer> node = createTestNode12();
+        TreeNode<Integer, Integer> node = createTestNode12();
         node.setHeight(THREE);
         assertEquals(THREE, node.getHeight());
     }
@@ -66,8 +66,8 @@ public class NodeTest {
      */
     @Test
     public void getLeftChildShouldBeWiredCorrectlyToSetLeftChild() {
-        Node<Integer, Integer> parent = createTestNode12();
-        Node<Integer, Integer> child = createTestNode12();
+        TreeNode<Integer, Integer> parent = createTestNode12();
+        TreeNode<Integer, Integer> child = createTestNode12();
         parent.setLeftChild(child);
         assertEquals(child, parent.getLeftChild());
     }
@@ -85,8 +85,8 @@ public class NodeTest {
      */
     @Test
     public void getRightChildShouldBeWiredCorrectlyToSetRightChild() {
-        Node<Integer, Integer> parent = createTestNode12();
-        Node<Integer, Integer> child = createTestNode12();
+        TreeNode<Integer, Integer> parent = createTestNode12();
+        TreeNode<Integer, Integer> child = createTestNode12();
         parent.setRightChild(child);
         assertEquals(child, parent.getRightChild());
     }
@@ -104,9 +104,9 @@ public class NodeTest {
      */
     @Test
     public void getLeftmostChildShouldReturnLeftmostGrandchild() {
-        Node<Integer, Integer> parent = createTestNode12();
-        Node<Integer, Integer> child = createTestNode12();
-        Node<Integer, Integer> grandchild = createTestNode12();
+        TreeNode<Integer, Integer> parent = createTestNode12();
+        TreeNode<Integer, Integer> child = createTestNode12();
+        TreeNode<Integer, Integer> grandchild = createTestNode12();
         parent.setLeftChild(child);
         child.setLeftChild(grandchild);
         assertEquals(grandchild, parent.getLeftmostChild());
@@ -125,9 +125,9 @@ public class NodeTest {
      */
     @Test
     public void getSizeShouldReturnThreeForNodeWithLeftAndRightChild() {
-        Node<Integer, Integer> parent = createTestNode12();
-        Node<Integer, Integer> leftChild = createTestNode12();
-        Node<Integer, Integer> rightChild = createTestNode12();
+        TreeNode<Integer, Integer> parent = createTestNode12();
+        TreeNode<Integer, Integer> leftChild = createTestNode12();
+        TreeNode<Integer, Integer> rightChild = createTestNode12();
         parent.setLeftChild(leftChild);
         parent.setRightChild(rightChild);
         assertEquals(THREE, parent.getSize());

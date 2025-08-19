@@ -6,7 +6,7 @@ package net.filipvanlaenen.kolektoj.sortedtree;
  * @param <K> The sorting key type.
  * @param <C> The content type.
  */
-class Node<K, C> {
+class TreeNode<K, C> {
     /**
      * The content of the node.
      */
@@ -22,18 +22,18 @@ class Node<K, C> {
     /**
      * The left child of the node.
      */
-    private Node<K, C> leftChild;
+    private TreeNode<K, C> leftChild;
     /**
      * The right child of the node.
      */
-    private Node<K, C> rightChild;
+    private TreeNode<K, C> rightChild;
 
     /**
      * Constructor taking the key as its parameter. Sets the content to <code>null</code>.
      *
      * @param key The key for the node.
      */
-    Node(final K key) {
+    TreeNode(final K key) {
         this(key, null);
     }
 
@@ -43,7 +43,7 @@ class Node<K, C> {
      * @param key     The key for the node.
      * @param content The content for the node.
      */
-    Node(final K key, final C content) {
+    TreeNode(final K key, final C content) {
         this.key = key;
         this.content = content;
     }
@@ -80,7 +80,7 @@ class Node<K, C> {
      *
      * @return The left child of the node.
      */
-    Node<K, C> getLeftChild() {
+    TreeNode<K, C> getLeftChild() {
         return leftChild;
     }
 
@@ -89,7 +89,7 @@ class Node<K, C> {
      *
      * @return The leftmost child of the node, or the node itself if it has no left child.
      */
-    Node<K, C> getLeftmostChild() {
+    TreeNode<K, C> getLeftmostChild() {
         return leftChild == null ? this : leftChild.getLeftmostChild();
     }
 
@@ -98,7 +98,7 @@ class Node<K, C> {
      *
      * @return The right child of the node.
      */
-    Node<K, C> getRightChild() {
+    TreeNode<K, C> getRightChild() {
         return rightChild;
     }
 
@@ -107,7 +107,7 @@ class Node<K, C> {
      *
      * @return The rightmost child of the node, or the node itself if it has no right child.
      */
-    Node<K, C> getRightmostChild() {
+    TreeNode<K, C> getRightmostChild() {
         return rightChild == null ? this : rightChild.getRightmostChild();
     }
 
@@ -143,7 +143,7 @@ class Node<K, C> {
      *
      * @param leftChild The left child of the node.
      */
-    void setLeftChild(final Node<K, C> leftChild) {
+    void setLeftChild(final TreeNode<K, C> leftChild) {
         this.leftChild = leftChild;
     }
 
@@ -152,7 +152,7 @@ class Node<K, C> {
      *
      * @param rightChild The right child of the node.
      */
-    void setRightChild(final Node<K, C> rightChild) {
+    void setRightChild(final TreeNode<K, C> rightChild) {
         this.rightChild = rightChild;
     }
 }

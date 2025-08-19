@@ -147,7 +147,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
 
     @Override
     public boolean contains(final Entry<K, V> element) {
-        Node<K, Collection<V>> node = sortedTree.getNode(element.key());
+        TreeNode<K, Collection<V>> node = sortedTree.getNode(element.key());
         if (node == null) {
             return false;
         } else {
@@ -175,14 +175,14 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
-            Node<K, Collection<V>> root = sortedTree.getRootNode();
+            TreeNode<K, Collection<V>> root = sortedTree.getRootNode();
             return new Entry<K, V>(root.getKey(), root.getContent().get());
         }
     }
 
     @Override
     public V get(final K key) throws IllegalArgumentException {
-        Node<K, Collection<V>> node = sortedTree.getNode(key);
+        TreeNode<K, Collection<V>> node = sortedTree.getNode(key);
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
@@ -191,7 +191,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
 
     @Override
     public Collection<V> getAll(final K key) throws IllegalArgumentException {
-        Node<K, Collection<V>> node = sortedTree.getNode(key);
+        TreeNode<K, Collection<V>> node = sortedTree.getNode(key);
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
         }
@@ -208,7 +208,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
-            Node<K, Collection<V>> node = sortedTree.getGreatest();
+            TreeNode<K, Collection<V>> node = sortedTree.getGreatest();
             return new Entry<K, V>(node.getKey(), node.getContent().get());
         }
     }
@@ -228,7 +228,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
-            Node<K, Collection<V>> node = sortedTree.getLeast();
+            TreeNode<K, Collection<V>> node = sortedTree.getLeast();
             return new Entry<K, V>(node.getKey(), node.getContent().get());
         }
     }

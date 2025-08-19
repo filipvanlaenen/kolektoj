@@ -34,7 +34,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     /**
      * The head node of the linked list.
      */
-    private Node<E> head;
+    private ListNode<E> head;
     /**
      * The size of the collection.
      */
@@ -69,7 +69,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         if (elementCardinality == DISTINCT_ELEMENTS && contains(element)) {
             return false;
         }
-        head = new Node<E>(element, head);
+        head = new ListNode<E>(element, head);
         size++;
         cachedArrayDirty = true;
         return true;
@@ -93,7 +93,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
 
     @Override
     public boolean contains(final E element) {
-        Node<E> current = head;
+        ListNode<E> current = head;
         while (current != null) {
             if (Objects.equals(current.getElement(), element)) {
                 return true;
@@ -111,7 +111,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         boolean[] matches = new boolean[size];
         for (Object element : collection) {
             boolean found = false;
-            Node<E> current = head;
+            ListNode<E> current = head;
             for (int i = 0; i < size; i++) {
                 if (!matches[i] && Objects.equals(element, current.getElement())) {
                     matches[i] = true;
@@ -157,8 +157,8 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
             cachedArrayDirty = true;
             return true;
         }
-        Node<E> current = head;
-        Node<E> next = current.getNext();
+        ListNode<E> current = head;
+        ListNode<E> next = current.getNext();
         while (next != null) {
             if (Objects.equals(next.getElement(), element)) {
                 current.setNext(next.getNext());
@@ -187,7 +187,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
             return false;
         }
         boolean[] retain = new boolean[size];
-        Node<E> current = head;
+        ListNode<E> current = head;
         for (int i = 0; i < size; i++) {
             retain[i] = !predicate.test(current.getElement());
             current = current.getNext();
@@ -202,7 +202,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         }
         boolean[] retain = new boolean[size];
         for (E element : collection) {
-            Node<E> current = head;
+            ListNode<E> current = head;
             for (int i = 0; i < size; i++) {
                 if (!retain[i] && Objects.equals(element, current.getElement())) {
                     retain[i] = true;
@@ -233,8 +233,8 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         if (head == null) {
             return true;
         }
-        Node<E> current = head;
-        Node<E> next = current.getNext();
+        ListNode<E> current = head;
+        ListNode<E> next = current.getNext();
         i++;
         while (i < retain.length) {
             if (retain[i]) {
@@ -265,7 +265,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     public Object[] toArray() {
         if (cachedArrayDirty) {
             cachedArray = new Object[size];
-            Node<E> current = head;
+            ListNode<E> current = head;
             for (int i = 0; i < size; i++) {
                 cachedArray[i] = current.getElement();
                 current = current.getNext();

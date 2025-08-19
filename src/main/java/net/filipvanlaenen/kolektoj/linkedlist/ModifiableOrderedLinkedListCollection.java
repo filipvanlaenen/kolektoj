@@ -37,7 +37,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
     /**
      * The head node of the linked list.
      */
-    private Node<E> head;
+    private ListNode<E> head;
     /**
      * The size of the collection.
      */
@@ -45,7 +45,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
     /**
      * The tail node of the linked list.
      */
-    private Node<E> tail;
+    private ListNode<E> tail;
 
     /**
      * Constructs a modifiable linked list collection with the given elements.
@@ -76,7 +76,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         if (elementCardinality == DISTINCT_ELEMENTS && contains(element)) {
             return false;
         }
-        head = new Node<E>(element, head);
+        head = new ListNode<E>(element, head);
         if (tail == null) {
             tail = head;
         }
@@ -103,8 +103,8 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         if (collection.isEmpty()) {
             return false;
         }
-        Node<E> newListHead = null;
-        Node<E> newListTail = null;
+        ListNode<E> newListHead = null;
+        ListNode<E> newListTail = null;
         Object[] newElements = collection.toArray();
         if (elementCardinality == DISTINCT_ELEMENTS) {
             newElements = ArrayUtilities.cloneDistinctElements(newElements);
@@ -114,10 +114,10 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             E element = (E) object;
             if (elementCardinality != DISTINCT_ELEMENTS || !contains(element)) {
                 if (newListHead == null) {
-                    newListHead = new Node<E>(element, null);
+                    newListHead = new ListNode<E>(element, null);
                     newListTail = newListHead;
                 } else {
-                    Node<E> newNode = new Node<E>(element, null);
+                    ListNode<E> newNode = new ListNode<E>(element, null);
                     newListTail.setNext(newNode);
                     newListTail = newNode;
                 }
@@ -137,7 +137,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             tail.setNext(newListHead);
             tail = newListTail;
         } else {
-            Node<E> current = head;
+            ListNode<E> current = head;
             for (int i = 0; i < index - 1; i++) {
                 current = current.getNext();
             }
@@ -159,20 +159,20 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
                 return false;
             }
             if (index == 0) {
-                head = new Node<E>(element, head);
+                head = new ListNode<E>(element, head);
                 if (tail == null) {
                     tail = head;
                 }
             } else if (index == size) {
-                Node<E> newNode = new Node<E>(element, null);
+                ListNode<E> newNode = new ListNode<E>(element, null);
                 tail.setNext(newNode);
                 tail = newNode;
             } else {
-                Node<E> current = head;
+                ListNode<E> current = head;
                 for (int i = 0; i < index - 1; i++) {
                     current = current.getNext();
                 }
-                Node<E> newNode = new Node<E>(element, current.getNext());
+                ListNode<E> newNode = new ListNode<E>(element, current.getNext());
                 current.setNext(newNode);
             }
             size++;
@@ -191,7 +191,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
 
     @Override
     public boolean contains(final E element) {
-        Node<E> current = head;
+        ListNode<E> current = head;
         while (current != null) {
             if (Objects.equals(current.getElement(), element)) {
                 return true;
@@ -209,7 +209,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         boolean[] matches = new boolean[size];
         for (Object element : collection) {
             boolean found = false;
-            Node<E> current = head;
+            ListNode<E> current = head;
             for (int i = 0; i < size; i++) {
                 if (!matches[i] && Objects.equals(element, current.getElement())) {
                     matches[i] = true;
@@ -249,7 +249,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
                     // EQMU: Replacing integer subtraction with addition above produces an equivalent mutant.
                     return tail.getElement();
                 } else {
-                    Node<E> current = head;
+                    ListNode<E> current = head;
                     for (int i = 0; i < index; i++) {
                         current = current.getNext();
                     }
@@ -283,8 +283,8 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             cachedArrayDirty = true;
             return true;
         }
-        Node<E> current = head;
-        Node<E> next = current.getNext();
+        ListNode<E> current = head;
+        ListNode<E> next = current.getNext();
         while (next != null) {
             if (Objects.equals(next.getElement(), element)) {
                 current.setNext(next.getNext());
@@ -315,11 +315,11 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
                     tail = null;
                 }
             } else {
-                Node<E> current = head;
+                ListNode<E> current = head;
                 for (int i = 0; i < index - 1; i++) {
                     current = current.getNext();
                 }
-                Node<E> next = current.getNext();
+                ListNode<E> next = current.getNext();
                 element = next.getElement();
                 current.setNext(next.getNext());
                 if (index == size - 1) {
@@ -347,7 +347,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             return false;
         }
         boolean[] retain = new boolean[size];
-        Node<E> current = head;
+        ListNode<E> current = head;
         for (int i = 0; i < size; i++) {
             retain[i] = !predicate.test(current.getElement());
             current = current.getNext();
@@ -362,7 +362,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         }
         boolean[] retain = new boolean[size];
         for (E element : collection) {
-            Node<E> current = head;
+            ListNode<E> current = head;
             for (int i = 0; i < size; i++) {
                 if (!retain[i] && Objects.equals(element, current.getElement())) {
                     retain[i] = true;
@@ -395,7 +395,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             return true;
         }
         tail = head;
-        Node<E> next = tail.getNext();
+        ListNode<E> next = tail.getNext();
         i++;
         while (i < retain.length) {
             if (retain[i]) {
@@ -428,7 +428,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
     public Object[] toArray() {
         if (cachedArrayDirty) {
             cachedArray = new Object[size];
-            Node<E> current = head;
+            ListNode<E> current = head;
             for (int i = 0; i < size; i++) {
                 cachedArray[i] = current.getElement();
                 current = current.getNext();

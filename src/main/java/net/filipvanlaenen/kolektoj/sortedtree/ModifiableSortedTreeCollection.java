@@ -208,7 +208,7 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     public Object[] toArray() {
         if (cachedArrayDirty) {
             cachedArray = new Object[size()];
-            Node<E, E>[] compactedArray = sortedTree.toArray();
+            TreeNode<E, E>[] compactedArray = sortedTree.toArray();
             for (int i = 0; i < size(); i++) {
                 cachedArray[i] = compactedArray[i].getKey();
 

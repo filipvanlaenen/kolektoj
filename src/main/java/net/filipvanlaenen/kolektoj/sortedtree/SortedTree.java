@@ -39,7 +39,7 @@ class SortedTree<K, C> {
     /**
      * The root node of the tree.
      */
-    private Node<K, C> root;
+    private TreeNode<K, C> root;
     /**
      * The size of the tree.
      */
@@ -64,7 +64,7 @@ class SortedTree<K, C> {
      * @return True if a new node was created and added to the tree.
      */
     boolean add(final K key, final C content) {
-        Node<K, C> newNode = new Node<K, C>(key, content);
+        TreeNode<K, C> newNode = new TreeNode<K, C>(key, content);
         int originalSize = size;
         root = insertNodeAndUpdateSize(root, key, newNode);
         updateNodeHeight(root);
@@ -72,7 +72,7 @@ class SortedTree<K, C> {
         return size != originalSize;
     }
 
-    private int addNodesToArray(final Node<K, C>[] array, final Node<K, C> node, final int index) {
+    private int addNodesToArray(final TreeNode<K, C>[] array, final TreeNode<K, C> node, final int index) {
         if (node == null) {
             return index;
         }
@@ -81,7 +81,7 @@ class SortedTree<K, C> {
         return addNodesToArray(array, node.getRightChild(), result);
     }
 
-    private int calculateNodeBalanceFactor(final Node<K, C> node) {
+    private int calculateNodeBalanceFactor(final TreeNode<K, C> node) {
         return getNodeHeight(node.getRightChild()) - getNodeHeight(node.getLeftChild());
     }
 
@@ -93,8 +93,8 @@ class SortedTree<K, C> {
         size = 0;
     }
 
-    private int collectUnmatchedForRemoval(final Node<K, C>[] removeArray, final int removeArraySize,
-            final Node<K, C> node, final boolean[] matched, final int index) {
+    private int collectUnmatchedForRemoval(final TreeNode<K, C>[] removeArray, final int removeArraySize,
+            final TreeNode<K, C> node, final boolean[] matched, final int index) {
         if (node == null) {
             return removeArraySize;
         }
@@ -170,8 +170,8 @@ class SortedTree<K, C> {
         return getNode(key) != null;
     }
 
-    private Node<K, C>[] createNodeArray(final int length, final Node<K, C>... foo) {
-        return (Node<K, C>[]) Array.newInstance(getNodeElementType(foo), length);
+    private TreeNode<K, C>[] createNodeArray(final int length, final TreeNode<K, C>... foo) {
+        return (TreeNode<K, C>[]) Array.newInstance(getNodeElementType(foo), length);
     }
 
     private void createEntryNodes(final Object[] sortedArray) {
@@ -181,10 +181,10 @@ class SortedTree<K, C> {
         }
     }
 
-    private Node<K, C> createEntryNodes(final Object[] sortedArray, final int firstIndex, final int lastIndex) {
+    private TreeNode<K, C> createEntryNodes(final Object[] sortedArray, final int firstIndex, final int lastIndex) {
         int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
         Entry<K, C> entry = (Entry<K, C>) sortedArray[middleIndex];
-        Node<K, C> node = new Node<K, C>(entry.key(), entry.value());
+        TreeNode<K, C> node = new TreeNode<K, C>(entry.key(), entry.value());
         if (middleIndex > firstIndex) {
             node.setLeftChild(createEntryNodes(sortedArray, firstIndex, middleIndex - 1));
         }
@@ -201,9 +201,9 @@ class SortedTree<K, C> {
         }
     }
 
-    private Node<K, C> createElementNodes(final Object[] sortedArray, final int firstIndex, final int lastIndex) {
+    private TreeNode<K, C> createElementNodes(final Object[] sortedArray, final int firstIndex, final int lastIndex) {
         int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
-        Node<K, C> node = new Node<K, C>((K) sortedArray[middleIndex]);
+        TreeNode<K, C> node = new TreeNode<K, C>((K) sortedArray[middleIndex]);
         if (middleIndex > firstIndex) {
             node.setLeftChild(createElementNodes(sortedArray, firstIndex, middleIndex - 1));
         }
@@ -213,7 +213,7 @@ class SortedTree<K, C> {
         return node;
     }
 
-    private Node<K, C> deleteNodeAndUpdateSize(final K element, final Node<K, C> node) {
+    private TreeNode<K, C> deleteNodeAndUpdateSize(final K element, final TreeNode<K, C> node) {
         if (node == null) {
             return null;
         } else if (comparator.compare(element, node.getKey()) < 0) {
@@ -234,7 +234,7 @@ class SortedTree<K, C> {
             size--;
             return node.getLeftChild();
         } else {
-            Node<K, C> inOrderSuccessor = node.getRightChild().getLeftmostChild();
+            TreeNode<K, C> inOrderSuccessor = node.getRightChild().getLeftmostChild();
             node.setKey(inOrderSuccessor.getKey());
             node.setRightChild(deleteNodeAndUpdateSize(inOrderSuccessor.getKey(), node.getRightChild()));
             updateNodeHeight(node);
@@ -242,7 +242,7 @@ class SortedTree<K, C> {
         }
     }
 
-    private boolean findAndMarkMatch(final Node<K, C> node, final boolean[] matched, final int index, final K key) {
+    private boolean findAndMarkMatch(final TreeNode<K, C> node, final boolean[] matched, final int index, final K key) {
         if (node == null) {
             return false;
         }
@@ -286,7 +286,7 @@ class SortedTree<K, C> {
      * @return The node at the index.
      * @throws IndexOutOfBoundsException If the index is larger or equal than the size.
      */
-    Node<K, C> getAt(final int index) throws IndexOutOfBoundsException {
+    TreeNode<K, C> getAt(final int index) throws IndexOutOfBoundsException {
         if (index >= size) {
             throw new IndexOutOfBoundsException("Cannot return an element at a position beyond the size of the tree.");
         } else {
@@ -301,8 +301,8 @@ class SortedTree<K, C> {
      * @param index The index.
      * @return The node at the index.
      */
-    private Node<K, C> getAt(final Node<K, C> node, final int index) {
-        Node<K, C> leftChild = node.getLeftChild();
+    private TreeNode<K, C> getAt(final TreeNode<K, C> node, final int index) {
+        TreeNode<K, C> leftChild = node.getLeftChild();
         int leftSize = leftChild == null ? 0 : leftChild.getSize();
         if (leftSize < index) {
             return getAt(node.getRightChild(), index - leftSize - 1);
@@ -318,7 +318,7 @@ class SortedTree<K, C> {
      *
      * @return The tree's greatest (rightmost) node.
      */
-    Node<K, C> getGreatest() {
+    TreeNode<K, C> getGreatest() {
         return root.getRightmostChild();
     }
 
@@ -341,7 +341,7 @@ class SortedTree<K, C> {
      *
      * @return The tree's least (leftmost) node.
      */
-    Node<K, C> getLeast() {
+    TreeNode<K, C> getLeast() {
         return root.getLeftmostChild();
     }
 
@@ -351,7 +351,7 @@ class SortedTree<K, C> {
      * @param key The key.
      * @return A node with the given key.
      */
-    Node<K, C> getNode(final K key) {
+    TreeNode<K, C> getNode(final K key) {
         return getNode(root, key);
     }
 
@@ -362,7 +362,7 @@ class SortedTree<K, C> {
      * @param key  The key.
      * @return A node with the given key.
      */
-    private Node<K, C> getNode(final Node<K, C> node, final K key) {
+    private TreeNode<K, C> getNode(final TreeNode<K, C> node, final K key) {
         if (node == null) {
             return null;
         }
@@ -376,11 +376,11 @@ class SortedTree<K, C> {
         }
     }
 
-    private Class<Node<K, C>> getNodeElementType(final Node<K, C>... foo) {
-        return (Class<Node<K, C>>) foo.getClass().getComponentType();
+    private Class<TreeNode<K, C>> getNodeElementType(final TreeNode<K, C>... foo) {
+        return (Class<TreeNode<K, C>>) foo.getClass().getComponentType();
     }
 
-    private int getNodeHeight(final Node<K, C> node) {
+    private int getNodeHeight(final TreeNode<K, C> node) {
         return node == null ? 0 : node.getHeight();
     }
 
@@ -389,7 +389,7 @@ class SortedTree<K, C> {
      *
      * @return The root node of the tree.
      */
-    Node<K, C> getRootNode() {
+    TreeNode<K, C> getRootNode() {
         return root;
     }
 
@@ -402,7 +402,7 @@ class SortedTree<K, C> {
         return size;
     }
 
-    private Node<K, C> insertNodeAndUpdateSize(final Node<K, C> node, final K key, final Node<K, C> newNode) {
+    private TreeNode<K, C> insertNodeAndUpdateSize(final TreeNode<K, C> node, final K key, final TreeNode<K, C> newNode) {
         if (node == null) {
             size++;
             return newNode;
@@ -423,7 +423,7 @@ class SortedTree<K, C> {
         }
     }
 
-    private int markForRemoval(final Node<K, C>[] deleteArray, final int index, final Node<K, C> node,
+    private int markForRemoval(final TreeNode<K, C>[] deleteArray, final int index, final TreeNode<K, C> node,
             final Predicate<? super K> predicate) {
         if (node == null) {
             return index;
@@ -437,7 +437,7 @@ class SortedTree<K, C> {
         return newIndex;
     }
 
-    private Node<K, C> rebalanceNode(final Node<K, C> node) {
+    private TreeNode<K, C> rebalanceNode(final TreeNode<K, C> node) {
         int balanceFactor = calculateNodeBalanceFactor(node);
         if (balanceFactor < -1) {
             if (calculateNodeBalanceFactor(node.getLeftChild()) <= 0) {
@@ -485,7 +485,7 @@ class SortedTree<K, C> {
      *         predicate.
      */
     boolean removeIf(final Predicate<? super K> predicate) {
-        Node<K, C>[] removeArray = createNodeArray(size);
+        TreeNode<K, C>[] removeArray = createNodeArray(size);
         int removeArraySize = markForRemoval(removeArray, 0, root, predicate);
         for (int i = 0; i < removeArraySize; i++) {
             remove(removeArray[i].getKey());
@@ -508,7 +508,7 @@ class SortedTree<K, C> {
                 findAndMarkMatch(root, matched, 0, (K) element);
             }
         }
-        Node<K, C>[] removeArray = createNodeArray(size);
+        TreeNode<K, C>[] removeArray = createNodeArray(size);
         int removeArraySize = collectUnmatchedForRemoval(removeArray, 0, root, matched, 0);
         for (int i = 0; i < removeArraySize; i++) {
             remove(removeArray[i].getKey());
@@ -538,8 +538,8 @@ class SortedTree<K, C> {
      * @param node The node to rotate around.
      * @return The right child that should replace the current node.
      */
-    private Node<K, C> rotateLeft(final Node<K, C> node) {
-        Node<K, C> originalRightChild = node.getRightChild();
+    private TreeNode<K, C> rotateLeft(final TreeNode<K, C> node) {
+        TreeNode<K, C> originalRightChild = node.getRightChild();
         node.setRightChild(originalRightChild.getLeftChild());
         originalRightChild.setLeftChild(node);
         updateNodeHeight(node);
@@ -569,8 +569,8 @@ class SortedTree<K, C> {
      * @param node The node to rotate around.
      * @return The left child that should replace the current node.
      */
-    private Node<K, C> rotateRight(final Node<K, C> node) {
-        Node<K, C> originalLeftChild = node.getLeftChild();
+    private TreeNode<K, C> rotateRight(final TreeNode<K, C> node) {
+        TreeNode<K, C> originalLeftChild = node.getLeftChild();
         node.setLeftChild(originalLeftChild.getRightChild());
         originalLeftChild.setRightChild(node);
         updateNodeHeight(node);
@@ -583,8 +583,8 @@ class SortedTree<K, C> {
      *
      * @return An array containing the elements of this tree.
      */
-    Node<K, C>[] toArray() {
-        Node<K, C>[] array = createNodeArray(size);
+    TreeNode<K, C>[] toArray() {
+        TreeNode<K, C>[] array = createNodeArray(size);
         addNodesToArray(array, root, 0);
         return array.clone();
     }
@@ -598,14 +598,14 @@ class SortedTree<K, C> {
      * @param compactedArray An array with the K,Collection<V>-entries.
      * @return An array with K,V-entries.
      */
-    static <L, W, D extends Collection<W>> Object[] uncompact(final Node<L, D>[] compactedArray, final Object[] array) {
+    static <L, W, D extends Collection<W>> Object[] uncompact(final TreeNode<L, D>[] compactedArray, final Object[] array) {
         int size = 0;
-        for (Node<L, D> node : compactedArray) {
+        for (TreeNode<L, D> node : compactedArray) {
             size += node.getContent().size();
         }
         Object[] result = array.length == size ? array : new Object[size];
         int i = 0;
-        for (Node<L, D> node : compactedArray) {
+        for (TreeNode<L, D> node : compactedArray) {
             L key = node.getKey();
             for (W value : node.getContent()) {
                 result[i] = new Entry<L, W>(key, value);
@@ -620,7 +620,7 @@ class SortedTree<K, C> {
      *
      * @param node The node for which the height should be updated.
      */
-    private void updateNodeHeight(final Node<K, C> node) {
+    private void updateNodeHeight(final TreeNode<K, C> node) {
         int leftHeight = getNodeHeight(node.getLeftChild());
         int rightHeight = getNodeHeight(node.getRightChild());
         node.setHeight(Math.max(leftHeight, rightHeight) + 1);

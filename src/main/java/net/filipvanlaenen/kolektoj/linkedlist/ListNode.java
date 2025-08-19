@@ -5,7 +5,7 @@ package net.filipvanlaenen.kolektoj.linkedlist;
  *
  * @param <E> The element type.
  */
-final class Node<E> {
+final class ListNode<E> {
     /**
      * The element of the node.
      */
@@ -13,7 +13,7 @@ final class Node<E> {
     /**
      * The next node in the linked list.
      */
-    private Node<E> next;
+    private ListNode<E> next;
 
     /**
      * Constructor taking the element and the next nodes as its parameters.
@@ -21,7 +21,7 @@ final class Node<E> {
      * @param element The element of this node.
      * @param next    The next node in the linked list.
      */
-    Node(final E element, final Node<E> next) {
+    ListNode(final E element, final ListNode<E> next) {
         this.element = element;
         this.next = next;
     }
@@ -40,7 +40,7 @@ final class Node<E> {
      *
      * @return The next node in the linked list.
      */
-    Node<E> getNext() {
+    ListNode<E> getNext() {
         return next;
     }
 
@@ -49,7 +49,7 @@ final class Node<E> {
      *
      * @param next The next node in the linked list.
      */
-    void setNext(final Node<E> next) {
+    void setNext(final ListNode<E> next) {
         this.next = next;
     }
 }
