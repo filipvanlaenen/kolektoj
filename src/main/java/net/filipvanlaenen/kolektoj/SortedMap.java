@@ -190,10 +190,26 @@ public interface SortedMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
     Entry<K, V> getGreatest();
 
     /**
-     * Returns the entry with the greatest key in the map.
+     * Returns the greatest key in the map.
      *
-     * @return The entry with the greatest key in the map.
+     * @return The greatest key in the map.
+     * @throws IndexOutOfBoundsException Thrown if the map is empty.
+     */
+    K getGreatestKey();
+
+    /**
+     * Returns the entry with the least key in the map.
+     *
+     * @return The entry with the least key in the map.
      * @throws IndexOutOfBoundsException Thrown if the map is empty.
      */
     Entry<K, V> getLeast();
+
+    /**
+     * Returns the least key in the map.
+     *
+     * @return The least key in the map.
+     * @throws IndexOutOfBoundsException Thrown if the map is empty.
+     */
+    K getLeastKey();
 }

@@ -213,6 +213,15 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     }
 
     @Override
+    public K getGreatestKey() {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        } else {
+            return sortedTree.getGreatest().getKey();
+        }
+    }
+
+    @Override
     public KeyAndValueCardinality getKeyAndValueCardinality() {
         return keyAndValueCardinality;
     }
@@ -229,6 +238,15 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         } else {
             TreeNode<K, ModifiableCollection<V>> node = sortedTree.getLeast();
             return new Entry<K, V>(node.getKey(), node.getContent().get());
+        }
+    }
+
+    @Override
+    public K getLeastKey() {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        } else {
+            return sortedTree.getLeast().getKey();
         }
     }
 

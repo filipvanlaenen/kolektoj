@@ -20,6 +20,10 @@ import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 public abstract class UpdatableSortedMapTestBase<T extends UpdatableSortedMap<Integer, String>,
         TC extends UpdatableSortedMap<KeyWithCollidingHash, Integer>> extends UpdatableMapTestBase<T, TC> {
     /**
+     * The magic number three.
+     */
+    private static final int THREE = 3;
+    /**
      * Sorted map with three entries.
      */
     private T map123 = createMap(ENTRY1, ENTRY2, ENTRY3);
@@ -72,6 +76,24 @@ public abstract class UpdatableSortedMapTestBase<T extends UpdatableSortedMap<In
     }
 
     /**
+     * Verifies that trying to get the greatest key from an empty map throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getGreatestKeyShouldThrowExceptionWhenCalledOnAnEmptyMap() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createMap().getGreatestKey());
+        assertEquals("Cannot return a key from an empty map.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getGreatestKey</code> returns the greatest key of a sorted map.
+     */
+    @Test
+    public void getGreatestKeyShouldReturnTheGreatestKeyInASortedMap() {
+        assertEquals(THREE, map123.getGreatestKey());
+    }
+
+    /**
      * Verifies that trying to get the least entry from an empty map throws IndexOutOfBoundsException.
      */
     @Test
@@ -87,5 +109,23 @@ public abstract class UpdatableSortedMapTestBase<T extends UpdatableSortedMap<In
     @Test
     public void getLeastShouldReturnTheGreatestEntryInASortedMap() {
         assertEquals(ENTRY1, map123.getLeast());
+    }
+
+    /**
+     * Verifies that <code>getLeastKey</code> returns the least key of a sorted map.
+     */
+    @Test
+    public void getLeastKeyShouldReturnTheLeastKeyInASortedMap() {
+        assertEquals(1, map123.getLeastKey());
+    }
+
+    /**
+     * Verifies that trying to get the least key from an empty map throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getLeastKeyShouldThrowExceptionWhenCalledOnAnEmptyMap() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createMap().getLeastKey());
+        assertEquals("Cannot return a key from an empty map.", exception.getMessage());
     }
 }

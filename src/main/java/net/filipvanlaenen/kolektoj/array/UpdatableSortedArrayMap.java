@@ -15,7 +15,6 @@ import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.UpdatableSortedMap;
-import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection;
 
 /**
@@ -207,6 +206,15 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
     }
 
     @Override
+    public K getGreatestKey() {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        } else {
+            return ((Entry<K, V>) entries[entries.length - 1]).key();
+        }
+    }
+
+    @Override
     public KeyAndValueCardinality getKeyAndValueCardinality() {
         return keyAndValueCardinality;
     }
@@ -222,6 +230,15 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
             return (Entry<K, V>) entries[0];
+        }
+    }
+
+    @Override
+    public K getLeastKey() {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        } else {
+            return ((Entry<K, V>) entries[0]).key();
         }
     }
 
