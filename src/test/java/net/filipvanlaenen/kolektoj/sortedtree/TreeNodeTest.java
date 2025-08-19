@@ -113,6 +113,27 @@ public class TreeNodeTest {
     }
 
     /**
+     * Verifies that by default, the rightmost child is the node itself.
+     */
+    @Test
+    public void getRightmostChildShouldReturnNullByDefault() {
+        assertEquals(NODE12, NODE12.getRightmostChild());
+    }
+
+    /**
+     * Verifies that the getter for the rightmost child navigates to the rightmost grandchild.
+     */
+    @Test
+    public void getRightmostChildShouldReturnRightmostGrandchild() {
+        TreeNode<Integer, Integer> parent = createTestNode12();
+        TreeNode<Integer, Integer> child = createTestNode12();
+        TreeNode<Integer, Integer> grandchild = createTestNode12();
+        parent.setRightChild(child);
+        child.setRightChild(grandchild);
+        assertEquals(grandchild, parent.getRightmostChild());
+    }
+
+    /**
      * Verifies that by default, the size is one.
      */
     @Test
