@@ -1,13 +1,13 @@
 package net.filipvanlaenen.kolektoj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Comparator;
 import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 
-import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 
 /**
@@ -18,6 +18,10 @@ import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
  */
 public abstract class SortedMapTestBase<T extends SortedMap<Integer, String>,
         TC extends SortedMap<KeyWithCollidingHash, Integer>> extends MapTestBase<T, TC> {
+    /**
+     * Sorted map with three entries.
+     */
+    private T map123 = createMap(ENTRY1, ENTRY2, ENTRY3);
     /**
      * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
      * value.
@@ -44,7 +48,42 @@ public abstract class SortedMapTestBase<T extends SortedMap<Integer, String>,
      */
     @Test
     public void getComparatorShouldReturnTheProvidedComparator() {
-        T map = createMap(new Entry<Integer, String>(1, "one"), new Entry<Integer, String>(2, "two"));
-        assertEquals(COMPARATOR, map.getComparator());
+        assertEquals(COMPARATOR, map123.getComparator());
+    }
+
+    /**
+     * Verifies that trying to get the greatest entry from an empty map throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getGreatestShouldThrowExceptionWhenCalledOnAnEmptyMap() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createMap().getGreatest());
+        assertEquals("Cannot return an entry from an empty map.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getGreatest</code> returns the greatest entry of a sorted map.
+     */
+    @Test
+    public void getGreatestShouldReturnTheGreatestEntryInASortedMap() {
+        assertEquals(ENTRY3, map123.getGreatest());
+    }
+
+    /**
+     * Verifies that trying to get the least entry from an empty map throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getLeastShouldThrowExceptionWhenCalledOnAnEmptyMap() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createMap().getLeast());
+        assertEquals("Cannot return an entry from an empty map.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getLeast</code> returns the greatest entry of a sorted map.
+     */
+    @Test
+    public void getLeastShouldReturnTheGreatestEntryInASortedMap() {
+        assertEquals(ENTRY1, map123.getLeast());
     }
 }
