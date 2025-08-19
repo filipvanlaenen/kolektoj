@@ -170,8 +170,23 @@ class SortedTree<K, C> {
         return getNode(key) != null;
     }
 
-    private TreeNode<K, C>[] createNodeArray(final int length, final TreeNode<K, C>... foo) {
-        return (TreeNode<K, C>[]) Array.newInstance(getNodeElementType(foo), length);
+    private void createElementNodes(final Object[] sortedArray) {
+        size = sortedArray.length;
+        if (size > 0) {
+            root = createElementNodes(sortedArray, 0, size - 1);
+        }
+    }
+
+    private TreeNode<K, C> createElementNodes(final Object[] sortedArray, final int firstIndex, final int lastIndex) {
+        int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
+        TreeNode<K, C> node = new TreeNode<K, C>((K) sortedArray[middleIndex]);
+        if (middleIndex > firstIndex) {
+            node.setLeftChild(createElementNodes(sortedArray, firstIndex, middleIndex - 1));
+        }
+        if (middleIndex < lastIndex) {
+            node.setRightChild(createElementNodes(sortedArray, middleIndex + 1, lastIndex));
+        }
+        return node;
     }
 
     private void createEntryNodes(final Object[] sortedArray) {
@@ -194,23 +209,8 @@ class SortedTree<K, C> {
         return node;
     }
 
-    private void createElementNodes(final Object[] sortedArray) {
-        size = sortedArray.length;
-        if (size > 0) {
-            root = createElementNodes(sortedArray, 0, size - 1);
-        }
-    }
-
-    private TreeNode<K, C> createElementNodes(final Object[] sortedArray, final int firstIndex, final int lastIndex) {
-        int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
-        TreeNode<K, C> node = new TreeNode<K, C>((K) sortedArray[middleIndex]);
-        if (middleIndex > firstIndex) {
-            node.setLeftChild(createElementNodes(sortedArray, firstIndex, middleIndex - 1));
-        }
-        if (middleIndex < lastIndex) {
-            node.setRightChild(createElementNodes(sortedArray, middleIndex + 1, lastIndex));
-        }
-        return node;
+    private TreeNode<K, C>[] createNodeArray(final int length, final TreeNode<K, C>... foo) {
+        return (TreeNode<K, C>[]) Array.newInstance(getNodeElementType(foo), length);
     }
 
     private TreeNode<K, C> deleteNodeAndUpdateSize(final K element, final TreeNode<K, C> node) {
@@ -402,7 +402,8 @@ class SortedTree<K, C> {
         return size;
     }
 
-    private TreeNode<K, C> insertNodeAndUpdateSize(final TreeNode<K, C> node, final K key, final TreeNode<K, C> newNode) {
+    private TreeNode<K, C> insertNodeAndUpdateSize(final TreeNode<K, C> node, final K key,
+            final TreeNode<K, C> newNode) {
         if (node == null) {
             size++;
             return newNode;
@@ -590,15 +591,17 @@ class SortedTree<K, C> {
     }
 
     /**
-     * Uncompacts an array with K,Collection<V>-entries into a new array with K,V-entries.
+     * Uncompacts an array with L,Collection<W>-entries into a new array with L,W-entries.
      *
      * @param <L>            The key type.
      * @param <W>            The value type.
      * @param <D>            The value collection type.
-     * @param compactedArray An array with the K,Collection<V>-entries.
-     * @return An array with K,V-entries.
+     * @param compactedArray An array with the L,Collection<W>-entries.
+     * @param array          An array to put the L,W-entries in, or to use as the prototype for cloning.
+     * @return An array with L,W-entries.
      */
-    static <L, W, D extends Collection<W>> Object[] uncompact(final TreeNode<L, D>[] compactedArray, final Object[] array) {
+    static <L, W, D extends Collection<W>> Object[] uncompact(final TreeNode<L, D>[] compactedArray,
+            final Object[] array) {
         int size = 0;
         for (TreeNode<L, D> node : compactedArray) {
             size += node.getContent().size();
