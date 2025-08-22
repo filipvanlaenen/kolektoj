@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,11 @@ import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<Integer, String>,
         TC extends ModifiableSortedMap<KeyWithCollidingHash, Integer>> extends SortedMapTestBase<T, TC> {
     /**
+     * Sorted map with three entries.
+     */
+    private T map123 = createMap(ENTRY1, ENTRY2, ENTRY3);
+
+    /**
      * Verifies that trying to remove the entry with the greatest key from an empty map throws
      * IndexOutOfBoundsException.
      */
@@ -27,6 +33,24 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
     }
 
     /**
+     * Verifies that <code>removeGreatest</code> returns the greatest entry of a sorted map.
+     */
+    @Test
+    public void removeGreatestShouldReturnTheGreatestEntryInASortedMap() {
+        assertEquals(ENTRY3, map123.removeGreatest());
+    }
+
+    /**
+     * Verifies that <code>removeGreatest</code> removes the greatest entry of a sorted map.
+     */
+    @Test
+    public void removeGreatestShouldRemoveTheGreatestEntryInASortedMap() {
+        map123.removeGreatest();
+        assertEquals(2, map123.size());
+        assertFalse(map123.contains(ENTRY3));
+    }
+
+    /**
      * Verifies that trying to remove the entry with the least key from an empty map throws IndexOutOfBoundsException.
      */
     @Test
@@ -34,5 +58,23 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
         IndexOutOfBoundsException exception =
                 assertThrows(IndexOutOfBoundsException.class, () -> createMap().removeLeast());
         assertEquals("Cannot remove an entry from an empty map.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>removeLeast</code> returns the least entry of a sorted map.
+     */
+    @Test
+    public void removeLeastShouldReturnTheLeastEntryInASortedMap() {
+        assertEquals(ENTRY1, map123.removeLeast());
+    }
+
+    /**
+     * Verifies that <code>removeLeast</code> removes the least entry of a sorted map.
+     */
+    @Test
+    public void removeLeastShouldRemoveTheLeastEntryInASortedMap() {
+        map123.removeLeast();
+        assertEquals(2, map123.size());
+        assertFalse(map123.contains(ENTRY1));
     }
 }

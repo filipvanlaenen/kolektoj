@@ -305,17 +305,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        ModifiableCollection<V> keyValues = node.getContent();
-        V value = keyValues.get();
-        keyValues.remove(value);
-        if (keyValues.isEmpty()) {
-            sortedTree.remove(key);
-        }
-        keys.remove(key);
-        values.remove(value);
-        size--;
-        cachedArrayDirty = true;
-        return value;
+        return removeAValueFromNode(node).value();
     }
 
     @Override
@@ -327,18 +317,25 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
             ModifiableCollection<V> keyValues = node.getContent();
             V value = e.value();
             if (keyValues.contains(value)) {
-                keyValues.remove(value);
-                if (keyValues.isEmpty()) {
-                    sortedTree.remove(key);
-                }
-                keys.remove(key);
-                values.remove(value);
-                size--;
-                cachedArrayDirty = true;
+                removeValueForKey(key, keyValues, value);
                 result = true;
             }
         }
         return result;
+    }
+
+    /**
+     * Removes a value for the given node.
+     *
+     * @param node The node from which a value should be removed.
+     * @return The entry that was removed.
+     */
+    private Entry<K, V> removeAValueFromNode(final TreeNode<K, ModifiableCollection<V>> node) {
+        K key = node.getKey();
+        ModifiableCollection<V> keyValues = node.getContent();
+        V value = keyValues.get();
+        removeValueForKey(key, keyValues, value);
+        return new Entry<K, V>(key, value);
     }
 
     @Override
@@ -346,7 +343,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot remove an entry from an empty map.");
         } else {
-            return null;
+            return removeAValueFromNode(sortedTree.getGreatest());
         }
     }
 
@@ -369,14 +366,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
                 ModifiableCollection<V> keyValues = node.getContent();
                 V value = e.value();
                 if (keyValues.contains(value)) {
-                    keyValues.remove(value);
-                    if (keyValues.isEmpty()) {
-                        sortedTree.remove(key);
-                    }
-                    keys.remove(key);
-                    values.remove(value);
-                    size--;
-                    cachedArrayDirty = true;
+                    removeValueForKey(key, keyValues, value);
                 }
             }
         }
@@ -388,8 +378,26 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot remove an entry from an empty map.");
         } else {
-            return null;
+            return removeAValueFromNode(sortedTree.getLeast());
         }
+    }
+
+    /**
+     * Removes the given value for the given key. It's assumed that there is a value for this key in the map.
+     *
+     * @param key       The key.
+     * @param keyValues The values for the key.
+     * @param value     The value.
+     */
+    private void removeValueForKey(final K key, final ModifiableCollection<V> keyValues, final V value) {
+        keyValues.remove(value);
+        if (keyValues.isEmpty()) {
+            sortedTree.remove(key);
+        }
+        keys.remove(key);
+        values.remove(value);
+        size--;
+        cachedArrayDirty = true;
     }
 
     @Override
@@ -414,14 +422,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
                 ModifiableCollection<V> keyValues = node.getContent();
                 V value = e.value();
                 if (keyValues.contains(value)) {
-                    keyValues.remove(value);
-                    if (keyValues.isEmpty()) {
-                        sortedTree.remove(key);
-                    }
-                    keys.remove(key);
-                    values.remove(value);
-                    size--;
-                    cachedArrayDirty = true;
+                    removeValueForKey(key, keyValues, value);
                 }
             }
         }

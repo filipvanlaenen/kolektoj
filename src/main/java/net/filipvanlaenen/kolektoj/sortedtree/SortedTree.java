@@ -213,35 +213,6 @@ class SortedTree<K, C> {
         return (TreeNode<K, C>[]) Array.newInstance(getNodeElementType(foo), length);
     }
 
-    private TreeNode<K, C> deleteNodeAndUpdateSize(final K element, final TreeNode<K, C> node) {
-        if (node == null) {
-            return null;
-        } else if (comparator.compare(element, node.getKey()) < 0) {
-            node.setLeftChild(deleteNodeAndUpdateSize(element, node.getLeftChild()));
-            updateNodeHeight(node);
-            return rebalanceNode(node);
-        } else if (comparator.compare(element, node.getKey()) > 0) {
-            node.setRightChild(deleteNodeAndUpdateSize(element, node.getRightChild()));
-            updateNodeHeight(node);
-            return rebalanceNode(node);
-        } else if (node.getLeftChild() == null && node.getRightChild() == null) {
-            size--;
-            return null;
-        } else if (node.getLeftChild() == null) {
-            size--;
-            return node.getRightChild();
-        } else if (node.getRightChild() == null) {
-            size--;
-            return node.getLeftChild();
-        } else {
-            TreeNode<K, C> inOrderSuccessor = node.getRightChild().getLeftmostChild();
-            node.setKey(inOrderSuccessor.getKey());
-            node.setRightChild(deleteNodeAndUpdateSize(inOrderSuccessor.getKey(), node.getRightChild()));
-            updateNodeHeight(node);
-            return rebalanceNode(node);
-        }
-    }
-
     private boolean findAndMarkMatch(final TreeNode<K, C> node, final boolean[] matched, final int index, final K key) {
         if (node == null) {
             return false;
@@ -483,7 +454,7 @@ class SortedTree<K, C> {
             return false;
         }
         int originalSize = size;
-        root = deleteNodeAndUpdateSize(key, root);
+        root = removeKey(root, key);
         if (root != null) {
             updateNodeHeight(root);
             root = rebalanceNode(root);
@@ -506,6 +477,44 @@ class SortedTree<K, C> {
             remove(removeArray[i].getKey());
         }
         return removeArraySize > 0;
+    }
+
+    /**
+     * Deletes a node with the given key within the subtree defined by the given node, rebalances the subtree and
+     * updates its size, and returns the new root node for the subtree.
+     *
+     * @param node The node defining the subtree.
+     * @param key  The key for which the node should be deleted.
+     *
+     * @return The new root node for the subtree.
+     */
+    private TreeNode<K, C> removeKey(final TreeNode<K, C> node, final K key) {
+        if (node == null) {
+            return null;
+        } else if (comparator.compare(key, node.getKey()) < 0) {
+            node.setLeftChild(removeKey(node.getLeftChild(), key));
+            updateNodeHeight(node);
+            return rebalanceNode(node);
+        } else if (comparator.compare(key, node.getKey()) > 0) {
+            node.setRightChild(removeKey(node.getRightChild(), key));
+            updateNodeHeight(node);
+            return rebalanceNode(node);
+        } else if (node.getLeftChild() == null && node.getRightChild() == null) {
+            size--;
+            return null;
+        } else if (node.getLeftChild() == null) {
+            size--;
+            return node.getRightChild();
+        } else if (node.getRightChild() == null) {
+            size--;
+            return node.getLeftChild();
+        } else {
+            TreeNode<K, C> inOrderSuccessor = node.getRightChild().getLeftmostChild();
+            node.setKey(inOrderSuccessor.getKey());
+            node.setRightChild(removeKey(node.getRightChild(), inOrderSuccessor.getKey()));
+            updateNodeHeight(node);
+            return rebalanceNode(node);
+        }
     }
 
     /**
