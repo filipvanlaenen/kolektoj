@@ -168,7 +168,11 @@ public interface OrderedCollection<E> extends Collection<E> {
      * @throws IndexOutOfBoundsException Thrown if the collection is empty.
      */
     default E getFirst() throws IndexOutOfBoundsException {
-        return getAt(0);
+        if (size() == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        } else {
+            return getAt(0);
+        }
     }
 
     /**
@@ -178,6 +182,10 @@ public interface OrderedCollection<E> extends Collection<E> {
      * @throws IndexOutOfBoundsException Thrown if the collection is empty.
      */
     default E getLast() throws IndexOutOfBoundsException {
-        return getAt(size() - 1);
+        if (size() == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        } else {
+            return getAt(size() - 1);
+        }
     }
 }

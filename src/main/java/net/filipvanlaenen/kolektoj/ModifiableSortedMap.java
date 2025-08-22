@@ -216,4 +216,20 @@ public interface ModifiableSortedMap<K, V>
     static <L, W> ModifiableSortedMap<L, W> of(final SortedMap<L, ? extends W> map) {
         return new ModifiableSortedTreeMap<L, W>(map.getComparator(), map);
     }
+
+    /**
+     * Removes the entry with the greatest key in the map.
+     *
+     * @return The entry that was removed.
+     * @throws IndexOutOfBoundsException Thrown if the map is empty.
+     */
+    Entry<K, V> removeGreatest();
+
+    /**
+     * Removes the entry with the least key in the map.
+     *
+     * @return The entry that was removed.
+     * @throws IndexOutOfBoundsException Thrown if the map is empty.
+     */
+    Entry<K, V> removeLeast();
 }

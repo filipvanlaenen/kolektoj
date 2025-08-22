@@ -84,19 +84,27 @@ public interface ModifiableSortedCollection<E> extends ModifiableCollection<E>, 
      * Removes the greatest element of this collection.
      *
      * @return The element that was removed.
-     * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
+     * @throws IndexOutOfBoundsException Thrown if the collection is empty.
      */
     default E removeGreatest() throws IndexOutOfBoundsException {
-        return removeAt(size() - 1);
+        if (size() == 0) {
+            throw new IndexOutOfBoundsException("Cannot remove an element from an empty collection.");
+        } else {
+            return removeAt(size() - 1);
+        }
     }
 
     /**
      * Removes the least element of this collection.
      *
      * @return The element that was removed.
-     * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
+     * @throws IndexOutOfBoundsException Thrown if the collection is empty.
      */
     default E removeLeast() throws IndexOutOfBoundsException {
-        return removeAt(0);
+        if (size() == 0) {
+            throw new IndexOutOfBoundsException("Cannot remove an element from an empty collection.");
+        } else {
+            return removeAt(0);
+        }
     }
 }

@@ -342,6 +342,15 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     }
 
     @Override
+    public Entry<K, V> removeGreatest() {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public boolean removeIf(final Predicate<Entry<? extends K, ? extends V>> predicate) {
         boolean result = false;
         boolean[] remove = new boolean[size];
@@ -372,6 +381,15 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
             }
         }
         return result;
+    }
+
+    @Override
+    public Entry<K, V> removeLeast() {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        } else {
+            return null;
+        }
     }
 
     @Override
