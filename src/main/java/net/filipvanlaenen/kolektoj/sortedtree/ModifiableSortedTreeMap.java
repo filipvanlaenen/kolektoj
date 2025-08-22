@@ -184,6 +184,9 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     @Override
     public void clear() {
         sortedTree.clear();
+        keys.clear();
+        values.clear();
+        size = 0;
         cachedArrayDirty = cachedArray.length != 0;
     }
 

@@ -365,6 +365,17 @@ public final class ModifiableHashMapTest
     }
 
     /**
+     * Verifies that clearing a map empties caches.
+     */
+    @Test
+    public void clearShouldSetCachesToBeEmpty() {
+        ModifiableMap<Integer, String> map = createNewMap();
+        map.clear();
+        assertEquals(0, map.toArray().length);
+        assertFalse(map.contains(ENTRY1));
+    }
+
+    /**
      * Verifies that keys are removed from the map when it's cleared.
      */
     @Test
