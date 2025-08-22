@@ -344,7 +344,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     @Override
     public Entry<K, V> removeGreatest() {
         if (size == 0) {
-            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+            throw new IndexOutOfBoundsException("Cannot remove an entry from an empty map.");
         } else {
             return null;
         }
@@ -386,7 +386,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     @Override
     public Entry<K, V> removeLeast() {
         if (size == 0) {
-            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+            throw new IndexOutOfBoundsException("Cannot remove an entry from an empty map.");
         } else {
             return null;
         }
