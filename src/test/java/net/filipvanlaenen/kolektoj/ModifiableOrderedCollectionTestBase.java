@@ -336,6 +336,37 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that putting an element at the start is done correctly.
+     */
+    @Test
+    public void putAtAtTheStartShouldBeDoneCorrectly() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE, FOUR);
+        assertEquals(1, collection.putAt(0, FIVE));
+        assertArrayEquals(new Integer[] {FIVE, 2, THREE, FOUR}, collection.toArray());
+    }
+
+    /**
+     * Verifies that putting an element at the end is done correctly.
+     */
+    @Test
+    public void putAtAtTheEndShouldBeDoneCorrectly() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE, FOUR);
+        assertEquals(FOUR, collection.putAt(THREE, FIVE));
+        assertEquals(FIVE, collection.getLast());
+    }
+
+    /**
+     * Verifies that putting an element at the end is done correctly.
+     */
+    @Test
+    public void putAtAtTheEndOfSingletonShouldBeDoneCorrectly() {
+        T collection = createModifiableOrderedCollection(1);
+        assertEquals(1, collection.putAt(0, 2));
+        collection.addAt(0, THREE);
+        assertEquals(2, collection.getLast());
+    }
+
+    /**
      * Verifies that putting an element in the middle is done correctly.
      */
     @Test
@@ -347,12 +378,33 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
-     * Verifies that putting the same element in the middle is doesn't throw an exception for a distinct collection.
+     * Verifies that putting an element at the start is done correctly.
+     */
+    @Test
+    public void putAtOfDuplicateAtTheStartShouldBeDoneCorrectly() {
+        T collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1, 2, THREE, FOUR);
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> collection.putAt(0, THREE));
+        assertEquals("Cannot put a duplicate element at the position due to the cardinality constraint.",
+                exception.getMessage());
+    }
+
+    /**
+     * Verifies that putting the same element in the middle doesn't throw an exception for a distinct collection.
      */
     @Test
     public void putAtInTheMiddleOfDistinceCollectionShouldBeDoneCorrectly() {
         T collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1, 2, THREE, FOUR);
         assertEquals(THREE, collection.putAt(2, THREE));
+    }
+
+    /**
+     * Verifies that putting the same element at the start doesn't throw an exception for a distinct collection.
+     */
+    @Test
+    public void putAtAtTheStartOfDistinceCollectionShouldBeDoneCorrectly() {
+        T collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1, 2, THREE, FOUR);
+        assertEquals(1, collection.putAt(0, 1));
     }
 
     /**
