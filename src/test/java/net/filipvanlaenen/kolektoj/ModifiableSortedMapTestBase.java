@@ -2,10 +2,7 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +40,16 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
     @Test
     public void addOnAnEmptyMapShouldReturnTrue() {
         assertTrue(createMap().add(1, "one"));
+    }
+
+    /**
+     * Verifies that adding an element to an empty map increases the size to one.
+     */
+    @Test
+    public void addOnAnEmptyMapShouldIncreaseSize() {
+        T map = createMap();
+        map.add(1, "one");
+        assertEquals(1, map.size());
     }
 
     /**
