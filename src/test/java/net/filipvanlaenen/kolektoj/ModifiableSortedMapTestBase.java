@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
+import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.ModifiableSortedMap} interface.
@@ -31,6 +32,14 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
      */
     private T createMap123() {
         return createMap(ENTRY1, ENTRY2, ENTRY3);
+    }
+
+    /**
+     * Verifies that adding an element to an empty map returns true.
+     */
+    @Test
+    public void addOnAnEmptyMapShouldReturnTrue() {
+        assertTrue(createMap().add(1, "one"));
     }
 
     /**
