@@ -270,6 +270,52 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
     }
 
     @Override
+    public E putAt(final int index, final E element) throws IllegalArgumentException, IndexOutOfBoundsException {
+        if (index > size) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot put an element at a position beyond the size of the collection.");
+        } else {
+            if (index == 0) {
+                E original = head.getElement();
+                if (Objects.equals(original, element)) {
+                    return element;
+                }
+                if (elementCardinality == DISTINCT_ELEMENTS && contains(element)) {
+                    throw new IllegalArgumentException(
+                            "Cannot put a duplicate element at the position due to the cardinality constraint.");
+                }
+                head = new ListNode<E>(element, head.getNext());
+                if (size == 1) {
+                    tail = head;
+                }
+                cachedArrayDirty = true;
+                return original;
+            } else {
+                ListNode<E> previous = head;
+                for (int i = 0; i < index - 1; i++) {
+                    previous = previous.getNext();
+                }
+                ListNode<E> current = previous.getNext();
+                E original = current.getElement();
+                if (Objects.equals(original, element)) {
+                    return element;
+                }
+                if (elementCardinality == DISTINCT_ELEMENTS && contains(element)) {
+                    throw new IllegalArgumentException(
+                            "Cannot put a duplicate element at the position due to the cardinality constraint.");
+                }
+                ListNode<E> newNode = new ListNode<E>(element, current.getNext());
+                previous.setNext(newNode);
+                if (tail == current) {
+                    tail = newNode;
+                }
+                cachedArrayDirty = true;
+                return original;
+            }
+        }
+    }
+
+    @Override
     public boolean remove(final E element) {
         if (head == null) {
             return false;

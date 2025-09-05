@@ -315,6 +315,38 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that trying to put an element at an index beyond the size of the collection throws
+     * IndexOutOfBoundsException.
+     */
+    @Test
+    public void putAtShouldThrowExceptionWhenCalledBeyondCollectionSize() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> collection123.putAt(SIX, 0));
+        assertEquals("Cannot put an element at a position beyond the size of the collection.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that putting an element in the middle is done correctly.
+     */
+    @Test
+    public void putAtInTheMiddleShouldBeDoneCorrectly() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE, FOUR);
+        collection.putAt(2, FIVE);
+        assertArrayEquals(new Integer[] {1, 2, FIVE, FOUR}, collection.toArray());
+    }
+
+    /**
+     * Verifies that putting an element in the middle is done correctly.
+     */
+    @Test
+    public void putAtOfDuplicateInTheMiddleShouldBeDoneCorrectly() {
+        T collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1, 2, THREE, FOUR);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> collection.putAt(2, 1));
+        assertEquals("Cannot put a duplicate element at the position due to the cardinality constraint.",
+                exception.getMessage());
+    }
+
+    /**
      * Verifies that trying to remove an element in the middle of the collection returns true.
      */
     @Test

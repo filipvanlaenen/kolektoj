@@ -118,6 +118,18 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
     }
 
     /**
+     * Puts an element in this collection at a given position and returns the original value.
+     *
+     * @param index   The position that should be overwritten.
+     * @param element The element to be put at the given position in the collection.
+     * @return The original value that has been overwritten.
+     * @throws IllegalArgumentException  Thrown if putting the element at the given position would result into
+     *                                   duplicates when they're not allowed.
+     * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
+     */
+    E putAt(int index, E element) throws IllegalArgumentException, IndexOutOfBoundsException;
+
+    /**
      * Removes an element from this collection at a given position.
      *
      * @param index The position of the element that should be removed.

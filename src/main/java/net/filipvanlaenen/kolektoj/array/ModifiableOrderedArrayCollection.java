@@ -223,6 +223,25 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     }
 
     @Override
+    public E putAt(final int index, final E element) throws IllegalArgumentException, IndexOutOfBoundsException {
+        if (index > elements.length) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot put an element at a position beyond the size of the collection.");
+        } else {
+            E original = (E) elements[index];
+            if (Objects.equals(original, element)) {
+                return element;
+            }
+            if (elementCardinality == DISTINCT_ELEMENTS && contains(element)) {
+                throw new IllegalArgumentException(
+                        "Cannot put a duplicate element at the position due to the cardinality constraint.");
+            }
+            elements[index] = element;
+            return original;
+        }
+    }
+
+    @Override
     public boolean remove(final E element) {
         for (int i = 0; i < size; i++) {
             if (elements[i].equals(element)) {
