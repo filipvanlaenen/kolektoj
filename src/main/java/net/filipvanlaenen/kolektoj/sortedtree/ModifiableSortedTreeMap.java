@@ -161,6 +161,9 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
                                     : DISTINCT_ELEMENTS,
                             value));
         } else {
+            if (keyAndValueCardinality == DISTINCT_KEYS) {
+                return false;
+            }
             changed = node.getContent().add(value);
         }
         if (changed) {

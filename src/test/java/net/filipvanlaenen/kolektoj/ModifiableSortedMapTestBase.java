@@ -1,12 +1,15 @@
 package net.filipvanlaenen.kolektoj;
 
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
-import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.ModifiableSortedMap} interface.
@@ -40,6 +43,35 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
     @Test
     public void addOnAnEmptyMapShouldReturnTrue() {
         assertTrue(createMap().add(1, "one"));
+    }
+
+    /**
+     * Verifies that adding an entry with an already present key to a map with distinct keys returns false.
+     */
+    @Test
+    public void addWithDuplicateKeyOnMapWithDistinctKeysShouldReturnFalse() {
+        T map = createMap(DISTINCT_KEYS, ENTRY1);
+        assertFalse(map.add(1, null));
+    }
+
+    /**
+     * Verifies that adding an entry with an already present key and value to a map with duplicate keys with distinct
+     * values returns false.
+     */
+    @Test
+    public void addWithDuplicateKeyAndValueOnMapWithDuplicateKeysAndDistinctValuesShouldReturnFalse() {
+        T map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1);
+        assertFalse(map.add(1, "one"));
+    }
+
+    /**
+     * Verifies that adding with a duplicate key stored the hashed value correctly.
+     */
+    @Test
+    public void addWithDuplicateKeyShouldStoreTheEntryCorrectly() {
+        T map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
+        map.add(1, "bis");
+        assertEquals(2, map.getAll(1).size());
     }
 
     /**
