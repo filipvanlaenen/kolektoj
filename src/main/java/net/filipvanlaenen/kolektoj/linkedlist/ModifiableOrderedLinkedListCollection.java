@@ -271,7 +271,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
 
     @Override
     public E putAt(final int index, final E element) throws IllegalArgumentException, IndexOutOfBoundsException {
-        if (index > size) {
+        if (index >= size) {
             throw new IndexOutOfBoundsException(
                     "Cannot put an element at a position beyond the size of the collection.");
         } else {

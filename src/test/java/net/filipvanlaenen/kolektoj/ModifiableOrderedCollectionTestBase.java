@@ -321,7 +321,7 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     @Test
     public void putAtShouldThrowExceptionWhenCalledBeyondCollectionSize() {
         IndexOutOfBoundsException exception =
-                assertThrows(IndexOutOfBoundsException.class, () -> collection123.putAt(SIX, 0));
+                assertThrows(IndexOutOfBoundsException.class, () -> collection123.putAt(THREE, 0));
         assertEquals("Cannot put an element at a position beyond the size of the collection.", exception.getMessage());
     }
 
@@ -331,7 +331,7 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     @Test
     public void putAtInTheMiddleShouldBeDoneCorrectly() {
         T collection = createModifiableOrderedCollection(1, 2, THREE, FOUR);
-        collection.putAt(2, FIVE);
+        assertEquals(THREE, collection.putAt(2, FIVE));
         assertArrayEquals(new Integer[] {1, 2, FIVE, FOUR}, collection.toArray());
     }
 
@@ -344,6 +344,15 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> collection.putAt(2, 1));
         assertEquals("Cannot put a duplicate element at the position due to the cardinality constraint.",
                 exception.getMessage());
+    }
+
+    /**
+     * Verifies that putting the same element in the middle is doesn't throw an exception for a distinct collection.
+     */
+    @Test
+    public void putAtInTheMiddleOfDistinceCollectionShouldBeDoneCorrectly() {
+        T collection = createModifiableOrderedCollection(DISTINCT_ELEMENTS, 1, 2, THREE, FOUR);
+        assertEquals(THREE, collection.putAt(2, THREE));
     }
 
     /**

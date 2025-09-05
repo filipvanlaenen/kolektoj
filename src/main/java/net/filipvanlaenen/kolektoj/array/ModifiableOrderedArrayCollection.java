@@ -224,7 +224,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public E putAt(final int index, final E element) throws IllegalArgumentException, IndexOutOfBoundsException {
-        if (index > elements.length) {
+        if (index >= elements.length) {
             throw new IndexOutOfBoundsException(
                     "Cannot put an element at a position beyond the size of the collection.");
         } else {
