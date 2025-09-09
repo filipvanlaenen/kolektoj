@@ -19,6 +19,14 @@ public class SortedTreeTest {
      */
     private static final int THREE = 3;
     /**
+     * The magic number thirteen.
+     */
+    private static final int THIRTEEN = 13;
+    /**
+     * The magic number fourteen.
+     */
+    private static final int FOURTEEN = 14;
+    /**
      * The magic number twenty.
      */
     private static final int TWENTY = 20;
@@ -323,6 +331,30 @@ public class SortedTreeTest {
     public void getNodeWithKeyShouldReturnNullForKeyAbsentInLargeTree() {
         assertNull(LARGE_TREE.getNode(0));
         assertNull(LARGE_TREE.getNode(HUNDRED));
+    }
+
+    /**
+     * Verifies that indexOf returns -1 for an element not in a small tree.
+     */
+    @Test
+    public void indexOfShouldReturnMinusOneForAnElementNotInTheTree() {
+        assertEquals(-1, SMALL_TREE.indexOf(0));
+    }
+
+    /**
+     * Verifies that indexOf returns the correct index for an element in a small tree.
+     */
+    @Test
+    public void indexOfShouldReturnIndexForAnElementInTheTree() {
+        assertEquals(1, SMALL_TREE.indexOf(2));
+    }
+
+    /**
+     * Verifies that indexOf returns the correct index for an element in a large tree.
+     */
+    @Test
+    public void indexOfShouldReturnIndexForAnElementInTheLargeTree() {
+        assertEquals(THIRTEEN, LARGE_TREE.indexOf(FOURTEEN));
     }
 
     /**
