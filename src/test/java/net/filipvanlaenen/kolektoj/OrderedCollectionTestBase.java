@@ -183,6 +183,38 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
     }
 
     /**
+     * Verifies that firstIndexOf returns -1 for an element not in the collection.
+     */
+    @Test
+    public void firstIndexOfShouldReturnMinusOneForAnElementNotInTheCollection() {
+        assertEquals(-1, collection123.firstIndexOf(0));
+    }
+
+    /**
+     * Verifies that firstIndexOf returns the correct index for an element in the collection.
+     */
+    @Test
+    public void firstIndexOfShouldReturnIndexForAnElementInTheCollection() {
+        assertEquals(1, collection123.firstIndexOf(2));
+    }
+
+    /**
+     * Verifies that firstIndexOf returns the first index for a duplicate element in the collection.
+     */
+    @Test
+    public void firstIndexOfShouldReturnFirstIndexForDuplicateElementInTheCollection() {
+        assertEquals(1, createOrderedCollection(DUPLICATE_ELEMENTS, 1, 2, 2, 2, 2, THREE).firstIndexOf(2));
+    }
+
+    /**
+     * Verifies that firstIndexOf returns the first index for a duplicate element at the beginning of the collection.
+     */
+    @Test
+    public void firstIndexOfShouldReturnFirstIndexForDuplicateElementAtTheBeginningOfTheCollection() {
+        assertEquals(0, createOrderedCollection(DUPLICATE_ELEMENTS, 1, 1, 1, 1, 2, THREE).firstIndexOf(1));
+    }
+
+    /**
      * Verifies that indexOf returns -1 for an element not in the collection.
      */
     @Test
