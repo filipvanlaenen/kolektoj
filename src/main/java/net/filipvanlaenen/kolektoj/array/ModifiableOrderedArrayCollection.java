@@ -238,6 +238,16 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     }
 
     @Override
+    public int lastIndexOf(final E element) {
+        for (int i = size - 1; i >= 0; i--) {
+            if (Objects.equals(elements[i], element)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
     public E putAt(final int index, final E element) throws IllegalArgumentException, IndexOutOfBoundsException {
         if (index >= elements.length) {
             throw new IndexOutOfBoundsException(

@@ -35,7 +35,11 @@ class SortedTree<K, C> {
         /**
          * Return the first index.
          */
-        FIRST
+        FIRST,
+        /**
+         * Return the last index.
+         */
+        LAST
     }
 
     /**
@@ -265,12 +269,11 @@ class SortedTree<K, C> {
     }
 
     /**
-     * Returns the index for the first occurrence of the key (or an equivalent one according to the comparator) in the
-     * sorted tree, or -1 if the sorted tree doesn't contain the key.
+     * Returns the index for the first occurrence of the key in the sorted tree, or -1 if the sorted tree doesn't
+     * contain the key.
      *
      * @param key The key for which the first index should be found.
-     * @return The index for the first occurrence of the key (or an equivalent one according to the comparator), or -1
-     *         if the sorted tree doesn't contain it.
+     * @return The index for the first occurrence of the key, or -1 if the sorted tree doesn't contain it.
      */
     int firstIndexOf(final K key) {
         return indexOf(key, root, 0, IndexPreference.FIRST);
@@ -413,15 +416,14 @@ class SortedTree<K, C> {
     }
 
     /**
-     * Returns the index for an occurrence of the key (or an equivalent one according to the comparator) in the sorted
-     * tree, searching in the subtree defined by the node, or -1 if the subtree doesn't contain the key.
+     * Returns the index for an occurrence of the key in the sorted tree, searching in the subtree defined by the node,
+     * or -1 if the subtree doesn't contain the key.
      *
      * @param key             The key for which an index should be found.
      * @param node            The node defining the subtree in which the key should be found.
      * @param sizeBefore      The size of the tree before the subtree defined by the node.
      * @param indexPreference The direction preference for the index.
-     * @return The index for an occurrence of the key (or an equivalent one according to the comparator), or -1 if the
-     *         sorted tree doesn't contain it.
+     * @return The index for an occurrence of the key, or -1 if the sorted tree doesn't contain it.
      */
     private int indexOf(final K key, final TreeNode<K, C> node, final int sizeBefore,
             final IndexPreference indexPreference) {
@@ -436,15 +438,24 @@ class SortedTree<K, C> {
         } else if (comparison > 0) {
             return indexOf(key, node.getRightChild(), sizeBefore + leftSize + 1, indexPreference);
         } else {
-            if (indexPreference == IndexPreference.FIRST) {
-                int lowerIndex = indexOf(key, leftChild, sizeBefore, indexPreference);
-                if (lowerIndex == -1) {
+            if (indexPreference == IndexPreference.LAST) {
+                int upperIndex = indexOf(key, node.getRightChild(), sizeBefore + leftSize + 1, indexPreference);
+                if (upperIndex != -1) {
+                    return upperIndex;
+                } else if (Objects.equals(key, node.getKey())) {
                     return sizeBefore + leftSize;
                 } else {
-                    return lowerIndex;
+                    return indexOf(key, leftChild, sizeBefore, indexPreference);
                 }
             } else {
-                return sizeBefore + leftSize;
+                int lowerIndex = indexOf(key, leftChild, sizeBefore, indexPreference);
+                if (lowerIndex != -1) {
+                    return lowerIndex;
+                } else if (Objects.equals(key, node.getKey())) {
+                    return sizeBefore + leftSize;
+                } else {
+                    return indexOf(key, node.getRightChild(), sizeBefore + leftSize + 1, indexPreference);
+                }
             }
         }
     }
@@ -477,6 +488,17 @@ class SortedTree<K, C> {
             updateNodeHeight(node);
             return rebalanceNode(node);
         }
+    }
+
+    /**
+     * Returns the index for the last occurrence of the key in the sorted tree, or -1 if the sorted tree doesn't contain
+     * the key.
+     *
+     * @param key The key for which the last index should be found.
+     * @return The index for the last occurrence of the key, or -1 if the sorted tree doesn't contain it.
+     */
+    int lastIndexOf(final K key) {
+        return indexOf(key, root, 0, IndexPreference.LAST);
     }
 
     private int markForRemoval(final TreeNode<K, C>[] deleteArray, final int index, final TreeNode<K, C> node,

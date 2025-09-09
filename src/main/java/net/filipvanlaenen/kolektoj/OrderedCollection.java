@@ -206,4 +206,13 @@ public interface OrderedCollection<E> extends Collection<E> {
      * @return The index of an occurrence of the element, or -1 is the collection doesn't contain it.
      */
     int indexOf(E element);
+
+    /**
+     * Returns the index of the last occurrence of the specified element, or -1 if this collection does not contain the
+     * element.
+     *
+     * @param element The element for which the last index should be returned.
+     * @return The index of the last occurrence of the element, or -1 is the collection doesn't contain it.
+     */
+    int lastIndexOf(E element);
 }

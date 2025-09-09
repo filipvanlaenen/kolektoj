@@ -5,6 +5,7 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICAT
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
@@ -93,7 +94,16 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
             while (i > 0 && comparator.compare(element, (E) elements[i - 1]) == 0) {
                 i--;
             }
-            return i;
+            if (Objects.equals(element, elements[i])) {
+                return i;
+            }
+            while (i < elements.length - 1 && comparator.compare(element, (E) elements[i + 1]) == 0) {
+                if (Objects.equals(element, elements[i])) {
+                    return i;
+                }
+                i++;
+            }
+            return -1;
         }
     }
 
@@ -134,6 +144,28 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
     @Override
     public Iterator<E> iterator() {
         return new ArrayIterator<E>(elements);
+    }
+
+    @Override
+    public int lastIndexOf(final E element) {
+        int i = ArrayUtilities.findIndex(elements, elements.length, element, comparator);
+        if (i == -1) {
+            return -1;
+        } else {
+            while (i < elements.length - 1 && comparator.compare(element, (E) elements[i + 1]) == 0) {
+                i++;
+            }
+            if (Objects.equals(element, elements[i])) {
+                return i;
+            }
+            while (i > 0 && comparator.compare(element, (E) elements[i - 1]) == 0) {
+                if (Objects.equals(element, elements[i])) {
+                    return i;
+                }
+                i--;
+            }
+            return -1;
+        }
     }
 
     @Override

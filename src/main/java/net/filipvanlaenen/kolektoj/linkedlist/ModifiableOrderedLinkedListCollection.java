@@ -289,6 +289,21 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
     }
 
     @Override
+    public int lastIndexOf(final E element) {
+        ListNode<E> current = head;
+        int i = 0;
+        int result = -1;
+        while (current != null) {
+            if (Objects.equals(current.getElement(), element)) {
+                result = i;
+            }
+            current = current.getNext();
+            i++;
+        }
+        return result;
+    }
+
+    @Override
     public E putAt(final int index, final E element) throws IllegalArgumentException, IndexOutOfBoundsException {
         if (index >= size) {
             throw new IndexOutOfBoundsException(

@@ -116,6 +116,16 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
     }
 
     @Override
+    public int lastIndexOf(final E element) {
+        for (int i = elements.length - 1; i >= 0; i--) {
+            if (Objects.equals(elements[i], element)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
     public int size() {
         return elements.length;
     }

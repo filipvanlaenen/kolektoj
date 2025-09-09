@@ -143,6 +143,11 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
     }
 
     @Override
+    public int lastIndexOf(final E element) {
+        return sortedTree.lastIndexOf(element);
+    }
+
+    @Override
     public int size() {
         return size;
     }

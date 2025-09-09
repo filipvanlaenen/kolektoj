@@ -162,6 +162,11 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     }
 
     @Override
+    public int lastIndexOf(final E element) {
+        return sortedTree.lastIndexOf(element);
+    }
+
+    @Override
     public boolean remove(final E element) {
         boolean changed = sortedTree.remove(element);
         cachedArrayDirty = cachedArrayDirty || changed;

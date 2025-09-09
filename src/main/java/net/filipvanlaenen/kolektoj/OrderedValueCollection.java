@@ -147,6 +147,11 @@ public final class OrderedValueCollection<E> implements OrderedCollection<E> {
     }
 
     @Override
+    public int lastIndexOf(final E element) {
+        return collection.lastIndexOf(element);
+    }
+
+    @Override
     public int size() {
         return collection.size();
     }
