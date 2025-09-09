@@ -9,6 +9,7 @@ import java.util.Objects;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.SortedTree} class.
@@ -224,6 +225,42 @@ public class SortedTreeTest {
     public void containsKeyShouldReturnFalseForKeysAbsentInLargeTree() {
         assertFalse(LARGE_TREE.containsKey(0));
         assertFalse(LARGE_TREE.containsKey(HUNDRED));
+    }
+
+    /**
+     * Verifies that firstIndexOf returns the correct index for an element in a small tree.
+     */
+    @Test
+    public void firstIndexOfShouldReturnIndexForAnElementInTheTree() {
+        assertEquals(1, SMALL_TREE.firstIndexOf(2));
+    }
+
+    /**
+     * Verifies that firstIndexOf returns the correct index for a duplicate element in a tree.
+     */
+    @Test
+    public void firstIndexOfShouldReturnFirstIndexForADuplicateElementInTheTree() {
+        SortedTree<Integer, String> sortedTree =
+                new SortedTree<Integer, String>(COMPARATOR, ElementCardinality.DUPLICATE_ELEMENTS);
+        sortedTree.add(1, Integer.toString(1));
+        for (int i = 0; i < THREE; i++) {
+            sortedTree.add(2, Integer.toString(2));
+        }
+        assertEquals(1, sortedTree.firstIndexOf(2));
+    }
+
+    /**
+     * Verifies that firstIndexOf returns the correct index for a duplicate element in a large tree.
+     */
+    @Test
+    public void firstIndexOfShouldReturnFirstIndexForADuplicateElementInALargeTree() {
+        SortedTree<Integer, String> sortedTree =
+                new SortedTree<Integer, String>(COMPARATOR, ElementCardinality.DUPLICATE_ELEMENTS);
+        sortedTree.add(1, Integer.toString(1));
+        for (int i = 0; i < TWENTY; i++) {
+            sortedTree.add(2, Integer.toString(2));
+        }
+        assertEquals(1, sortedTree.firstIndexOf(2));
     }
 
     /**
