@@ -142,6 +142,22 @@ public final class ModifiableSortedTreeCollectionTest
     }
 
     /**
+     * Verifies that lastIndexOf returns -1 for an element not in the collection.
+     */
+    @Test
+    public void lastIndexOfShouldReturnMinusOneForAnElementNotInTheCollection() {
+        assertEquals(-1, createCollection513().lastIndexOf(0));
+    }
+
+    /**
+     * Verifies that lastIndexOf returns the correct index for an element in the collection.
+     */
+    @Test
+    public void lastIndexOfShouldReturnIndexForAnElementInTheCollection() {
+        assertEquals(1, createCollection513().lastIndexOf(THREE));
+    }
+
+    /**
      * Verifies that removing an element at an index occurs according to sorting.
      */
     @Test
