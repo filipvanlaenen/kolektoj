@@ -94,6 +94,22 @@ public final class ModifiableSortedTreeCollectionTest
     }
 
     /**
+     * Verifies that firstIndexOf returns -1 for an element not in the collection.
+     */
+    @Test
+    public void firstIndexOfShouldReturnMinusOneForAnElementNotInTheCollection() {
+        assertEquals(-1, createCollection513().firstIndexOf(0));
+    }
+
+    /**
+     * Verifies that firstIndexOf returns the correct index for an element in the collection.
+     */
+    @Test
+    public void firstIndexOfShouldReturnIndexForAnElementInTheCollection() {
+        assertEquals(1, createCollection513().firstIndexOf(THREE));
+    }
+
+    /**
      * Verifies that getting an element at an index occurs according to sorting.
      */
     @Test
