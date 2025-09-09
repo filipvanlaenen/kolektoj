@@ -243,6 +243,39 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
     }
 
     /**
+     * Verifies that lastIndexOf returns -1 for an element not in the collection.
+     */
+    @Test
+    public void lastIndexOfShouldReturnMinusOneForAnElementNotInTheCollection() {
+        assertEquals(-1, collection123.lastIndexOf(0));
+    }
+
+    /**
+     * Verifies that lastIndexOf returns the correct index for an element in the collection.
+     */
+    @Test
+    public void lastIndexOfShouldReturnIndexForAnElementInTheCollection() {
+        assertEquals(1, collection123.lastIndexOf(2));
+    }
+
+    /**
+     * Verifies that lastIndexOf returns the last index for a duplicate element in the collection.
+     */
+    @Test
+    public void lastIndexOfShouldReturnFirstIndexForDuplicateElementInTheCollection() {
+        assertEquals(4, createOrderedCollection(DUPLICATE_ELEMENTS, 1, 2, 2, 2, 2, THREE).lastIndexOf(2));
+    }
+
+    /**
+     * Verifies that lastIndexOf returns the last index for a duplicate element at the beginning of the collection.
+     */
+    @Test
+    public void lastIndexOfShouldReturnFirstIndexForDuplicateElementAtTheEndOfTheCollection() {
+        assertEquals(5,
+                createOrderedCollection(DUPLICATE_ELEMENTS, 1, 2, THREE, THREE, THREE, THREE).lastIndexOf(THREE));
+    }
+
+    /**
      * Verifies that the spliterator has the ordered flag set.
      */
     @Test
