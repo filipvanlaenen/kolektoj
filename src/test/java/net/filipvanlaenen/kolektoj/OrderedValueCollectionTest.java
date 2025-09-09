@@ -97,6 +97,22 @@ public class OrderedValueCollectionTest {
     }
 
     /**
+     * Verifies that firstIndexOf returns -1 for an element not in the collection.
+     */
+    @Test
+    public void firstIndexOfShouldReturnMinusOneForAnElementNotInTheCollection() {
+        assertEquals(-1, LARGE_ORDERED_VALUE_COLLECTION.firstIndexOf(0));
+    }
+
+    /**
+     * Verifies that firstIndexOf returns the correct index for an element in the collection.
+     */
+    @Test
+    public void firstIndexOfShouldReturnIndexForAnElementInTheCollection() {
+        assertEquals(1, LARGE_ORDERED_VALUE_COLLECTION.firstIndexOf(2));
+    }
+
+    /**
      * Verifies that indexOf returns -1 for an element not in the collection.
      */
     @Test
