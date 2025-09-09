@@ -97,6 +97,22 @@ public class OrderedValueCollectionTest {
     }
 
     /**
+     * Verifies that indexOf returns -1 for an element not in the collection.
+     */
+    @Test
+    public void indexOfShouldReturnMinusOneForAnElementNotInTheCollection() {
+        assertEquals(-1, LARGE_ORDERED_VALUE_COLLECTION.indexOf(0));
+    }
+
+    /**
+     * Verifies that indexOf returns the correct index for an element in the collection.
+     */
+    @Test
+    public void indexOfShouldReturnIndexForAnElementInTheCollection() {
+        assertEquals(1, LARGE_ORDERED_VALUE_COLLECTION.indexOf(2));
+    }
+
+    /**
      * Verifies that an empty ordered value collection is empty.
      */
     @Test
