@@ -315,6 +315,22 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     }
 
     /**
+     * Verifies that indexOf returns -1 for an element not in the collection.
+     */
+    @Test
+    public void indexOfShouldReturnMinusOneForAnElementNotInTheCollection() {
+        assertEquals(-1, collection123.indexOf(0));
+    }
+
+    /**
+     * Verifies that indexOf returns the correct index for an element in the collection.
+     */
+    @Test
+    public void indexOfShouldReturnIndexForAnElementInTheCollection() {
+        assertEquals(1, collection123.indexOf(2));
+    }
+
+    /**
      * Verifies that trying to put an element at an index beyond the size of the collection throws
      * IndexOutOfBoundsException.
      */
