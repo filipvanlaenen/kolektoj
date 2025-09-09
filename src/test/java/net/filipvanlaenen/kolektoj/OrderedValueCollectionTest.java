@@ -137,6 +137,22 @@ public class OrderedValueCollectionTest {
     }
 
     /**
+     * Verifies that lastIndexOf returns -1 for an element not in the collection.
+     */
+    @Test
+    public void larstIndexOfShouldReturnMinusOneForAnElementNotInTheCollection() {
+        assertEquals(-1, LARGE_ORDERED_VALUE_COLLECTION.lastIndexOf(0));
+    }
+
+    /**
+     * Verifies that lastIndexOf returns the correct index for an element in the collection.
+     */
+    @Test
+    public void larstIndexOfShouldReturnIndexForAnElementInTheCollection() {
+        assertEquals(1, LARGE_ORDERED_VALUE_COLLECTION.lastIndexOf(2));
+    }
+
+    /**
      * Verifies that an ordered value collection with a specific element cardinality receives that element cardinality.
      */
     @Test
