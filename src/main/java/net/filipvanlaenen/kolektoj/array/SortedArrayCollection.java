@@ -5,7 +5,6 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICAT
 
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
@@ -86,6 +85,19 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
     }
 
     @Override
+    public int firstIndexOf(final E element) {
+        int i = ArrayUtilities.findIndex(elements, elements.length, element, comparator);
+        if (i == -1) {
+            return -1;
+        } else {
+            while (i > 0 && comparator.compare(element, (E) elements[i - 1]) == 0) {
+                i--;
+            }
+            return i;
+        }
+    }
+
+    @Override
     public E get() throws IndexOutOfBoundsException {
         if (elements.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
@@ -116,12 +128,7 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
 
     @Override
     public int indexOf(final E element) {
-        for (int i = 0; i < elements.length; i++) {
-            if (Objects.equals(elements[i], element)) {
-                return i;
-            }
-        }
-        return -1;
+        return ArrayUtilities.findIndex(elements, elements.length, element, comparator);
     }
 
     @Override

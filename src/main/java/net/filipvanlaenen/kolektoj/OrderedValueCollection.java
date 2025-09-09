@@ -104,6 +104,11 @@ public final class OrderedValueCollection<E> implements OrderedCollection<E> {
     }
 
     @Override
+    public int firstIndexOf(final E element) {
+        return collection.firstIndexOf(element);
+    }
+
+    @Override
     public E get() throws IndexOutOfBoundsException {
         return collection.get();
     }

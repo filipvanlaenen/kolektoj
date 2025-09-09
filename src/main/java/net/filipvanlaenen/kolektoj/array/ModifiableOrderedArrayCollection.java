@@ -194,6 +194,16 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     }
 
     @Override
+    public int firstIndexOf(final E element) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(elements[i], element)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
     public E get() throws IndexOutOfBoundsException {
         if (elements.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
@@ -219,12 +229,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     @Override
     public int indexOf(final E element) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
-                return i;
-            }
-        }
-        return -1;
+        return firstIndexOf(element);
     }
 
     @Override

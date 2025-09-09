@@ -153,6 +153,15 @@ public interface OrderedCollection<E> extends Collection<E> {
     }
 
     /**
+     * Returns the index of the first occurrence of the specified element, or -1 if this collection does not contain the
+     * element.
+     *
+     * @param element The element for which the first index should be returned.
+     * @return The index of the first occurrence of the element, or -1 is the collection doesn't contain it.
+     */
+    int firstIndexOf(E element);
+
+    /**
      * Returns the element from the collection at the given position.
      *
      * @param index The position of the element that should be returned.

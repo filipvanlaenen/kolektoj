@@ -72,6 +72,16 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
     }
 
     @Override
+    public int firstIndexOf(final E element) {
+        for (int i = 0; i < elements.length; i++) {
+            if (Objects.equals(elements[i], element)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
     public E get() throws IndexOutOfBoundsException {
         if (elements.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
@@ -97,12 +107,7 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
 
     @Override
     public int indexOf(final E element) {
-        for (int i = 0; i < elements.length; i++) {
-            if (Objects.equals(elements[i], element)) {
-                return i;
-            }
-        }
-        return -1;
+        return firstIndexOf(element);
     }
 
     @Override

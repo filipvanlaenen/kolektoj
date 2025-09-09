@@ -25,6 +25,20 @@ import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
  */
 class SortedTree<K, C> {
     /**
+     * Enumeration describing the direction preference when trying to find an index.
+     */
+    private enum IndexPreference {
+        /**
+         * Return any index.
+         */
+        ANY,
+        /**
+         * Return the first index.
+         */
+        FIRST
+    }
+
+    /**
      * The key comparator to sort the nodes of the tree.
      */
     private final Comparator<? super K> comparator;
@@ -251,6 +265,18 @@ class SortedTree<K, C> {
     }
 
     /**
+     * Returns the index for the first occurrence of the key (or an equivalent one according to the comparator) in the
+     * sorted tree, or -1 if the sorted tree doesn't contain the key.
+     *
+     * @param key The key for which the first index should be found.
+     * @return The index for the first occurrence of the key (or an equivalent one according to the comparator), or -1
+     *         if the sorted tree doesn't contain it.
+     */
+    int firstIndexOf(final K key) {
+        return indexOf(key, root, 0, IndexPreference.FIRST);
+    }
+
+    /**
      * Returns this tree's node at a given index.
      *
      * @param index The index.
@@ -383,20 +409,22 @@ class SortedTree<K, C> {
      *         sorted tree doesn't contain it.
      */
     int indexOf(final K key) {
-        return indexOf(key, root, 0);
+        return indexOf(key, root, 0, IndexPreference.ANY);
     }
 
     /**
      * Returns the index for an occurrence of the key (or an equivalent one according to the comparator) in the sorted
      * tree, searching in the subtree defined by the node, or -1 if the subtree doesn't contain the key.
      *
-     * @param key        The key for which an index should be found.
-     * @param node       The node defining the subtree in which the key should be found.
-     * @param sizeBefore The size of the tree before the subtree defined by the node.
+     * @param key             The key for which an index should be found.
+     * @param node            The node defining the subtree in which the key should be found.
+     * @param sizeBefore      The size of the tree before the subtree defined by the node.
+     * @param indexPreference The direction preference for the index.
      * @return The index for an occurrence of the key (or an equivalent one according to the comparator), or -1 if the
      *         sorted tree doesn't contain it.
      */
-    private int indexOf(final K key, final TreeNode<K, C> node, final int sizeBefore) {
+    private int indexOf(final K key, final TreeNode<K, C> node, final int sizeBefore,
+            final IndexPreference indexPreference) {
         if (node == null) {
             return -1;
         }
@@ -404,11 +432,20 @@ class SortedTree<K, C> {
         TreeNode<K, C> leftChild = node.getLeftChild();
         int leftSize = leftChild == null ? 0 : leftChild.getSize();
         if (comparison < 0) {
-            return indexOf(key, leftChild, sizeBefore);
+            return indexOf(key, leftChild, sizeBefore, indexPreference);
         } else if (comparison > 0) {
-            return indexOf(key, node.getRightChild(), sizeBefore + leftSize + 1);
+            return indexOf(key, node.getRightChild(), sizeBefore + leftSize + 1, indexPreference);
         } else {
-            return sizeBefore + leftSize;
+            if (indexPreference == IndexPreference.FIRST) {
+                int lowerIndex = indexOf(key, leftChild, sizeBefore, indexPreference);
+                if (lowerIndex == -1) {
+                    return sizeBefore + leftSize;
+                } else {
+                    return lowerIndex;
+                }
+            } else {
+                return sizeBefore + leftSize;
+            }
         }
     }
 

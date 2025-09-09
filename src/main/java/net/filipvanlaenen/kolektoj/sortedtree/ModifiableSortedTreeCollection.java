@@ -123,6 +123,11 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     }
 
     @Override
+    public int firstIndexOf(final E element) {
+        return sortedTree.firstIndexOf(element);
+    }
+
+    @Override
     public E get() throws IndexOutOfBoundsException {
         if (size() == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
