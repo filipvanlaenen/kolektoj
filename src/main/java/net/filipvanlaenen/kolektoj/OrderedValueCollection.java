@@ -132,6 +132,11 @@ public final class OrderedValueCollection<E> implements OrderedCollection<E> {
     }
 
     @Override
+    public int indexOf(final E element) {
+        return collection.indexOf(element);
+    }
+
+    @Override
     public Iterator<E> iterator() {
         return collection.iterator();
     }

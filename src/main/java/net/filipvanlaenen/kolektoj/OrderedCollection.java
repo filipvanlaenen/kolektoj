@@ -188,4 +188,13 @@ public interface OrderedCollection<E> extends Collection<E> {
             return getAt(size() - 1);
         }
     }
+
+    /**
+     * Returns the index of an occurrence of the specified element, or -1 if this collection does not contain the
+     * element.
+     *
+     * @param element The element for which an index should be returned.
+     * @return The index of an occurrence of the element, or -1 is the collection doesn't contain it.
+     */
+    int indexOf(E element);
 }

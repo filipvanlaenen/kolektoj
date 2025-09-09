@@ -4,6 +4,7 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
@@ -92,6 +93,16 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
     @Override
     public ElementCardinality getElementCardinality() {
         return elementCardinality;
+    }
+
+    @Override
+    public int indexOf(final E element) {
+        for (int i = 0; i < elements.length; i++) {
+            if (Objects.equals(elements[i], element)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override

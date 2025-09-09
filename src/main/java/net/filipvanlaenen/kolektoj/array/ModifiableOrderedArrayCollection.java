@@ -218,6 +218,16 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     }
 
     @Override
+    public int indexOf(final E element) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(elements[i], element)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
     public Iterator<E> iterator() {
         return new ArrayIterator<E>(toArray());
     }
@@ -244,7 +254,7 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
     @Override
     public boolean remove(final E element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i].equals(element)) {
+            if (Objects.equals(elements[i], element)) {
                 removeAt(i);
                 return true;
             }

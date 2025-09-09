@@ -128,6 +128,11 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
     }
 
     @Override
+    public int indexOf(final E element) {
+        return sortedTree.indexOf(element);
+    }
+
+    @Override
     public Iterator<E> iterator() {
         return new ArrayIterator<E>(toArray());
     }

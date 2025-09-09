@@ -265,6 +265,20 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
     }
 
     @Override
+    public int indexOf(final E element) {
+        ListNode<E> current = head;
+        int i = 0;
+        while (current != null) {
+            if (Objects.equals(current.getElement(), element)) {
+                return i;
+            }
+            current = current.getNext();
+            i++;
+        }
+        return -1;
+    }
+
+    @Override
     public Iterator<E> iterator() {
         return new ArrayIterator<E>(toArray());
     }

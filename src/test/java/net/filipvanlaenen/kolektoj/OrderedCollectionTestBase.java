@@ -183,6 +183,22 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
     }
 
     /**
+     * Verifies that indexOf returns -1 for an element not in the collection.
+     */
+    @Test
+    public void indexOfShouldReturnMinusOneForAnElementNotInTheCollection() {
+        assertEquals(-1, collection123.indexOf(0));
+    }
+
+    /**
+     * Verifies that indexOf returns the correct index for an element in the collection.
+     */
+    @Test
+    public void indexOfShouldReturnIndexForAnElementInTheCollection() {
+        assertEquals(1, collection123.indexOf(2));
+    }
+
+    /**
      * Verifies that the collection produces an iterator that produces the elements in the correct order.
      */
     @Test

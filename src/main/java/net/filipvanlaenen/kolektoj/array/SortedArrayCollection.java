@@ -5,6 +5,7 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICAT
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
@@ -111,6 +112,16 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
     @Override
     public ElementCardinality getElementCardinality() {
         return elementCardinality;
+    }
+
+    @Override
+    public int indexOf(final E element) {
+        for (int i = 0; i < elements.length; i++) {
+            if (Objects.equals(elements[i], element)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override

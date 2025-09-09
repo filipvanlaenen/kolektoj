@@ -327,11 +327,12 @@ class SortedTree<K, C> {
     }
 
     /**
-     * Returns a node with the given key starting from the provided node.
+     * Returns a node with the given key (or an equivalent key according to the comparator) starting from the provided
+     * node.
      *
      * @param node The start node to search from.
      * @param key  The key.
-     * @return A node with the given key.
+     * @return A node with the given key, or an equivalent one according to the comparator.
      */
     private TreeNode<K, C> getNode(final TreeNode<K, C> node, final K key) {
         if (node == null) {
@@ -371,6 +372,44 @@ class SortedTree<K, C> {
      */
     int getSize() {
         return size;
+    }
+
+    /**
+     * Returns the index for an occurrence of the key (or an equivalent one according to the comparator) in the sorted
+     * tree, or -1 if the sorted tree doesn't contain the key.
+     *
+     * @param key The key for which an index should be found.
+     * @return The index for an occurrence of the key (or an equivalent one according to the comparator), or -1 if the
+     *         sorted tree doesn't contain it.
+     */
+    int indexOf(final K key) {
+        return indexOf(key, root, 0);
+    }
+
+    /**
+     * Returns the index for an occurrence of the key (or an equivalent one according to the comparator) in the sorted
+     * tree, searching in the subtree defined by the node, or -1 if the subtree doesn't contain the key.
+     *
+     * @param key        The key for which an index should be found.
+     * @param node       The node defining the subtree in which the key should be found.
+     * @param sizeBefore The size of the tree before the subtree defined by the node.
+     * @return The index for an occurrence of the key (or an equivalent one according to the comparator), or -1 if the
+     *         sorted tree doesn't contain it.
+     */
+    private int indexOf(final K key, final TreeNode<K, C> node, final int sizeBefore) {
+        if (node == null) {
+            return -1;
+        }
+        int comparison = comparator.compare(key, node.getKey());
+        TreeNode<K, C> leftChild = node.getLeftChild();
+        int leftSize = leftChild == null ? 0 : leftChild.getSize();
+        if (comparison < 0) {
+            return indexOf(key, leftChild, sizeBefore);
+        } else if (comparison > 0) {
+            return indexOf(key, node.getRightChild(), sizeBefore + leftSize + 1);
+        } else {
+            return sizeBefore + leftSize;
+        }
     }
 
     /**

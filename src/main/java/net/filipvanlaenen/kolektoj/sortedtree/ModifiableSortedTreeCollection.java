@@ -147,6 +147,11 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     }
 
     @Override
+    public int indexOf(final E element) {
+        return sortedTree.indexOf(element);
+    }
+
+    @Override
     public Iterator<E> iterator() {
         return new ArrayIterator<E>(toArray());
     }
