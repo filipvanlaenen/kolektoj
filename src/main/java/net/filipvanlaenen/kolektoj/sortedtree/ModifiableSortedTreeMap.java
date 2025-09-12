@@ -321,11 +321,13 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         for (Entry<? extends K, ? extends V> e : map) {
             K key = e.key();
             TreeNode<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
-            ModifiableCollection<V> keyValues = node.getContent();
-            V value = e.value();
-            if (keyValues.contains(value)) {
-                removeValueForKey(key, keyValues, value);
-                result = true;
+            if (node != null) {
+                ModifiableCollection<V> keyValues = node.getContent();
+                V value = e.value();
+                if (keyValues.contains(value)) {
+                    removeValueForKey(key, keyValues, value);
+                    result = true;
+                }
             }
         }
         return result;
