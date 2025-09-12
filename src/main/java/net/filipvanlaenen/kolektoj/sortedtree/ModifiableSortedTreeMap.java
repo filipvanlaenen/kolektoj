@@ -432,6 +432,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
                 V value = e.value();
                 if (keyValues.contains(value)) {
                     removeValueForKey(key, keyValues, value);
+                    result = true;
                 }
             }
         }
