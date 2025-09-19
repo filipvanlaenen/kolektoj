@@ -211,7 +211,7 @@ public final class UpdatableHashMap<K, V> implements UpdatableMap<K, V> {
 
     @Override
     public Collection<V> getValues() {
-        return new ArrayCollection<V>(values);
+        return Collection.<V>of(values);
     }
 
     @Override

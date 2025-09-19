@@ -244,7 +244,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
 
     @Override
     public Collection<V> getValues() {
-        return new ArrayCollection<V>(values);
+        return Collection.<V>of(values);
     }
 
     @Override

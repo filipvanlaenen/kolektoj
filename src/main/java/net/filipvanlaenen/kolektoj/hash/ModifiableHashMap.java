@@ -15,7 +15,6 @@ import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
-import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
 /**
@@ -284,12 +283,12 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
 
     @Override
     public Collection<K> getKeys() {
-        return new ArrayCollection<K>(keys);
+        return Collection.<K>of(keys);
     }
 
     @Override
     public Collection<V> getValues() {
-        return new ArrayCollection<V>(values);
+        return Collection.<V>of(values);
     }
 
     @Override

@@ -16,6 +16,7 @@ import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableSortedCollection;
 import net.filipvanlaenen.kolektoj.ModifiableSortedMap;
+import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
@@ -273,8 +274,8 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     }
 
     @Override
-    public Collection<K> getKeys() {
-        return keys;
+    public SortedCollection<K> getKeys() {
+        return SortedCollection.<K>of(keys);
     }
 
     @Override
@@ -298,7 +299,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
 
     @Override
     public Collection<V> getValues() {
-        return new ArrayCollection<V>(values);
+        return Collection.<V>of(values);
     }
 
     @Override

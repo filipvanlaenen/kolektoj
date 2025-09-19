@@ -228,7 +228,7 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     }
 
     @Override
-    public Collection<K> getKeys() {
+    public SortedCollection<K> getKeys() {
         return keys;
     }
 

@@ -198,6 +198,13 @@ public interface SortedMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
     K getGreatestKey();
 
     /**
+     * Returns a sorted collection with all the keys present in the map.
+     *
+     * @return A sorted collection with all the keys present in the map.
+     */
+    SortedCollection<K> getKeys();
+
+    /**
      * Returns the entry with the least key in the map.
      *
      * @return The entry with the least key in the map.

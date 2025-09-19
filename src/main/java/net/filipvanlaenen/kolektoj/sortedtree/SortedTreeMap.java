@@ -228,7 +228,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public Collection<K> getKeys() {
+    public SortedCollection<K> getKeys() {
         return keys;
     }
 
