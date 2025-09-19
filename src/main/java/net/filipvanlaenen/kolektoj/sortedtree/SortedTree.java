@@ -90,6 +90,15 @@ class SortedTree<K, C> {
         return size != originalSize;
     }
 
+    /**
+     * Adds the nodes of the subtree defined by the provided node to an array and returns the index where the next node
+     * should be added.
+     *
+     * @param array The array to store the nodes.
+     * @param node  The node defining the subtree.
+     * @param index The index where the first node can be stored in the array.
+     * @return The index where the next node can be stored in the array.
+     */
     private int addNodesToArray(final TreeNode<K, C>[] array, final TreeNode<K, C> node, final int index) {
         if (node == null) {
             return index;
@@ -99,6 +108,12 @@ class SortedTree<K, C> {
         return addNodesToArray(array, node.getRightChild(), result);
     }
 
+    /**
+     * Calculates the balance factor for a node.
+     *
+     * @param node The node for which to calculate the balance factor.
+     * @return The balance factor.
+     */
     private int calculateNodeBalanceFactor(final TreeNode<K, C> node) {
         return getNodeHeight(node.getRightChild()) - getNodeHeight(node.getLeftChild());
     }
@@ -165,6 +180,13 @@ class SortedTree<K, C> {
         return result;
     }
 
+    /**
+     * Returns whether all the elements in the provided collection are used as keys.
+     *
+     * @param collection A collection of keys.
+     * @return True if all the elements in the collection are keys and are used as keys in the sorted tree, and false
+     *         otherwise.
+     */
     boolean containsAllKeys(final Collection<?> collection) {
         if (collection.size() > size) {
             return false;
@@ -322,6 +344,11 @@ class SortedTree<K, C> {
         return root.getRightmostChild();
     }
 
+    /**
+     * Returns the height of the tree.
+     *
+     * @return The height of the tree.
+     */
     int getHeight() {
         return getNodeHeight(root);
     }
@@ -377,10 +404,16 @@ class SortedTree<K, C> {
         }
     }
 
-    private Class<TreeNode<K, C>> getNodeElementType(final TreeNode<K, C>... foo) {
-        return (Class<TreeNode<K, C>>) foo.getClass().getComponentType();
+    private Class<TreeNode<K, C>> getNodeElementType(final TreeNode<K, C>... node) {
+        return (Class<TreeNode<K, C>>) node.getClass().getComponentType();
     }
 
+    /**
+     * Returns the height for the subtree defined by the provided node. If the node is <code>null</code>, 0 is returned.
+     *
+     * @param node The node for which to calculate the height.
+     * @return The height of the subtree defined by the provided node, or 0 if it's <code>null</code>.
+     */
     private int getNodeHeight(final TreeNode<K, C> node) {
         return node == null ? 0 : node.getHeight();
     }
