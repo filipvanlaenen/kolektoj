@@ -98,10 +98,10 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
                 return i;
             }
             while (i < elements.length - 1 && comparator.compare(element, (E) elements[i + 1]) == 0) {
+                i++;
                 if (Objects.equals(element, elements[i])) {
                     return i;
                 }
-                i++;
             }
             return -1;
         }
@@ -147,16 +147,16 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
             }
             int j = i;
             while (j > 0 && comparator.compare(element, (E) elements[j - 1]) == 0) {
+                j--;
                 if (Objects.equals(element, elements[j])) {
                     return j;
                 }
-                j--;
             }
             while (i < elements.length - 1 && comparator.compare(element, (E) elements[i + 1]) == 0) {
+                i++;
                 if (Objects.equals(element, elements[i])) {
                     return i;
                 }
-                i++;
             }
             return -1;
         }
@@ -180,10 +180,10 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
                 return i;
             }
             while (i > 0 && comparator.compare(element, (E) elements[i - 1]) == 0) {
+                i--;
                 if (Objects.equals(element, elements[i])) {
                     return i;
                 }
-                i--;
             }
             return -1;
         }

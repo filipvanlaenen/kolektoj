@@ -34,11 +34,11 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
      */
     private static final Integer[] ARRAY123 = new Integer[] {1, 2, THREE};
     /**
-     * Ordered array collection with the integers 1, 2 and 3.
+     * Ordered collection with the integers 1, 2 and 3.
      */
     private final T collection123 = createOrderedCollection(1, 2, 3);
     /**
-     * Ordered array collection with the integers 1, 2, 3 and null.
+     * Ordered collection with the integers 1, 2, 3 and null.
      */
     private final OrderedCollection<Integer> collection123Null = createOrderedCollection(1, 2, 3, null);
 
