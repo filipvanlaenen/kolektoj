@@ -20,17 +20,17 @@ public class SortedTreeTest {
      */
     private static final int THREE = 3;
     /**
-     * The magic number thirteen.
+     * The magic number five.
      */
-    private static final int THIRTEEN = 13;
-    /**
-     * The magic number fourteen.
-     */
-    private static final int FOURTEEN = 14;
+    private static final int FIVE = 5;
     /**
      * The magic number twenty.
      */
     private static final int TWENTY = 20;
+    /**
+     * The magic number twenty-one.
+     */
+    private static final int TWENTY_ONE = 21;
     /**
      * The magic number hundred.
      */
@@ -52,6 +52,32 @@ public class SortedTreeTest {
                 return -1;
             } else {
                 return 1;
+            }
+        }
+    };
+    /**
+     * A comparator ordering integers in the natural order, but modulo five, and handling <code>null</code> as the
+     * lowest value.
+     */
+    protected static final Comparator<Integer> MOD5COMPARATOR = new Comparator<Integer>() {
+        @Override
+        public int compare(final Integer i1, final Integer i2) {
+            if (Objects.equals(i1, i2)) {
+                return 0;
+            } else if (i1 == null) {
+                return -1;
+            } else if (i2 == null) {
+                return 1;
+            } else {
+                int m1 = i1 % FIVE;
+                int m2 = i2 % FIVE;
+                if (m1 == m2) {
+                    return 0;
+                } else if (m1 < m2) {
+                    return -1;
+                } else {
+                    return 1;
+                }
             }
         }
     };
@@ -228,11 +254,21 @@ public class SortedTreeTest {
     }
 
     /**
+     * Verifies that firstIndexOf returns -1 for an element not in a small tree.
+     */
+    @Test
+    public void firstIndexOfShouldReturnMinusOneForAnElementNotInTheTree() {
+        assertEquals(-1, SMALL_TREE.firstIndexOf(0));
+    }
+
+    /**
      * Verifies that firstIndexOf returns the correct index for an element in a small tree.
      */
     @Test
     public void firstIndexOfShouldReturnIndexForAnElementInTheTree() {
+        assertEquals(0, SMALL_TREE.firstIndexOf(1));
         assertEquals(1, SMALL_TREE.firstIndexOf(2));
+        assertEquals(2, SMALL_TREE.firstIndexOf(THREE));
     }
 
     /**
@@ -241,26 +277,29 @@ public class SortedTreeTest {
     @Test
     public void firstIndexOfShouldReturnFirstIndexForADuplicateElementInTheTree() {
         SortedTree<Integer, String> sortedTree =
-                new SortedTree<Integer, String>(COMPARATOR, ElementCardinality.DUPLICATE_ELEMENTS);
-        sortedTree.add(1, Integer.toString(1));
-        for (int i = 0; i < THREE; i++) {
-            sortedTree.add(2, Integer.toString(2));
+                new SortedTree<Integer, String>(MOD5COMPARATOR, ElementCardinality.DUPLICATE_ELEMENTS);
+        for (int i = 1; i <= TWENTY_ONE; i++) {
+            sortedTree.add(i, Integer.toString(i));
         }
-        assertEquals(1, sortedTree.firstIndexOf(2));
+        for (int i = 1; i <= TWENTY_ONE; i++) {
+            assertEquals(i, sortedTree.getAt(sortedTree.firstIndexOf(i)).getKey());
+        }
     }
 
     /**
-     * Verifies that firstIndexOf returns the correct index for a duplicate element in a large tree.
+     * Verifies that firstIndexOf returns an index lower than lastIndexOf.
      */
     @Test
-    public void firstIndexOfShouldReturnFirstIndexForADuplicateElementInALargeTree() {
+    public void firstIndexOfShouldReturnALowerIndexThanLastIndexOf() {
         SortedTree<Integer, String> sortedTree =
-                new SortedTree<Integer, String>(COMPARATOR, ElementCardinality.DUPLICATE_ELEMENTS);
-        sortedTree.add(1, Integer.toString(1));
-        for (int i = 0; i < TWENTY; i++) {
-            sortedTree.add(2, Integer.toString(2));
+                new SortedTree<Integer, String>(MOD5COMPARATOR, ElementCardinality.DUPLICATE_ELEMENTS);
+        for (int i = 1; i <= TWENTY; i++) {
+            sortedTree.add(i, Integer.toString(i));
+            sortedTree.add(i, Integer.toString(i));
         }
-        assertEquals(1, sortedTree.firstIndexOf(2));
+        for (int i = 1; i <= TWENTY; i++) {
+            assertTrue(sortedTree.firstIndexOf(i) < sortedTree.lastIndexOf(i));
+        }
     }
 
     /**
@@ -383,15 +422,57 @@ public class SortedTreeTest {
      */
     @Test
     public void indexOfShouldReturnIndexForAnElementInTheTree() {
+        assertEquals(0, SMALL_TREE.indexOf(1));
         assertEquals(1, SMALL_TREE.indexOf(2));
+        assertEquals(2, SMALL_TREE.indexOf(THREE));
     }
 
     /**
-     * Verifies that indexOf returns the correct index for an element in a large tree.
+     * Verifies that indexOf returns the correct index for a duplicate element in a tree.
      */
     @Test
-    public void indexOfShouldReturnIndexForAnElementInTheLargeTree() {
-        assertEquals(THIRTEEN, LARGE_TREE.indexOf(FOURTEEN));
+    public void indexOfShouldReturnFirstIndexForADuplicateElementInTheTree() {
+        SortedTree<Integer, String> sortedTree =
+                new SortedTree<Integer, String>(MOD5COMPARATOR, ElementCardinality.DUPLICATE_ELEMENTS);
+        for (int i = 1; i <= TWENTY_ONE; i++) {
+            sortedTree.add(i, Integer.toString(i));
+        }
+        for (int i = 1; i <= TWENTY_ONE; i++) {
+            assertEquals(i, sortedTree.getAt(sortedTree.indexOf(i)).getKey());
+        }
+    }
+
+    /**
+     * Verifies that lastIndexOf returns -1 for an element not in a small tree.
+     */
+    @Test
+    public void lastIndexOfShouldReturnMinusOneForAnElementNotInTheTree() {
+        assertEquals(-1, SMALL_TREE.lastIndexOf(0));
+    }
+
+    /**
+     * Verifies that lastIndexOf returns the correct index for an element in a small tree.
+     */
+    @Test
+    public void lastIndexOfShouldReturnIndexForAnElementInTheTree() {
+        assertEquals(0, SMALL_TREE.lastIndexOf(1));
+        assertEquals(1, SMALL_TREE.lastIndexOf(2));
+        assertEquals(2, SMALL_TREE.lastIndexOf(THREE));
+    }
+
+    /**
+     * Verifies that lastIndexOf returns the correct index for a duplicate element in a tree.
+     */
+    @Test
+    public void lastIndexOfShouldReturnFirstIndexForADuplicateElementInTheTree() {
+        SortedTree<Integer, String> sortedTree =
+                new SortedTree<Integer, String>(MOD5COMPARATOR, ElementCardinality.DUPLICATE_ELEMENTS);
+        for (int i = 1; i <= TWENTY; i++) {
+            sortedTree.add(i, Integer.toString(i));
+        }
+        for (int i = 1; i <= TWENTY; i++) {
+            assertEquals(i, sortedTree.getAt(sortedTree.lastIndexOf(i)).getKey());
+        }
     }
 
     /**
