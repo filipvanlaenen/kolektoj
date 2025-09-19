@@ -138,7 +138,28 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
 
     @Override
     public int indexOf(final E element) {
-        return ArrayUtilities.findIndex(elements, elements.length, element, comparator);
+        int i = ArrayUtilities.findIndex(elements, elements.length, element, comparator);
+        if (i == -1) {
+            return -1;
+        } else {
+            if (Objects.equals(element, elements[i])) {
+                return i;
+            }
+            int j = i;
+            while (j > 0 && comparator.compare(element, (E) elements[j - 1]) == 0) {
+                if (Objects.equals(element, elements[j])) {
+                    return j;
+                }
+                j--;
+            }
+            while (i < elements.length - 1 && comparator.compare(element, (E) elements[i + 1]) == 0) {
+                if (Objects.equals(element, elements[i])) {
+                    return i;
+                }
+                i++;
+            }
+            return -1;
+        }
     }
 
     @Override

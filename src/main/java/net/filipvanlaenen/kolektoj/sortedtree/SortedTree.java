@@ -438,7 +438,18 @@ class SortedTree<K, C> {
         } else if (comparison > 0) {
             return indexOf(key, node.getRightChild(), sizeBefore + leftSize + 1, indexPreference);
         } else {
-            if (indexPreference == IndexPreference.LAST) {
+            if (indexPreference == IndexPreference.ANY) {
+                if (Objects.equals(key, node.getKey())) {
+                    return sizeBefore + leftSize;
+                } else {
+                    int lowerIndex = indexOf(key, leftChild, sizeBefore, indexPreference);
+                    if (lowerIndex != -1) {
+                        return lowerIndex;
+                    } else {
+                        return indexOf(key, node.getRightChild(), sizeBefore + leftSize + 1, indexPreference);
+                    }
+                }
+            } else if (indexPreference == IndexPreference.LAST) {
                 int upperIndex = indexOf(key, node.getRightChild(), sizeBefore + leftSize + 1, indexPreference);
                 if (upperIndex != -1) {
                     return upperIndex;

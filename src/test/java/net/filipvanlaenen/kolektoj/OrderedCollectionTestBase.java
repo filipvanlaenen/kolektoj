@@ -22,6 +22,14 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
      */
     private static final int THREE = 3;
     /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
+     * The magic number five.
+     */
+    private static final int FIVE = 5;
+    /**
      * An array containing the numbers 1, 2 and 3.
      */
     private static final Integer[] ARRAY123 = new Integer[] {1, 2, THREE};
@@ -259,11 +267,19 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
     }
 
     /**
+     * Verifies that lastIndexOf returns the correct index for the first element in the collection.
+     */
+    @Test
+    public void lastIndexOfShouldReturnIndexForFirstElementInTheCollection() {
+        assertEquals(0, collection123.lastIndexOf(1));
+    }
+
+    /**
      * Verifies that lastIndexOf returns the last index for a duplicate element in the collection.
      */
     @Test
     public void lastIndexOfShouldReturnFirstIndexForDuplicateElementInTheCollection() {
-        assertEquals(4, createOrderedCollection(DUPLICATE_ELEMENTS, 1, 2, 2, 2, 2, THREE).lastIndexOf(2));
+        assertEquals(FOUR, createOrderedCollection(DUPLICATE_ELEMENTS, 1, 2, 2, 2, 2, THREE).lastIndexOf(2));
     }
 
     /**
@@ -271,7 +287,7 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
      */
     @Test
     public void lastIndexOfShouldReturnFirstIndexForDuplicateElementAtTheEndOfTheCollection() {
-        assertEquals(5,
+        assertEquals(FIVE,
                 createOrderedCollection(DUPLICATE_ELEMENTS, 1, 2, THREE, THREE, THREE, THREE).lastIndexOf(THREE));
     }
 
