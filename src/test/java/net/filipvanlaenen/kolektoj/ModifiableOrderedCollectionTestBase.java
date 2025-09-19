@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Spliterator;
@@ -328,6 +329,47 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
     @Test
     public void indexOfShouldReturnIndexForAnElementInTheCollection() {
         assertEquals(1, collection123.indexOf(2));
+    }
+
+    /**
+     * Verifies that lastIndexOf returns -1 for an element not in the collection.
+     */
+    @Test
+    public void lastIndexOfShouldReturnMinusOneForAnElementNotInTheCollection() {
+        assertEquals(-1, collection123.lastIndexOf(0));
+    }
+
+    /**
+     * Verifies that lastIndexOf returns the correct index for an element in the collection.
+     */
+    @Test
+    public void lastIndexOfShouldReturnIndexForAnElementInTheCollection() {
+        assertEquals(1, collection123.lastIndexOf(2));
+    }
+
+    /**
+     * Verifies that lastIndexOf returns the correct index for the first element in the collection.
+     */
+    @Test
+    public void lastIndexOfShouldReturnIndexForFirstElementInTheCollection() {
+        assertEquals(0, collection123.lastIndexOf(1));
+    }
+
+    /**
+     * Verifies that lastIndexOf returns the last index for a duplicate element in the collection.
+     */
+    @Test
+    public void lastIndexOfShouldReturnFirstIndexForDuplicateElementInTheCollection() {
+        assertEquals(FOUR, createModifiableOrderedCollection(DUPLICATE_ELEMENTS, 1, 2, 2, 2, 2, THREE).lastIndexOf(2));
+    }
+
+    /**
+     * Verifies that lastIndexOf returns the last index for a duplicate element at the beginning of the collection.
+     */
+    @Test
+    public void lastIndexOfShouldReturnFirstIndexForDuplicateElementAtTheEndOfTheCollection() {
+        assertEquals(FIVE, createModifiableOrderedCollection(DUPLICATE_ELEMENTS, 1, 2, THREE, THREE, THREE, THREE)
+                .lastIndexOf(THREE));
     }
 
     /**
