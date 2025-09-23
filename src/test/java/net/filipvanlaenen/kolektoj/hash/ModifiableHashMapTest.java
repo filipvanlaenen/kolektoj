@@ -2,7 +2,11 @@ package net.filipvanlaenen.kolektoj.hash;
 
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -61,7 +65,7 @@ public final class ModifiableHashMapTest
     /**
      * Map with the integers 1 and 2.
      */
-    private static final Map<Integer, String> MAP12 = new HashMap<Integer, String>(ENTRY1, ENTRY2);
+    private static final Map<Integer, String> MAP12 = Map.<Integer, String>of(ENTRY1, ENTRY2);
     /**
      * Map with the integers 1, 2 and 3 mapped to their words.
      */
@@ -69,12 +73,11 @@ public final class ModifiableHashMapTest
     /**
      * Map with the integers 1, 2 and 3 mapped to their words, and null to null.
      */
-    private static final Map<Integer, String> MAP123NULL =
-            new HashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
+    private static final Map<Integer, String> MAP123NULL = Map.<Integer, String>of(ENTRY1, ENTRY2, ENTRY3, ENTRY_NULL);
     /**
      * Map with the integer 4 mapped to its word.
      */
-    private static final Map<Integer, String> MAP4 = new HashMap<Integer, String>(ENTRY4);
+    private static final Map<Integer, String> MAP4 = Map.<Integer, String>of(ENTRY4);
 
     @Override
     protected ModifiableHashMap<Integer, String> createMap(final Entry<Integer, String>... entries) {
@@ -249,7 +252,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void addAllWithEmptyMapShouldReturnFalse() {
-        assertFalse(createNewMap().addAll(new HashMap<Integer, String>()));
+        assertFalse(createNewMap().addAll(Map.<Integer, String>empty()));
     }
 
     /**
@@ -259,7 +262,7 @@ public final class ModifiableHashMapTest
     public void addAllWithDuplicateKeysOnMapWithDistinctKeysShouldReturnFalse() {
         ModifiableMap<Integer, String> map =
                 new ModifiableHashMap<Integer, String>(DISTINCT_KEYS, ENTRY1, ENTRY2, ENTRY3);
-        assertFalse(map.addAll(new HashMap<Integer, String>(ENTRY1BIS)));
+        assertFalse(map.addAll(Map.<Integer, String>of(ENTRY1BIS)));
     }
 
     /**
@@ -268,7 +271,7 @@ public final class ModifiableHashMapTest
     @Test
     public void addAllOnMapWithDistinctKeysShouldAddNewKeysOnly() {
         ModifiableMap<Integer, String> map = new ModifiableHashMap<Integer, String>(DISTINCT_KEYS, ENTRY1, ENTRY2);
-        assertTrue(map.addAll(new HashMap<Integer, String>(ENTRY3, ENTRY1BIS)));
+        assertTrue(map.addAll(Map.<Integer, String>of(ENTRY3, ENTRY1BIS)));
         assertEquals(THREE, map.size());
     }
 
@@ -280,7 +283,7 @@ public final class ModifiableHashMapTest
     public void addAllWithDuplicateKeyAndValuesOnMapWithDuplicateKeysAndDistinctValuesShouldReturnFalse() {
         ModifiableMap<Integer, String> map =
                 new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
-        assertFalse(map.addAll(new HashMap<Integer, String>(new Entry<Integer, String>(1, "one"))));
+        assertFalse(map.addAll(Map.<Integer, String>of(new Entry<Integer, String>(1, "one"))));
     }
 
     /**
@@ -291,7 +294,7 @@ public final class ModifiableHashMapTest
     public void addAllOnMapWithDuplicateKeysAndDistinctValuesShouldAddNewKeysAndNewValues() {
         ModifiableMap<Integer, String> map =
                 new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2);
-        assertTrue(map.addAll(new HashMap<Integer, String>(ENTRY3, ENTRY1BIS, new Entry<Integer, String>(1, "one"))));
+        assertTrue(map.addAll(Map.<Integer, String>of(ENTRY3, ENTRY1BIS, new Entry<Integer, String>(1, "one"))));
         assertEquals(FOUR, map.size());
     }
 

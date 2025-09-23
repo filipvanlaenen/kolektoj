@@ -2,10 +2,15 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 
 /**
@@ -15,11 +20,31 @@ import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
  * @param <TC> The subclass type to be tested, but with a key type with colliding hash values.
  */
 public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<Integer, String>,
-        TC extends ModifiableSortedMap<KeyWithCollidingHash, Integer>> extends SortedMapTestBase<T, TC> {
+        TC extends ModifiableSortedMap<KeyWithCollidingHash, Integer>> extends UpdatableSortedMapTestBase<T, TC> {
+    /**
+     * The magic number three.
+     */
+    private static final int THREE = 3;
     /**
      * The magic number four.
      */
     private static final int FOUR = 4;
+    /**
+     * The magic number six.
+     */
+    private static final int SIX = 6;
+    /**
+     * The magic number ten.
+     */
+    private static final int TEN = 10;
+    /**
+     * An entry with key 4 and value four.
+     */
+    private static final Entry<Integer, String> ENTRY4 = new Entry<Integer, String>(4, "four");
+    /**
+     * Map with the integer 4 mapped to its word.
+     */
+    private static final Map<Integer, String> MAP4 = Map.<Integer, String>of(ENTRY4);
     /**
      * Sorted map with three entries.
      */
@@ -79,6 +104,96 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
         T map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
         map.add(1, "bis");
         assertEquals(2, map.getAll(1).size());
+    }
+
+    /**
+     * Verifies that adding an empty map returns false.
+     */
+    @Test
+    public void addAllWithEmptyMapShouldReturnFalse() {
+        assertFalse(createMap123().addAll(Map.<Integer, String>empty()));
+    }
+
+    /**
+     * Verifies that adding a map with already present keys on a map with distinct keys returns false.
+     */
+    @Test
+    public void addAllWithDuplicateKeysOnMapWithDistinctKeysShouldReturnFalse() {
+        T map = createMap(DISTINCT_KEYS, ENTRY1, ENTRY2, ENTRY3);
+        assertFalse(map.addAll(Map.<Integer, String>of(ENTRY1BIS)));
+    }
+
+    /**
+     * Verifies that adding a map with both present and absent keys adds the entries with absent keys.
+     */
+    @Test
+    public void addAllOnMapWithDistinctKeysShouldAddNewKeysOnly() {
+        T map = createMap(DISTINCT_KEYS, ENTRY1, ENTRY2);
+        assertTrue(map.addAll(Map.<Integer, String>of(ENTRY3, ENTRY1BIS)));
+        assertEquals(THREE, map.size());
+    }
+
+    /**
+     * Verifies that adding a map with already present keys and values on a map with duplicate keys and distinct values
+     * returns false.
+     */
+    @Test
+    public void addAllWithDuplicateKeyAndValuesOnMapWithDuplicateKeysAndDistinctValuesShouldReturnFalse() {
+        T map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
+        assertFalse(map.addAll(Map.<Integer, String>of(new Entry<Integer, String>(1, "one"))));
+    }
+
+    /**
+     * Verifies that adding a map with both present and absent keys and values adds the entries with new keys or new
+     * values.
+     */
+    @Test
+    public void addAllOnMapWithDuplicateKeysAndDistinctValuesShouldAddNewKeysAndNewValues() {
+        T map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2);
+        assertTrue(map.addAll(Map.<Integer, String>of(ENTRY3, ENTRY1BIS, new Entry<Integer, String>(1, "one"))));
+        assertEquals(FOUR, map.size());
+    }
+
+    /**
+     * Verifies that adding a map of size one returns true.
+     */
+    @Test
+    public void addAllWithMapWithOneEntryReturnsTrue() {
+        assertTrue(createMap().addAll(MAP4));
+    }
+
+    /**
+     * Verifies that adding a map of size one increases the size of the map.
+     */
+    @Test
+    public void addAllWithMapWithOneEntryIncreasesTheSizeByOne() {
+        T map = createMap123();
+        map.addAll(MAP4);
+        assertEquals(FOUR, map.size());
+    }
+
+    /**
+     * Verifies that adding a map with a large map returns true. This tests that resizing works as intended. Note that
+     * the size of the large map is constructed to match the ratios in the implementation.
+     */
+    @Test
+    public void addAllWithLargeMapReturnsTrue() {
+        T map1 = createMap();
+        ModifiableMap map2 = ModifiableMap.<Integer, String>empty();
+        for (int i = 0; i < TEN; i++) {
+            map2.add(SIX + i, "2");
+        }
+        assertTrue(map1.addAll(map2));
+    }
+
+    /**
+     * Verifies that adding a map with an entry with a null key adds the entry with the null key.
+     */
+    @Test
+    public void addAllWithMapWithNullKeyAddsTheNullKey() {
+        T map = createMap();
+        map.addAll(Map.<Integer, String>of(ENTRY1, ENTRY2, ENTRY3, new Entry<Integer, String>(null, null)));
+        assertNull(map.get(null));
     }
 
     /**
@@ -178,48 +293,5 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
         map123.removeLeast();
         assertEquals(2, map123.size());
         assertFalse(map123.contains(ENTRY1));
-    }
-
-    /**
-     * Verifies that trying to update an absent key throws IllegalArgumentException.
-     */
-    @Test
-    public void updateShouldThrowExceptionForAbsentKey() {
-        IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> createMap123().update(FOUR, "four"));
-        assertEquals("Map doesn't contain an entry with the key 4.", exception.getMessage());
-    }
-
-    /**
-     * Verifies that updating a key with a new value stores the new value for the key.
-     */
-    @Test
-    public void updateShouldStoreTheNewValueForTheKey() {
-        UpdatableMap<Integer, String> map = createMap123();
-        map.update(1, "bis");
-        assertEquals("bis", map.get(1));
-        assertTrue(map.containsValue("bis"));
-        assertTrue(map.contains(ENTRY1BIS));
-        assertFalse(map.containsValue("one"));
-        assertFalse(map.contains(ENTRY1));
-    }
-
-    /**
-     * Verifies that for maps allowing duplicate keys but not duplicate values, values are updated such that they are
-     * kept distinct.
-     */
-    @Test
-    public void updateShouldAvoidDuplicateValuesForMapsWithDistinctValues() {
-        UpdatableMap<Integer, String> map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY1BIS);
-        assertEquals("one", map.update(1, "one"));
-        assertEquals("bis", map.update(1, "bis"));
-    }
-
-    /**
-     * Verifies that updating a key with a new value returns the old value for the key.
-     */
-    @Test
-    public void updateShouldReturnTheOldValueForTheKey() {
-        assertEquals("one", createMap123().update(1, "bis"));
     }
 }

@@ -265,6 +265,16 @@ class SortedTree<K, C> {
         return (TreeNode<K, C>[]) Array.newInstance(getNodeElementType(foo), length);
     }
 
+    /**
+     * Finds a key in the subtree defined by the provided node, and if it's present and not yet matched, marks it in the
+     * boolean array as matched at the correct index, and finally returns true.
+     *
+     * @param node    The node defining the subtree.
+     * @param matched The boolean array keeping track of which elements in the tree have already been matched.
+     * @param index   The start index for the subtree defined by the provided node.
+     * @param key     The key to look for.
+     * @return True if the provided key can be found in the subtree and isn't matched yet, and false otherwise.
+     */
     private boolean findAndMarkMatch(final TreeNode<K, C> node, final boolean[] matched, final int index, final K key) {
         if (node == null) {
             return false;
