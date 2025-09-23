@@ -143,10 +143,10 @@ public class SortedTreeTest {
     }
 
     /**
-     * Verifies that trying to add an element that is already present returns false.
+     * Verifies that trying to add an element that is already present in a tree with distinct keys returns false.
      */
     @Test
-    public void addShouldReturnFalseOnATreeWithDistinct() {
+    public void addShouldReturnFalseOnATreeWithDistinctKeys() {
         assertFalse(createTree(1).add(1, "1"));
     }
 
@@ -323,6 +323,47 @@ public class SortedTreeTest {
         TreeNode<Integer, String> node = LARGE_TREE.getGreatest();
         assertEquals(TWENTY, node.getKey());
         assertEquals("20", node.getContent());
+    }
+
+    /**
+     * Verifies that <code>getHeight</code> returns zero for an empty tree.
+     */
+    @Test
+    public void getHeightShouldReturnZeroForAnEmptyTree() {
+        assertEquals(0, createEmptyTree().getHeight());
+    }
+
+    /**
+     * Verifies that <code>getHeight</code> returns one after adding an element to an empty tree.
+     */
+    @Test
+    public void getHeightShouldReturnOneAfterAddingElementToEmptyTree() {
+        SortedTree<Integer, String> sortedTree = createEmptyTree();
+        sortedTree.add(1, "one");
+        assertEquals(1, sortedTree.getHeight());
+    }
+
+    /**
+     * Verifies that <code>getHeight</code> returns two after adding two elements to an empty tree.
+     */
+    @Test
+    public void getHeightShouldReturnTwoAfterAddingTwoElementsToEmptyTree() {
+        SortedTree<Integer, String> sortedTree = createEmptyTree();
+        sortedTree.add(1, "one");
+        sortedTree.add(2, "two");
+        assertEquals(2, sortedTree.getHeight());
+    }
+
+    /**
+     * Verifies that <code>getHeight</code> returns two after adding three elements to an empty tree.
+     */
+    @Test
+    public void getHeightShouldReturnTwoAfterAddingThreeElementsToEmptyTree() {
+        SortedTree<Integer, String> sortedTree = createEmptyTree();
+        sortedTree.add(1, "one");
+        sortedTree.add(2, "two");
+        sortedTree.add(THREE, "three");
+        assertEquals(2, sortedTree.getHeight());
     }
 
     /**

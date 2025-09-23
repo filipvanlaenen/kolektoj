@@ -46,6 +46,7 @@ class TreeNode<K, C> {
     TreeNode(final K key, final C content) {
         this.key = key;
         this.content = content;
+        height = 1;
     }
 
     /**
