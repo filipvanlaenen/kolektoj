@@ -17,7 +17,6 @@ import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableSortedCollection;
 import net.filipvanlaenen.kolektoj.ModifiableSortedMap;
 import net.filipvanlaenen.kolektoj.SortedCollection;
-import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
@@ -156,11 +155,11 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         TreeNode<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
         boolean changed;
         if (node == null) {
-            changed = sortedTree.add(key,
-                    new ModifiableArrayCollection<V>(
-                            keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS
-                                    : DISTINCT_ELEMENTS,
-                            value));
+            ElementCardinality elementCardinality =
+                    keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS
+                            : DISTINCT_ELEMENTS;
+            sortedTree.add(key, ModifiableCollection.<V>of(elementCardinality, value));
+            changed = true;
         } else {
             if (keyAndValueCardinality == DISTINCT_KEYS) {
                 return false;
@@ -241,7 +240,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         if (node == null) {
             throw new IllegalArgumentException("Map doesn't contain entries with the key " + key + ".");
         }
-        return new ArrayCollection<V>(node.getContent());
+        return Collection.<V>of(node.getContent());
     }
 
     @Override

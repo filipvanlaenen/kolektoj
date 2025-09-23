@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
 import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 
 /**
@@ -103,6 +104,17 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
     public void addWithDuplicateKeyShouldStoreTheEntryCorrectly() {
         T map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2, ENTRY3);
         map.add(1, "bis");
+        assertEquals(2, map.getAll(1).size());
+    }
+
+    /**
+     * Verifies that duplicate values can be added to the same key on a map with duplicate keys and values.
+     */
+    @Test
+    public void addOnAMapWithDuplicateKeysAndDuplicateValuesAllowsDuplicateValues() {
+        T map = createMap(KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES);
+        map.add(1, "one");
+        map.add(1, "one");
         assertEquals(2, map.getAll(1).size());
     }
 
