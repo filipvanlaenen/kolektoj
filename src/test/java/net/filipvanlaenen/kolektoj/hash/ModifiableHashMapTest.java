@@ -69,7 +69,7 @@ public final class ModifiableHashMapTest
     /**
      * Map with the integers 1, 2 and 3 mapped to their words.
      */
-    private static final ModifiableMap<Integer, String> MAP123 = createNewMap();
+    private static final ModifiableMap<Integer, String> MAP123 = createMap123();
     /**
      * Map with the integers 1, 2 and 3 mapped to their words, and null to null.
      */
@@ -101,7 +101,7 @@ public final class ModifiableHashMapTest
      *
      * @return A new map for unit testing.
      */
-    private static ModifiableMap<Integer, String> createNewMap() {
+    private static ModifiableMap<Integer, String> createMap123() {
         return new ModifiableHashMap<Integer, String>(ENTRY1, ENTRY2, ENTRY3);
     }
 
@@ -168,7 +168,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void mapShouldContainAnElementAfterHavingItAdded() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.add(0, "zero");
         assertTrue(map.contains(new Entry<Integer, String>(0, "zero")));
     }
@@ -178,7 +178,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void mapShouldContainKeyAfterHavingItAdded() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.add(0, "zero");
         assertTrue(map.containsKey(0));
     }
@@ -188,7 +188,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void mapShouldContainNullKeyAfterHavingItAdded() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.add(null, "zero");
         assertTrue(map.containsKey(null));
     }
@@ -198,7 +198,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void mapShouldContainValueAfterHavingItAdded() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.add(0, "zero");
         assertTrue(map.containsValue("zero"));
     }
@@ -208,7 +208,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void mapShouldContainNullValueAfterHavingItAdded() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.add(0, null);
         assertTrue(map.containsValue(null));
     }
@@ -218,7 +218,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void mapShouldContainValueForKeyAfterHavingItAdded() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.add(0, "zero");
         assertEquals("zero", map.get(0));
     }
@@ -228,7 +228,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void mapShouldContainNullValueForNullKeyAfterHavingItAdded() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.add(null, null);
         assertNull(map.get(null));
     }
@@ -252,7 +252,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void addAllWithEmptyMapShouldReturnFalse() {
-        assertFalse(createNewMap().addAll(Map.<Integer, String>empty()));
+        assertFalse(createMap123().addAll(Map.<Integer, String>empty()));
     }
 
     /**
@@ -303,7 +303,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void addAllWithMapWithOneEntryReturnsTrue() {
-        assertTrue(createNewMap().addAll(MAP4));
+        assertTrue(createMap123().addAll(MAP4));
     }
 
     /**
@@ -311,7 +311,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void addAllWithMapWithOneEntryIncreasesTheSizeByOne() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.addAll(MAP4);
         assertEquals(FOUR, map.size());
     }
@@ -322,7 +322,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void addAllWithLargeMapReturnsTrue() {
-        ModifiableMap<Integer, String> map1 = createNewMap();
+        ModifiableMap<Integer, String> map1 = createMap123();
         ModifiableMap<Integer, String> map2 = new ModifiableHashMap<Integer, String>();
         for (int i = 0; i < TEN; i++) {
             map2.add(SIX + i, "2");
@@ -361,7 +361,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void clearShouldSetMapToBeEmpty() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.clear();
         assertTrue(map.isEmpty());
         assertFalse(map.containsKey(1));
@@ -372,7 +372,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void clearShouldSetCachesToBeEmpty() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.clear();
         assertEquals(0, map.toArray().length);
         assertFalse(map.contains(ENTRY1));
@@ -383,7 +383,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void clearShouldRemoveKeys() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.clear();
         assertTrue(map.getKeys().isEmpty());
     }
@@ -393,7 +393,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void clearShouldRemoveValues() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.clear();
         assertTrue(map.getValues().isEmpty());
     }
@@ -404,7 +404,7 @@ public final class ModifiableHashMapTest
     @Test
     public void removeShouldThrowExceptionForAbsentKey() {
         IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> createNewMap().remove(FOUR));
+                assertThrows(IllegalArgumentException.class, () -> createMap123().remove(FOUR));
         assertEquals("Map doesn't contain an entry with the key 4.", exception.getMessage());
     }
 
@@ -413,7 +413,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void removeShouldReturnTheValueForTheKey() {
-        assertEquals("one", createNewMap().remove(1));
+        assertEquals("one", createMap123().remove(1));
     }
 
     /**
@@ -440,7 +440,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void removeAllWithTheSameEntriesShouldMakeMapEmpty() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.removeAll(MAP123);
         assertTrue(map.isEmpty());
     }
@@ -450,7 +450,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void removeAllShouldReturnTrueWhenSomeEntriesAreRemoved() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         assertTrue(map.removeAll(MAP12));
     }
 
@@ -459,7 +459,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void removeAllShouldReturnFalseWhenNoEntriesAreRemoved() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         assertFalse(map.removeAll(MAP4));
     }
 
@@ -511,7 +511,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void removeIfShouldReturnFalseWhenNoElementsAreRemoved() {
-        assertFalse(createNewMap().removeIf(x -> false));
+        assertFalse(createMap123().removeIf(x -> false));
     }
 
     /**
@@ -519,7 +519,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void removeIfShouldReturnTrueWhenAnElementIsRemoved() {
-        assertTrue(createNewMap().removeIf(x -> x.key() == 1));
+        assertTrue(createMap123().removeIf(x -> x.key() == 1));
     }
 
     /**
@@ -527,7 +527,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void retainAllShouldReturnTrueWhenSomeEntriesAreRemoved() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         assertTrue(map.retainAll(MAP12));
     }
 
@@ -536,7 +536,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void retainAllShouldReturnFalseWhenNoEntriesAreRemoved() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         assertFalse(map.retainAll(MAP123));
     }
 
@@ -545,7 +545,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void retainAllWithTheSameEntriessShouldNotRemoveEntries() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.retainAll(MAP123);
         assertEquals(THREE, map.size());
         assertTrue(map.contains(ENTRY1));
@@ -558,7 +558,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void retainAllWithAbsentEntriesOnlyClearsTheMap() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.retainAll(MAP4);
         assertTrue(map.isEmpty());
     }
@@ -597,7 +597,7 @@ public final class ModifiableHashMapTest
     @Test
     public void updateShouldThrowExceptionForAbsentKey() {
         IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> createNewMap().update(FOUR, "four"));
+                assertThrows(IllegalArgumentException.class, () -> createMap123().update(FOUR, "four"));
         assertEquals("Map doesn't contain an entry with the key 4.", exception.getMessage());
     }
 
@@ -606,7 +606,7 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void updateShouldStoreTheNewValueForTheKey() {
-        ModifiableMap<Integer, String> map = createNewMap();
+        ModifiableMap<Integer, String> map = createMap123();
         map.update(1, "bis");
         assertEquals("bis", map.get(1));
         assertTrue(map.containsValue("bis"));
@@ -620,6 +620,6 @@ public final class ModifiableHashMapTest
      */
     @Test
     public void updateShouldReturnTheOldValueForTheKey() {
-        assertEquals("one", createNewMap().update(1, "bis"));
+        assertEquals("one", createMap123().update(1, "bis"));
     }
 }

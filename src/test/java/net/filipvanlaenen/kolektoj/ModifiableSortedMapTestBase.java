@@ -314,6 +314,34 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
     }
 
     /**
+     * Verifies that removeIf returns false on an empty map.
+     */
+    @Test
+    public void removeIfShouldReturnFalseOnAnEmptyMap() {
+        assertFalse(createMap().removeIf(x -> true));
+    }
+
+    /**
+     * Verifies that removeIf returns false when no elements are removed.
+     */
+    @Test
+    public void removeIfShouldReturnFalseWhenNoElementsAreRemoved() {
+        T map = createMap123();
+        assertFalse(map.removeIf(x -> false));
+        assertEquals(THREE, map.size());
+    }
+
+    /**
+     * Verifies that removeIf returns true when an element is removed.
+     */
+    @Test
+    public void removeIfShouldReturnTrueWhenAnElementIsRemoved() {
+        T map = createMap123();
+        assertTrue(map.removeIf(x -> x.key() == 1));
+        assertEquals(2, map.size());
+    }
+
+    /**
      * Verifies that trying to remove the entry with the least key from an empty map throws IndexOutOfBoundsException.
      */
     @Test
