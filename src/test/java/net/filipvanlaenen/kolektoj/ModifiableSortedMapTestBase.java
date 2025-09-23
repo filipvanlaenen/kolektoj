@@ -257,6 +257,16 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
     }
 
     /**
+     * Verifies that the map is updated when the least key is removed.
+     */
+    @Test
+    public void removeShouldUpdateStructureWhenLeastKeyIsRemoved() {
+        T map = createMap(ENTRY1, ENTRY2, ENTRY3);
+        map.remove(1);
+        assertEquals(ENTRY2, map.getLeast());
+    }
+
+    /**
      * Verifies that when all entries are removed, a collection is empty.
      */
     @Test
