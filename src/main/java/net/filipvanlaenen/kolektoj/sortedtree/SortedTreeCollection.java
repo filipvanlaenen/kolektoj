@@ -12,6 +12,7 @@ import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
+import net.filipvanlaenen.kolektoj.sortedtree.SortedTree.TreeNodesBelowAtAndAbove;
 
 /**
  * An implementation of the {@link net.filipvanlaenen.kolektoj.OrderedCollection} interface backed by a sorted tree, in
@@ -151,12 +152,13 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
         }
-        TreeNode<E, E> at = sortedTree.getNodesBelowAtAndAbove(element).at();
+        TreeNodesBelowAtAndAbove<E, E> belowAtAndAbove = sortedTree.getNodesBelowAtAndAbove(element);
+        TreeNode<E, E> at = belowAtAndAbove.at();
         if (at == null) {
-            TreeNode<E, E> above = sortedTree.getNodesBelowAtAndAbove(element).above();
+            TreeNode<E, E> above = belowAtAndAbove.above();
             if (above == null) {
                 throw new IndexOutOfBoundsException("Cannot return an element from the collection that's greater than"
-                        + " or equal to the the provided value.");
+                        + " or equal to the provided value.");
             } else {
                 return above.getKey();
             }
@@ -184,9 +186,10 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
         }
-        TreeNode<E, E> at = sortedTree.getNodesBelowAtAndAbove(element).at();
+        TreeNodesBelowAtAndAbove<E, E> belowAtAndAbove = sortedTree.getNodesBelowAtAndAbove(element);
+        TreeNode<E, E> at = belowAtAndAbove.at();
         if (at == null) {
-            TreeNode<E, E> below = sortedTree.getNodesBelowAtAndAbove(element).below();
+            TreeNode<E, E> below = belowAtAndAbove.below();
             if (below == null) {
                 throw new IndexOutOfBoundsException("Cannot return an element from the collection that's less than or"
                         + " equal to the the provided value.");

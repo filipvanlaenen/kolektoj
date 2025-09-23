@@ -16,7 +16,6 @@ import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
-import net.filipvanlaenen.kolektoj.sortedtree.SortedTree.TreeNodesBelowAtAndAbove;
 
 /**
  * A class implementing an AVL tree.
@@ -469,11 +468,7 @@ class SortedTree<K, C> {
         } else {
             TreeNodesBelowAtAndAbove<K, C> leftResults = getNodesBelowAtAndAbove(node.getLeftChild(), key);
             TreeNodesBelowAtAndAbove<K, C> rightResults = getNodesBelowAtAndAbove(node.getRightChild(), key);
-            if (leftResults.at == null) {
-                return new TreeNodesBelowAtAndAbove<K, C>(leftResults.below, rightResults.at, rightResults.above);
-            } else {
-                return new TreeNodesBelowAtAndAbove<K, C>(leftResults.below, leftResults.at, rightResults.above);
-            }
+            return new TreeNodesBelowAtAndAbove<K, C>(leftResults.below, node, rightResults.above);
         }
     }
 

@@ -160,7 +160,7 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
         int i = ArrayUtilities.findInsertionIndex(elements, elements.length, element, comparator);
         if (i == elements.length) {
             throw new IndexOutOfBoundsException("Cannot return an element from the collection that's greater than or"
-                    + " equal to the the provided value.");
+                    + " equal to the provided value.");
         }
         return (E) elements[i];
     }
