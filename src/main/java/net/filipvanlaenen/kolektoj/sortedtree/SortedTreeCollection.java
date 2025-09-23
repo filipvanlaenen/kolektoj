@@ -192,7 +192,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
             TreeNode<E, E> below = belowAtAndAbove.below();
             if (below == null) {
                 throw new IndexOutOfBoundsException("Cannot return an element from the collection that's less than or"
-                        + " equal to the the provided value.");
+                        + " equal to the provided value.");
             } else {
                 return below.getKey();
             }

@@ -228,6 +228,37 @@ public abstract class SortedCollectionTestBase<T extends SortedCollection<Intege
     }
 
     /**
+     * Verifies that <code>getLessThanOrEqualTo</code> on an empty collection throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getLessThanOrEqualToShouldThrowExceptionWhenCalledOnAnEmptyCollection() {
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class,
+                () -> createSortedCollection(COMPARATOR).getLessThanOrEqualTo(2));
+        assertEquals("Cannot return an element from an empty collection.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getLessThanOrEqualTo</code> returns an element that's greater than or equal to the provided
+     * element.
+     */
+    @Test
+    public void getLessThanOrEqualToShouldReturnTheElementThatIsEqualIfPresent() {
+        assertEquals(2, collection123.getLessThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getLessThanOrEqualTo</code> throws IndexOutOfBoundsException when there's no less or equal
+     * element.
+     */
+    @Test
+    public void getLessThanOrEqualToShouldThrowExceptionWhenCalledWithGreaterThanGreatestElement() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> collection123.getLessThanOrEqualTo(0));
+        assertEquals("Cannot return an element from the collection that's less than or equal to the provided value.",
+                exception.getMessage());
+    }
+
+    /**
      * Verifies that indexOf returns the correct index for elements in the collection.
      */
     @Test
