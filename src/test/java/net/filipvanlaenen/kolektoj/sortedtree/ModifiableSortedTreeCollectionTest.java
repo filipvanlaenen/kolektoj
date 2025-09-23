@@ -33,6 +33,14 @@ public final class ModifiableSortedTreeCollectionTest
      */
     private static final int FIVE = 5;
     /**
+     * Sorted collection with the integers 1, 2 and 3.
+     */
+    private final ModifiableSortedTreeCollection<Integer> collection123 = createModifiableCollection(1, 2, 3);
+    /**
+     * Sorted collection with the integers 1 and 3.
+     */
+    private final ModifiableSortedTreeCollection<Integer> collection13 = createModifiableCollection(1, 3);
+    /**
      * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
      * value.
      */
@@ -123,6 +131,143 @@ public final class ModifiableSortedTreeCollectionTest
     @Test
     public void getComparatorShouldReturnTheProvidedComparator() {
         assertEquals(COMPARATOR, createCollection513().getComparator());
+    }
+
+    /**
+     * Verifies that <code>getGreaterThan</code> on an empty collection throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getGreaterThanShouldThrowExceptionWhenCalledOnAnEmptyCollection() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createModifiableCollection().getGreaterThan(2));
+        assertEquals("Cannot return an element from an empty collection.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getGreaterThan</code> returns an element that's greater than the provided element.
+     */
+    @Test
+    public void getGreaterThanShouldReturnTheFirstElementThatIsGreater() {
+        assertEquals(THREE, collection123.getGreaterThan(2));
+    }
+
+    /**
+     * Verifies that <code>getGreaterThan</code> throws IndexOutOfBoundsException when there's no greater element.
+     */
+    @Test
+    public void getGreaterThanShouldThrowExceptionWhenCalledWithGreatestElement() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> collection123.getGreaterThan(THREE));
+        assertEquals("Cannot return an element from the collection that's greater than the provided value.",
+                exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getGreaterThanOrEqualTo</code> on an empty collection throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getGreaterThanOrEqualToShouldThrowExceptionWhenCalledOnAnEmptyCollection() {
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class,
+                () -> createModifiableCollection().getGreaterThanOrEqualTo(2));
+        assertEquals("Cannot return an element from an empty collection.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getGreaterThanOrEqualTo</code> returns an element that's equal to the provided element if
+     * it's present.
+     */
+    @Test
+    public void getGreaterThanOrEqualToShouldReturnTheElementThatIsEqualIfPresent() {
+        assertEquals(2, collection123.getGreaterThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getGreaterThanOrEqualTo</code> returns an element that's greater than if the provided element
+     * is absent.
+     */
+    @Test
+    public void getGreaterThanOrEqualToShouldReturnGreaterElementIfProvidedElementIsAbsent() {
+        assertEquals(THREE, collection13.getGreaterThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getGreaterThanOrEqualTo</code> throws IndexOutOfBoundsException when there's no greater or
+     * equal element.
+     */
+    @Test
+    public void getGreaterThanOrEqualToShouldThrowExceptionWhenCalledWithGreaterThanGreatestElement() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> collection123.getGreaterThanOrEqualTo(FOUR));
+        assertEquals("Cannot return an element from the collection that's greater than or equal to the provided value.",
+                exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getLessThan</code> on an empty collection throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getLessThanShouldThrowExceptionWhenCalledOnAnEmptyCollection() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createModifiableCollection().getLessThan(2));
+        assertEquals("Cannot return an element from an empty collection.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getLessThan</code> returns an element that's less than the provided element.
+     */
+    @Test
+    public void getLessThanShouldReturnTheLastElementThatIsLess() {
+        assertEquals(1, collection123.getLessThan(2));
+    }
+
+    /**
+     * Verifies that <code>getLessThan</code> throws IndexOutOfBoundsException when there's no less element.
+     */
+    @Test
+    public void getLessThanShouldThrowExceptionWhenCalledWithLeastElement() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> collection123.getLessThan(1));
+        assertEquals("Cannot return an element from the collection that's less than the provided value.",
+                exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getLessThanOrEqualTo</code> on an empty collection throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getLessThanOrEqualToShouldThrowExceptionWhenCalledOnAnEmptyCollection() {
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class,
+                () -> createModifiableCollection().getLessThanOrEqualTo(2));
+        assertEquals("Cannot return an element from an empty collection.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getLessThanOrEqualTo</code> returns an element that's equal to the provided element if it's
+     * present.
+     */
+    @Test
+    public void getLessThanOrEqualToShouldReturnTheElementThatIsEqualIfPresent() {
+        assertEquals(2, collection123.getLessThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getLessThanOrEqualTo</code> returns an element that's less if the provided element is absent.
+     */
+    @Test
+    public void getLessThanOrEqualToShouldReturnLessElementIfProvidedElementIsAbsent() {
+        assertEquals(1, collection13.getLessThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getLessThanOrEqualTo</code> throws IndexOutOfBoundsException when there's no less or equal
+     * element.
+     */
+    @Test
+    public void getLessThanOrEqualToShouldThrowExceptionWhenCalledWithGreaterThanGreatestElement() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> collection123.getLessThanOrEqualTo(0));
+        assertEquals("Cannot return an element from the collection that's less than or equal to the provided value.",
+                exception.getMessage());
     }
 
     /**

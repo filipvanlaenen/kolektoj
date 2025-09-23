@@ -13,6 +13,7 @@ import net.filipvanlaenen.kolektoj.ModifiableSortedCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
+import net.filipvanlaenen.kolektoj.sortedtree.SortedTree.TreeNodesBelowAtAndAbove;
 
 /**
  * An implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableSortedCollection} interface backed by a sorted
@@ -153,26 +154,70 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
 
     @Override
     public E getGreaterThan(final E element) throws IndexOutOfBoundsException {
-        // TODO: Issue #46
-        return null;
+        if (size() == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        }
+        TreeNode<E, E> above = sortedTree.getNodesBelowAtAndAbove(element).above();
+        if (above == null) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an element from the collection that's greater than the provided value.");
+        } else {
+            return above.getKey();
+        }
     }
 
     @Override
     public E getGreaterThanOrEqualTo(final E element) throws IndexOutOfBoundsException {
-        // TODO: Issue #46
-        return null;
+        if (size() == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        }
+        TreeNodesBelowAtAndAbove<E, E> belowAtAndAbove = sortedTree.getNodesBelowAtAndAbove(element);
+        TreeNode<E, E> at = belowAtAndAbove.at();
+        if (at == null) {
+            TreeNode<E, E> above = belowAtAndAbove.above();
+            if (above == null) {
+                throw new IndexOutOfBoundsException("Cannot return an element from the collection that's greater than"
+                        + " or equal to the provided value.");
+            } else {
+                return above.getKey();
+            }
+        } else {
+            return at.getKey();
+        }
     }
 
     @Override
     public E getLessThan(final E element) throws IndexOutOfBoundsException {
-        // TODO: Issue #46
-        return null;
+        if (size() == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        }
+        TreeNode<E, E> below = sortedTree.getNodesBelowAtAndAbove(element).below();
+        if (below == null) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an element from the collection that's less than the provided value.");
+        } else {
+            return below.getKey();
+        }
     }
 
     @Override
     public E getLessThanOrEqualTo(final E element) throws IndexOutOfBoundsException {
-        // TODO: Issue #46
-        return null;
+        if (size() == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        }
+        TreeNodesBelowAtAndAbove<E, E> belowAtAndAbove = sortedTree.getNodesBelowAtAndAbove(element);
+        TreeNode<E, E> at = belowAtAndAbove.at();
+        if (at == null) {
+            TreeNode<E, E> below = belowAtAndAbove.below();
+            if (below == null) {
+                throw new IndexOutOfBoundsException("Cannot return an element from the collection that's less than or"
+                        + " equal to the provided value.");
+            } else {
+                return below.getKey();
+            }
+        } else {
+            return at.getKey();
+        }
     }
 
     @Override
