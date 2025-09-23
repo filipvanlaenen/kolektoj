@@ -171,7 +171,7 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
         }
         int i = ArrayUtilities.findInsertionIndex(elements, elements.length, element, comparator);
-        while (i >= 0 && comparator.compare(element, (E) elements[i]) >= 0) {
+        while (i >= 0 && comparator.compare(element, (E) elements[i]) <= 0) {
             i--;
         }
         if (i == -1) {
@@ -187,7 +187,7 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
             throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
         }
         int i = ArrayUtilities.findInsertionIndex(elements, elements.length, element, comparator);
-        while (i >= 0 && comparator.compare(element, (E) elements[i]) > 0) {
+        while (i >= 0 && comparator.compare(element, (E) elements[i]) < 0) {
             i--;
         }
         if (i == -1) {

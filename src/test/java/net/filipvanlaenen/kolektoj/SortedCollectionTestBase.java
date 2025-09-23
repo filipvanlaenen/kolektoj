@@ -110,6 +110,27 @@ public abstract class SortedCollectionTestBase<T extends SortedCollection<Intege
     protected abstract T createSortedCollection(Comparator<Integer> comparator, Integer... integers);
 
     /**
+     * Verifies that firstIndexOf returns the correct index for elements in the collection.
+     */
+    @Test
+    public void firstIndexOfShouldReturnIndexForAnElementInTheCollection() {
+        for (int i : mod5collection) {
+            assertEquals(i, mod5collection.getAt(mod5collection.firstIndexOf(i)));
+        }
+    }
+
+    /**
+     * Verifies that firstIndexOf returns -1 for elements not in the collection.
+     */
+    @Test
+    public void firstIndexOfShouldReturnMinusOneForAnElementNotInTheCollection() {
+        assertEquals(-1, mod5collection.firstIndexOf(SIXTEEN));
+        assertEquals(-1, mod5collection.firstIndexOf(SEVENTEEN));
+        assertEquals(-1, mod5collection.firstIndexOf(EIGHTEEN));
+        assertEquals(-1, mod5collection.firstIndexOf(FOUR));
+    }
+
+    /**
      * Verifies that <code>getComparator</code> returns the comparator used to create the sorted collection.
      */
     @Test
@@ -178,24 +199,32 @@ public abstract class SortedCollectionTestBase<T extends SortedCollection<Intege
     }
 
     /**
-     * Verifies that firstIndexOf returns the correct index for elements in the collection.
+     * Verifies that <code>getLessThan</code> on an empty collection throws IndexOutOfBoundsException.
      */
     @Test
-    public void firstIndexOfShouldReturnIndexForAnElementInTheCollection() {
-        for (int i : mod5collection) {
-            assertEquals(i, mod5collection.getAt(mod5collection.firstIndexOf(i)));
-        }
+    public void getLessThanShouldThrowExceptionWhenCalledOnAnEmptyCollection() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createSortedCollection(COMPARATOR).getLessThan(2));
+        assertEquals("Cannot return an element from an empty collection.", exception.getMessage());
     }
 
     /**
-     * Verifies that firstIndexOf returns -1 for elements not in the collection.
+     * Verifies that <code>getLessThan</code> returns an element that's less than the provided element.
      */
     @Test
-    public void firstIndexOfShouldReturnMinusOneForAnElementNotInTheCollection() {
-        assertEquals(-1, mod5collection.firstIndexOf(SIXTEEN));
-        assertEquals(-1, mod5collection.firstIndexOf(SEVENTEEN));
-        assertEquals(-1, mod5collection.firstIndexOf(EIGHTEEN));
-        assertEquals(-1, mod5collection.firstIndexOf(FOUR));
+    public void getLessThanShouldReturnTheLastElementThatIsLess() {
+        assertEquals(1, collection123.getLessThan(2));
+    }
+
+    /**
+     * Verifies that <code>getLessThan</code> throws IndexOutOfBoundsException when there's no less element.
+     */
+    @Test
+    public void getLessThanShouldThrowExceptionWhenCalledWithLeastElement() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> collection123.getLessThan(1));
+        assertEquals("Cannot return an element from the collection that's less than the provided value.",
+                exception.getMessage());
     }
 
     /**
