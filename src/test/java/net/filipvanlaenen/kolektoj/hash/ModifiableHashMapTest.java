@@ -460,7 +460,7 @@ public final class ModifiableHashMapTest
     @Test
     public void removeAllShouldReturnFalseWhenNoEntriesAreRemoved() {
         ModifiableMap<Integer, String> map = createNewMap();
-        assertFalse(map.removeAll(new ModifiableHashMap<Integer, String>(ENTRY4)));
+        assertFalse(map.removeAll(MAP4));
     }
 
     /**

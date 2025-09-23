@@ -257,6 +257,34 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
     }
 
     /**
+     * Verifies that when all entries are removed, a collection is empty.
+     */
+    @Test
+    public void removeAllWithTheSameEntriesShouldMakeMapEmpty() {
+        T map = createMap123();
+        map.removeAll(map123);
+        assertTrue(map.isEmpty());
+    }
+
+    /**
+     * Verifies that when some entries are removed, removeAll returns true.
+     */
+    @Test
+    public void removeAllShouldReturnTrueWhenSomeEntriesAreRemoved() {
+        T map = createMap123();
+        assertTrue(map.removeAll(Map.<Integer, String>of(ENTRY1, ENTRY2)));
+    }
+
+    /**
+     * Verifies that when no entries are removed, removeAll returns false.
+     */
+    @Test
+    public void removeAllShouldReturnFalseWhenNoEntriesAreRemoved() {
+        T map = createMap123();
+        assertFalse(map.removeAll(MAP4));
+    }
+
+    /**
      * Verifies that trying to remove the entry with the greatest key from an empty map throws
      * IndexOutOfBoundsException.
      */
