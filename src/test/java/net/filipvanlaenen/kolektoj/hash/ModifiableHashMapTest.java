@@ -2,11 +2,7 @@ package net.filipvanlaenen.kolektoj.hash;
 
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -544,7 +540,7 @@ public final class ModifiableHashMapTest
      * Verifies that when all entries are retained, a map remains intact.
      */
     @Test
-    public void retainAllWithTheSameEntriessShouldNotRemoveEntries() {
+    public void retainAllWithTheSameEntriesShouldNotRemoveEntries() {
         ModifiableMap<Integer, String> map = createMap123();
         map.retainAll(MAP123);
         assertEquals(THREE, map.size());

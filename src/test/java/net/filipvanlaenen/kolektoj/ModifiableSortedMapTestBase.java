@@ -2,11 +2,7 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +37,10 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
      * An entry with key 4 and value four.
      */
     private static final Entry<Integer, String> ENTRY4 = new Entry<Integer, String>(4, "four");
+    /**
+     * Map with the integers 1 and 2.
+     */
+    private static final Map<Integer, String> MAP12 = Map.<Integer, String>of(ENTRY1, ENTRY2);
     /**
      * Map with the integer 4 mapped to its word.
      */
@@ -272,7 +272,7 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
     @Test
     public void removeAllShouldReturnTrueWhenSomeEntriesAreRemoved() {
         T map = createMap123();
-        assertTrue(map.removeAll(Map.<Integer, String>of(ENTRY1, ENTRY2)));
+        assertTrue(map.removeAll(MAP12));
     }
 
     /**
@@ -367,5 +367,25 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
         map123.removeLeast();
         assertEquals(2, map123.size());
         assertFalse(map123.contains(ENTRY1));
+    }
+
+    /**
+     * Verifies that when some entries are removed, retainAll returns true.
+     */
+    @Test
+    public void retainAllShouldReturnTrueWhenSomeEntriesAreRemoved() {
+        T map = createMap123();
+        assertTrue(map.retainAll(MAP12));
+        assertEquals(2, map.size());
+    }
+
+    /**
+     * Verifies that when no entries are removed, retainAll returns false.
+     */
+    @Test
+    public void retainAllShouldReturnFalseWhenNoEntriesAreRemoved() {
+        ModifiableMap<Integer, String> map = createMap123();
+        assertFalse(map.retainAll(Map.<Integer, String>of(ENTRY1, ENTRY2, ENTRY3, ENTRY4)));
+        assertEquals(THREE, map.size());
     }
 }
