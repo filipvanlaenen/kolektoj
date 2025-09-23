@@ -21,6 +21,10 @@ public class SortedTreeTest {
      */
     private static final int THREE = 3;
     /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
      * The magic number five.
      */
     private static final int FIVE = 5;
@@ -364,6 +368,19 @@ public class SortedTreeTest {
         sortedTree.add(2, "two");
         sortedTree.add(THREE, "three");
         assertEquals(2, sortedTree.getHeight());
+    }
+
+    /**
+     * Verifies that <code>getHeight</code> returns three after adding four elements to an empty tree.
+     */
+    @Test
+    public void getHeightShouldReturnTwoAfterAddingFourElementsToEmptyTree() {
+        SortedTree<Integer, String> sortedTree = createEmptyTree();
+        sortedTree.add(1, "one");
+        sortedTree.add(2, "two");
+        sortedTree.add(THREE, "three");
+        sortedTree.add(FOUR, "four");
+        assertEquals(THREE, sortedTree.getHeight());
     }
 
     /**
