@@ -40,9 +40,13 @@ public abstract class SortedCollectionTestBase<T extends SortedCollection<Intege
      */
     private static final int EIGHTEEN = 18;
     /**
-     * Ordered collection with the integers 1, 2 and 3.
+     * Sorted collection with the integers 1, 2 and 3.
      */
     private final T collection123 = createSortedCollection(COMPARATOR, 1, 2, 3);
+    /**
+     * Sorted collection with the integers 1 and 3.
+     */
+    private final T collection13 = createSortedCollection(COMPARATOR, 1, 3);
     /**
      * Sorted collection using the modulo five comparator.
      */
@@ -178,12 +182,21 @@ public abstract class SortedCollectionTestBase<T extends SortedCollection<Intege
     }
 
     /**
-     * Verifies that <code>getGreaterThanOrEqualTo</code> returns an element that's greater than or equal to the
-     * provided element.
+     * Verifies that <code>getGreaterThanOrEqualTo</code> returns an element that's equal to the provided element if
+     * it's present.
      */
     @Test
     public void getGreaterThanOrEqualToShouldReturnTheElementThatIsEqualIfPresent() {
         assertEquals(2, collection123.getGreaterThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getGreaterThanOrEqualTo</code> returns an element that's greater than if the provided element
+     * is absent.
+     */
+    @Test
+    public void getGreaterThanOrEqualToShouldReturnGreaterElementIfProvidedElementIsAbsent() {
+        assertEquals(THREE, collection13.getGreaterThanOrEqualTo(2));
     }
 
     /**
@@ -238,12 +251,20 @@ public abstract class SortedCollectionTestBase<T extends SortedCollection<Intege
     }
 
     /**
-     * Verifies that <code>getLessThanOrEqualTo</code> returns an element that's greater than or equal to the provided
-     * element.
+     * Verifies that <code>getLessThanOrEqualTo</code> returns an element that's equal to the provided element if it's
+     * present.
      */
     @Test
     public void getLessThanOrEqualToShouldReturnTheElementThatIsEqualIfPresent() {
         assertEquals(2, collection123.getLessThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getLessThanOrEqualTo</code> returns an element that's less if the provided element is absent.
+     */
+    @Test
+    public void getLessThanOrEqualToShouldReturnLessElementIfProvidedElementIsAbsent() {
+        assertEquals(1, collection13.getLessThanOrEqualTo(2));
     }
 
     /**
