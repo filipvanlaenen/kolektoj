@@ -119,6 +119,16 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
     }
 
     /**
+     * Verifies that cached arrays are marked as dirty after adding a new key.
+     */
+    @Test
+    public void addShouldMarkCachedArraysAsDirty() {
+        T map = createMap(ENTRY1);
+        map.add(2, "one");
+        assertEquals(2, map.toArray().length);
+    }
+
+    /**
      * Verifies that adding an empty map returns false.
      */
     @Test
