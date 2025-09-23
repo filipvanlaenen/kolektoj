@@ -239,6 +239,24 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
     }
 
     /**
+     * Verifies that trying to remove an absent key throws IllegalArgumentException.
+     */
+    @Test
+    public void removeShouldThrowExceptionForAbsentKey() {
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> createMap().remove(FOUR));
+        assertEquals("Map doesn't contain an entry with the key 4.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that removing a key returns the associated value.
+     */
+    @Test
+    public void removeShouldReturnTheValueForTheKey() {
+        assertEquals("one", createMap123().remove(1));
+    }
+
+    /**
      * Verifies that trying to remove the entry with the greatest key from an empty map throws
      * IndexOutOfBoundsException.
      */
