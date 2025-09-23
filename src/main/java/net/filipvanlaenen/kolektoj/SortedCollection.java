@@ -79,6 +79,26 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
     Comparator<? super E> getComparator();
 
     /**
+     * Returns the least element in this collection greater than the provided element.
+     *
+     * @param element The value to match.
+     * @return The least element in this collection greater than the provided element.
+     * @throws IndexOutOfBoundsException Thrown if the collection doesn't contain an element that's greater than the
+     *                                   provided element, or the collection is empty.
+     */
+    E getGreaterThan(E element) throws IndexOutOfBoundsException;
+
+    /**
+     * Returns the least element in this collection greater than or equal to the provided element.
+     *
+     * @param element The value to match.
+     * @return The least element in this collection greater than or equal to the provided element.
+     * @throws IndexOutOfBoundsException Thrown if the collection doesn't contain an element that's greater than or
+     *                                   equal to the provided element, or the collection is empty.
+     */
+    E getGreaterThanOrEqualTo(E element) throws IndexOutOfBoundsException;
+
+    /**
      * Returns the greatest element in the collection.
      *
      * @return The greatest element in the collection.
@@ -97,4 +117,24 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
     default E getLeast() throws IndexOutOfBoundsException {
         return getFirst();
     }
+
+    /**
+     * Returns the greatest element in this collection less than the provided element.
+     *
+     * @param element The value to match.
+     * @return The greatest element in this collection less than the provided element.
+     * @throws IndexOutOfBoundsException Thrown if the collection doesn't contain an element that's less than the
+     *                                   provided element, or the collection is empty.
+     */
+    E getLessThan(E element) throws IndexOutOfBoundsException;
+
+    /**
+     * Returns the greatest element in this collection less than or equal to the provided element.
+     *
+     * @param element The value to match.
+     * @return The greatest element in this collection less than or equal to the provided element.
+     * @throws IndexOutOfBoundsException Thrown if the collection doesn't contain an element that's less than or equal
+     *                                   to the provided element, or the collection is empty.
+     */
+    E getLessThanOrEqualTo(E element) throws IndexOutOfBoundsException;
 }

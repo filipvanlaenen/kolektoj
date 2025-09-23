@@ -152,6 +152,30 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     }
 
     @Override
+    public E getGreaterThan(final E element) throws IndexOutOfBoundsException {
+        // TODO: Issue #46
+        return null;
+    }
+
+    @Override
+    public E getGreaterThanOrEqualTo(final E element) throws IndexOutOfBoundsException {
+        // TODO: Issue #46
+        return null;
+    }
+
+    @Override
+    public E getLessThan(final E element) throws IndexOutOfBoundsException {
+        // TODO: Issue #46
+        return null;
+    }
+
+    @Override
+    public E getLessThanOrEqualTo(final E element) throws IndexOutOfBoundsException {
+        // TODO: Issue #46
+        return null;
+    }
+
+    @Override
     public int indexOf(final E element) {
         return sortedTree.indexOf(element);
     }

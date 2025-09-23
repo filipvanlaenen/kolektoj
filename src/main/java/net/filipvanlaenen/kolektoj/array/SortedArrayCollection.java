@@ -137,6 +137,67 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
     }
 
     @Override
+    public E getGreaterThan(final E element) throws IndexOutOfBoundsException {
+        if (elements.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        }
+        int i = ArrayUtilities.findInsertionIndex(elements, elements.length, element, comparator);
+        while (i < elements.length && comparator.compare(element, (E) elements[i]) == 0) {
+            i++;
+        }
+        if (i == elements.length) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an element from the collection that's greater than the provided value.");
+        }
+        return (E) elements[i];
+    }
+
+    @Override
+    public E getGreaterThanOrEqualTo(final E element) throws IndexOutOfBoundsException {
+        if (elements.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        }
+        int i = ArrayUtilities.findInsertionIndex(elements, elements.length, element, comparator);
+        if (i == elements.length) {
+            throw new IndexOutOfBoundsException("Cannot return an element from the collection that's greater than or"
+                    + " equal to the the provided value.");
+        }
+        return (E) elements[i];
+    }
+
+    @Override
+    public E getLessThan(final E element) throws IndexOutOfBoundsException {
+        if (elements.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        }
+        int i = ArrayUtilities.findInsertionIndex(elements, elements.length, element, comparator);
+        while (i >= 0 && comparator.compare(element, (E) elements[i]) >= 0) {
+            i--;
+        }
+        if (i == -1) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an element from the collection that's less than the provided value.");
+        }
+        return (E) elements[i];
+    }
+
+    @Override
+    public E getLessThanOrEqualTo(final E element) throws IndexOutOfBoundsException {
+        if (elements.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        }
+        int i = ArrayUtilities.findInsertionIndex(elements, elements.length, element, comparator);
+        while (i >= 0 && comparator.compare(element, (E) elements[i]) > 0) {
+            i--;
+        }
+        if (i == -1) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an element from the collection that's less than or equal to the provided value.");
+        }
+        return (E) elements[i];
+    }
+
+    @Override
     public int indexOf(final E element) {
         int i = ArrayUtilities.findIndex(elements, elements.length, element, comparator);
         if (i == -1) {

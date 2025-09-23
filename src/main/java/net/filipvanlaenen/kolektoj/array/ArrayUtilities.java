@@ -224,6 +224,31 @@ public final class ArrayUtilities {
      *         that the comparator returns zero, or -1 if it's absent.
      */
     static <E> int findIndex(final Object[] elements, final int size, final E element, final Comparator<E> comparator) {
+        int i = findInsertionIndex(elements, size, element, comparator);
+        if (i < size && comparator.compare(element, (E) elements[i]) == 0) {
+            return i;
+        } else {
+            return -1;
+        }
+    }
+
+    /**
+     * Returns an index where an element can be inserted in the first <code>size</code> elements of a sorted array using
+     * the provided comparator. The returned index either contains an element for which the comparator returns zero when
+     * compared to the provided element, or it is the first element for which the comparator returns a positive integer.
+     * If all elements in the sorted array return a negative integer, the size is returned.
+     *
+     * @param <E>        The element type.
+     * @param elements   The array that should contain the elements.
+     * @param size       The number of elements to check in the source array.
+     * @param element    The element.
+     * @param comparator The comparator to use.
+     * @return An index where an element can be found in the first <code>size</code> elements of a sorted array such
+     *         that the comparator returns zero, or -1 if it's absent.
+     */
+
+    static <E> int findInsertionIndex(final Object[] elements, final int size, final E element,
+            final Comparator<E> comparator) {
         int below = -1;
         int above = size;
         while (above > below + 1) {
@@ -237,7 +262,7 @@ public final class ArrayUtilities {
                 below = middle;
             }
         }
-        return -1;
+        return above;
     }
 
     /**
