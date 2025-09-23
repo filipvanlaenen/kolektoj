@@ -24,7 +24,16 @@ import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
  * @param <C> The content type.
  */
 class SortedTree<K, C> {
-    record TreeNodesBelowAtAndAbove<K, C>(TreeNode<K, C> below, TreeNode<K, C> at, TreeNode<K, C> above) {
+    /**
+     * Record holding the nodes just below, at and just above a key.
+     *
+     * @param <L>   The sorting key type.
+     * @param <D>   The content type.
+     * @param below The node just below.
+     * @param at    The node with an equivalent key.
+     * @param above The node just above.
+     */
+    record TreeNodesBelowAtAndAbove<L, D>(TreeNode<L, D> below, TreeNode<L, D> at, TreeNode<L, D> above) {
     }
 
     /**

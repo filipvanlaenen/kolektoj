@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
+import net.filipvanlaenen.kolektoj.sortedtree.SortedTree.TreeNodesBelowAtAndAbove;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.SortedTree} class.
@@ -23,6 +24,18 @@ public class SortedTreeTest {
      * The magic number five.
      */
     private static final int FIVE = 5;
+    /**
+     * The magic number nine.
+     */
+    private static final int NINE = 9;
+    /**
+     * The magic number ten.
+     */
+    private static final int TEN = 10;
+    /**
+     * The magic number eleven.
+     */
+    private static final int ELEVEN = 11;
     /**
      * The magic number twenty.
      */
@@ -303,24 +316,6 @@ public class SortedTreeTest {
     }
 
     /**
-     * Verifies that <code>getRootNode</code> returns <code>null</code> for an empty tree.
-     */
-    @Test
-    public void getRootNodeShouldReturnNullForEmptyTree() {
-        assertNull(EMPTY_TREE.getRootNode());
-    }
-
-    /**
-     * Verifies that <code>getRootNode</code> returns the root node for a tiny tree.
-     */
-    @Test
-    public void getRootNodeShouldReturnNodeWithKeyAndValueForTinyTree() {
-        TreeNode<Integer, String> node = TINY_TREE.getRootNode();
-        assertEquals(1, node.getKey());
-        assertEquals("1", node.getContent());
-    }
-
-    /**
      * Verifies that <code>getGreatest</code> returns the rightmost node.
      */
     @Test
@@ -407,6 +402,36 @@ public class SortedTreeTest {
     public void getNodeWithKeyShouldReturnNullForKeyAbsentInLargeTree() {
         assertNull(LARGE_TREE.getNode(0));
         assertNull(LARGE_TREE.getNode(HUNDRED));
+    }
+
+    /**
+     * Verifies that <code>getNodesBelowAtAndAbove</code> returns nodes just below, at and just above the provided key
+     * when all are present.
+     */
+    @Test
+    public void getNodesBelowAtAndAboveReturnsJustBelowAtAndJustAboveWhenAllPresent() {
+        TreeNodesBelowAtAndAbove<Integer, String> belowAtAndAbove = LARGE_TREE.getNodesBelowAtAndAbove(TEN);
+        assertEquals(NINE, belowAtAndAbove.below().getKey());
+        assertEquals(TEN, belowAtAndAbove.at().getKey());
+        assertEquals(ELEVEN, belowAtAndAbove.above().getKey());
+    }
+
+    /**
+     * Verifies that <code>getRootNode</code> returns <code>null</code> for an empty tree.
+     */
+    @Test
+    public void getRootNodeShouldReturnNullForEmptyTree() {
+        assertNull(EMPTY_TREE.getRootNode());
+    }
+
+    /**
+     * Verifies that <code>getRootNode</code> returns the root node for a tiny tree.
+     */
+    @Test
+    public void getRootNodeShouldReturnNodeWithKeyAndValueForTinyTree() {
+        TreeNode<Integer, String> node = TINY_TREE.getRootNode();
+        assertEquals(1, node.getKey());
+        assertEquals("1", node.getContent());
     }
 
     /**
