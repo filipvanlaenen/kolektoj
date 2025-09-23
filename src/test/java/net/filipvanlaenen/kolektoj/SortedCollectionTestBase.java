@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -14,6 +15,10 @@ import org.junit.jupiter.api.Test;
  */
 public abstract class SortedCollectionTestBase<T extends SortedCollection<Integer>>
         extends OrderedCollectionTestBase<T> {
+    /**
+     * The magic number three.
+     */
+    private static final int THREE = 3;
     /**
      * The magic number four.
      */
@@ -34,6 +39,10 @@ public abstract class SortedCollectionTestBase<T extends SortedCollection<Intege
      * The magic number eighteen.
      */
     private static final int EIGHTEEN = 18;
+    /**
+     * Ordered collection with the integers 1, 2 and 3.
+     */
+    private final T collection123 = createSortedCollection(COMPARATOR, 1, 2, 3);
     /**
      * Sorted collection using the modulo five comparator.
      */
@@ -105,8 +114,36 @@ public abstract class SortedCollectionTestBase<T extends SortedCollection<Intege
      */
     @Test
     public void getComparatorShouldReturnTheProvidedComparator() {
-        T collection = createSortedCollection(COMPARATOR, 1, 2);
-        assertEquals(COMPARATOR, collection.getComparator());
+        assertEquals(COMPARATOR, collection123.getComparator());
+    }
+
+    /**
+     * Verifies that <code>getGreaterThan</code> on an empty collection throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getGreaterThanShouldThrowExceptionWhenCalledOnAnEmptyCollection() {
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class,
+                () -> createSortedCollection(COMPARATOR).getGreaterThan(2));
+        assertEquals("Cannot return an element from an empty collection.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getGreaterThan</code> returns an element that's greater than the provided element.
+     */
+    @Test
+    public void getGreaterThanShouldReturnTheFirstElementThatIsGreater() {
+        assertEquals(THREE, collection123.getGreaterThan(2));
+    }
+
+    /**
+     * Verifies that <code>getGreaterThan</code> throws IndexOutOfBoundsException when there's no greater element.
+     */
+    @Test
+    public void getGreaterThanShouldThrowExceptionWhenCalledWithGreatestElement() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> collection123.getGreaterThan(THREE));
+        assertEquals("Cannot return an element from the collection that's greater than the provided value.",
+                exception.getMessage());
     }
 
     /**

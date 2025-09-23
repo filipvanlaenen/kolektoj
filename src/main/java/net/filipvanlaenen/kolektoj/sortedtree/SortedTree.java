@@ -16,6 +16,7 @@ import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
+import net.filipvanlaenen.kolektoj.sortedtree.SortedTree.TreeNodesBelowAtAndAbove;
 
 /**
  * A class implementing an AVL tree.
@@ -24,6 +25,9 @@ import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
  * @param <C> The content type.
  */
 class SortedTree<K, C> {
+    record TreeNodesBelowAtAndAbove<K, C>(TreeNode<K, C> below, TreeNode<K, C> at, TreeNode<K, C> above) {
+    }
+
     /**
      * Enumeration describing the direction preference when trying to find an index.
      */
@@ -383,12 +387,11 @@ class SortedTree<K, C> {
     }
 
     /**
-     * Returns a node with the given key (or an equivalent key according to the comparator) starting from the provided
-     * node.
+     * Returns a node with the given key starting from the provided node.
      *
      * @param node The start node to search from.
      * @param key  The key.
-     * @return A node with the given key, or an equivalent one according to the comparator.
+     * @return A node with the given key.
      */
     private TreeNode<K, C> getNode(final TreeNode<K, C> node, final K key) {
         if (node == null) {
@@ -400,7 +403,15 @@ class SortedTree<K, C> {
         } else if (comparison > 0) {
             return getNode(node.getRightChild(), key);
         } else {
-            return node;
+            if (Objects.equals(key, node.getKey())) {
+                return node;
+            }
+            TreeNode<K, C> leftNode = getNode(node.getLeftChild(), key);
+            if (leftNode == null) {
+                return getNode(node.getRightChild(), key);
+            } else {
+                return leftNode;
+            }
         }
     }
 
@@ -416,6 +427,54 @@ class SortedTree<K, C> {
      */
     private int getNodeHeight(final TreeNode<K, C> node) {
         return node == null ? 0 : node.getHeight();
+    }
+
+    /**
+     * Returns the nodes at, just below and just above a given key (or an equivalent key according to the comparator).
+     *
+     * @param key The key.
+     * @return Nodes at, just below and just above a given key, or an equivalent one according to the comparator.
+     */
+    TreeNodesBelowAtAndAbove<K, C> getNodesBelowAtAndAbove(final K key) {
+        return getNodesBelowAtAndAbove(root, key);
+    }
+
+    /**
+     * Returns the nodes at, just below and just above a given key (or an equivalent key according to the comparator)
+     * starting from the provided node.
+     *
+     * @param node The start node to search from.
+     * @param key  The key.
+     * @return Nodes at, just below and just above a given key, or an equivalent one according to the comparator.
+     */
+    private TreeNodesBelowAtAndAbove<K, C> getNodesBelowAtAndAbove(final TreeNode<K, C> node, final K key) {
+        if (node == null) {
+            return new TreeNodesBelowAtAndAbove<K, C>(null, null, null);
+        }
+        int comparison = comparator.compare(key, node.getKey());
+        if (comparison < 0) {
+            TreeNodesBelowAtAndAbove<K, C> leftResults = getNodesBelowAtAndAbove(node.getLeftChild(), key);
+            if (leftResults.above == null) {
+                return new TreeNodesBelowAtAndAbove<K, C>(leftResults.below, leftResults.at, node);
+            } else {
+                return leftResults;
+            }
+        } else if (comparison > 0) {
+            TreeNodesBelowAtAndAbove<K, C> rightResults = getNodesBelowAtAndAbove(node.getRightChild(), key);
+            if (rightResults.below == null) {
+                return new TreeNodesBelowAtAndAbove<K, C>(node, rightResults.at, rightResults.above);
+            } else {
+                return rightResults;
+            }
+        } else {
+            TreeNodesBelowAtAndAbove<K, C> leftResults = getNodesBelowAtAndAbove(node.getLeftChild(), key);
+            TreeNodesBelowAtAndAbove<K, C> rightResults = getNodesBelowAtAndAbove(node.getRightChild(), key);
+            if (leftResults.at == null) {
+                return new TreeNodesBelowAtAndAbove<K, C>(leftResults.below, rightResults.at, rightResults.above);
+            } else {
+                return new TreeNodesBelowAtAndAbove<K, C>(leftResults.below, leftResults.at, rightResults.above);
+            }
+        }
     }
 
     /**

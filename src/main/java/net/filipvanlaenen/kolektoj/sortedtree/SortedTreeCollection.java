@@ -134,26 +134,68 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
 
     @Override
     public E getGreaterThan(final E element) throws IndexOutOfBoundsException {
-        // TODO: Issue #46
-        return null;
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        }
+        TreeNode<E, E> above = sortedTree.getNodesBelowAtAndAbove(element).above();
+        if (above == null) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an element from the collection that's greater than the provided value.");
+        } else {
+            return above.getKey();
+        }
     }
 
     @Override
     public E getGreaterThanOrEqualTo(final E element) throws IndexOutOfBoundsException {
-        // TODO: Issue #46
-        return null;
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        }
+        TreeNode<E, E> at = sortedTree.getNodesBelowAtAndAbove(element).at();
+        if (at == null) {
+            TreeNode<E, E> above = sortedTree.getNodesBelowAtAndAbove(element).above();
+            if (above == null) {
+                throw new IndexOutOfBoundsException("Cannot return an element from the collection that's greater than"
+                        + " or equal to the the provided value.");
+            } else {
+                return above.getKey();
+            }
+        } else {
+            return at.getKey();
+        }
     }
 
     @Override
     public E getLessThan(final E element) throws IndexOutOfBoundsException {
-        // TODO: Issue #46
-        return null;
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        }
+        TreeNode<E, E> below = sortedTree.getNodesBelowAtAndAbove(element).below();
+        if (below == null) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an element from the collection that's less than the provided value.");
+        } else {
+            return below.getKey();
+        }
     }
 
     @Override
     public E getLessThanOrEqualTo(final E element) throws IndexOutOfBoundsException {
-        // TODO: Issue #46
-        return null;
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an element from an empty collection.");
+        }
+        TreeNode<E, E> at = sortedTree.getNodesBelowAtAndAbove(element).at();
+        if (at == null) {
+            TreeNode<E, E> below = sortedTree.getNodesBelowAtAndAbove(element).below();
+            if (below == null) {
+                throw new IndexOutOfBoundsException("Cannot return an element from the collection that's less than or"
+                        + " equal to the the provided value.");
+            } else {
+                return below.getKey();
+            }
+        } else {
+            return at.getKey();
+        }
     }
 
     @Override
