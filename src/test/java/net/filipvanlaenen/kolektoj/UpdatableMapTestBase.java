@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 
 /**
@@ -16,9 +17,17 @@ import net.filipvanlaenen.kolektoj.MapTestBase.KeyWithCollidingHash;
 public abstract class UpdatableMapTestBase<T extends UpdatableMap<Integer, String>,
         TC extends UpdatableMap<KeyWithCollidingHash, Integer>> extends MapTestBase<T, TC> {
     /**
+     * The magic number three.
+     */
+    private static final int THREE = 3;
+    /**
      * The magic number four.
      */
     private static final int FOUR = 4;
+    /**
+     * The magic number nine.
+     */
+    private static final int NINE = 9;
 
     /**
      * Verifies that trying to update an absent key throws IllegalArgumentException.
@@ -125,5 +134,27 @@ public abstract class UpdatableMapTestBase<T extends UpdatableMap<Integer, Strin
     public void updateWithNewValueEqualToOldValueShouldReturnFalse() {
         UpdatableMap<Integer, String> map = createMap(ENTRY1, ENTRY2, ENTRY3);
         assertFalse(map.update(1, "one", "one"));
+    }
+
+    /**
+     * Verifies that updating a key with a new value works across all edge cases when duplicate keys are allowed with
+     * distinct values.
+     */
+    @Test
+    public void updateWithNewValueShouldShouldWorkCorrectlyForDuplicateKeyWithDistinctValues() {
+        Entry<Integer, String>[] entries = new Entry[NINE];
+        for (int i = 0; i < THREE; i++) {
+            for (int j = 1; j < FOUR; j++) {
+                entries[i * THREE + j - 1] = new Entry<Integer, String>(i, "" + i + "-" + j);
+            }
+        }
+        UpdatableMap<Integer, String> map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, entries);
+        for (int i = 0; i < THREE; i++) {
+            for (int j = 1; j < FOUR; j++) {
+                assertTrue(map.update(i, "" + i + "-" + j, "" + i + "-" + j + "!"));
+            }
+            int k = i;
+            assertThrows(IllegalArgumentException.class, () -> map.update(k, "" + k + "-0", "" + k + "-0!"));
+        }
     }
 }
