@@ -112,17 +112,7 @@ public final class UpdatableHashMap<K, V> implements UpdatableMap<K, V> {
 
     @Override
     public boolean contains(final Entry<K, V> entry) {
-        if (hashedEntriesSize == 0) {
-            return false;
-        }
-        int index = HashUtilities.hash(entry.key(), hashedEntriesSize);
-        while (hashedEntries[index] != null) {
-            if (hashedEntries[index].equals(entry)) {
-                return true;
-            }
-            index = Math.floorMod(index + 1, hashedEntriesSize);
-        }
-        return false;
+        return findFirstIndexForEntry(entry) != -1;
     }
 
     @Override
