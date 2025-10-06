@@ -190,7 +190,7 @@ public interface UpdatableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
 
     /**
      * Updates the key with the given value, and returns the value that was previously mapped to the key. Throws an
-     * exception if the map doesn't contain an entry with the key.
+     * illegal argument exception if the map doesn't contain an entry with the key.
      *
      * @param key   The key.
      * @param value The value.
@@ -198,4 +198,18 @@ public interface UpdatableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
      * @throws IllegalArgumentException Thrown if the map doesn't contain an entry with the key.
      */
     V update(K key, V value) throws IllegalArgumentException;
+
+    /**
+     * Updates the entry with the provided key and original value with the new value, and returns true if the map was
+     * changed. Throws an illegal argument exception if the map doesn't contain an entry with the provided key and
+     * original value.
+     *
+     * @param key      The key.
+     * @param oldValue The original value mapped to the key.
+     * @param newValue The new value to be mapped to the key.
+     * @return True if the map was changed.
+     * @throws IllegalArgumentException Thrown if the map doesn't contain an entry with the provided key and original
+     *                                  value.
+     */
+    boolean update(K key, V oldValue, V newValue);
 }

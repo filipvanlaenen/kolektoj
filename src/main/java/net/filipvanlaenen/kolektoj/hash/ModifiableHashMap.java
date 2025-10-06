@@ -3,6 +3,7 @@ package net.filipvanlaenen.kolektoj.hash;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
 import java.lang.reflect.Array;
@@ -458,5 +459,28 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             values.add(value);
         }
         return oldValue;
+    }
+
+    @Override
+    public boolean update(final K key, final V oldValue, final V newValue) throws IllegalArgumentException {
+        Entry<K, V> oldEntry = new Entry<K, V>(key, oldValue);
+        int index = findFirstIndexForEntry(oldEntry);
+        if (index == -1) {
+            throw new IllegalArgumentException(
+                    "Map doesn't contain an entry with the key " + key + " and value " + oldValue + ".");
+        }
+        if (Objects.equals(oldValue, newValue)) {
+            return false;
+        }
+        Entry<K, V> newEntry = new Entry<K, V>(key, newValue);
+        if (keyAndValueCardinality == DUPLICATE_KEYS_WITH_DISTINCT_VALUES && contains(newEntry)) {
+            return false;
+        }
+        entries.remove(oldEntry);
+        entries.add(newEntry);
+        hashedEntries[index] = newEntry;
+        values.remove(oldValue);
+        values.add(newValue);
+        return true;
     }
 }

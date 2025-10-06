@@ -2,8 +2,7 @@ package net.filipvanlaenen.kolektoj.array;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -280,9 +279,38 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
         V oldValue = ((Entry<K, V>) entries[index]).value();
-        entries[index] = new Entry<K, V>(key, value);
+        entries[index] = newEntry;
         values.remove(oldValue);
         values.add(value);
         return oldValue;
+    }
+
+    @Override
+    public boolean update(final K key, final V oldValue, final V newValue) throws IllegalArgumentException {
+        Entry<K, V> oldEntry = new Entry<K, V>(key, oldValue);
+        int index = ArrayUtilities.findIndex(entries, entries.length, oldEntry, entryByKeyComparator);
+        if (index == -1) {
+            throw new IllegalArgumentException(
+                    "Map doesn't contain an entry with the key " + key + " and value " + oldValue + ".");
+        }
+        while (!entries[index].equals(oldEntry) && index > 0
+                && entryByKeyComparator.compare(oldEntry, (Entry<K, V>) entries[index - 1]) == 0) {
+            index--;
+        }
+        while (!entries[index].equals(oldEntry) && index < entries.length - 1
+                && entryByKeyComparator.compare(oldEntry, (Entry<K, V>) entries[index + 1]) == 0) {
+            index++;
+        }
+        if (Objects.equals(oldValue, newValue)) {
+            return false;
+        }
+        Entry<K, V> newEntry = new Entry<K, V>(key, newValue);
+        if (keyAndValueCardinality == DUPLICATE_KEYS_WITH_DISTINCT_VALUES && contains(newEntry)) {
+            return false;
+        }
+        entries[index] = newEntry;
+        values.remove(oldValue);
+        values.add(newValue);
+        return true;
     }
 }

@@ -3,10 +3,12 @@ package net.filipvanlaenen.kolektoj.sortedtree;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
 import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 
 import net.filipvanlaenen.kolektoj.Collection;
@@ -295,5 +297,26 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         values.remove(oldValue);
         values.add(value);
         return oldValue;
+    }
+
+    @Override
+    public boolean update(final K key, final V oldValue, final V newValue) throws IllegalArgumentException {
+        TreeNode<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
+        if (node == null || !node.getContent().contains(oldValue)) {
+            throw new IllegalArgumentException(
+                    "Map doesn't contain an entry with the key " + key + " and value " + oldValue + ".");
+        }
+        if (Objects.equals(oldValue, newValue)) {
+            return false;
+        }
+        ModifiableCollection<V> content = node.getContent();
+        if (keyAndValueCardinality == DUPLICATE_KEYS_WITH_DISTINCT_VALUES && content.contains(newValue)) {
+            return false;
+        }
+        content.remove(oldValue);
+        content.add(newValue);
+        values.remove(oldValue);
+        values.add(newValue);
+        return true;
     }
 }
