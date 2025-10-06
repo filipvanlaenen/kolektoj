@@ -2,9 +2,7 @@ package net.filipvanlaenen.kolektoj.hash;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;
@@ -117,7 +115,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             return false;
         }
         Entry<K, V> entry = new Entry<K, V>(key, value);
-        if (keyAndValueCardinality == KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES && contains(entry)) {
+        if (keyAndValueCardinality == DUPLICATE_KEYS_WITH_DISTINCT_VALUES && contains(entry)) {
             return false;
         }
         entries.add(entry);
@@ -154,8 +152,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             }
             V value = entry.value();
             Entry<K, V> newEntry = new Entry<K, V>(key, value);
-            if (keyAndValueCardinality == KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES
-                    && contains(newEntry)) {
+            if (keyAndValueCardinality == DUPLICATE_KEYS_WITH_DISTINCT_VALUES && contains(newEntry)) {
                 continue;
             }
             entries.add(newEntry);

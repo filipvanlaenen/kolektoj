@@ -301,6 +301,10 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
                 && entryByKeyComparator.compare(oldEntry, (Entry<K, V>) entries[index + 1]) == 0) {
             index++;
         }
+        if (!entries[index].equals(oldEntry)) {
+            throw new IllegalArgumentException(
+                    "Map doesn't contain an entry with the key " + key + " and value " + oldValue + ".");
+        }
         if (Objects.equals(oldValue, newValue)) {
             return false;
         }

@@ -62,4 +62,58 @@ public abstract class UpdatableMapTestBase<T extends UpdatableMap<Integer, Strin
     public void updateShouldReturnTheOldValueForTheKey() {
         assertEquals("one", createMap(ENTRY1, ENTRY2, ENTRY3).update(1, "bis"));
     }
+
+    /**
+     * Verifies that trying to update an absent key throws IllegalArgumentException.
+     */
+    @Test
+    public void updateWithOldValueShouldThrowExceptionForAbsentKey() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> createMap(ENTRY1, ENTRY2, ENTRY3).update(FOUR, "four", "five"));
+        assertEquals("Map doesn't contain an entry with the key 4 and value four.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that trying to update an absent value for a key throws IllegalArgumentException.
+     */
+    @Test
+    public void updateWithOldValueShouldThrowExceptionForAbsentOldValue() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> createMap(ENTRY1, ENTRY2, ENTRY3).update(1, "bis", "ter"));
+        assertEquals("Map doesn't contain an entry with the key 1 and value bis.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that updating a key with a new value stores the new value for the key.
+     */
+    @Test
+    public void updateWithOldValueShouldStoreTheNewValueForTheKey() {
+        UpdatableMap<Integer, String> map = createMap(ENTRY1, ENTRY2, ENTRY3);
+        map.update(1, "one", "bis");
+        assertEquals("bis", map.get(1));
+        assertTrue(map.containsValue("bis"));
+        assertTrue(map.contains(ENTRY1BIS));
+        assertFalse(map.containsValue("one"));
+        assertFalse(map.contains(ENTRY1));
+    }
+
+    /**
+     * Verifies that for maps allowing duplicate keys but not duplicate values, values are updated when they are kept
+     * distinct.
+     */
+    @Test
+    public void updateWithOldValueShouldAvoidDuplicateValuesForMapsWithDistinctValues() {
+        UpdatableMap<Integer, String> map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY1BIS);
+        assertFalse(map.update(1, "one", "bis"));
+        assertTrue(map.update(1, "one", "ter"));
+    }
+
+    /**
+     * Verifies that updating a key with a new value that's equal to the old value returns false.
+     */
+    @Test
+    public void updateWithNewValueEqualToOldValueShouldReturnFalse() {
+        UpdatableMap<Integer, String> map = createMap(ENTRY1, ENTRY2, ENTRY3);
+        assertFalse(map.update(1, "one", "one"));
+    }
 }
