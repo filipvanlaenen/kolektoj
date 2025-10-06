@@ -64,6 +64,16 @@ public abstract class UpdatableMapTestBase<T extends UpdatableMap<Integer, Strin
     }
 
     /**
+     * Verifies that trying to update on an empty map.
+     */
+    @Test
+    public void updateWithOldValueShouldThrowExceptionForEmptyMap() {
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> createMap().update(1, "one", "bis"));
+        assertEquals("Map doesn't contain an entry with the key 1 and value one.", exception.getMessage());
+    }
+
+    /**
      * Verifies that trying to update an absent key throws IllegalArgumentException.
      */
     @Test
