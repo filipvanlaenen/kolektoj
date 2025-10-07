@@ -289,6 +289,40 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
     }
 
     /**
+     * Verifies that trying to remove an absent key (with value) returns false.
+     */
+    @Test
+    public void removeWithValueShouldReturnFalseForAbsentKey() {
+        assertFalse(createMap123().remove(FOUR, "four"));
+    }
+
+    /**
+     * Verifies that trying to remove an absent key and value returns false.
+     */
+    @Test
+    public void removeWithValueShouldReturnFalseForAbsentValueForKey() {
+        assertFalse(createMap123().remove(1, "bis"));
+    }
+
+    /**
+     * Verifies that removing a key and value returns true.
+     */
+    @Test
+    public void removeWithValueShouldReturnTrue() {
+        assertTrue(createMap123().remove(1, "one"));
+    }
+
+    /**
+     * Verifies that removing a key and value returns removes the entry from the map.
+     */
+    @Test
+    public void removeWithValueShouldRemoveEntryFromMap() {
+        T map = createMap123();
+        map.remove(1, "one");
+        assertFalse(map.containsKey(1));
+    }
+
+    /**
      * Verifies that when all entries are removed, a collection is empty.
      */
     @Test
