@@ -432,6 +432,49 @@ public final class ModifiableHashMapTest extends
     }
 
     /**
+     * Verifies that trying to remove an absent key (with value) returns false.
+     */
+    @Test
+    public void removeWithValueShouldReturnFalseForAbsentKey() {
+        assertFalse(createMap123().remove(FOUR, "four"));
+    }
+
+    /**
+     * Verifies that trying to remove an absent key and value returns false.
+     */
+    @Test
+    public void removeWithValueShouldReturnFalseForAbsentValueForKey() {
+        assertFalse(createMap123().remove(1, "bis"));
+    }
+
+    /**
+     * Verifies that removing a key and value returns true.
+     */
+    @Test
+    public void removeWithValueShouldReturnTrue() {
+        assertTrue(createMap123().remove(1, "one"));
+    }
+
+    /**
+     * Verifies that when multiple entries have the same key, and some of them are removed, getAll still returns all
+     * values. This ensures that the hashed array is rehashed as holes appear in the overflow after removing entries.
+     */
+    @Test
+    public void removeWithValueShouldRehashIfHolesAppear() {
+        ModifiableMap<Integer, String> map =
+                new ModifiableHashMap<Integer, String>(DUPLICATE_KEYS_WITH_DISTINCT_VALUES);
+        map.add(1, "a");
+        map.add(1, "b");
+        map.add(1, "c");
+        map.add(1, "d");
+        map.add(1, "e");
+        map.add(1, "f");
+        map.add(1, "g");
+        map.remove(1, "a");
+        assertEquals(SIX, map.getAll(1).size());
+    }
+
+    /**
      * Verifies that when all entries are removed, a collection is empty.
      */
     @Test
