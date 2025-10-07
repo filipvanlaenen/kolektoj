@@ -315,6 +315,16 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     }
 
     @Override
+    public boolean remove(final K key, final V value) {
+        TreeNode<K, ModifiableCollection<V>> node = sortedTree.getNode(key);
+        if (node == null || !node.getContent().contains(value)) {
+            return false;
+        }
+        removeValueForKey(key, node.getContent(), value);
+        return true;
+    }
+
+    @Override
     public boolean removeAll(final Map<? extends K, ? extends V> map) {
         boolean result = false;
         for (Entry<? extends K, ? extends V> e : map) {

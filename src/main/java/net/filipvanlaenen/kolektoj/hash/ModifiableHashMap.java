@@ -317,6 +317,27 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     }
 
     @Override
+    public boolean remove(final K key, final V value) {
+        Entry<K, V> entry = new Entry<K, V>(key, value);
+        int index = findFirstIndexForEntry(entry);
+        if (index == -1) {
+            return false;
+        }
+        entries.remove(entry);
+        hashedEntries[index] = null;
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        // EQMU: Negating the second conditional below produces an equivalent mutant.
+        // EQMU: Replacing integer multiplication with division below produces an equivalent mutant.
+        if (hashedEntries[Math.floorMod(index + 1, hashedEntriesSize)] != null
+                || entries.size() * MAXIMAL_HASHING_RATIO < hashedEntriesSize) {
+            resizeHashedEntriesTo(entries.size());
+        }
+        keys.remove(key);
+        values.remove(value);
+        return true;
+    }
+
+    @Override
     public boolean removeAll(final Map<? extends K, ? extends V> map) {
         boolean result = false;
         for (Entry<? extends K, ? extends V> e : map) {
