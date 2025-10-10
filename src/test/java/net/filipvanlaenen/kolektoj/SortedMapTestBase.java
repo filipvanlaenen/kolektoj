@@ -56,6 +56,35 @@ public abstract class SortedMapTestBase<T extends SortedMap<Integer, String>,
     }
 
     /**
+     * Verifies that <code>getGreaterThan</code> on an empty map throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getGreaterThanShouldThrowExceptionWhenCalledOnAnEmptyMap() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createMap().getGreaterThan(2));
+        assertEquals("Cannot return an entry from an empty map.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getGreaterThan</code> returns an entry that's greater than the provided key.
+     */
+    @Test
+    public void getGreaterThanShouldReturnTheFirstEntryThatIsGreater() {
+        assertEquals(ENTRY3, map123.getGreaterThan(2));
+    }
+
+    /**
+     * Verifies that <code>getGreaterThan</code> throws IndexOutOfBoundsException when there's no greater element.
+     */
+    @Test
+    public void getGreaterThanShouldThrowExceptionWhenCalledWithGreatestElement() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> map123.getGreaterThan(THREE));
+        assertEquals("Cannot return an entry from the map with a key that's greater than the provided value.",
+                exception.getMessage());
+    }
+
+    /**
      * Verifies that trying to get the greatest entry from an empty map throws IndexOutOfBoundsException.
      */
     @Test
