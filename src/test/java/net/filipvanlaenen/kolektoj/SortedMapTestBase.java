@@ -23,9 +23,17 @@ public abstract class SortedMapTestBase<T extends SortedMap<Integer, String>,
      */
     private static final int THREE = 3;
     /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
      * Sorted map with three entries.
      */
     private T map123 = createMap(ENTRY1, ENTRY2, ENTRY3);
+    /**
+     * Sorted map with two entries.
+     */
+    private T map13 = createMap(ENTRY1, ENTRY3);
     /**
      * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
      * value.
@@ -77,10 +85,51 @@ public abstract class SortedMapTestBase<T extends SortedMap<Integer, String>,
      * Verifies that <code>getGreaterThan</code> throws IndexOutOfBoundsException when there's no greater element.
      */
     @Test
-    public void getGreaterThanShouldThrowExceptionWhenCalledWithGreatestElement() {
+    public void getGreaterThanShouldThrowExceptionWhenCalledWithGreatestKey() {
         IndexOutOfBoundsException exception =
                 assertThrows(IndexOutOfBoundsException.class, () -> map123.getGreaterThan(THREE));
         assertEquals("Cannot return an entry from the map with a key that's greater than the provided value.",
+                exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getGreaterThanOrEqualTo</code> on an empty map throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getGreaterThanOrEqualToShouldThrowExceptionWhenCalledOnAnEmptyMap() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createMap().getGreaterThanOrEqualTo(2));
+        assertEquals("Cannot return an entry from an empty map.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getGreaterThanOrEqualTo</code> returns an entry with a key that's equal to the provided value
+     * if it's present.
+     */
+    @Test
+    public void getGreaterThanOrEqualToShouldReturnTheEntryThatIsEqualIfPresent() {
+        assertEquals(ENTRY2, map123.getGreaterThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getGreaterThanOrEqualTo</code> returns an entry with a key that's greater than if the
+     * provided value is absent.
+     */
+    @Test
+    public void getGreaterThanOrEqualToShouldReturnGreaterEntryIfProvidedKeyIsAbsent() {
+        assertEquals(ENTRY3, map13.getGreaterThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getGreaterThanOrEqualTo</code> throws IndexOutOfBoundsException when there's no greater or
+     * equal key.
+     */
+    @Test
+    public void getGreaterThanOrEqualToShouldThrowExceptionWhenCalledWithGreaterThanGreatestKey() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> map123.getGreaterThanOrEqualTo(FOUR));
+        assertEquals(
+                "Cannot return an entry from the map with a key that's greater than or equal to the provided value.",
                 exception.getMessage());
     }
 

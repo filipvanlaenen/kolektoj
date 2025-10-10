@@ -216,7 +216,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     @Override
     public Entry<K, V> getGreaterThanOrEqualTo(K key) throws IndexOutOfBoundsException {
         if (entries.length == 0) {
-            throw new IndexOutOfBoundsException("Cannot return an element from an empty map.");
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
         int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
                 entryByKeyComparator);
@@ -276,7 +276,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     @Override
     public Entry<K, V> getLessThan(K key) throws IndexOutOfBoundsException {
         if (entries.length == 0) {
-            throw new IndexOutOfBoundsException("Cannot return an element from an empty map.");
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
         int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
                 entryByKeyComparator);
