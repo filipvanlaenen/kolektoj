@@ -218,6 +218,46 @@ public interface SortedMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
     K getGreatestKey() throws IndexOutOfBoundsException;
 
     /**
+     * Returns the least key in this map greater than the provided key.
+     *
+     * @param key The key to match.
+     * @return The least key in this map greater than the provided key.
+     * @throws IndexOutOfBoundsException Thrown if the map doesn't contain a key that's greater than the provided key,
+     *                                   or the map is empty.
+     */
+    K getKeyGreaterThan(K key) throws IndexOutOfBoundsException;
+
+    /**
+     * Returns the least key in this map greater than or equal to the provided key.
+     *
+     * @param key The key to match.
+     * @return The least key in this map greater than or equal to the provided key.
+     * @throws IndexOutOfBoundsException Thrown if the map doesn't contain a key that's greater than or equal to the
+     *                                   provided key, or the map is empty.
+     */
+    K getKeyGreaterThanOrEqualTo(K key) throws IndexOutOfBoundsException;
+
+    /**
+     * Returns the greatest key in this map less than the provided key.
+     *
+     * @param key The key to match.
+     * @return The greatest key in this map less than the provided key.
+     * @throws IndexOutOfBoundsException Thrown if the map doesn't contain a key that's less than the provided key, or
+     *                                   the map is empty.
+     */
+    K getKeyLessThan(K key) throws IndexOutOfBoundsException;
+
+    /**
+     * Returns the greatest key in this map less than or equal to the provided key.
+     *
+     * @param key The key to match.
+     * @return The greatest key in this map less than or equal to the provided key.
+     * @throws IndexOutOfBoundsException Thrown if the map doesn't contain a key that's less than or equal to the
+     *                                   provided key, or the map is empty.
+     */
+    K getKeyLessThanOrEqualTo(K key) throws IndexOutOfBoundsException;
+
+    /**
      * Returns a sorted collection with all the keys present in the map.
      *
      * @return A sorted collection with all the keys present in the map.

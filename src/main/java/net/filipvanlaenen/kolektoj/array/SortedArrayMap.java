@@ -201,16 +201,12 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
-        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
-                entryByKeyComparator);
-        while (i < entries.length && comparator.compare(key, ((Entry<K, V>) entries[i]).key()) == 0) {
-            i++;
-        }
-        if (i == entries.length) {
+        int index = getIndexGreaterThan(key);
+        if (index == entries.length) {
             throw new IndexOutOfBoundsException(
                     "Cannot return an entry from the map with a key that's greater than the provided value.");
         }
-        return (Entry<K, V>) entries[i];
+        return (Entry<K, V>) entries[index];
     }
 
     @Override
@@ -218,13 +214,13 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
-        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
+        int index = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
                 entryByKeyComparator);
-        if (i == entries.length) {
+        if (index == entries.length) {
             throw new IndexOutOfBoundsException("Cannot return an entry from the map with a key that's greater than or"
                     + " equal to the provided value.");
         }
-        return (Entry<K, V>) entries[i];
+        return (Entry<K, V>) entries[index];
     }
 
     @Override
@@ -245,9 +241,89 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         }
     }
 
+    private int getIndexGreaterThan(final K key) {
+        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
+                entryByKeyComparator);
+        while (i < entries.length && comparator.compare(key, ((Entry<K, V>) entries[i]).key()) == 0) {
+            i++;
+        }
+        return i;
+    }
+
+    private int getIndexLessThan(final K key) {
+        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
+                entryByKeyComparator);
+        while (i >= 0 && comparator.compare(key, ((Entry<K, V>) entries[i]).key()) <= 0) {
+            i--;
+        }
+        return i;
+    }
+
+    private int getIndexLessThanOrEqualTo(final K key) {
+        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
+                entryByKeyComparator);
+        while (i >= 0 && comparator.compare(key, ((Entry<K, V>) entries[i]).key()) < 0) {
+            i--;
+        }
+        return i;
+    }
+
     @Override
     public KeyAndValueCardinality getKeyAndValueCardinality() {
         return keyAndValueCardinality;
+    }
+
+    @Override
+    public K getKeyGreaterThan(final K key) throws IndexOutOfBoundsException {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        }
+        int index = getIndexGreaterThan(key);
+        if (index == entries.length) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return a key from the map that's greater than the provided value.");
+        }
+        return ((Entry<K, V>) entries[index]).key();
+    }
+
+    @Override
+    public K getKeyGreaterThanOrEqualTo(final K key) throws IndexOutOfBoundsException {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        }
+        int index = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
+                entryByKeyComparator);
+        if (index == entries.length) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return a key from the map that's greater than or equal to the provided value.");
+        }
+        return ((Entry<K, V>) entries[index]).key();
+    }
+
+    @Override
+    public K getKeyLessThan(final K key) throws IndexOutOfBoundsException {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        }
+        int index = getIndexLessThan(key);
+        if (index == -1) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return a key from the map that's less than the provided value.");
+        }
+        return ((Entry<K, V>) entries[index]).key();
+    }
+
+    @Override
+    public K getKeyLessThanOrEqualTo(final K key) throws IndexOutOfBoundsException {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        }
+        int index = getIndexLessThanOrEqualTo(key);
+        if (index == -1) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return a key from the map that's less than or equal to the provided value.");
+        }
+        return ((Entry<K, V>) entries[index]).key();
     }
 
     @Override
@@ -278,16 +354,12 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
-        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
-                entryByKeyComparator);
-        while (i >= 0 && comparator.compare(key, ((Entry<K, V>) entries[i]).key()) <= 0) {
-            i--;
-        }
-        if (i == -1) {
+        int index = getIndexLessThan(key);
+        if (index == -1) {
             throw new IndexOutOfBoundsException(
                     "Cannot return an entry from the map with a key that's less than the provided value.");
         }
-        return (Entry<K, V>) entries[i];
+        return (Entry<K, V>) entries[index];
     }
 
     @Override
@@ -295,16 +367,12 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
-        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
-                entryByKeyComparator);
-        while (i >= 0 && comparator.compare(key, ((Entry<K, V>) entries[i]).key()) < 0) {
-            i--;
-        }
-        if (i == -1) {
+        int index = getIndexLessThanOrEqualTo(key);
+        if (index == -1) {
             throw new IndexOutOfBoundsException(
                     "Cannot return an entry from the map with a key that's less than or equal to the provided value.");
         }
-        return (Entry<K, V>) entries[i];
+        return (Entry<K, V>) entries[index];
     }
 
     @Override
