@@ -20,6 +20,7 @@ import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 import net.filipvanlaenen.kolektoj.array.SortedArrayCollection;
+import net.filipvanlaenen.kolektoj.sortedtree.SortedTree.TreeNodesBelowAtAndAbove;
 
 /**
  * An implementation of the {@link net.filipvanlaenen.kolektoj.SortedMap} interface backed by a sorted tree, in
@@ -176,7 +177,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
             TreeNode<K, Collection<V>> root = sortedTree.getRootNode();
-            return new Entry<K, V>(root.getKey(), root.getContent().get());
+            return getAnEntryFromNode(root);
         }
     }
 
@@ -198,23 +199,67 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         return node.getContent();
     }
 
+    /**
+     * Creates an entry with the key and a value from a node.
+     *
+     * @param node The node.
+     * @return An entry with the node's key and one of its values.
+     */
+    private Entry<K, V> getAnEntryFromNode(final TreeNode<K, Collection<V>> node) {
+        return new Entry<K, V>(node.getKey(), node.getContent().get());
+    }
+
     @Override
     public Comparator<? super K> getComparator() {
         return comparator;
     }
 
     @Override
-    public Entry<K, V> getGreatest() {
-        if (entries.length == 0) {
+    public Entry<K, V> getGreaterThan(K key) throws IndexOutOfBoundsException {
+        if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        }
+        TreeNode<K, Collection<V>> above = sortedTree.getNodesBelowAtAndAbove(key).above();
+        if (above == null) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an entry from the map with a key that's greater than the provided value.");
         } else {
-            TreeNode<K, Collection<V>> node = sortedTree.getGreatest();
-            return new Entry<K, V>(node.getKey(), node.getContent().get());
+            return getAnEntryFromNode(above);
         }
     }
 
     @Override
-    public K getGreatestKey() {
+    public Entry<K, V> getGreaterThanOrEqualTo(K key) throws IndexOutOfBoundsException {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        }
+        TreeNodesBelowAtAndAbove<K, Collection<V>> belowAtAndAbove = sortedTree.getNodesBelowAtAndAbove(key);
+        TreeNode<K, Collection<V>> at = belowAtAndAbove.at();
+        if (at == null) {
+            TreeNode<K, Collection<V>> above = belowAtAndAbove.above();
+            if (above == null) {
+                throw new IndexOutOfBoundsException("Cannot return an entry from the map with a key that's greater than"
+                        + " or equal to the provided value.");
+            } else {
+                return getAnEntryFromNode(above);
+            }
+        } else {
+            return getAnEntryFromNode(at);
+        }
+    }
+
+    @Override
+    public Entry<K, V> getGreatest() throws IndexOutOfBoundsException {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        } else {
+            TreeNode<K, Collection<V>> node = sortedTree.getGreatest();
+            return getAnEntryFromNode(node);
+        }
+    }
+
+    @Override
+    public K getGreatestKey() throws IndexOutOfBoundsException {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
         } else {
@@ -233,21 +278,55 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public Entry<K, V> getLeast() {
+    public Entry<K, V> getLeast() throws IndexOutOfBoundsException {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
             TreeNode<K, Collection<V>> node = sortedTree.getLeast();
-            return new Entry<K, V>(node.getKey(), node.getContent().get());
+            return getAnEntryFromNode(node);
         }
     }
 
     @Override
-    public K getLeastKey() {
+    public K getLeastKey() throws IndexOutOfBoundsException {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
         } else {
             return sortedTree.getLeast().getKey();
+        }
+    }
+
+    @Override
+    public Entry<K, V> getLessThan(K key) throws IndexOutOfBoundsException {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        }
+        TreeNode<K, Collection<V>> below = sortedTree.getNodesBelowAtAndAbove(key).below();
+        if (below == null) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an entry from the map with a key that's less than the provided value.");
+        } else {
+            return getAnEntryFromNode(below);
+        }
+    }
+
+    @Override
+    public Entry<K, V> getLessThanOrEqualTo(K key) throws IndexOutOfBoundsException {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        }
+        TreeNodesBelowAtAndAbove<K, Collection<V>> belowAtAndAbove = sortedTree.getNodesBelowAtAndAbove(key);
+        TreeNode<K, Collection<V>> at = belowAtAndAbove.at();
+        if (at == null) {
+            TreeNode<K, Collection<V>> below = belowAtAndAbove.below();
+            if (below == null) {
+                throw new IndexOutOfBoundsException("Cannot return an entry from the map with a key that's less than"
+                        + " or equal to the provided value.");
+            } else {
+                return getAnEntryFromNode(below);
+            }
+        } else {
+            return getAnEntryFromNode(at);
         }
     }
 

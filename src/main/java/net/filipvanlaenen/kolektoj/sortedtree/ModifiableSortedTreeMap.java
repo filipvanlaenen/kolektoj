@@ -2,7 +2,9 @@ package net.filipvanlaenen.kolektoj.sortedtree;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -20,6 +22,7 @@ import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
+import net.filipvanlaenen.kolektoj.sortedtree.SortedTree.TreeNodesBelowAtAndAbove;
 
 /**
  * An implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableSortedMap} interface backed by a sorted tree,
@@ -220,7 +223,7 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
             TreeNode<K, ModifiableCollection<V>> node = sortedTree.getRootNode();
-            return new Entry<K, V>(node.getKey(), node.getContent().get());
+            return getAnEntryFromNode(node);
         }
     }
 
@@ -242,23 +245,67 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         return Collection.<V>of(node.getContent());
     }
 
+    /**
+     * Creates an entry with the key and a value from a node.
+     *
+     * @param node The node.
+     * @return An entry with the node's key and one of its values.
+     */
+    private Entry<K, V> getAnEntryFromNode(final TreeNode<K, ModifiableCollection<V>> node) {
+        return new Entry<K, V>(node.getKey(), node.getContent().get());
+    }
+
     @Override
     public Comparator<? super K> getComparator() {
         return comparator;
     }
 
     @Override
-    public Entry<K, V> getGreatest() {
+    public Entry<K, V> getGreaterThan(K key) throws IndexOutOfBoundsException {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        }
+        TreeNode<K, ModifiableCollection<V>> above = sortedTree.getNodesBelowAtAndAbove(key).above();
+        if (above == null) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an entry from the map with a key that's greater than the provided value.");
         } else {
-            TreeNode<K, ModifiableCollection<V>> node = sortedTree.getGreatest();
-            return new Entry<K, V>(node.getKey(), node.getContent().get());
+            return getAnEntryFromNode(above);
         }
     }
 
     @Override
-    public K getGreatestKey() {
+    public Entry<K, V> getGreaterThanOrEqualTo(K key) throws IndexOutOfBoundsException {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        }
+        TreeNodesBelowAtAndAbove<K, ModifiableCollection<V>> belowAtAndAbove = sortedTree.getNodesBelowAtAndAbove(key);
+        TreeNode<K, ModifiableCollection<V>> at = belowAtAndAbove.at();
+        if (at == null) {
+            TreeNode<K, ModifiableCollection<V>> above = belowAtAndAbove.above();
+            if (above == null) {
+                throw new IndexOutOfBoundsException("Cannot return an entry from the map with a key that's greater than"
+                        + " or equal to the provided value.");
+            } else {
+                return getAnEntryFromNode(above);
+            }
+        } else {
+            return getAnEntryFromNode(at);
+        }
+    }
+
+    @Override
+    public Entry<K, V> getGreatest() throws IndexOutOfBoundsException {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        } else {
+            TreeNode<K, ModifiableCollection<V>> node = sortedTree.getGreatest();
+            return getAnEntryFromNode(node);
+        }
+    }
+
+    @Override
+    public K getGreatestKey() throws IndexOutOfBoundsException {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
         } else {
@@ -277,21 +324,55 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     }
 
     @Override
-    public Entry<K, V> getLeast() {
+    public Entry<K, V> getLeast() throws IndexOutOfBoundsException {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         } else {
             TreeNode<K, ModifiableCollection<V>> node = sortedTree.getLeast();
-            return new Entry<K, V>(node.getKey(), node.getContent().get());
+            return getAnEntryFromNode(node);
         }
     }
 
     @Override
-    public K getLeastKey() {
+    public K getLeastKey() throws IndexOutOfBoundsException {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
         } else {
             return sortedTree.getLeast().getKey();
+        }
+    }
+
+    @Override
+    public Entry<K, V> getLessThan(K key) throws IndexOutOfBoundsException {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        }
+        TreeNode<K, ModifiableCollection<V>> below = sortedTree.getNodesBelowAtAndAbove(key).below();
+        if (below == null) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return an entry from the map with a key that's less than the provided value.");
+        } else {
+            return getAnEntryFromNode(below);
+        }
+    }
+
+    @Override
+    public Entry<K, V> getLessThanOrEqualTo(K key) throws IndexOutOfBoundsException {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
+        }
+        TreeNodesBelowAtAndAbove<K, ModifiableCollection<V>> belowAtAndAbove = sortedTree.getNodesBelowAtAndAbove(key);
+        TreeNode<K, ModifiableCollection<V>> at = belowAtAndAbove.at();
+        if (at == null) {
+            TreeNode<K, ModifiableCollection<V>> below = belowAtAndAbove.below();
+            if (below == null) {
+                throw new IndexOutOfBoundsException("Cannot return an entry from the map with a key that's less than"
+                        + " or equal to the provided value.");
+            } else {
+                return getAnEntryFromNode(below);
+            }
+        } else {
+            return getAnEntryFromNode(at);
         }
     }
 
