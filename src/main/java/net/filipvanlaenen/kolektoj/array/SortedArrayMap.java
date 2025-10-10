@@ -197,7 +197,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public Entry<K, V> getGreaterThan(K key) throws IndexOutOfBoundsException {
+    public Entry<K, V> getGreaterThan(final K key) throws IndexOutOfBoundsException {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
@@ -214,7 +214,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public Entry<K, V> getGreaterThanOrEqualTo(K key) throws IndexOutOfBoundsException {
+    public Entry<K, V> getGreaterThanOrEqualTo(final K key) throws IndexOutOfBoundsException {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
@@ -274,7 +274,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public Entry<K, V> getLessThan(K key) throws IndexOutOfBoundsException {
+    public Entry<K, V> getLessThan(final K key) throws IndexOutOfBoundsException {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
@@ -291,7 +291,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public Entry<K, V> getLessThanOrEqualTo(K key) throws IndexOutOfBoundsException {
+    public Entry<K, V> getLessThanOrEqualTo(final K key) throws IndexOutOfBoundsException {
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
