@@ -241,6 +241,12 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         }
     }
 
+    /**
+     * Returns the index of the first entry with a key greater than the provided key.
+     *
+     * @param key The provided key.
+     * @return The index of the first entry with a key greater than the provided key.
+     */
     private int getIndexGreaterThan(final K key) {
         int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
                 entryByKeyComparator);
@@ -250,6 +256,12 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         return i;
     }
 
+    /**
+     * Returns the index of the last entry with a key less than the provided key.
+     *
+     * @param key The provided key.
+     * @return The index of the last entry with a key less than the provided key.
+     */
     private int getIndexLessThan(final K key) {
         int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
                 entryByKeyComparator);
@@ -259,6 +271,12 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         return i;
     }
 
+    /**
+     * Returns the index of the last entry with a key less than or equal to the provided key.
+     *
+     * @param key The provided key.
+     * @return The index of the last entry with a key less than or equal to the provided key.
+     */
     private int getIndexLessThanOrEqualTo(final K key) {
         int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
                 entryByKeyComparator);
@@ -273,7 +291,13 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         return keyAndValueCardinality;
     }
 
-    private K getKeyAt(int index) {
+    /**
+     * Returns the key of the entry at an index.
+     *
+     * @param index The index.
+     * @return The key of the entry at an index.
+     */
+    private K getKeyAt(final int index) {
         return ((Entry<K, V>) entries[index]).key();
     }
 
@@ -379,6 +403,12 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         return (Entry<K, V>) entries[index];
     }
 
+    /**
+     * Returns the value of the entry at an index.
+     *
+     * @param index The index.
+     * @return The value of the entry at an index.
+     */
     private V getValueAt(final int index) {
         return ((Entry<K, V>) entries[index]).value();
     }
