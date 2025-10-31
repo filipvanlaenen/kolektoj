@@ -219,10 +219,9 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     public Entry<K, V> get() throws IndexOutOfBoundsException {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
-        } else {
-            TreeNode<K, ModifiableCollection<V>> node = sortedTree.getRootNode();
-            return getAnEntryFromNode(node);
         }
+        TreeNode<K, ModifiableCollection<V>> node = sortedTree.getRootNode();
+        return getAnEntryFromNode(node);
     }
 
     @Override
@@ -267,9 +266,8 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         if (above == null) {
             throw new IndexOutOfBoundsException(
                     "Cannot return an entry from the map with a key that's greater than the provided value.");
-        } else {
-            return getAnEntryFromNode(above);
         }
+        return getAnEntryFromNode(above);
     }
 
     @Override
@@ -284,36 +282,96 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
             if (above == null) {
                 throw new IndexOutOfBoundsException("Cannot return an entry from the map with a key that's greater than"
                         + " or equal to the provided value.");
-            } else {
-                return getAnEntryFromNode(above);
             }
-        } else {
-            return getAnEntryFromNode(at);
+            return getAnEntryFromNode(above);
         }
+        return getAnEntryFromNode(at);
     }
 
     @Override
     public Entry<K, V> getGreatest() throws IndexOutOfBoundsException {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
-        } else {
-            TreeNode<K, ModifiableCollection<V>> node = sortedTree.getGreatest();
-            return getAnEntryFromNode(node);
         }
+        TreeNode<K, ModifiableCollection<V>> node = sortedTree.getGreatest();
+        return getAnEntryFromNode(node);
     }
 
     @Override
     public K getGreatestKey() throws IndexOutOfBoundsException {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
-        } else {
-            return sortedTree.getGreatest().getKey();
         }
+        return sortedTree.getGreatest().getKey();
     }
 
     @Override
     public KeyAndValueCardinality getKeyAndValueCardinality() {
         return keyAndValueCardinality;
+    }
+
+    @Override
+    public K getKeyGreaterThan(final K key) throws IndexOutOfBoundsException {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        }
+        TreeNode<K, ModifiableCollection<V>> above = sortedTree.getNodesBelowAtAndAbove(key).above();
+        if (above == null) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return a key from the map that's greater than the provided value.");
+        }
+        return above.getKey();
+    }
+
+    @Override
+    public K getKeyGreaterThanOrEqualTo(final K key) throws IndexOutOfBoundsException {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        }
+        TreeNodesBelowAtAndAbove<K, ModifiableCollection<V>> belowAtAndAbove = sortedTree.getNodesBelowAtAndAbove(key);
+        TreeNode<K, ModifiableCollection<V>> at = belowAtAndAbove.at();
+        if (at == null) {
+            TreeNode<K, ModifiableCollection<V>> above = belowAtAndAbove.above();
+            if (above == null) {
+                throw new IndexOutOfBoundsException(
+                        "Cannot return a key from the map that's greater than or equal to the provided value.");
+            }
+            return above.getKey();
+        } else {
+            return at.getKey();
+        }
+    }
+
+    @Override
+    public K getKeyLessThan(final K key) throws IndexOutOfBoundsException {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        }
+        TreeNode<K, ModifiableCollection<V>> below = sortedTree.getNodesBelowAtAndAbove(key).below();
+        if (below == null) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return a key from the map that's less than the provided value.");
+        }
+        return below.getKey();
+    }
+
+    @Override
+    public K getKeyLessThanOrEqualTo(final K key) throws IndexOutOfBoundsException {
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        }
+        TreeNodesBelowAtAndAbove<K, ModifiableCollection<V>> belowAtAndAbove = sortedTree.getNodesBelowAtAndAbove(key);
+        TreeNode<K, ModifiableCollection<V>> at = belowAtAndAbove.at();
+        if (at == null) {
+            TreeNode<K, ModifiableCollection<V>> below = belowAtAndAbove.below();
+            if (below == null) {
+                throw new IndexOutOfBoundsException(
+                        "Cannot return a key from the map that's less than or equal to the provided value.");
+            }
+            return below.getKey();
+        } else {
+            return at.getKey();
+        }
     }
 
     @Override
@@ -325,19 +383,17 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     public Entry<K, V> getLeast() throws IndexOutOfBoundsException {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
-        } else {
-            TreeNode<K, ModifiableCollection<V>> node = sortedTree.getLeast();
-            return getAnEntryFromNode(node);
         }
+        TreeNode<K, ModifiableCollection<V>> node = sortedTree.getLeast();
+        return getAnEntryFromNode(node);
     }
 
     @Override
     public K getLeastKey() throws IndexOutOfBoundsException {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
-        } else {
-            return sortedTree.getLeast().getKey();
         }
+        return sortedTree.getLeast().getKey();
     }
 
     @Override
@@ -349,9 +405,8 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
         if (below == null) {
             throw new IndexOutOfBoundsException(
                     "Cannot return an entry from the map with a key that's less than the provided value.");
-        } else {
-            return getAnEntryFromNode(below);
         }
+        return getAnEntryFromNode(below);
     }
 
     @Override
@@ -366,12 +421,10 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
             if (below == null) {
                 throw new IndexOutOfBoundsException("Cannot return an entry from the map with a key that's less than"
                         + " or equal to the provided value.");
-            } else {
-                return getAnEntryFromNode(below);
             }
-        } else {
-            return getAnEntryFromNode(at);
+            return getAnEntryFromNode(below);
         }
+        return getAnEntryFromNode(at);
     }
 
     @Override
@@ -439,9 +492,8 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     public Entry<K, V> removeGreatest() {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot remove an entry from an empty map.");
-        } else {
-            return removeAValueFromNode(sortedTree.getGreatest());
         }
+        return removeAValueFromNode(sortedTree.getGreatest());
     }
 
     @Override
@@ -474,9 +526,8 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     public Entry<K, V> removeLeast() {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Cannot remove an entry from an empty map.");
-        } else {
-            return removeAValueFromNode(sortedTree.getLeast());
         }
+        return removeAValueFromNode(sortedTree.getLeast());
     }
 
     /**

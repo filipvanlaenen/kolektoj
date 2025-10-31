@@ -2,7 +2,9 @@ package net.filipvanlaenen.kolektoj.array;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -163,7 +165,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        return ((Entry<K, V>) entries[index]).value();
+        return getValueAt(index);
     }
 
     @Override
@@ -174,16 +176,16 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         }
         ModifiableCollection<V> result = new ModifiableArrayCollection<V>(
                 keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS,
-                ((Entry<K, V>) entries[index]).value());
+                getValueAt(index));
         if (!keyAndValueCardinality.equals(DISTINCT_KEYS)) {
             int i = index - 1;
-            while (i >= 0 && Objects.equals(key, ((Entry<K, V>) entries[i]).key())) {
-                result.add(((Entry<K, V>) entries[i]).value());
+            while (i >= 0 && Objects.equals(key, getKeyAt(i))) {
+                result.add(getValueAt(i));
                 i--;
             }
             i = index + 1;
-            while (i < entries.length && Objects.equals(key, ((Entry<K, V>) entries[i]).key())) {
-                result.add(((Entry<K, V>) entries[i]).value());
+            while (i < entries.length && Objects.equals(key, getKeyAt(i))) {
+                result.add(getValueAt(i));
                 i++;
             }
         }
@@ -200,16 +202,12 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
-        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
-                entryByKeyComparator);
-        while (i < entries.length && comparator.compare(key, ((Entry<K, V>) entries[i]).key()) == 0) {
-            i++;
-        }
-        if (i == entries.length) {
+        int index = getIndexGreaterThan(key);
+        if (index == entries.length) {
             throw new IndexOutOfBoundsException(
                     "Cannot return an entry from the map with a key that's greater than the provided value.");
         }
-        return (Entry<K, V>) entries[i];
+        return (Entry<K, V>) entries[index];
     }
 
     @Override
@@ -240,13 +238,97 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
         } else {
-            return ((Entry<K, V>) entries[entries.length - 1]).key();
+            return getKeyAt(entries.length - 1);
         }
+    }
+
+    private int getIndexGreaterThan(final K key) {
+        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
+                entryByKeyComparator);
+        while (i < entries.length && comparator.compare(key, getKeyAt(i)) == 0) {
+            i++;
+        }
+        return i;
+    }
+
+    private int getIndexLessThan(final K key) {
+        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
+                entryByKeyComparator);
+        while (i >= 0 && comparator.compare(key, getKeyAt(i)) <= 0) {
+            i--;
+        }
+        return i;
+    }
+
+    private int getIndexLessThanOrEqualTo(final K key) {
+        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
+                entryByKeyComparator);
+        while (i >= 0 && comparator.compare(key, getKeyAt(i)) < 0) {
+            i--;
+        }
+        return i;
     }
 
     @Override
     public KeyAndValueCardinality getKeyAndValueCardinality() {
         return keyAndValueCardinality;
+    }
+
+    private K getKeyAt(final int index) {
+        return ((Entry<K, V>) entries[index]).key();
+    }
+
+    @Override
+    public K getKeyGreaterThan(final K key) throws IndexOutOfBoundsException {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        }
+        int index = getIndexGreaterThan(key);
+        if (index == entries.length) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return a key from the map that's greater than the provided value.");
+        }
+        return getKeyAt(index);
+    }
+
+    @Override
+    public K getKeyGreaterThanOrEqualTo(final K key) throws IndexOutOfBoundsException {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        }
+        int index = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
+                entryByKeyComparator);
+        if (index == entries.length) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return a key from the map that's greater than or equal to the provided value.");
+        }
+        return getKeyAt(index);
+    }
+
+    @Override
+    public K getKeyLessThan(final K key) throws IndexOutOfBoundsException {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        }
+        int index = getIndexLessThan(key);
+        if (index == -1) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return a key from the map that's less than the provided value.");
+        }
+        return getKeyAt(index);
+    }
+
+    @Override
+    public K getKeyLessThanOrEqualTo(final K key) throws IndexOutOfBoundsException {
+        if (entries.length == 0) {
+            throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
+        }
+        int index = getIndexLessThanOrEqualTo(key);
+        if (index == -1) {
+            throw new IndexOutOfBoundsException(
+                    "Cannot return a key from the map that's less than or equal to the provided value.");
+        }
+        return getKeyAt(index);
     }
 
     @Override
@@ -268,7 +350,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return a key from an empty map.");
         } else {
-            return ((Entry<K, V>) entries[0]).key();
+            return getKeyAt(0);
         }
     }
 
@@ -277,16 +359,12 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
-        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
-                entryByKeyComparator);
-        while (i >= 0 && comparator.compare(key, ((Entry<K, V>) entries[i]).key()) <= 0) {
-            i--;
-        }
-        if (i == -1) {
+        int index = getIndexLessThan(key);
+        if (index == -1) {
             throw new IndexOutOfBoundsException(
                     "Cannot return an entry from the map with a key that's less than the provided value.");
         }
-        return (Entry<K, V>) entries[i];
+        return (Entry<K, V>) entries[index];
     }
 
     @Override
@@ -294,16 +372,16 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         if (entries.length == 0) {
             throw new IndexOutOfBoundsException("Cannot return an entry from an empty map.");
         }
-        int i = ArrayUtilities.findInsertionIndex(entries, entries.length, new Entry<K, V>(key, null),
-                entryByKeyComparator);
-        while (i >= 0 && comparator.compare(key, ((Entry<K, V>) entries[i]).key()) < 0) {
-            i--;
-        }
-        if (i == -1) {
+        int index = getIndexLessThanOrEqualTo(key);
+        if (index == -1) {
             throw new IndexOutOfBoundsException(
                     "Cannot return an entry from the map with a key that's less than or equal to the provided value.");
         }
-        return (Entry<K, V>) entries[i];
+        return (Entry<K, V>) entries[index];
+    }
+
+    private V getValueAt(final int index) {
+        return ((Entry<K, V>) entries[index]).value();
     }
 
     @Override
@@ -343,7 +421,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         if (index == -1) {
             throw new IllegalArgumentException("Map doesn't contain an entry with the key " + key + ".");
         }
-        V oldValue = ((Entry<K, V>) entries[index]).value();
+        V oldValue = getValueAt(index);
         entries[index] = newEntry;
         values.remove(oldValue);
         values.add(value);
