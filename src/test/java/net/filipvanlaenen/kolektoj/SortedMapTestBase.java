@@ -170,6 +170,142 @@ public abstract class SortedMapTestBase<T extends SortedMap<Integer, String>,
     }
 
     /**
+     * Verifies that <code>getGreaterKeyThan</code> on an empty map throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getKeyGreaterThanShouldThrowExceptionWhenCalledOnAnEmptyMap() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createMap().getKeyGreaterThan(2));
+        assertEquals("Cannot return a key from an empty map.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getGreaterKeyThan</code> returns the key that's greater than the provided key.
+     */
+    @Test
+    public void getKeyGreaterThanShouldReturnTheFirstKeyThatIsGreater() {
+        assertEquals(THREE, map123.getKeyGreaterThan(2));
+    }
+
+    /**
+     * Verifies that <code>getGreaterKeyThan</code> throws IndexOutOfBoundsException when there's no greater key.
+     */
+    @Test
+    public void getKeyGreaterThanShouldThrowExceptionWhenCalledWithGreatestKey() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> map123.getKeyGreaterThan(THREE));
+        assertEquals("Cannot return a key from the map that's greater than the provided value.",
+                exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getKeyGreaterThanOrEqualTo</code> on an empty map throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getKeyGreaterThanOrEqualToShouldThrowExceptionWhenCalledOnAnEmptyMap() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createMap().getKeyGreaterThanOrEqualTo(2));
+        assertEquals("Cannot return a key from an empty map.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getKeyGreaterThanOrEqualTo</code> returns a key that's equal to the provided value if it's
+     * present.
+     */
+    @Test
+    public void getKeyGreaterThanOrEqualToShouldReturnTheKeyThatIsEqualIfPresent() {
+        assertEquals(2, map123.getKeyGreaterThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getKeyGreaterThanOrEqualTo</code> returns a key that's greater than if the provided value is
+     * absent.
+     */
+    @Test
+    public void getKeyGreaterThanOrEqualToShouldReturnGreaterKeyIfProvidedKeyIsAbsent() {
+        assertEquals(THREE, map13.getKeyGreaterThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getKeyGreaterThanOrEqualTo</code> throws IndexOutOfBoundsException when there's no greater or
+     * equal key.
+     */
+    @Test
+    public void getKeyGreaterThanOrEqualToShouldThrowExceptionWhenCalledWithGreaterThanGreatestKey() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> map123.getKeyGreaterThanOrEqualTo(FOUR));
+        assertEquals("Cannot return a key from the map that's greater than or equal to the provided value.",
+                exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getKeyLessThan</code> on an empty map throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getKeyLessThanShouldThrowExceptionWhenCalledOnAnEmptyMap() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createMap().getKeyLessThan(2));
+        assertEquals("Cannot return a key from an empty map.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getKeyLessThan</code> returns a key that's less than the provided key.
+     */
+    @Test
+    public void getKeyLessThanShouldReturnTheLastKeyThatIsLess() {
+        assertEquals(1, map123.getKeyLessThan(2));
+    }
+
+    /**
+     * Verifies that <code>getKeyLessThan</code> throws IndexOutOfBoundsException when there's no less key.
+     */
+    @Test
+    public void getKeyLessThanShouldThrowExceptionWhenCalledWithLeastKey() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> map123.getKeyLessThan(1));
+        assertEquals("Cannot return a key from the map that's less than the provided value.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getKeyLessThanOrEqualTo</code> on an empty map throws IndexOutOfBoundsException.
+     */
+    @Test
+    public void getKeyLessThanOrEqualToShouldThrowExceptionWhenCalledOnAnEmptyMap() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> createMap().getKeyLessThanOrEqualTo(2));
+        assertEquals("Cannot return a key from an empty map.", exception.getMessage());
+    }
+
+    /**
+     * Verifies that <code>getKeyLessThanOrEqualTo</code> returns a key that's equal to the provided value if it's
+     * present.
+     */
+    @Test
+    public void getKeyLessThanOrEqualToShouldReturnTheKeyThatIsEqualIfPresent() {
+        assertEquals(2, map123.getKeyLessThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getKeyLessThanOrEqualTo</code> returns a key that's less if the provided key is absent.
+     */
+    @Test
+    public void getKeyLessThanOrEqualToShouldReturnLessKeyIfProvidedKeyIsAbsent() {
+        assertEquals(1, map13.getKeyLessThanOrEqualTo(2));
+    }
+
+    /**
+     * Verifies that <code>getKeyLessThanOrEqualTo</code> throws IndexOutOfBoundsException when there's no less or equal
+     * key.
+     */
+    @Test
+    public void getKeyLessThanOrEqualToShouldThrowExceptionWhenCalledWithGreaterThanGreatestKey() {
+        IndexOutOfBoundsException exception =
+                assertThrows(IndexOutOfBoundsException.class, () -> map123.getKeyLessThanOrEqualTo(0));
+        assertEquals("Cannot return a key from the map that's less than or equal to the provided value.",
+                exception.getMessage());
+    }
+
+    /**
      * Verifies that trying to get the least entry from an empty map throws IndexOutOfBoundsException.
      */
     @Test
