@@ -13,6 +13,14 @@ public class OrderedCollectionTest {
      * The magic number three.
      */
     private static final int THREE = 3;
+    /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
+     * The magic number five.
+     */
+    private static final int FIVE = 5;
 
     /**
      * Verifies that an empty ordered collection is empty.
@@ -46,6 +54,16 @@ public class OrderedCollectionTest {
         OrderedCollection<Integer> collection = OrderedCollection.<Integer>of(1, 2, THREE);
         OrderedCollection<Number> clone = OrderedCollection.<Number>of(collection);
         assertArrayEquals(collection.toArray(), clone.toArray());
+    }
+
+    /**
+     * Verifies that the of factory method using a collection and from and to indices clones a collection.
+     */
+    @Test
+    public void ofWithCollectionAndIndicesShoudlReturnAClone() {
+        OrderedCollection<Integer> collection = OrderedCollection.<Integer>of(1, 2, THREE, FOUR, FIVE);
+        OrderedCollection<Number> slice = OrderedCollection.<Number>of(collection, 1, THREE);
+        assertTrue(slice.containsSame(Collection.of(2, THREE)));
     }
 
     /**

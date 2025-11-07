@@ -153,6 +153,24 @@ public interface OrderedCollection<E> extends Collection<E> {
     }
 
     /**
+     * Returns a new ordered collection cloned from a range in the provided ordered collection.
+     *
+     * @param <F>        The element type.
+     * @param collection The original ordered collection.
+     * @param fromIndex  The index of the first element to be included in the new ordered collection.
+     * @param toIndex    The index of the first element not to be included in the new ordered collection.
+     * @return A new ordered collection cloned from a range in the provided ordered collection.
+     */
+    static <F> OrderedCollection<F> of(final OrderedCollection<? extends F> collection, final int fromIndex,
+            final int toIndex) {
+        ModifiableOrderedCollection<F> slice = ModifiableOrderedCollection.<F>empty();
+        for (int i = fromIndex; i < toIndex; i++) {
+            slice.addLast(collection.getAt(i));
+        }
+        return new OrderedArrayCollection<F>(slice);
+    }
+
+    /**
      * Returns the index of the first occurrence of the specified element, or -1 if this collection does not contain the
      * element.
      *
