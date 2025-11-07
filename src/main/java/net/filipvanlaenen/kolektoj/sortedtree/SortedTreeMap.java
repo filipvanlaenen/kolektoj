@@ -12,13 +12,15 @@ import java.util.Spliterator;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.SortedMap;
-import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
-import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
+import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
+import net.filipvanlaenen.kolektoj.array.OrderedArrayCollection;
 import net.filipvanlaenen.kolektoj.array.SortedArrayCollection;
 import net.filipvanlaenen.kolektoj.sortedtree.SortedTree.TreeNodesBelowAtAndAbove;
 
@@ -59,9 +61,9 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
      */
     private final SortedTree<K, Collection<V>> sortedTree;
     /**
-     * A collection with the values.
+     * An ordered collection with the values.
      */
-    private final Collection<V> values;
+    private final OrderedCollection<V> values;
 
     /**
      * Constructor taking the entries as its parameter.
@@ -125,14 +127,14 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
         sortedTree = SortedTree.fromSortedEntryArray(comparator, keyAndValueCardinality, this.entries, false);
         ModifiableCollection<K> theKeys = new ModifiableSortedTreeCollection<K>(
                 keyAndValueCardinality == DISTINCT_KEYS ? DISTINCT_ELEMENTS : DUPLICATE_ELEMENTS, comparator);
-        ModifiableCollection<V> theValues = new ModifiableArrayCollection<V>();
-        for (Object object : entries) {
+        ModifiableOrderedCollection<V> theValues = new ModifiableOrderedArrayCollection<V>();
+        for (Object object : this.entries) {
             Entry<K, V> entry = (Entry<K, V>) object;
             theKeys.add(entry.key());
             theValues.add(entry.value());
         }
         this.keys = new SortedArrayCollection<K>(comparator, theKeys);
-        this.values = new ArrayCollection<V>(theValues);
+        this.values = new OrderedArrayCollection<V>(theValues);
     }
 
     /**
@@ -387,7 +389,7 @@ public final class SortedTreeMap<K, V> implements SortedMap<K, V> {
     }
 
     @Override
-    public Collection<V> getValues() {
+    public OrderedCollection<V> getValues() {
         return values;
     }
 

@@ -299,4 +299,11 @@ public interface SortedMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
      *                                   provided key, or the map is empty.
      */
     Entry<K, V> getLessThanOrEqualTo(K key) throws IndexOutOfBoundsException;
+
+    /**
+     * Returns an ordered collection with all the values present in the map.
+     *
+     * @return An ordered collection with all the values present in the map.
+     */
+    OrderedCollection<V> getValues();
 }

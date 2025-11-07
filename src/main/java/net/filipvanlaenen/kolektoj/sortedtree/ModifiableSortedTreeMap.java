@@ -13,13 +13,16 @@ import java.util.function.Predicate;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.ModifiableSortedCollection;
 import net.filipvanlaenen.kolektoj.ModifiableSortedMap;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
+import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
 import net.filipvanlaenen.kolektoj.sortedtree.SortedTree.TreeNodesBelowAtAndAbove;
 
 /**
@@ -428,8 +431,12 @@ public final class ModifiableSortedTreeMap<K, V> implements ModifiableSortedMap<
     }
 
     @Override
-    public Collection<V> getValues() {
-        return Collection.<V>of(values);
+    public OrderedCollection<V> getValues() {
+        ModifiableOrderedCollection<V> result = new ModifiableOrderedArrayCollection<V>();
+        for (Object object : toArray()) {
+            result.add(((Entry<K, V>) object).value());
+        }
+        return result;
     }
 
     @Override

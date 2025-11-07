@@ -12,8 +12,11 @@ import java.util.Spliterator;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.UpdatableSortedMap;
+import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection;
 
 /**
@@ -413,8 +416,12 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
     }
 
     @Override
-    public Collection<V> getValues() {
-        return Collection.<V>of(values);
+    public OrderedCollection<V> getValues() {
+        ModifiableOrderedCollection<V> result = new ModifiableOrderedArrayCollection<V>();
+        for (Object object : entries) {
+            result.add(((Entry<K, V>) object).value());
+        }
+        return result;
     }
 
     @Override

@@ -1,7 +1,9 @@
 package net.filipvanlaenen.kolektoj;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -407,5 +409,14 @@ public abstract class SortedMapTestBase<T extends SortedMap<Integer, String>,
                 assertThrows(IndexOutOfBoundsException.class, () -> map123.getLessThanOrEqualTo(0));
         assertEquals("Cannot return an entry from the map with a key that's less than or equal to the provided value.",
                 exception.getMessage());
+    }
+
+    /**
+     * Verifies that getValues returns all the values ordered.
+     */
+    @Test
+    public void getValuesShouldReturnAllValuesOrdered() {
+        OrderedCollection<String> actual = map123.getValues();
+        assertArrayEquals(new String[] {"one", "two", "three"}, actual.toArray());
     }
 }
