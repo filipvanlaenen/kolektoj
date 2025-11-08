@@ -103,6 +103,17 @@ public class ModifiableSortedCollectionTest {
     }
 
     /**
+     * Verifies that the of factory method using a collection and a range clones a collection.
+     */
+    @Test
+    public void ofWithCollectionAndRangeShouldReturnAClone() {
+        SortedCollection<Integer> collection = SortedCollection.<Integer>of(COMPARATOR, 1, 2, THREE, FOUR, FIVE);
+        ModifiableSortedCollection<Integer> slice =
+                ModifiableSortedCollection.<Integer>of(collection, Range.greaterThan(1).lessThan(FIVE));
+        assertTrue(slice.containsSame(Collection.of(2, THREE, FOUR)));
+    }
+
+    /**
      * Verifies that the <code>of</code> factory method using a sorted collection clones a sorted collection.
      */
     @Test

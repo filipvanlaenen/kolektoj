@@ -91,6 +91,32 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
     }
 
     /**
+     * Returns a new sorted collection cloned from the provided sorted collection.
+     *
+     * @param <F>        The element type.
+     * @param collection The original sorted collection.
+     * @return A new sorted collection cloned from the provided sorted collection.
+     */
+    static <F> SortedCollection<F> of(final SortedCollection<F> collection, final Range<F> range) {
+        ModifiableCollection<F> slice = ModifiableCollection.<F>of(collection.getElementCardinality());
+        boolean below = true;
+        for (F element : collection) {
+            if (below) {
+                if (!range.isBelow(collection.getComparator(), element)) {
+                    below = false;
+                }
+            }
+            if (!below) {
+                if (range.isAbove(collection.getComparator(), element)) {
+                    break;
+                }
+                slice.add(element);
+            }
+        }
+        return new SortedArrayCollection<F>(collection.getComparator(), slice);
+    }
+
+    /**
      * Returns the comparator sorting this collection.
      *
      * @return The comparator sorting this collection
