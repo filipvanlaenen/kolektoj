@@ -50,6 +50,16 @@ public class RangeTest {
     private static final Range<Integer> GREATER_THAN_ONE_AND_LESS_THAN_OR_EQUAL_TO_THREE =
             Range.greaterThan(1).lessThanOrEqualTo(THREE);
     /**
+     * The range greater than or equal to one and less than three.
+     */
+    private static final Range<Integer> GREATER_THAN_OR_EQUAL_TO_ONE_AND_LESS_THAN_THREE =
+            Range.greaterThanOrEqualTo(1).lessThan(THREE);
+    /**
+     * The range greater than or equal to one and less than or equal to three.
+     */
+    private static final Range<Integer> GREATER_THAN_OR_EQUAL_TO_ONE_AND_LESS_THAN_OR_EQUAL_TO_THREE =
+            Range.greaterThanOrEqualTo(1).lessThanOrEqualTo(THREE);
+    /**
      * The range less than one.
      */
     private static final Range<Integer> LESS_THAN_ONE = Range.lessThan(1);
@@ -112,6 +122,48 @@ public class RangeTest {
     @Test
     public void lessThanOrEqualToShouldCreateRangeForLessThanOrEqualToAValue() {
         assertEquals(new Range.LessThanOrEqualTo<Integer>(1), Range.lessThanOrEqualTo(1));
+    }
+
+    /**
+     * Verifies that the factory method creates a range for greater than and less than a value.
+     */
+    @Test
+    public void greaterThanAndLessThanShouldCreateRangeForGreaterThanAndLessThanAValue() {
+        assertEquals(new Range.GreaterThanAndLessThan<Integer>(1, THREE), Range.greaterThan(1).lessThan(THREE));
+        assertEquals(new Range.GreaterThanAndLessThan<Integer>(1, THREE), Range.lessThan(THREE).greaterThan(1));
+    }
+
+    /**
+     * Verifies that the factory method creates a range for greater than and less than or equal to a value.
+     */
+    @Test
+    public void greaterThanAndLessThanOrEqualToShouldCreateRangeForGreaterThanAndLessThanOrEqualToAValue() {
+        assertEquals(new Range.GreaterThanAndLessThanOrEqualTo<Integer>(1, THREE),
+                Range.greaterThan(1).lessThanOrEqualTo(THREE));
+        assertEquals(new Range.GreaterThanAndLessThanOrEqualTo<Integer>(1, THREE),
+                Range.lessThanOrEqualTo(THREE).greaterThan(1));
+    }
+
+    /**
+     * Verifies that the factory method creates a range for greater than or equal to and less than a value.
+     */
+    @Test
+    public void greaterThanOrEqualToAndLessThanShouldCreateRangeForGreaterThanOrEqualToAndLessThanAValue() {
+        assertEquals(new Range.GreaterThanOrEqualToAndLessThan<Integer>(1, THREE),
+                Range.greaterThanOrEqualTo(1).lessThan(THREE));
+        assertEquals(new Range.GreaterThanOrEqualToAndLessThan<Integer>(1, THREE),
+                Range.lessThan(THREE).greaterThanOrEqualTo(1));
+    }
+
+    /**
+     * Verifies that the factory method creates a range for greater than or equal to and less than or equal to a value.
+     */
+    @Test
+    public void greaterThanOrEqualToAndLessThanOrEqualToShouldCreateCorrectRange() {
+        assertEquals(new Range.GreaterThanOrEqualToAndLessThanOrEqualTo<Integer>(1, THREE),
+                Range.greaterThanOrEqualTo(1).lessThanOrEqualTo(THREE));
+        assertEquals(new Range.GreaterThanOrEqualToAndLessThanOrEqualTo<Integer>(1, THREE),
+                Range.lessThanOrEqualTo(THREE).greaterThanOrEqualTo(1));
     }
 
     /**
@@ -288,6 +340,72 @@ public class RangeTest {
     @Test
     public void fourShouldBeAboveGreaterThanOneAndLessThanOrEqualToThree() {
         assertTrue(GREATER_THAN_ONE_AND_LESS_THAN_OR_EQUAL_TO_THREE.isAbove(Comparator.naturalOrder(), FOUR));
+    }
+
+    /**
+     * Verifies that zero is below greater than or equal to one and less than three.
+     */
+    @Test
+    public void zeroShouldBeBelowGreaterThanOrEqualToOneAndLessThanThree() {
+        assertTrue(GREATER_THAN_OR_EQUAL_TO_ONE_AND_LESS_THAN_THREE.isBelow(Comparator.naturalOrder(), 0));
+    }
+
+    /**
+     * Verifies that one isn't below greater than or equal to one and less than three.
+     */
+    @Test
+    public void oneShouldNotBeBelowGreaterThanOrEqualToOneAndLessThanThree() {
+        assertFalse(GREATER_THAN_OR_EQUAL_TO_ONE_AND_LESS_THAN_THREE.isBelow(Comparator.naturalOrder(), 1));
+    }
+
+    /**
+     * Verifies that two isn't above greater than or equal to one and less than three.
+     */
+    @Test
+    public void twoShouldNotBeAboveGreaterThanOrEqualToOneAndLessThanThree() {
+        assertFalse(GREATER_THAN_OR_EQUAL_TO_ONE_AND_LESS_THAN_THREE.isAbove(Comparator.naturalOrder(), 2));
+    }
+
+    /**
+     * Verifies that three is above greater than or equal to one and less than three.
+     */
+    @Test
+    public void threeShouldBeAboveGreaterThanOrEqualToOneAndLessThanThree() {
+        assertTrue(GREATER_THAN_OR_EQUAL_TO_ONE_AND_LESS_THAN_THREE.isAbove(Comparator.naturalOrder(), THREE));
+    }
+
+    /**
+     * Verifies that zero is below greater than or equal to one and less than or equal to three.
+     */
+    @Test
+    public void zeroShouldBeBelowGreaterThanOrEqualToOneAndLessThanOrEqualToThree() {
+        assertTrue(GREATER_THAN_OR_EQUAL_TO_ONE_AND_LESS_THAN_OR_EQUAL_TO_THREE.isBelow(Comparator.naturalOrder(), 0));
+    }
+
+    /**
+     * Verifies that one isn't below greater than or equal to one and less than or equal to three.
+     */
+    @Test
+    public void oneShouldNotBeBelowGreaterThanOrEqualToOneAndLessThanOrEqualToThree() {
+        assertFalse(GREATER_THAN_OR_EQUAL_TO_ONE_AND_LESS_THAN_OR_EQUAL_TO_THREE.isBelow(Comparator.naturalOrder(), 1));
+    }
+
+    /**
+     * Verifies that three isn't above greater than or equal to one and less than or equal to three.
+     */
+    @Test
+    public void threeShouldNotBeAboveGreaterThanOrEqualToOneAndLessThanOrEqualToThree() {
+        assertFalse(
+                GREATER_THAN_OR_EQUAL_TO_ONE_AND_LESS_THAN_OR_EQUAL_TO_THREE.isAbove(Comparator.naturalOrder(), THREE));
+    }
+
+    /**
+     * Verifies that four is above greater than or equal to one and less than or equal to three.
+     */
+    @Test
+    public void fourShouldBeAboveGreaterThanOrEqualToOneAndLessThanOrEqualToThree() {
+        assertTrue(
+                GREATER_THAN_OR_EQUAL_TO_ONE_AND_LESS_THAN_OR_EQUAL_TO_THREE.isAbove(Comparator.naturalOrder(), FOUR));
     }
 
     /**
