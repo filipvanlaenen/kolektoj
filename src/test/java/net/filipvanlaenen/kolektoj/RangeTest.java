@@ -6,6 +6,9 @@ import java.util.Comparator;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests on the {@link net.filipvanlaenen.kolektoj.Range} class.
+ */
 public class RangeTest {
     /**
      * The magic number three.

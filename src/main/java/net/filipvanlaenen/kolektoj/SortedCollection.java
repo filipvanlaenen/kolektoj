@@ -95,16 +95,15 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
      *
      * @param <F>        The element type.
      * @param collection The original sorted collection.
+     * @param range      The range.
      * @return A new sorted collection cloned from the provided sorted collection.
      */
     static <F> SortedCollection<F> of(final SortedCollection<F> collection, final Range<F> range) {
         ModifiableCollection<F> slice = ModifiableCollection.<F>of(collection.getElementCardinality());
         boolean below = true;
         for (F element : collection) {
-            if (below) {
-                if (!range.isBelow(collection.getComparator(), element)) {
-                    below = false;
-                }
+            if (below && !range.isBelow(collection.getComparator(), element)) {
+                below = false;
             }
             if (!below) {
                 if (range.isAbove(collection.getComparator(), element)) {
