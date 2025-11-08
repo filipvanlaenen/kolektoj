@@ -1,6 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
+import net.filipvanlaenen.kolektoj.array.OrderedArrayCollection;
 
 /**
  * Interface defining the signature for all modifiable ordered collections.
@@ -50,6 +51,24 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
      */
     static <F> ModifiableOrderedCollection<F> of(final OrderedCollection<? extends F> collection) {
         return new ModifiableOrderedArrayCollection<F>(collection);
+    }
+
+    /**
+     * Returns a new modifiable ordered collection cloned from a range in the provided ordered collection.
+     *
+     * @param <F>        The element type.
+     * @param collection The original ordered collection.
+     * @param fromIndex  The index of the first element to be included in the new ordered collection.
+     * @param toIndex    The index of the first element not to be included in the new ordered collection.
+     * @return A new modifiable ordered collection cloned from a range in the provided ordered collection.
+     */
+    static <F> ModifiableOrderedCollection<F> of(final OrderedCollection<? extends F> collection, final int fromIndex,
+            final int toIndex) {
+        ModifiableOrderedCollection<F> slice = new ModifiableOrderedArrayCollection<F>();
+        for (int i = fromIndex; i < toIndex; i++) {
+            slice.addLast(collection.getAt(i));
+        }
+        return slice;
     }
 
     /**

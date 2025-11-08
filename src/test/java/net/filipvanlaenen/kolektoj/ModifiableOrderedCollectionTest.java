@@ -17,6 +17,10 @@ public class ModifiableOrderedCollectionTest {
      * The magic number four.
      */
     private static final int FOUR = 4;
+    /**
+     * The magic number five.
+     */
+    private static final int FIVE = 5;
 
     /**
      * Verifies that an empty modifiable ordered collection is empty.
@@ -51,6 +55,16 @@ public class ModifiableOrderedCollectionTest {
         OrderedCollection<Integer> collection = OrderedCollection.<Integer>of(1, 2, THREE);
         ModifiableOrderedCollection<Number> clone = ModifiableOrderedCollection.<Number>of(collection);
         assertArrayEquals(collection.toArray(), clone.toArray());
+    }
+
+    /**
+     * Verifies that the of factory method using a collection and from and to indices clones a collection.
+     */
+    @Test
+    public void ofWithCollectionAndIndicesShoudlReturnAClone() {
+        OrderedCollection<Integer> collection = OrderedCollection.<Integer>of(1, 2, THREE, FOUR, FIVE);
+        ModifiableOrderedCollection<Number> slice = ModifiableOrderedCollection.<Number>of(collection, 1, THREE);
+        assertTrue(slice.containsSame(Collection.of(2, THREE)));
     }
 
     /**
