@@ -35,6 +35,25 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
     }
 
     /**
+     * Returns a new sorted collection cloned from a range in the provided ordered collection.
+     *
+     * @param <F>        The element type.
+     * @param comparator The comparator by which to sort the elements.
+     * @param collection The original ordered collection.
+     * @param fromIndex  The index of the first element to be included in the new ordered collection.
+     * @param toIndex    The index of the first element not to be included in the new ordered collection.
+     * @return A new sorted collection cloned from a range in the provided ordered collection.
+     */
+    static <F> SortedCollection<F> of(final Comparator<? super F> comparator,
+            final OrderedCollection<? extends F> collection, final int fromIndex, final int toIndex) {
+        ModifiableCollection<F> slice = ModifiableCollection.<F>of(collection.getElementCardinality());
+        for (int i = fromIndex; i < toIndex; i++) {
+            slice.add(collection.getAt(i));
+        }
+        return new SortedArrayCollection<F>(comparator, slice);
+    }
+
+    /**
      * Returns a new sorted collection with the specified elements.
      *
      * @param <F>        The element type.

@@ -50,7 +50,7 @@ public class OrderedCollectionTest {
      * Verifies that the of factory method using a collection clones a collection.
      */
     @Test
-    public void ofWithCollectionShoudlReturnAClone() {
+    public void ofWithCollectionShouldReturnAClone() {
         OrderedCollection<Integer> collection = OrderedCollection.<Integer>of(1, 2, THREE);
         OrderedCollection<Number> clone = OrderedCollection.<Number>of(collection);
         assertArrayEquals(collection.toArray(), clone.toArray());

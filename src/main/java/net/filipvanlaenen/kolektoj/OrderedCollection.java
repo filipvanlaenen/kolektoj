@@ -163,7 +163,7 @@ public interface OrderedCollection<E> extends Collection<E> {
      */
     static <F> OrderedCollection<F> of(final OrderedCollection<? extends F> collection, final int fromIndex,
             final int toIndex) {
-        ModifiableOrderedCollection<F> slice = ModifiableOrderedCollection.<F>empty();
+        ModifiableOrderedCollection<F> slice = ModifiableOrderedCollection.<F>of(collection.getElementCardinality());
         for (int i = fromIndex; i < toIndex; i++) {
             slice.addLast(collection.getAt(i));
         }

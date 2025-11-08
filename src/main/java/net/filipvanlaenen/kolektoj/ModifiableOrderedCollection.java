@@ -1,7 +1,6 @@
 package net.filipvanlaenen.kolektoj;
 
 import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
-import net.filipvanlaenen.kolektoj.array.OrderedArrayCollection;
 
 /**
  * Interface defining the signature for all modifiable ordered collections.
@@ -64,11 +63,12 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
      */
     static <F> ModifiableOrderedCollection<F> of(final OrderedCollection<? extends F> collection, final int fromIndex,
             final int toIndex) {
-        ModifiableOrderedCollection<F> slice = new ModifiableOrderedArrayCollection<F>();
+        ModifiableOrderedCollection<F> result =
+                new ModifiableOrderedArrayCollection<F>(collection.getElementCardinality());
         for (int i = fromIndex; i < toIndex; i++) {
-            slice.addLast(collection.getAt(i));
+            result.addLast(collection.getAt(i));
         }
-        return slice;
+        return result;
     }
 
     /**

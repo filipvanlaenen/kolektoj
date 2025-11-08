@@ -17,6 +17,14 @@ public class ModifiableSortedCollectionTest {
      * The magic number three.
      */
     private static final int THREE = 3;
+    /**
+     * The magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
+     * The magic number five.
+     */
+    private static final int FIVE = 5;
 
     /**
      * A comparator ordering integers in the natural order, but in addition handles <code>null</code> as the lowest
@@ -81,6 +89,17 @@ public class ModifiableSortedCollectionTest {
         Collection<Integer> collection = Collection.<Integer>of(1, 2, THREE);
         ModifiableSortedCollection<Integer> clone = ModifiableSortedCollection.<Integer>of(COMPARATOR, collection);
         assertArrayEquals(collection.toArray(), clone.toArray());
+    }
+
+    /**
+     * Verifies that the of factory method using a collection and from and to indices clones a collection.
+     */
+    @Test
+    public void ofWithCollectionAndIndicesShouldReturnAClone() {
+        OrderedCollection<Integer> collection = OrderedCollection.<Integer>of(1, 2, THREE, FOUR, FIVE);
+        ModifiableSortedCollection<Integer> slice =
+                ModifiableSortedCollection.<Integer>of(COMPARATOR, collection, 1, THREE);
+        assertTrue(slice.containsSame(Collection.of(2, THREE)));
     }
 
     /**
