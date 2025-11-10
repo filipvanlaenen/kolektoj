@@ -138,6 +138,17 @@ class SortedTree<K, C> {
         size = 0;
     }
 
+    /**
+     * Collect unmatched nodes for removal in a provided array and return the current number of collected unmatched
+     * nodes..
+     *
+     * @param removeArray     An array where to store unmatched nodes.
+     * @param removeArraySize The number of stored unmatched nodes.
+     * @param node            The node defining the subtree to process.
+     * @param matched         An array indicating which nodes are matched.
+     * @param index           The index of the node defining the subtree to process in the entire tree.
+     * @return The updated number of stored unmatched nodes.
+     */
     private int collectUnmatchedForRemoval(final TreeNode<K, C>[] removeArray, final int removeArraySize,
             final TreeNode<K, C> node, final boolean[] matched, final int index) {
         if (node == null) {
@@ -222,6 +233,11 @@ class SortedTree<K, C> {
         return getNode(key) != null;
     }
 
+    /**
+     * Creates element nodes based on a sorted array.
+     *
+     * @param sortedArray The sorted array with the elements.
+     */
     private void createElementNodes(final Object[] sortedArray) {
         size = sortedArray.length;
         if (size > 0) {
@@ -229,6 +245,14 @@ class SortedTree<K, C> {
         }
     }
 
+    /**
+     * Creates element nodes from a sorted array within a given range.
+     *
+     * @param sortedArray The sorted array with the elements.
+     * @param firstIndex  The first index of the range.
+     * @param lastIndex   The last index of the range.
+     * @return A node defining a subtree with nodes taken from the range in the array.
+     */
     private TreeNode<K, C> createElementNodes(final Object[] sortedArray, final int firstIndex, final int lastIndex) {
         int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
         TreeNode<K, C> node = new TreeNode<K, C>((K) sortedArray[middleIndex]);
@@ -241,6 +265,11 @@ class SortedTree<K, C> {
         return node;
     }
 
+    /**
+     * Creates entry nodes based on a sorted array.
+     *
+     * @param sortedArray The sorted array with the entries.
+     */
     private void createEntryNodes(final Object[] sortedArray) {
         size = sortedArray.length;
         if (size > 0) {
@@ -248,6 +277,14 @@ class SortedTree<K, C> {
         }
     }
 
+    /**
+     * Creates entry nodes from a sorted array within a given range.
+     *
+     * @param sortedArray The sorted array with the entries.
+     * @param firstIndex  The first index of the range.
+     * @param lastIndex   The last index of the range.
+     * @return A node defining a subtree with nodes taken from the range in the array.
+     */
     private TreeNode<K, C> createEntryNodes(final Object[] sortedArray, final int firstIndex, final int lastIndex) {
         int middleIndex = firstIndex + (lastIndex - firstIndex) / 2;
         Entry<K, C> entry = (Entry<K, C>) sortedArray[middleIndex];
@@ -261,8 +298,15 @@ class SortedTree<K, C> {
         return node;
     }
 
-    private TreeNode<K, C>[] createNodeArray(final int length, final TreeNode<K, C>... foo) {
-        return (TreeNode<K, C>[]) Array.newInstance(getNodeElementType(foo), length);
+    /**
+     * Creates an array using the node type.
+     *
+     * @param length The requested length for the array.
+     * @param node   A node used as a prototype to derive the node type.
+     * @return An array of the node type.
+     */
+    private TreeNode<K, C>[] createNodeArray(final int length, final TreeNode<K, C>... node) {
+        return (TreeNode<K, C>[]) Array.newInstance(getNodeElementType(node), length);
     }
 
     /**
@@ -298,6 +342,15 @@ class SortedTree<K, C> {
         }
     }
 
+    /**
+     * Creates a sorted tree from a sorted element array.
+     *
+     * @param <L>                The element type.
+     * @param comparator         The comparator.
+     * @param elementCardinality The element cardinality.
+     * @param sortedArray        The sorted element array.
+     * @return A sorted tree created from the sorted element array.
+     */
     static <L> SortedTree<L, L> fromSortedElementArray(final Comparator<? super L> comparator,
             final ElementCardinality elementCardinality, final Object[] sortedArray) {
         SortedTree<L, L> sortedTree = new SortedTree<L, L>(comparator, elementCardinality);
@@ -305,6 +358,18 @@ class SortedTree<K, C> {
         return sortedTree;
     }
 
+    /**
+     * Creates a sorted tree from a sorted entry array.
+     *
+     * @param <L>                    The key type.
+     * @param <D>                    The value collection type.
+     * @param <W>                    The value type.
+     * @param comparator             The comparator.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param sortedArray            The sorted entry array.
+     * @param modifiable             Flag indicating whether the value collection type should be modifiable or not.
+     * @return A sorted tree created from the sorted entry array.
+     */
     static <L, D, W> SortedTree<L, D> fromSortedEntryArray(final Comparator<? super L> comparator,
             final KeyAndValueCardinality keyAndValueCardinality, final Object[] sortedArray, final boolean modifiable) {
         SortedTree<L, D> sortedTree = new SortedTree<L, D>(comparator, DISTINCT_ELEMENTS);
@@ -433,6 +498,12 @@ class SortedTree<K, C> {
         }
     }
 
+    /**
+     * Returns the node element type.
+     *
+     * @param node A prototype node to derive the element type from.
+     * @return The node element type.
+     */
     private Class<TreeNode<K, C>> getNodeElementType(final TreeNode<K, C>... node) {
         return (Class<TreeNode<K, C>>) node.getClass().getComponentType();
     }
@@ -618,12 +689,21 @@ class SortedTree<K, C> {
         return indexOf(key, root, 0, IndexPreference.LAST);
     }
 
-    private int markForRemoval(final TreeNode<K, C>[] deleteArray, final int index, final TreeNode<K, C> node,
+    /**
+     * Marks nodes for removal if their key evaluates to true for the provided predicate.
+     *
+     * @param deleteArray     An array to store the nodes that can be removed.
+     * @param deleteArraySize The current number of nodes marked for removal.
+     * @param node            The node defining the subtree to be processed.
+     * @param predicate       The predicate used to evaluate the keys of the entries.
+     * @return The updated number of nodes marked for removal.
+     */
+    private int markForRemoval(final TreeNode<K, C>[] deleteArray, final int deleteArraySize, final TreeNode<K, C> node,
             final Predicate<? super K> predicate) {
         if (node == null) {
-            return index;
+            return deleteArraySize;
         }
-        int newIndex = index;
+        int newIndex = deleteArraySize;
         if (predicate.test(node.getKey())) {
             deleteArray[newIndex++] = node;
         }
