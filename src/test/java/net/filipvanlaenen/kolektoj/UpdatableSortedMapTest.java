@@ -191,6 +191,19 @@ public class UpdatableSortedMapTest {
     }
 
     /**
+     * Verifies that the of factory method using a map and a range clones a map.
+     */
+    @Test
+    public void ofShouldConstructASortedMapFromAnotherSortedMapAndRangeCorrectly() {
+        SortedMap<Integer, String> prototype =
+                SortedMap.of(COMPARATOR, 1, "one", 2, "two", THREE, "three", FOUR, "four", FIVE, "five");
+        UpdatableSortedMap<Integer, String> actual =
+                UpdatableSortedMap.of(prototype, Range.greaterThan(1).lessThan(FIVE));
+        assertTrue(actual.containsSame(Map.of(2, "two", THREE, "three", FOUR, "four")));
+        assertEquals(COMPARATOR, actual.getComparator());
+    }
+
+    /**
      * Verifies that a sorted map constructed from another map and a constructor is constructed correctly.
      */
     @Test

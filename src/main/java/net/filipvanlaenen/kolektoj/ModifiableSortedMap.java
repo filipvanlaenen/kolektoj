@@ -218,6 +218,33 @@ public interface ModifiableSortedMap<K, V>
     }
 
     /**
+     * Returns a new modifiable sorted map cloned from the provided sorted map.
+     *
+     * @param <L>   The key type.
+     * @param <W>   The value type.
+     * @param map   The original sorted map.
+     * @param range The range.
+     * @return A new modifiable sorted map cloned from the provided sorted map.
+     */
+    static <L, W> ModifiableSortedMap<L, W> of(final SortedMap<L, ? extends W> map, final Range<L> range) {
+        ModifiableSortedMap<L, W> result =
+                new ModifiableSortedTreeMap<L, W>(map.getKeyAndValueCardinality(), map.getComparator());
+        boolean below = true;
+        for (Entry<L, ? extends W> entry : map) {
+            if (below && !range.isBelow(map.getComparator(), entry.key())) {
+                below = false;
+            }
+            if (!below) {
+                if (range.isAbove(map.getComparator(), entry.key())) {
+                    break;
+                }
+                result.add(entry.key(), entry.value());
+            }
+        }
+        return result;
+    }
+
+    /**
      * Removes the entry with the greatest key in the map.
      *
      * @return The entry that was removed.

@@ -3,6 +3,7 @@ package net.filipvanlaenen.kolektoj;
 import java.util.Comparator;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeMap;
 import net.filipvanlaenen.kolektoj.sortedtree.UpdatableSortedTreeMap;
 
 /**
@@ -214,5 +215,32 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
      */
     static <L, W> UpdatableSortedMap<L, W> of(final SortedMap<L, ? extends W> map) {
         return new UpdatableSortedTreeMap<L, W>(map.getComparator(), map);
+    }
+
+    /**
+     * Returns a new updatable sorted map cloned from the provided sorted map.
+     *
+     * @param <L>   The key type.
+     * @param <W>   The value type.
+     * @param map   The original sorted map.
+     * @param range The range.
+     * @return A new updatable sorted map cloned from the provided sorted map.
+     */
+    static <L, W> UpdatableSortedMap<L, W> of(final SortedMap<L, ? extends W> map, final Range<L> range) {
+        ModifiableSortedMap<L, W> slice =
+                new ModifiableSortedTreeMap<L, W>(map.getKeyAndValueCardinality(), map.getComparator());
+        boolean below = true;
+        for (Entry<L, ? extends W> entry : map) {
+            if (below && !range.isBelow(map.getComparator(), entry.key())) {
+                below = false;
+            }
+            if (!below) {
+                if (range.isAbove(map.getComparator(), entry.key())) {
+                    break;
+                }
+                slice.add(entry.key(), entry.value());
+            }
+        }
+        return new UpdatableSortedTreeMap<L, W>(map.getComparator(), slice);
     }
 }
