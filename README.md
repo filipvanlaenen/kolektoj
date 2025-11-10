@@ -267,10 +267,10 @@ interface map to Kolektoj methods.
 |                               | SortedCollection&lt;E>            | default E getLeast()          |
 | default E getLast()           | OrderedCollection&lt;E>           | default E getLast()           |
 |                               | SortedCollection&lt;E>            | default E getGreatest()       |
-| default E removeFirst()       | ModifiableOrderedCollection&lt;E> | default E removeFirst(E e)    |
-|                               | ModifiableSortedCollection&lt;E>  | default E removeLeast(E e)    |
-| default E removeLast()        | ModifiableOrderedCollection&lt;E> | default E removeLast(E e)     |
-|                               | ModifiableSortedCollection&lt;E>  | default E removeGreatest(E e) |
+| default E removeFirst()       | ModifiableOrderedCollection&lt;E> | default E removeFirst()       |
+|                               | ModifiableSortedCollection&lt;E>  | default E removeLeast()       |
+| default E removeLast()        | ModifiableOrderedCollection&lt;E> | default E removeLast()        |
+|                               | ModifiableSortedCollection&lt;E>  | default E removeGreatest()    |
 | default List&lt;E> reversed() |                                   |                               |
 
 #### java.util.SequencedMap&lt;K,V>
