@@ -175,8 +175,8 @@ class SortedTree<K, C> {
      * @param modifiable             Whether the collection should be modifiable or not.
      * @return An array with K,Collection<V>-entries.
      */
-    static <L, W> Object[] compact(final KeyAndValueCardinality keyAndValueCardinality, final Object[] kvEntries,
-            final boolean modifiable) {
+    private static <L, W> Object[] compact(final KeyAndValueCardinality keyAndValueCardinality,
+            final Object[] kvEntries, final boolean modifiable) {
         int kvLength = kvEntries.length;
         ElementCardinality cardinality =
                 keyAndValueCardinality == DUPLICATE_KEYS_WITH_DUPLICATE_VALUES ? DUPLICATE_ELEMENTS : DISTINCT_ELEMENTS;

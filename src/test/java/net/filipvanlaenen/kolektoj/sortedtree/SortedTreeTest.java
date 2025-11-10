@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
+import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
 import net.filipvanlaenen.kolektoj.sortedtree.SortedTree.TreeNodesBelowAtAndAbove;
 
 /**
@@ -317,6 +319,31 @@ public class SortedTreeTest {
         for (int i = 1; i <= TWENTY; i++) {
             assertTrue(sortedTree.firstIndexOf(i) < sortedTree.lastIndexOf(i));
         }
+    }
+
+    /**
+     * Verifies that the factory method <code>fromSortedElementArray</code> creates a new sorted tree correctly.
+     */
+    @Test
+    public void fromSortedElementArrayCreatesASortedTree() {
+        Integer[] array = new Integer[] {1, 2, THREE};
+        SortedTree<Integer, Integer> sortedTree =
+                SortedTree.fromSortedElementArray(COMPARATOR, ElementCardinality.DUPLICATE_ELEMENTS, array);
+        assertEquals(THREE, sortedTree.getSize());
+        assertTrue(sortedTree.containsAllKeys(Collection.of(1, 2, THREE)));
+    }
+
+    /**
+     * Verifies that the factory method <code>fromSortedEntryArray</code> creates a new sorted tree correctly.
+     */
+    @Test
+    public void fromSortedEntryArrayCreatesASortedTree() {
+        Entry<Integer, String>[] array = new Entry[] {new Entry(1, "one"), new Entry(1, "one bis"), new Entry(2, "two"),
+                new Entry(THREE, "three")};
+        SortedTree<Integer, Collection<String>> sortedTree = SortedTree.fromSortedEntryArray(COMPARATOR,
+                KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, array, true);
+        assertEquals(THREE, sortedTree.getSize());
+        assertTrue(sortedTree.containsAllKeys(Collection.of(1, 2, THREE)));
     }
 
     /**
