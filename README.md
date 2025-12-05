@@ -416,6 +416,7 @@ The following projects use Kolektoj:
 * [ASAPOP](https://github.com/filipvanlaenen/asapop)
 * [BLTXMLEPJ](https://github.com/filipvanlaenen/bltxmlepj)
 * [IACAJ](https://github.com/filipvanlaenen/iacaj)
+* [jCRK](https://github.com/filipvanlaenen/jcrk)
 * [Laconic Logging](https://github.com/filipvanlaenen/laconic)
 * [Nombraj Kolektoj](https://github.com/filipvanlaenen/nombrajkolektoj)
 * [SHecC](https://github.com/filipvanlaenen/shecc)
