@@ -38,16 +38,18 @@ The following collection properties have been identified:
 
 ## Overview
 
+You can browse the most recent Javadoc documentation [here](https://storage.googleapis.com/fvl-mvn-repo/javadoc/kolektoj/1.0.0/index.html).
+
 ![Overview](Overview.png)
 
 The table below shows the various implementations of the interfaces using different backing mechanisms.
 
-| Interface                   | Array                            | Hash                     | Linked List                           | Sorted Tree                       |
-|-----------------------------|----------------------------------|--------------------------|---------------------------------------|-----------------------------------|
-| Collection                  | ArrayCollection                  | HashCollection           | LinkedListCollection                  | —¹                                |
-| ModifiableCollection        | ModifiableArrayCollection        | ModifiableHashCollection | ModifiableLinkedListCollection        | —¹                                |
-| OrderedCollection           | OrderedArrayCollection           | —²                       | OrderedLinkedListCollection           | —¹                                |
-| ModifiableOrderedCollection | ModifiableOrderedArrayCollection | —²                       | ModifiableOrderedLinkedListCollection | —²                                |
+| Interface                                                                                                                                                      | Array                            | Hash                     | Linked List                           | Sorted Tree                       |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------|--------------------------|---------------------------------------|-----------------------------------|
+| [Collection](https://storage.googleapis.com/fvl-mvn-repo/javadoc/kolektoj/1.0.0/net/filipvanlaenen/kolektoj/Collection.html)                                   | ArrayCollection                  | HashCollection           | LinkedListCollection                  | —¹                                |
+| [ModifiableCollection](https://storage.googleapis.com/fvl-mvn-repo/javadoc/kolektoj/1.0.0/net/filipvanlaenen/kolektoj/ModifiableCollection.html)               | ModifiableArrayCollection        | ModifiableHashCollection | ModifiableLinkedListCollection        | —¹                                |
+| [OrderedCollection](https://storage.googleapis.com/fvl-mvn-repo/javadoc/kolektoj/1.0.0/net/filipvanlaenen/kolektoj/OrderedCollection.html)                     | OrderedArrayCollection           | —²                       | OrderedLinkedListCollection           | —¹                                |
+| [ModifiableOrderedCollection](https://storage.googleapis.com/fvl-mvn-repo/javadoc/kolektoj/1.0.0/net/filipvanlaenen/kolektoj/ModifiableOrderedCollection.html) | ModifiableOrderedArrayCollection | —²                       | ModifiableOrderedLinkedListCollection | —²                                |
 | SortedCollection            | SortedArrayCollection            | —²                       |                                       | SortedTreeCollection              |
 | ModifiableSortedCollection  | ModifiableSortedArrayCollection  | —²                       |                                       | ModifiableSortedTreeCollection    |
 | Map                         |                                  | HashMap                  |                                       | —¹                                |
