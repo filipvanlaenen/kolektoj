@@ -127,7 +127,7 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
      * @param comparator The comparator by which to sort the keys.
      * @param map        The map to create a new map from.
      */
-    public SortedArrayMap(final Comparator<? super K> comparator, final Map<K, V> map) {
+    public SortedArrayMap(final Comparator<? super K> comparator, final Map<? extends K, V> map) {
         this(map.getKeyAndValueCardinality(), comparator, map.toArray());
     }
 

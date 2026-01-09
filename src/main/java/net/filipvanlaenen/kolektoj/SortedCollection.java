@@ -40,8 +40,8 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
      * @param <F>        The element type.
      * @param comparator The comparator by which to sort the elements.
      * @param collection The original ordered collection.
-     * @param fromIndex  The index of the first element to be included in the new ordered collection.
-     * @param toIndex    The index of the first element not to be included in the new ordered collection.
+     * @param fromIndex  The index of the first element to be included in the new sorted collection.
+     * @param toIndex    The index of the first element not to be included in the new sorted collection.
      * @return A new sorted collection cloned from a range in the provided ordered collection.
      */
     static <F> SortedCollection<F> of(final Comparator<? super F> comparator,

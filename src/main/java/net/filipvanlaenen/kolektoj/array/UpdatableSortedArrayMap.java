@@ -127,7 +127,7 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
      * @param comparator The comparator by which to sort the keys.
      * @param map        The map to create a new map from.
      */
-    public UpdatableSortedArrayMap(final Comparator<? super K> comparator, final Map<K, V> map) {
+    public UpdatableSortedArrayMap(final Comparator<? super K> comparator, final Map<? extends K, V> map) {
         this(map.getKeyAndValueCardinality(), comparator, map.toArray());
     }
 

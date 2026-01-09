@@ -12,6 +12,52 @@ import net.filipvanlaenen.kolektoj.array.OrderedArrayCollection;
  */
 public interface OrderedCollection<E> extends Collection<E> {
     /**
+     * Returns an ordered collection holding a sequence of elements generated from a function taking an index as its
+     * parameter.
+     *
+     * @param <F>              The element type.
+     * @param generator        A function generating an element from an index.
+     * @param numberOfElements The requested number of elements.
+     * @return An ordered collection holding a sequence of elements.
+     */
+    static <F> OrderedCollection<F> createSequence(final Function<Integer, F> generator, final int numberOfElements) {
+        if (numberOfElements < 1) {
+            return OrderedCollection.<F>empty();
+        }
+        ModifiableOrderedCollection<F> collection = ModifiableOrderedCollection.of(generator.apply(0));
+        for (int i = 1; i < numberOfElements; i++) {
+            collection.add(generator.apply(i));
+        }
+        return new OrderedArrayCollection<F>(collection);
+    }
+
+    /**
+     * Returns an ordered collection holding a sequence of elements generated from a function taking an index as its
+     * parameter until a condition evaluates to false.
+     *
+     * @param <F>            The element type.
+     * @param generator      A function generating an element from an index.
+     * @param whileCondition A predicate defining a condition to be met by the generated elements to be part of the
+     *                       sequence.
+     * @return An ordered collection holding a sequence of elements.
+     */
+    static <F> OrderedCollection<F> createSequence(final Function<Integer, F> generator,
+            final Predicate<? super F> whileCondition) {
+        F firstElement = generator.apply(0);
+        if (!whileCondition.test(firstElement)) {
+            return OrderedCollection.<F>empty();
+        }
+        ModifiableOrderedCollection<F> collection = ModifiableOrderedCollection.of(firstElement);
+        int index = 1;
+        F element = generator.apply(index);
+        while (whileCondition.test(element)) {
+            collection.add(element);
+            element = generator.apply(++index);
+        }
+        return new OrderedArrayCollection<F>(collection);
+    }
+
+    /**
      * Returns an ordered collection holding a sequence of elements, starting with the provided first element, and with
      * the next elements generated recursively from the first element.
      *
@@ -25,7 +71,7 @@ public interface OrderedCollection<E> extends Collection<E> {
     static <F, G extends F> OrderedCollection<F> createSequence(final G firstElement,
             final Function<? super F, F> generator, final int numberOfElements) {
         if (numberOfElements < 1) {
-            return (OrderedCollection<F>) OrderedCollection.empty();
+            return OrderedCollection.<F>empty();
         }
         ModifiableOrderedCollection<F> collection = ModifiableOrderedCollection.of(firstElement);
         F element = firstElement;
@@ -51,59 +97,13 @@ public interface OrderedCollection<E> extends Collection<E> {
     static <F, G extends F> OrderedCollection<F> createSequence(final G firstElement,
             final Function<? super F, F> generator, final Predicate<? super F> whileCondition) {
         if (!whileCondition.test(firstElement)) {
-            return (OrderedCollection<F>) OrderedCollection.empty();
+            return OrderedCollection.<F>empty();
         }
         ModifiableOrderedCollection<F> collection = ModifiableOrderedCollection.of(firstElement);
         F element = generator.apply(firstElement);
         while (whileCondition.test(element)) {
             collection.add(element);
             element = generator.apply(element);
-        }
-        return new OrderedArrayCollection<F>(collection);
-    }
-
-    /**
-     * Returns an ordered collection holding a sequence of elements generated from a function taking an index as its
-     * parameter.
-     *
-     * @param <F>              The element type.
-     * @param generator        A function generating an element from an index.
-     * @param numberOfElements The requested number of elements.
-     * @return An ordered collection holding a sequence of elements.
-     */
-    static <F> OrderedCollection<F> createSequence(final Function<Integer, F> generator, final int numberOfElements) {
-        if (numberOfElements < 1) {
-            return (OrderedCollection<F>) OrderedCollection.empty();
-        }
-        ModifiableOrderedCollection<F> collection = ModifiableOrderedCollection.of(generator.apply(0));
-        for (int i = 1; i < numberOfElements; i++) {
-            collection.add(generator.apply(i));
-        }
-        return new OrderedArrayCollection<F>(collection);
-    }
-
-    /**
-     * Returns an ordered collection holding a sequence of elements generated from a function taking an index as its
-     * parameter until a condition evaluates to false.
-     *
-     * @param <F>            The element type.
-     * @param generator      A function generating an element from an index.
-     * @param whileCondition A predicate defining a condition to be met by the generated elements to be part of the
-     *                       sequence.
-     * @return An ordered collection holding a sequence of elements.
-     */
-    static <F> OrderedCollection<F> createSequence(final Function<Integer, F> generator,
-            final Predicate<? super F> whileCondition) {
-        F firstElement = generator.apply(0);
-        if (!whileCondition.test(firstElement)) {
-            return (OrderedCollection<F>) OrderedCollection.empty();
-        }
-        ModifiableOrderedCollection<F> collection = ModifiableOrderedCollection.of(firstElement);
-        int index = 1;
-        F element = generator.apply(index);
-        while (whileCondition.test(element)) {
-            collection.add(element);
-            element = generator.apply(++index);
         }
         return new OrderedArrayCollection<F>(collection);
     }

@@ -21,7 +21,7 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
      * @param comparator The comparator by which to sort the keys.
      * @return A new empty updatable sorted map.
      */
-    static <L, W> UpdatableSortedMap<L, W> empty(final Comparator<L> comparator) {
+    static <L, W> UpdatableSortedMap<L, W> empty(final Comparator<? super L> comparator) {
         return new UpdatableSortedTreeMap<L, W>(comparator);
     }
 
@@ -34,7 +34,7 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
      * @param entries    The entries for the new updatable sorted map.
      * @return A new updatable sorted map with the specified entries.
      */
-    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<L> comparator, final Entry<L, W>... entries) {
+    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<? super L> comparator, final Entry<L, W>... entries) {
         return new UpdatableSortedTreeMap<L, W>(comparator, entries);
     }
 
@@ -48,7 +48,7 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
      * @param value      The value for the entry.
      * @return A new updatable sorted map containing an entry with the key and the value.
      */
-    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<L> comparator, final L key, final W value) {
+    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<? super L> comparator, final L key, final W value) {
         return new UpdatableSortedTreeMap<L, W>(comparator, new Entry<L, W>(key, value));
     }
 
@@ -64,7 +64,7 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
      * @param value2     The second value for the entry.
      * @return A new updatable sorted map containing two entries using the provided keys and values.
      */
-    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<L> comparator, final L key1, final W value1,
+    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<? super L> comparator, final L key1, final W value1,
             final L key2, final W value2) {
         return new UpdatableSortedTreeMap<L, W>(comparator, new Entry<L, W>(key1, value1),
                 new Entry<L, W>(key2, value2));
@@ -84,7 +84,7 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
      * @param value3     The third value for the entry.
      * @return A new updatable sorted map containing three entries using the provided keys and values.
      */
-    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<L> comparator, final L key1, final W value1,
+    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<? super L> comparator, final L key1, final W value1,
             final L key2, final W value2, final L key3, final W value3) {
         return new UpdatableSortedTreeMap<L, W>(comparator, new Entry<L, W>(key1, value1),
                 new Entry<L, W>(key2, value2), new Entry<L, W>(key3, value3));
@@ -106,7 +106,7 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
      * @param value4     The fourth value for the entry.
      * @return A new updatable sorted map containing four entries using the provided keys and values.
      */
-    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<L> comparator, final L key1, final W value1,
+    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<? super L> comparator, final L key1, final W value1,
             final L key2, final W value2, final L key3, final W value3, final L key4, final W value4) {
         return new UpdatableSortedTreeMap<L, W>(comparator, new Entry<L, W>(key1, value1),
                 new Entry<L, W>(key2, value2), new Entry<L, W>(key3, value3), new Entry<L, W>(key4, value4));
@@ -130,7 +130,7 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
      * @param value5     The fifth value for the entry.
      * @return A new updatable sorted map containing five entries using the provided keys and values.
      */
-    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<L> comparator, final L key1, final W value1,
+    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<? super L> comparator, final L key1, final W value1,
             final L key2, final W value2, final L key3, final W value3, final L key4, final W value4, final L key5,
             final W value5) {
         return new UpdatableSortedTreeMap<L, W>(comparator, new Entry<L, W>(key1, value1),
@@ -162,7 +162,8 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
      * @param keys         The keys for the new map.
      * @return A new updatable sorted map with the specified entries.
      */
-    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<L> comparator, final W defaultValue, final L... keys) {
+    static <L, W> UpdatableSortedMap<L, W> of(final Comparator<? super L> comparator, final W defaultValue,
+            final L... keys) {
         ModifiableMap<L, W> map = ModifiableMap.<L, W>empty();
         for (L key : keys) {
             map.add(key, defaultValue);
@@ -181,7 +182,7 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
      * @return A new updatable sorted map with the specified entries.
      */
     static <L, W> UpdatableSortedMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality,
-            final Comparator<L> comparator, final Entry<L, W>... entries) {
+            final Comparator<? super L> comparator, final Entry<L, W>... entries) {
         return new UpdatableSortedTreeMap<L, W>(keyAndValueCardinality, comparator, entries);
     }
 
@@ -197,7 +198,7 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
      * @return A new updatable sorted map with the specified entries.
      */
     static <L, W> UpdatableSortedMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality,
-            final Comparator<L> comparator, final W defaultValue, final L... keys) {
+            final Comparator<? super L> comparator, final W defaultValue, final L... keys) {
         ModifiableMap<L, W> map = ModifiableMap.<L, W>of(keyAndValueCardinality);
         for (L key : keys) {
             map.add(key, defaultValue);
