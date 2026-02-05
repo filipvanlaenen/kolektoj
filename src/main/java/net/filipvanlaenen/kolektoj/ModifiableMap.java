@@ -141,6 +141,39 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, UpdatableM
     }
 
     /**
+     * Returns a new modifiable map with the entries from the provided map and the provided key and value cardinality.
+     *
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param map                    The original map.
+     * @return A new modifiable map with the entries from the provided map and the provided key and value cardinality.
+     */
+    static <L, W> ModifiableMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality,
+            final Map<? extends L, ? extends W> map) {
+        return new ModifiableHashMap<L, W>(keyAndValueCardinality, map);
+    }
+
+    /**
+     * Returns a new modifiable map with the specified keys with a default value and key and value cardinality.
+     *
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param defaultValue           The default value for the entries.
+     * @param keys                   The keys for the new map.
+     * @return A new modifiable map with the specified entries.
+     */
+    static <L, W> ModifiableMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality, final W defaultValue,
+            final Collection<? extends L> keys) {
+        ModifiableMap<L, W> map = ModifiableMap.<L, W>of(keyAndValueCardinality);
+        for (L key : keys) {
+            map.add(key, defaultValue);
+        }
+        return map;
+    }
+
+    /**
      * Returns a new modifiable map with the specified keys with a default value and key and value cardinality.
      *
      * @param <L>                    The key type.
@@ -169,6 +202,23 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, UpdatableM
      */
     static <L, W> ModifiableMap<L, W> of(final Map<? extends L, ? extends W> map) {
         return new ModifiableHashMap<L, W>(map);
+    }
+
+    /**
+     * Returns a new modifiable map with the specified keys with a default value.
+     *
+     * @param <L>          The key type.
+     * @param <W>          The value type.
+     * @param defaultValue The default value for the entries.
+     * @param keys         The keys for the new map.
+     * @return A new modifiable map with the specified entries.
+     */
+    static <L, W> ModifiableMap<L, W> of(final W defaultValue, final Collection<? extends L> keys) {
+        ModifiableMap<L, W> map = ModifiableMap.<L, W>empty();
+        for (L key : keys) {
+            map.add(key, defaultValue);
+        }
+        return map;
     }
 
     /**

@@ -100,6 +100,18 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
     }
 
     /**
+     * Constructs a modifiable hash map with the entries from another map, and the provided key and value cardinality.
+     *
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param map                    The map to create a new modifiable map from.
+     */
+    public ModifiableHashMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Map<? extends K, ? extends V> map) {
+        this(keyAndValueCardinality);
+        addAll(map);
+    }
+
+    /**
      * Constructs a modifiable hash map from another map, with the same entries and the same key and value cardinality.
      *
      * @param map The map to create a new modifiable map from.

@@ -131,6 +131,19 @@ public class ModifiableMapTest {
     }
 
     /**
+     * Verifies that a map constructed with a default value is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithDefaultValuesAndKeyCollectionCorrectly() {
+        ModifiableMap<Integer, String> actual = ModifiableMap.<Integer, String>of("", Collection.of(1, 2, THREE));
+        assertEquals(DISTINCT_KEYS, actual.getKeyAndValueCardinality());
+        assertEquals(THREE, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
+    }
+
+    /**
      * Verifies that a map constructed with entries and key and value cardinality and a default value is constructed
      * correctly.
      */
@@ -138,6 +151,21 @@ public class ModifiableMapTest {
     public void ofShouldConstructAMapWithKeyAndValueCardinalityAndDefaultValuesCorrectly() {
         ModifiableMap<Integer, String> actual =
                 ModifiableMap.<Integer, String>of(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, "", 1, 1, 2, THREE);
+        assertEquals(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, actual.getKeyAndValueCardinality());
+        assertEquals(FOUR, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
+    }
+
+    /**
+     * Verifies that a map constructed with entries and key and value cardinality and a default value is constructed
+     * correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithKeyAndValueCardinalityAndDefaultValuesWithKeyCollectionCorrectly() {
+        ModifiableMap<Integer, String> actual = ModifiableMap.<Integer, String>of(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES,
+                "", Collection.of(1, 1, 2, THREE));
         assertEquals(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, actual.getKeyAndValueCardinality());
         assertEquals(FOUR, actual.size());
         assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
@@ -166,6 +194,18 @@ public class ModifiableMapTest {
         Map<Integer, String> prototype = Map.of(1, "one", 2, "two", THREE, "three");
         ModifiableMap<Number, String> actual = ModifiableMap.of(prototype);
         assertTrue(actual.containsSame(prototype));
+    }
+
+    /**
+     * Verifies that a modifiable map constructed from another map is constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapFromAnotherMapCorrectlyWithCorrectCardinality() {
+        Map<Integer, String> prototype = Map.of(1, "one", 1, "one", 2, "two", THREE, "three");
+        ModifiableMap<Number, String> actual = ModifiableMap.of(DISTINCT_KEYS, prototype);
+        assertEquals(THREE, actual.size());
+        assertEquals(DISTINCT_KEYS, actual.getKeyAndValueCardinality());
+        assertTrue(prototype.containsAll(actual));
     }
 
     /**
