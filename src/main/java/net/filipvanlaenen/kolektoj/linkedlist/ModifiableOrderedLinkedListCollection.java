@@ -76,7 +76,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
      * provided element cardinality.
      *
      * @param elementCardinality The element cardinality.
-     * @param source             The collection to create a new collection from.
+     * @param source             The ordered collection to create a new collection from.
      */
     public ModifiableOrderedLinkedListCollection(final ElementCardinality elementCardinality,
             final OrderedCollection<? extends E> source) {
@@ -86,6 +86,15 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         }
         cachedArray = source.toArray();
         cachedArrayDirty = cachedArray.length != size;
+    }
+
+    /**
+     * Constructs a modifiable linked list collection with the given elements.
+     *
+     * @param source The ordered collection to create a new collection from.
+     */
+    public ModifiableOrderedLinkedListCollection(final OrderedCollection<? extends E> source) {
+        this(source.getElementCardinality(), source);
     }
 
     @Override
