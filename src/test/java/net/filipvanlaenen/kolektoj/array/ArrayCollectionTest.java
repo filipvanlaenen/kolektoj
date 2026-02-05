@@ -137,6 +137,20 @@ public class ArrayCollectionTest {
     }
 
     /**
+     * Verifies that duplicate elements are removed when the constructor restricts a clone from another collection to
+     * distinct elements.
+     */
+    @Test
+    public void constructorShouldRemoveDuplicateElementsFromCollection() {
+        Collection<Integer> collection = new ArrayCollection<Integer>(DUPLICATE_ELEMENTS, 1, 2, 2, THREE, 2, THREE);
+        Collection<Integer> clone = new ArrayCollection<Integer>(DISTINCT_ELEMENTS, collection);
+        assertEquals(THREE, clone.size());
+        assertTrue(clone.contains(1));
+        assertTrue(clone.contains(2));
+        assertTrue(clone.contains(THREE));
+    }
+
+    /**
      * Verifies that the spliterator has the distinct flag not set for collections with duplicate elements.
      */
     @Test

@@ -45,6 +45,22 @@ public final class ArrayCollection<E> implements Collection<E> {
     }
 
     /**
+     * Constructs a collection with the provided element cardinality and the elements of the provided collection.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param source             The collection to create a new collection from.
+     */
+    public ArrayCollection(final ElementCardinality elementCardinality, final Collection<? extends E> source)
+            throws IllegalArgumentException {
+        this.elementCardinality = elementCardinality;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            this.elements = ArrayUtilities.cloneDistinctElements(source.toArray());
+        } else {
+            this.elements = source.toArray();
+        }
+    }
+
+    /**
      * Constructs a collection with the given elements and element cardinality.
      *
      * @param elementCardinality The element cardinality.

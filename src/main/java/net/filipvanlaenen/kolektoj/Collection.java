@@ -61,6 +61,18 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
     }
 
     /**
+     * Returns a new collection with the specified element cardinality cloned from the provided collection.
+     *
+     * @param <F>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param collection         The original collection.
+     * @return A new collection with the specified element cardinality cloned from the provided collection.
+     */
+    static <F> Collection<F> of(final ElementCardinality elementCardinality, final Collection<? extends F> collection) {
+        return new ArrayCollection<F>(elementCardinality, collection);
+    }
+
+    /**
      * Returns a new collection with the specified element cardinality and the elements.
      *
      * @param <F>                The element type.

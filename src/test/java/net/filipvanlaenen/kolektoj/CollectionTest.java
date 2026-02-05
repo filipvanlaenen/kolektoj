@@ -3,7 +3,7 @@ package net.filipvanlaenen.kolektoj;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.jupiter.api.Assertions.*;
-import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -52,6 +52,18 @@ public class CollectionTest {
         Collection<Integer> collection = Collection.<Integer>of(1, 2, THREE);
         Collection<Number> clone = Collection.<Number>of(collection);
         assertTrue(clone.containsSame(collection));
+    }
+
+    /**
+     * Verifies that the of factory method using element cardinality and a collection clones a collection with the new
+     * element cardinality.
+     */
+    @Test
+    public void ofWithElementCardinalityAndCollectionShoudlReturnAClone() {
+        Collection<Integer> collection = Collection.<Integer>of(DUPLICATE_ELEMENTS, 1, 1, 2, THREE);
+        Collection<Number> clone = Collection.<Number>of(DISTINCT_ELEMENTS, collection);
+        assertEquals(DISTINCT_ELEMENTS, clone.getElementCardinality());
+        assertTrue(clone.containsSame(Collection.<Integer>of(1, 2, THREE)));
     }
 
     /**
