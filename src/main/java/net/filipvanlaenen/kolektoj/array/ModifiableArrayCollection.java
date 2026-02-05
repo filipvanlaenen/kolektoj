@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
 /**
  * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableCollection} interface.
@@ -55,6 +56,24 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
     public ModifiableArrayCollection(final E... elements) {
         this.elementCardinality = DUPLICATE_ELEMENTS;
         this.elements = elements.clone();
+        size = this.elements.length;
+    }
+
+    /**
+     * Constructs a modifiable array collection with the provided element cardinality and the elements of the provided
+     * collection.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param source             The collection to create a new collection from.
+     */
+    public ModifiableArrayCollection(final ElementCardinality elementCardinality, final Collection<? extends E> source)
+            throws IllegalArgumentException {
+        this.elementCardinality = elementCardinality;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            this.elements = ArrayUtilities.cloneDistinctElements(source.toArray());
+        } else {
+            this.elements = source.toArray();
+        }
         size = this.elements.length;
     }
 

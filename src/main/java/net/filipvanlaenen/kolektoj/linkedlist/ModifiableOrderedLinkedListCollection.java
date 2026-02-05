@@ -68,7 +68,24 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             addLast(element);
         }
         cachedArray = elements.clone();
-        cachedArrayDirty = elements.length != size;
+        cachedArrayDirty = cachedArray.length != size;
+    }
+
+    /**
+     * Constructs a modifiable ordered linked list collection with the elements of the provided collection and the
+     * provided element cardinality.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param source             The collection to create a new collection from.
+     */
+    public ModifiableOrderedLinkedListCollection(final ElementCardinality elementCardinality,
+            final OrderedCollection<? extends E> source) {
+        this.elementCardinality = elementCardinality;
+        for (final E element : source) {
+            addLast(element);
+        }
+        cachedArray = source.toArray();
+        cachedArrayDirty = cachedArray.length != size;
     }
 
     @Override

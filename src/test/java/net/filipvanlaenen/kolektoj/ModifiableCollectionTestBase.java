@@ -66,6 +66,17 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     protected abstract T createModifiableCollection(ElementCardinality elementCardinality, Integer... integers);
 
     /**
+     * Creates a modifiable collection with the specified element cardinality containing the integers from the provided
+     * collection.
+     *
+     * @param elementCardinality The element cardinality for the modifiable collection.
+     * @param integers           The integers to be included in the modifiable collection.
+     * @return A modifiable collection with the specified element cardinality containing and the integers from the
+     *         provided collection.
+     */
+    protected abstract T createModifiableCollection(ElementCardinality elementCardinality, T integers);
+
+    /**
      * Creates a new modifiable collection to run the unit tests on.
      *
      * @return A new modifiable collection to run the unit tests on.
@@ -451,6 +462,27 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     @Test
     public void constructorShouldSetElementCardinalityToDistinctElementsWhenSpecified() {
         assertEquals(DISTINCT_ELEMENTS, createModifiableCollection(DISTINCT_ELEMENTS, 1).getElementCardinality());
+    }
+
+    /**
+     * Verifies that when distinct elements are requested, the element cardinality is set to distinct elements.
+     */
+    @Test
+    public void constructorShouldOverrideElementCardinalityToDistinctElementsWhenSpecified() {
+        assertEquals(DISTINCT_ELEMENTS,
+                createModifiableCollection(DISTINCT_ELEMENTS, createModifiableCollection(1, 2, THREE))
+                        .getElementCardinality());
+    }
+
+    /**
+     * Verifies that the constructor removes duplicate elements when a collection is provided.
+     */
+    @Test
+    public void constructorShouldRemoveDuplicateElementsFromConstructor() {
+        T collection = createModifiableCollection(DUPLICATE_ELEMENTS, 1, 2, 2, THREE, 2, THREE);
+        ModifiableCollection<Integer> clone = createModifiableCollection(DISTINCT_ELEMENTS, collection);
+        assertEquals(THREE, clone.size());
+        assertEquals(THREE, clone.toArray().length);
     }
 
     /**

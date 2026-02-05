@@ -13,11 +13,11 @@ public interface ModifiableCollection<E> extends Collection<E> {
     /**
      * Returns a new empty modifiable collection.
      *
-     * @param <E> The element type.
+     * @param <F> The element type.
      * @return A new empty modifiable collection.
      */
-    static <E> ModifiableCollection<E> empty() {
-        return new ModifiableArrayCollection<E>();
+    static <F> ModifiableCollection<F> empty() {
+        return new ModifiableArrayCollection<F>();
     }
 
     /**
@@ -34,24 +34,38 @@ public interface ModifiableCollection<E> extends Collection<E> {
     /**
      * Returns a new modifiable collection with the specified elements.
      *
-     * @param <E>      The element type.
+     * @param <F>      The element type.
      * @param elements The elements for the new modifiable collection.
      * @return A new modifiable collection with the specified elements.
      */
-    static <E> ModifiableCollection<E> of(final E... elements) {
-        return new ModifiableArrayCollection<E>(elements);
+    static <F> ModifiableCollection<F> of(final F... elements) {
+        return new ModifiableArrayCollection<F>(elements);
+    }
+
+    /**
+     * Returns a new modifiable collection with the specified cardinality and the elements cloned from the provided
+     * collection.
+     *
+     * @param <F>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param collection         The original collection.
+     * @return A new modifiable collection with the specified element cardinality and the elements.
+     */
+    static <F> ModifiableCollection<F> of(final ElementCardinality elementCardinality,
+            final Collection<? extends F> collection) {
+        return new ModifiableArrayCollection<F>(elementCardinality, collection);
     }
 
     /**
      * Returns a new modifiable collection with the specified element cardinality and the elements.
      *
-     * @param <E>                The element type.
+     * @param <F>                The element type.
      * @param elementCardinality The element cardinality.
      * @param elements           The elements for the new collection.
      * @return A new modifiable collection with the specified element cardinality and the elements.
      */
-    static <E> ModifiableCollection<E> of(final ElementCardinality elementCardinality, final E... elements) {
-        return new ModifiableArrayCollection<E>(elementCardinality, elements);
+    static <F> ModifiableCollection<F> of(final ElementCardinality elementCardinality, final F... elements) {
+        return new ModifiableArrayCollection<F>(elementCardinality, elements);
     }
 
     /**

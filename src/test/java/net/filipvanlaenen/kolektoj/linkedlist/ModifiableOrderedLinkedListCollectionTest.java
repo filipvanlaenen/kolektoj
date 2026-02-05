@@ -30,4 +30,11 @@ public final class ModifiableOrderedLinkedListCollectionTest
             final Integer... integers) {
         return new ModifiableOrderedLinkedListCollection<Integer>(integers);
     }
+
+    @Override
+    protected ModifiableOrderedLinkedListCollection<Integer> createModifiableCollection(
+            final ElementCardinality elementCardinality,
+            final ModifiableOrderedLinkedListCollection<Integer> integers) {
+        return new ModifiableOrderedLinkedListCollection<Integer>(elementCardinality, integers);
+    }
 }

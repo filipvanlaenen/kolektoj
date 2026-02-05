@@ -71,6 +71,27 @@ public final class ModifiableSortedTreeCollection<E> implements ModifiableSorted
     }
 
     /**
+     * Constructs a new modifiable sorted tree collection with the elements from the provided collection and the
+     * provided element cardinality and using the comparator for sorting.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param comparator         The comparator by which to sort the elements.
+     * @param source             The collection to create a new ordered collection from.
+     */
+    public ModifiableSortedTreeCollection(final ElementCardinality elementCardinality,
+            final Comparator<? super E> comparator, final Collection<? extends E> source) {
+        this.comparator = comparator;
+        this.elementCardinality = elementCardinality;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            cachedArray = ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(source.toArray()), comparator);
+        } else {
+            cachedArray = ArrayUtilities.quicksort(source.toArray(), comparator);
+        }
+        sortedTree = SortedTree.fromSortedElementArray(comparator, elementCardinality, cachedArray);
+        cachedArrayDirty = false;
+    }
+
+    /**
      * Constructs a new modifiable sorted tree collection with the given elements and element cardinality and using the
      * comparator for sorting.
      *

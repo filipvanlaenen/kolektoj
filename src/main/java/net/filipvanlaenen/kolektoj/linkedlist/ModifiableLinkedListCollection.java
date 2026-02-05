@@ -41,12 +41,44 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     private int size;
 
     /**
+     * Constructs a modifiable linked list collection with the elements of the provided collection and its element
+     * cardinality.
+     *
+     * @param source The collection to create a new collection from.
+     */
+    public ModifiableLinkedListCollection(final Collection<? extends E> source) {
+        this.elementCardinality = source.getElementCardinality();
+        for (final E element : source) {
+            add(element);
+        }
+        cachedArray = source.toArray();
+        cachedArrayDirty = false;
+    }
+
+    /**
      * Constructs a modifiable linked list collection with the given elements.
      *
      * @param elements The elements of the modifiable linked list collection.
      */
     public ModifiableLinkedListCollection(final E... elements) {
         this(DUPLICATE_ELEMENTS, elements);
+    }
+
+    /**
+     * Constructs a modifiable linked list collection with the elements of the provided collection and the provided
+     * element cardinality.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param source             The collection to create a new collection from.
+     */
+    public ModifiableLinkedListCollection(final ElementCardinality elementCardinality,
+            final Collection<? extends E> source) {
+        this.elementCardinality = elementCardinality;
+        for (final E element : source) {
+            add(element);
+        }
+        cachedArray = source.toArray();
+        cachedArrayDirty = cachedArray.length != size;
     }
 
     /**
@@ -61,7 +93,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
             add(element);
         }
         cachedArray = elements.clone();
-        cachedArrayDirty = elements.length != size;
+        cachedArrayDirty = cachedArray.length != size;
     }
 
     @Override

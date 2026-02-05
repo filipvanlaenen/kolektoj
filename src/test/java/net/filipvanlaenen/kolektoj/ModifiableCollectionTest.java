@@ -49,4 +49,15 @@ public class ModifiableCollectionTest {
         ModifiableCollection<Number> clone = ModifiableCollection.<Number>of(collection);
         assertTrue(clone.containsSame(collection));
     }
+
+    /**
+     * Verifies that the of factory method using a collection and element cardinality clones a collection.
+     */
+    @Test
+    public void ofWithElementCardinalityAndCollectionShoudlReturnAClone() {
+        Collection<Integer> collection = Collection.<Integer>of(1, 1, 2, THREE);
+        ModifiableCollection<Number> clone = ModifiableCollection.<Number>of(DISTINCT_ELEMENTS, collection);
+        assertEquals(DISTINCT_ELEMENTS, clone.getElementCardinality());
+        assertTrue(clone.containsSame(Collection.<Integer>of(1, 2, THREE)));
+    }
 }

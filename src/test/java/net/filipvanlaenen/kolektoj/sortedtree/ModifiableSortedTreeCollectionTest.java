@@ -72,6 +72,12 @@ public final class ModifiableSortedTreeCollectionTest
         return new ModifiableSortedTreeCollection<Integer>(elementCardinality, COMPARATOR, integers);
     }
 
+    @Override
+    protected ModifiableSortedTreeCollection<Integer> createModifiableCollection(
+            final ElementCardinality elementCardinality, final ModifiableSortedTreeCollection<Integer> integers) {
+        return new ModifiableSortedTreeCollection<Integer>(elementCardinality, COMPARATOR, integers);
+    }
+
     /**
      * Creates a new modifiable sorted collection to run the unit tests on.
      *

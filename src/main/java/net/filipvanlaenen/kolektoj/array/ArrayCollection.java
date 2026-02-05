@@ -24,7 +24,7 @@ public final class ArrayCollection<E> implements Collection<E> {
     private final Object[] elements;
 
     /**
-     * Constructs a collection from another collection, with the same elements and the same element cardinality.
+     * Constructs an array collection from another collection, with the same elements and the same element cardinality.
      *
      * @param source The collection to create a new collection from.
      */
@@ -34,7 +34,7 @@ public final class ArrayCollection<E> implements Collection<E> {
     }
 
     /**
-     * Constructs a collection with the given elements. The element cardinality is defaulted to
+     * Constructs an array collection with the given elements. The element cardinality is defaulted to
      * <code>DUPLICATE_ELEMENTS</code>.
      *
      * @param elements The elements of the collection.
@@ -45,7 +45,7 @@ public final class ArrayCollection<E> implements Collection<E> {
     }
 
     /**
-     * Constructs a collection with the provided element cardinality and the elements of the provided collection.
+     * Constructs an array collection with the provided element cardinality and the elements of the provided collection.
      *
      * @param elementCardinality The element cardinality.
      * @param source             The collection to create a new collection from.
@@ -61,7 +61,7 @@ public final class ArrayCollection<E> implements Collection<E> {
     }
 
     /**
-     * Constructs a collection with the given elements and element cardinality.
+     * Constructs an array collection with the given elements and element cardinality.
      *
      * @param elementCardinality The element cardinality.
      * @param elements           The elements of the collection.

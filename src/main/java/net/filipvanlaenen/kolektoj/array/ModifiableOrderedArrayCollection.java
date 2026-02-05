@@ -64,6 +64,24 @@ public final class ModifiableOrderedArrayCollection<E> implements ModifiableOrde
 
     /**
      * Constructs a modifiable ordered array collection from another ordered collection, with the same elements in the
+     * same order, and the provided element cardinality.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param source             The ordered collection to create a new modifiable ordered array collection from.
+     */
+    public ModifiableOrderedArrayCollection(final ElementCardinality elementCardinality,
+            final OrderedCollection<? extends E> source) {
+        this.elementCardinality = elementCardinality;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            this.elements = ArrayUtilities.cloneDistinctElements(source.toArray());
+        } else {
+            this.elements = source.toArray();
+        }
+        size = this.elements.length;
+    }
+
+    /**
+     * Constructs a modifiable ordered array collection from another ordered collection, with the same elements in the
      * same order and the same element cardinality.
      *
      * @param source The ordered collection to create a new modifiable ordered array collection from.

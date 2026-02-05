@@ -29,4 +29,10 @@ public final class ModifiableOrderedArrayCollectionTest
     protected ModifiableOrderedArrayCollection<Integer> createModifiableOrderedCollection(final Integer... integers) {
         return new ModifiableOrderedArrayCollection<Integer>(integers);
     }
+
+    @Override
+    protected ModifiableOrderedArrayCollection<Integer> createModifiableCollection(
+            final ElementCardinality elementCardinality, final ModifiableOrderedArrayCollection<Integer> integers) {
+        return new ModifiableOrderedArrayCollection<Integer>(elementCardinality, integers);
+    }
 }
