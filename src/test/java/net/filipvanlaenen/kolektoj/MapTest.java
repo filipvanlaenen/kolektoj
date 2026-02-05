@@ -124,6 +124,18 @@ public class MapTest {
     }
 
     /**
+     * Verifies that a map constructed from another map but different key and value cardinality is constructed
+     * correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapFromAnotherMapWithOtherKeyAndValueCardinalityCorrectly() {
+        Map<Integer, String> prototype = Map.of(1, "one", 1, "one", 2, "two", THREE, "three");
+        Map<Number, String> actual = Map.of(DISTINCT_KEYS, prototype);
+        assertEquals(DISTINCT_KEYS, actual.getKeyAndValueCardinality());
+        assertTrue(actual.containsSame(Map.of(1, "one", 2, "two", THREE, "three")));
+    }
+
+    /**
      * Verifies that the element cardinality for a map with duplicate keys and values is that duplicate elements are
      * allowed.
      */

@@ -79,6 +79,20 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
     }
 
     /**
+     * Returns a new map cloned from the provided map with the provided key and value cardinality.
+     *
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param map                    The original map.
+     * @return A new map cloned from the provided map.
+     */
+    static <L, W> Map<L, W> of(final KeyAndValueCardinality keyAndValueCardinality,
+            final Map<? extends L, ? extends W> map) {
+        return new HashMap<L, W>(keyAndValueCardinality, map);
+    }
+
+    /**
      * Returns a new map containing an entry with the key and the value.
      *
      * @param <L>   The key type.
