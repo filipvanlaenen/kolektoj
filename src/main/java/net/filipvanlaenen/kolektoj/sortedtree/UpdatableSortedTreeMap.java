@@ -82,6 +82,16 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     }
 
     /**
+     * Constructs a map from another map, with the same entries and the same key and value cardinality.
+     *
+     * @param comparator The comparator by which to sort the keys.
+     * @param map        The map to create a new map from.
+     */
+    public UpdatableSortedTreeMap(final Comparator<? super K> comparator, final Map<? extends K, ? extends V> map) {
+        this(map.getKeyAndValueCardinality(), comparator, map.toArray());
+    }
+
+    /**
      * Constructor taking the key and value cardinality and the entries as its parameter.
      *
      * @param keyAndValueCardinality The key and value cardinality.
@@ -92,6 +102,18 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
     public UpdatableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality,
             final Comparator<? super K> comparator, final Entry<K, V>... entries) throws IllegalArgumentException {
         this(keyAndValueCardinality, comparator, (Object[]) entries);
+    }
+
+    /**
+     * Constructs a map from another map, with the same entries and the provided key and value cardinality.
+     *
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param comparator             The comparator by which to sort the keys.
+     * @param map                    The map to create a new map from.
+     */
+    public UpdatableSortedTreeMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<? super K> comparator, final Map<? extends K, ? extends V> map) {
+        this(keyAndValueCardinality, comparator, map.toArray());
     }
 
     /**
@@ -140,16 +162,6 @@ public final class UpdatableSortedTreeMap<K, V> implements UpdatableSortedMap<K,
         }
         this.keys = new SortedTreeCollection<K>(comparator, theKeys);
         this.values = new ModifiableArrayCollection<V>(theValues);
-    }
-
-    /**
-     * Constructs a map from another map, with the same entries and the same key and value cardinality.
-     *
-     * @param comparator The comparator by which to sort the keys.
-     * @param map        The map to create a new map from.
-     */
-    public UpdatableSortedTreeMap(final Comparator<? super K> comparator, final Map<? extends K, ? extends V> map) {
-        this(map.getKeyAndValueCardinality(), comparator, map.toArray());
     }
 
     @Override

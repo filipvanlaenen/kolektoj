@@ -2,7 +2,9 @@ package net.filipvanlaenen.kolektoj.array;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -16,7 +18,6 @@ import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.UpdatableSortedMap;
-import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection;
 
 /**
@@ -64,6 +65,16 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
     }
 
     /**
+     * Constructs a map from another map, with the same entries and the same key and value cardinality.
+     *
+     * @param comparator The comparator by which to sort the keys.
+     * @param map        The map to create a new map from.
+     */
+    public UpdatableSortedArrayMap(final Comparator<? super K> comparator, final Map<? extends K, V> map) {
+        this(map.getKeyAndValueCardinality(), comparator, map.toArray());
+    }
+
+    /**
      * Constructor taking the key and value cardinality and the entries as its parameter.
      *
      * @param keyAndValueCardinality The key and value cardinality.
@@ -74,6 +85,18 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
     public UpdatableSortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality,
             final Comparator<? super K> comparator, final Entry<K, V>... entries) throws IllegalArgumentException {
         this(keyAndValueCardinality, comparator, (Object[]) entries);
+    }
+
+    /**
+     * Constructs a map from another map, with the same entries and the ptovided key and value cardinality.
+     *
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param comparator             The comparator by which to sort the keys.
+     * @param map                    The map to create a new map from.
+     */
+    public UpdatableSortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<? super K> comparator, final Map<? extends K, V> map) {
+        this(keyAndValueCardinality, comparator, map.toArray());
     }
 
     /**
@@ -119,16 +142,6 @@ public final class UpdatableSortedArrayMap<K, V> implements UpdatableSortedMap<K
         }
         this.keys = new SortedArrayCollection<K>(comparator, theKeys);
         this.values = new ModifiableArrayCollection<V>(theValues);
-    }
-
-    /**
-     * Constructs a map from another map, with the same entries and the same key and value cardinality.
-     *
-     * @param comparator The comparator by which to sort the keys.
-     * @param map        The map to create a new map from.
-     */
-    public UpdatableSortedArrayMap(final Comparator<? super K> comparator, final Map<? extends K, V> map) {
-        this(map.getKeyAndValueCardinality(), comparator, map.toArray());
     }
 
     @Override
