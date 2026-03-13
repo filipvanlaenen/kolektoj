@@ -186,6 +186,36 @@ public interface OrderedCollection<E> extends Collection<E> {
     }
 
     /**
+     * Returns a new ordered collection with the specified element cardinality containing all the elements from the
+     * provided ordered collections.
+     *
+     * @param <F>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param collections        The ordered collections from which to copy all the elements.
+     * @return A new ordered collection with the specified element cardinality containing all the elements from the
+     *         provided ordered collections.
+     */
+    static <F> OrderedCollection<F> unionOf(final ElementCardinality elementCardinality,
+            final OrderedCollection<? extends F>... collections) {
+        ModifiableOrderedCollection<F> result = ModifiableOrderedCollection.of(elementCardinality);
+        for (OrderedCollection<? extends F> collection : collections) {
+            result.addAllLast(collection);
+        }
+        return new OrderedArrayCollection<F>(result);
+    }
+
+    /**
+     * Returns a new ordered collection containing all the elements from the provided ordered collections.
+     *
+     * @param <F>         The element type.
+     * @param collections The ordered collections from which to copy all the elements.
+     * @return A new ordered collection containing all the elements from the provided ordered collections.
+     */
+    static <F> OrderedCollection<F> unionOf(final OrderedCollection<? extends F>... collections) {
+        return unionOf(ElementCardinality.DUPLICATE_ELEMENTS, collections);
+    }
+
+    /**
      * Returns the index of the first occurrence of the specified element, or -1 if this collection does not contain the
      * element.
      *

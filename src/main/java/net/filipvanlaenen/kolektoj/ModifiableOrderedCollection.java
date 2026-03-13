@@ -87,15 +87,34 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
     }
 
     /**
-     * Adds an element to this collection at a given position and returns whether it increased the size of the
-     * collection.
+     * Returns a new modifiable ordered collection with the specified element cardinality containing all the elements
+     * from the provided ordered collections.
      *
-     * @param index   The position where the element should be added.
-     * @param element The element to be added to the collection.
-     * @return True if the size of the collection increased after adding the element.
-     * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
+     * @param <F>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param collections        The ordered collections from which to copy all the elements.
+     * @return A new modifiable ordered collection with the specified element cardinality containing all the elements
+     *         from the provided ordered collections.
      */
-    boolean addAt(int index, E element) throws IndexOutOfBoundsException;
+    static <F> ModifiableOrderedCollection<F> unionOf(final ElementCardinality elementCardinality,
+            final OrderedCollection<? extends F>... collections) {
+        ModifiableOrderedCollection<F> result = ModifiableOrderedCollection.of(elementCardinality);
+        for (OrderedCollection<? extends F> collection : collections) {
+            result.addAllLast(collection);
+        }
+        return result;
+    }
+
+    /**
+     * Returns a new modifiable ordered collection containing all the elements from the provided ordered collections.
+     *
+     * @param <F>         The element type.
+     * @param collections The ordered collections from which to copy all the elements.
+     * @return A new modifiable ordered collection containing all the elements from the provided ordered collections.
+     */
+    static <F> ModifiableOrderedCollection<F> unionOf(final OrderedCollection<? extends F>... collections) {
+        return unionOf(ElementCardinality.DUPLICATE_ELEMENTS, collections);
+    }
 
     /**
      * Adds elements from an ordered collection to this collection at a given position and returns whether it increased
@@ -128,6 +147,17 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
     default boolean addAllLast(OrderedCollection<? extends E> collection) throws IndexOutOfBoundsException {
         return addAllAt(size(), collection);
     }
+
+    /**
+     * Adds an element to this collection at a given position and returns whether it increased the size of the
+     * collection.
+     *
+     * @param index   The position where the element should be added.
+     * @param element The element to be added to the collection.
+     * @return True if the size of the collection increased after adding the element.
+     * @throws IndexOutOfBoundsException Thrown if the index is out of bounds.
+     */
+    boolean addAt(int index, E element) throws IndexOutOfBoundsException;
 
     /**
      * Adds an element to the start of this collection and returns whether it increased the size of the collection.

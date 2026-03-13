@@ -32,17 +32,6 @@ public interface ModifiableCollection<E> extends Collection<E> {
     }
 
     /**
-     * Returns a new modifiable collection with the specified elements.
-     *
-     * @param <F>      The element type.
-     * @param elements The elements for the new modifiable collection.
-     * @return A new modifiable collection with the specified elements.
-     */
-    static <F> ModifiableCollection<F> of(final F... elements) {
-        return new ModifiableArrayCollection<F>(elements);
-    }
-
-    /**
      * Returns a new modifiable collection with the specified cardinality and the elements cloned from the provided
      * collection.
      *
@@ -66,6 +55,47 @@ public interface ModifiableCollection<E> extends Collection<E> {
      */
     static <F> ModifiableCollection<F> of(final ElementCardinality elementCardinality, final F... elements) {
         return new ModifiableArrayCollection<F>(elementCardinality, elements);
+    }
+
+    /**
+     * Returns a new modifiable collection with the specified elements.
+     *
+     * @param <F>      The element type.
+     * @param elements The elements for the new modifiable collection.
+     * @return A new modifiable collection with the specified elements.
+     */
+    static <F> ModifiableCollection<F> of(final F... elements) {
+        return new ModifiableArrayCollection<F>(elements);
+    }
+
+    /**
+     * Returns a new modifiable collection containing all the elements from the provided collections.
+     *
+     * @param <F>         The element type.
+     * @param collections The collections from which to copy all the elements.
+     * @return A new modifiable collection containing all the elements from the provided collections.
+     */
+    static <F> ModifiableCollection<F> unionOf(final Collection<? extends F>... collections) {
+        return unionOf(ElementCardinality.DUPLICATE_ELEMENTS, collections);
+    }
+
+    /**
+     * Returns a new modifiable collection with the specified element cardinality containing all the elements from the
+     * provided collections.
+     *
+     * @param <F>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param collections        The collections from which to copy all the elements.
+     * @return A new modifiable collection with the specified element cardinality containing all the elements from the
+     *         provided collections.
+     */
+    static <F> ModifiableCollection<F> unionOf(final ElementCardinality elementCardinality,
+            final Collection<? extends F>... collections) {
+        ModifiableCollection<F> result = ModifiableCollection.of(elementCardinality);
+        for (Collection<? extends F> collection : collections) {
+            result.addAll(collection);
+        }
+        return result;
     }
 
     /**

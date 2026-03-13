@@ -85,6 +85,36 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
     }
 
     /**
+     * Returns a new collection containing all the elements from the provided collections.
+     *
+     * @param <F>         The element type.
+     * @param collections The collections from which to copy all the elements.
+     * @return A new collection containing all the elements from the provided collections.
+     */
+    static <F> Collection<F> unionOf(final Collection<? extends F>... collections) {
+        return unionOf(ElementCardinality.DUPLICATE_ELEMENTS, collections);
+    }
+
+    /**
+     * Returns a new collection with the specified element cardinality containing all the elements from the provided
+     * collections.
+     *
+     * @param <F>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param collections        The collections from which to copy all the elements.
+     * @return A new collection with the specified element cardinality containing all the elements from the provided
+     *         collections.
+     */
+    static <F> Collection<F> unionOf(final ElementCardinality elementCardinality,
+            final Collection<? extends F>... collections) {
+        ModifiableCollection<F> result = ModifiableCollection.of(elementCardinality);
+        for (Collection<? extends F> collection : collections) {
+            result.addAll(collection);
+        }
+        return new ArrayCollection<F>(result);
+    }
+
+    /**
      * Returns whether the collection contains the element.
      *
      * @param element The element.
