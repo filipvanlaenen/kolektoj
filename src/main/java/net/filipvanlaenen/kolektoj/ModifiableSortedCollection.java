@@ -81,6 +81,21 @@ public interface ModifiableSortedCollection<E> extends ModifiableCollection<E>, 
     }
 
     /**
+     * Returns a new modifiable sorted collection cloned from the provided collection with the specified element
+     * cardinality.
+     *
+     * @param <F>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param comparator         The comparator by which to sort the elements.
+     * @param collection         The original collection.
+     * @return A new modifiable sorted collection cloned from a collection and with the specified element cardinality.
+     */
+    static <F> ModifiableSortedCollection<F> of(final ElementCardinality elementCardinality,
+            final Comparator<? super F> comparator, final Collection<? extends F> collection) {
+        return new ModifiableSortedTreeCollection<F>(elementCardinality, comparator, collection);
+    }
+
+    /**
      * Returns a new modifiable sorted collection cloned from the provided sorted collection.
      *
      * @param <F>        The element type.
