@@ -63,13 +63,28 @@ public final class OrderedValueCollection<E> implements OrderedCollection<E> {
     }
 
     /**
+     * Returns a new ordered value collection cloned from the provided orderd collection with the specified element
+     * cardinality.
+     *
+     * @param <F>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param collection         The original ordered collection.
+     * @return A new ordered value collection cloned from the provided ordered collection with the specified element
+     *         cardinality.
+     */
+    public static <F> OrderedValueCollection<F> of(final ElementCardinality elementCardinality,
+            final OrderedCollection<? extends F> collection) {
+        return new OrderedValueCollection<F>(OrderedCollection.of(elementCardinality, collection));
+    }
+
+    /**
      * Returns a new ordered value collection cloned from the provided ordered collection.
      *
      * @param <F>        The element type.
      * @param collection The original ordered collection.
      * @return A new ordered value collection cloned from the provided ordered collection.
      */
-    static <F> OrderedValueCollection<F> of(final OrderedCollection<? extends F> collection) {
+    public static <F> OrderedValueCollection<F> of(final OrderedCollection<? extends F> collection) {
         return new OrderedValueCollection<F>(OrderedCollection.of(collection));
     }
 
