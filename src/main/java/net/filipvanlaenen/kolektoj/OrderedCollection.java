@@ -131,6 +131,21 @@ public interface OrderedCollection<E> extends Collection<E> {
     }
 
     /**
+     * Returns a new ordered collection with the specified element cardinality cloned from the provided ordered
+     * collection.
+     *
+     * @param <F>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param collection         The original ordered collection.
+     * @return A new ordered collection with the specified element cardinality cloned from the provided ordered
+     *         collection.
+     */
+    static <F> OrderedCollection<F> of(final ElementCardinality elementCardinality,
+            final OrderedCollection<? extends F> collection) {
+        return new OrderedArrayCollection<F>(elementCardinality, collection);
+    }
+
+    /**
      * Returns a new ordered collection with the specified elements.
      *
      * @param <F>      The element type.

@@ -52,6 +52,23 @@ public final class OrderedArrayCollection<E> implements OrderedCollection<E> {
     }
 
     /**
+     * Constructs an ordered collection from another ordered collection, with the elements in the same order, and with
+     * the provided element cardinality.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param source             The ordered collection to create a new ordered collection from.
+     */
+    public OrderedArrayCollection(final ElementCardinality elementCardinality,
+            final OrderedCollection<? extends E> source) {
+        this.elementCardinality = elementCardinality;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            this.elements = ArrayUtilities.cloneDistinctElements(source.toArray());
+        } else {
+            this.elements = source.toArray();
+        }
+    }
+
+    /**
      * Constructs an ordered collection from another ordered collection, with the elements in the same order.
      *
      * @param source The ordered collection to create a new ordered collection from.
