@@ -164,6 +164,23 @@ public interface SortedMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
     }
 
     /**
+     * Returns a new sorted map cloned from the provided map but with the provided key and value cardinality and sorted
+     * according to the comparator.
+     *
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param comparator             The comparator by which to sort the keys.
+     * @param map                    The original map.
+     * @return A new sorted map cloned from the provided map but with the provided key and value cardinality and sorted
+     *         according to the comparator.
+     */
+    static <L, W> SortedMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<? super L> comparator, final Map<? extends L, ? extends W> map) {
+        return new SortedTreeMap<L, W>(keyAndValueCardinality, comparator, map);
+    }
+
+    /**
      * Returns a new sorted map cloned from the provided sorted map.
      *
      * @param <L> The key type.

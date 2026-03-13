@@ -64,6 +64,16 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     }
 
     /**
+     * Constructs a map from another map, with the same entries and the same key and value cardinality.
+     *
+     * @param comparator The comparator by which to sort the keys.
+     * @param map        The map to create a new map from.
+     */
+    public SortedArrayMap(final Comparator<? super K> comparator, final Map<? extends K, V> map) {
+        this(map.getKeyAndValueCardinality(), comparator, map.toArray());
+    }
+
+    /**
      * Constructor taking the key and value cardinality, the comparator and the entries as its parameter.
      *
      * @param keyAndValueCardinality The key and value cardinality.
@@ -74,6 +84,19 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
     public SortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<? super K> comparator,
             final Entry<K, V>... entries) throws IllegalArgumentException {
         this(keyAndValueCardinality, comparator, (Object[]) entries);
+    }
+
+    /**
+     * Constructs a map from another map, with the same entries but the provided key and value cardinality and
+     * comparator.
+     *
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param comparator             The comparator by which to sort the keys.
+     * @param map                    The map to create a new map from.
+     */
+    public SortedArrayMap(final KeyAndValueCardinality keyAndValueCardinality, final Comparator<? super K> comparator,
+            final Map<? extends K, V> map) {
+        this(keyAndValueCardinality, comparator, map.toArray());
     }
 
     /**
@@ -119,16 +142,6 @@ public final class SortedArrayMap<K, V> implements SortedMap<K, V> {
         }
         this.keys = new SortedArrayCollection<K>(comparator, theKeys);
         this.values = new OrderedArrayCollection<V>(theValues);
-    }
-
-    /**
-     * Constructs a map from another map, with the same entries and the same key and value cardinality.
-     *
-     * @param comparator The comparator by which to sort the keys.
-     * @param map        The map to create a new map from.
-     */
-    public SortedArrayMap(final Comparator<? super K> comparator, final Map<? extends K, V> map) {
-        this(map.getKeyAndValueCardinality(), comparator, map.toArray());
     }
 
     @Override
