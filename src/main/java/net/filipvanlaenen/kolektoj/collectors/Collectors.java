@@ -14,7 +14,9 @@ import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
+import net.filipvanlaenen.kolektoj.OrderedValueCollection;
 import net.filipvanlaenen.kolektoj.UpdatableMap;
+import net.filipvanlaenen.kolektoj.ValueCollection;
 import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 import net.filipvanlaenen.kolektoj.linkedlist.ModifiableLinkedListCollection;
 import net.filipvanlaenen.kolektoj.linkedlist.ModifiableOrderedLinkedListCollection;
@@ -156,6 +158,22 @@ public final class Collectors {
 
     /**
      * Returns a collector that accumulates the input elements into a new
+     * {@link net.filipvanlaenen.kolektoj.OrderedValueCollection}.
+     *
+     * @param <E> The element type.
+     * @return A collector to produce a new {@link net.filipvanlaenen.kolektoj.OrderedValueCollection}.
+     */
+    public static <E> Collector<E, ModifiableOrderedLinkedListCollection<E>,
+            OrderedValueCollection<E>> toOrderedValueCollection() {
+        return new SimpleCollector<>(ModifiableOrderedLinkedListCollection::new,
+                ModifiableOrderedLinkedListCollection::addLast, (a, b) -> {
+                    a.addAllLast(b);
+                    return a;
+                }, a -> OrderedValueCollection.of(a), Set.of());
+    }
+
+    /**
+     * Returns a collector that accumulates the input elements into a new
      * {@link net.filipvanlaenen.kolektoj.UpdatableMap}.
      *
      * @param keyMapper   A mapper mapping an input element to a key.
@@ -176,4 +194,20 @@ public final class Collectors {
             return a;
         }, a -> UpdatableMap.of(a), Set.of(Characteristics.UNORDERED));
     }
+
+    /**
+     * Returns a collector that accumulates the input elements into a new
+     * {@link net.filipvanlaenen.kolektoj.ValueCollection}.
+     *
+     * @param <E> The element type.
+     * @return A collector to produce a new {@link net.filipvanlaenen.kolektoj.ValueCollection}.
+     */
+    public static <E> Collector<E, ModifiableLinkedListCollection<E>, ValueCollection<E>> toValueCollection() {
+        return new SimpleCollector<>(ModifiableLinkedListCollection::new, ModifiableLinkedListCollection::add,
+                (a, b) -> {
+                    a.addAll(b);
+                    return a;
+                }, a -> ValueCollection.of(a), Set.of(Characteristics.UNORDERED));
+    }
+
 }
