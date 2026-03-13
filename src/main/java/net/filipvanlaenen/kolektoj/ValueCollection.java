@@ -42,19 +42,21 @@ public final class ValueCollection<E> implements Collection<E> {
      * @param collection The original collection.
      * @return A new value collection cloned from the provided collection.
      */
-    static <F> ValueCollection<F> of(final Collection<? extends F> collection) {
+    public static <F> ValueCollection<F> of(final Collection<? extends F> collection) {
         return new ValueCollection<F>(Collection.of(collection));
     }
 
     /**
-     * Returns a new value collection with the specified elements.
+     * Returns a new value collection with the specified element cardinality cloned from the provided collection.
      *
-     * @param <F>      The element type.
-     * @param elements The elements for the new value collection.
-     * @return A new value collection with the specified elements.
+     * @param <F>                The element type.
+     * @param elementCardinality The element cardinality.
+     * @param collection         The original collection.
+     * @return A new value collection with the specified element cardinality cloned from the provided collection.
      */
-    public static <F> ValueCollection<F> of(final F... elements) {
-        return new ValueCollection<F>(Collection.of(elements));
+    public static <F> ValueCollection<F> of(final ElementCardinality elementCardinality,
+            final Collection<? extends F> collection) {
+        return new ValueCollection<F>(Collection.of(elementCardinality, collection));
     }
 
     /**
@@ -67,6 +69,17 @@ public final class ValueCollection<E> implements Collection<E> {
      */
     public static <F> ValueCollection<F> of(final ElementCardinality elementCardinality, final F... elements) {
         return new ValueCollection<F>(Collection.of(elementCardinality, elements));
+    }
+
+    /**
+     * Returns a new value collection with the specified elements.
+     *
+     * @param <F>      The element type.
+     * @param elements The elements for the new value collection.
+     * @return A new value collection with the specified elements.
+     */
+    public static <F> ValueCollection<F> of(final F... elements) {
+        return new ValueCollection<F>(Collection.of(elements));
     }
 
     @Override
