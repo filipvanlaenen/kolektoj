@@ -4,6 +4,7 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.hash.HashMap;
 
 /**
@@ -193,6 +194,36 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
      */
     static <L, W> Map<L, W> of(final Map<? extends L, ? extends W> map) {
         return new HashMap<L, W>(map);
+    }
+
+    /**
+     * Returns a new map with the specified key and value cardinality containing all the entries from the provided maps.
+     *
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param maps                   The maps from which to copy all the entries.
+     * @return A new map with the specified key and value cardinality containing all the entries from the provided maps.
+     */
+    static <L, W> Map<L, W> unionOf(final KeyAndValueCardinality keyAndValueCardinality,
+            final Map<? extends L, ? extends W>... maps) {
+        ModifiableMap<L, W> result = ModifiableMap.of(keyAndValueCardinality);
+        for (Map<? extends L, ? extends W> map : maps) {
+            result.addAll(map);
+        }
+        return new HashMap<L, W>(result);
+    }
+
+    /**
+     * Returns a new map containing all the entries from the provided maps.
+     *
+     * @param <L>  The key type.
+     * @param <W>  The value type.
+     * @param maps The maps from which to copy all the entries.
+     * @return A new map containing all the entries from the provided maps.
+     */
+    static <L, W> Map<L, W> unionOf(final Map<? extends L, ? extends W>... maps) {
+        return unionOf(KeyAndValueCardinality.DISTINCT_KEYS, maps);
     }
 
     /**

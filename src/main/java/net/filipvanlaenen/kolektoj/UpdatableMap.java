@@ -1,6 +1,8 @@
 package net.filipvanlaenen.kolektoj;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
+import net.filipvanlaenen.kolektoj.hash.HashMap;
 import net.filipvanlaenen.kolektoj.hash.UpdatableHashMap;
 
 /**
@@ -236,6 +238,38 @@ public interface UpdatableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
             map.add(key, defaultValue);
         }
         return new UpdatableHashMap<L, W>(map);
+    }
+
+    /**
+     * Returns a new updatable map with the specified key and value cardinality containing all the entries from the
+     * provided maps.
+     *
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param maps                   The maps from which to copy all the entries.
+     * @return A new updatable map with the specified key and value cardinality containing all the entries from the
+     *         provided maps.
+     */
+    static <L, W> UpdatableMap<L, W> unionOf(final KeyAndValueCardinality keyAndValueCardinality,
+            final Map<? extends L, ? extends W>... maps) {
+        ModifiableMap<L, W> result = ModifiableMap.of(keyAndValueCardinality);
+        for (Map<? extends L, ? extends W> map : maps) {
+            result.addAll(map);
+        }
+        return new UpdatableHashMap<L, W>(result);
+    }
+
+    /**
+     * Returns a new updatable map containing all the entries from the provided maps.
+     *
+     * @param <L>  The key type.
+     * @param <W>  The value type.
+     * @param maps The maps from which to copy all the entries.
+     * @return A new updatable map containing all the entries from the provided maps.
+     */
+    static <L, W> UpdatableMap<L, W> unionOf(final Map<? extends L, ? extends W>... maps) {
+        return unionOf(KeyAndValueCardinality.DISTINCT_KEYS, maps);
     }
 
     /**
