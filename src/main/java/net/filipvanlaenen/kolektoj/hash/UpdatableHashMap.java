@@ -74,6 +74,17 @@ public final class UpdatableHashMap<K, V> implements UpdatableMap<K, V> {
     }
 
     /**
+     * Constructs a map from another map, with the provided key and value cardinality.
+     *
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param map                    The map to create a new map from.
+     */
+    public UpdatableHashMap(final KeyAndValueCardinality keyAndValueCardinality,
+            final Map<? extends K, ? extends V> map) {
+        this(keyAndValueCardinality, map.toArray());
+    }
+
+    /**
      * Constructor taking the key and value cardinality and the entries as an object array as its parameter.
      *
      * @param keyAndValueCardinality The key and value cardinality.

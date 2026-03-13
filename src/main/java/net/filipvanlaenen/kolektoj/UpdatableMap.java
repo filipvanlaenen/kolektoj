@@ -36,6 +36,72 @@ public interface UpdatableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
     }
 
     /**
+     * Returns a new updatable map with the specified entries and key and value cardinality.
+     *
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param entries                The entries for the new map.
+     * @return A new updatable map with the specified entries.
+     */
+    static <L, W> UpdatableMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality,
+            final Entry<L, W>... entries) {
+        return new UpdatableHashMap<L, W>(keyAndValueCardinality, entries);
+    }
+
+    /**
+     * Returns a new updatable map cloned from the provided map with the specified key and value cardinality.
+     *
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param map                    The original map.
+     * @return A new updatable map cloned from the provided map with the specified key and value cardinality.
+     */
+    static <L, W> UpdatableMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality,
+            final Map<? extends L, ? extends W> map) {
+        return new UpdatableHashMap<L, W>(keyAndValueCardinality, map);
+    }
+
+    /**
+     * Returns a new updatable map with the specified keys with a default value and key and value cardinality.
+     *
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param defaultValue           The default value for the entries.
+     * @param keys                   The keys for the new map.
+     * @return A new updatable map with the specified entries.
+     */
+    static <L, W> UpdatableMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality, final W defaultValue,
+            final Collection<? extends L> keys) {
+        ModifiableMap<L, W> map = ModifiableMap.<L, W>of(keyAndValueCardinality);
+        for (L key : keys) {
+            map.add(key, defaultValue);
+        }
+        return new UpdatableHashMap<L, W>(map);
+    }
+
+    /**
+     * Returns a new updatable map with the specified keys with a default value and key and value cardinality.
+     *
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param defaultValue           The default value for the entries.
+     * @param keys                   The keys for the new map.
+     * @return A new updatable map with the specified entries.
+     */
+    static <L, W> UpdatableMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality, final W defaultValue,
+            final L... keys) {
+        ModifiableMap<L, W> map = ModifiableMap.<L, W>of(keyAndValueCardinality);
+        for (L key : keys) {
+            map.add(key, defaultValue);
+        }
+        return new UpdatableHashMap<L, W>(map);
+    }
+
+    /**
      * Returns a new updatable map containing an entry with the key and the value.
      *
      * @param <L>   The key type.
@@ -127,32 +193,28 @@ public interface UpdatableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
     }
 
     /**
-     * Returns a new updatable map with the specified entries and key and value cardinality.
+     * Returns a new updatable map cloned from the provided map.
      *
-     * @param <L>                    The key type.
-     * @param <W>                    The value type.
-     * @param keyAndValueCardinality The key and value cardinality.
-     * @param entries                The entries for the new map.
-     * @return A new updatable map with the specified entries.
+     * @param <L> The key type.
+     * @param <W> The value type.
+     * @param map The original map.
+     * @return A new updatable map cloned from the provided map.
      */
-    static <L, W> UpdatableMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality,
-            final Entry<L, W>... entries) {
-        return new UpdatableHashMap<L, W>(keyAndValueCardinality, entries);
+    static <L, W> UpdatableMap<L, W> of(final Map<? extends L, ? extends W> map) {
+        return new UpdatableHashMap<L, W>(map);
     }
 
     /**
-     * Returns a new updatable map with the specified keys with a default value and key and value cardinality.
+     * Returns a new updatable map with the specified keys with a default value.
      *
-     * @param <L>                    The key type.
-     * @param <W>                    The value type.
-     * @param keyAndValueCardinality The key and value cardinality.
-     * @param defaultValue           The default value for the entries.
-     * @param keys                   The keys for the new map.
+     * @param <L>          The key type.
+     * @param <W>          The value type.
+     * @param defaultValue The default value for the entries.
+     * @param keys         The keys for the new map.
      * @return A new updatable map with the specified entries.
      */
-    static <L, W> UpdatableMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality, final W defaultValue,
-            final L... keys) {
-        ModifiableMap<L, W> map = ModifiableMap.<L, W>of(keyAndValueCardinality);
+    static <L, W> UpdatableMap<L, W> of(final W defaultValue, final Collection<? extends L> keys) {
+        ModifiableMap<L, W> map = ModifiableMap.<L, W>empty();
         for (L key : keys) {
             map.add(key, defaultValue);
         }
@@ -173,18 +235,6 @@ public interface UpdatableMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
         for (L key : keys) {
             map.add(key, defaultValue);
         }
-        return new UpdatableHashMap<L, W>(map);
-    }
-
-    /**
-     * Returns a new updatable map cloned from the provided map.
-     *
-     * @param <L> The key type.
-     * @param <W> The value type.
-     * @param map The original map.
-     * @return A new updatable map cloned from the provided map.
-     */
-    static <L, W> UpdatableMap<L, W> of(final Map<? extends L, ? extends W> map) {
         return new UpdatableHashMap<L, W>(map);
     }
 
