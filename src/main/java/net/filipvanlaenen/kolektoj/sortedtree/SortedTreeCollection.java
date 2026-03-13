@@ -49,7 +49,7 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
      * @param source     The collection to create a new ordered collection from.
      * @param comparator The comparator by which to sort the elements.
      */
-    public SortedTreeCollection(final Comparator<? super E> comparator, final Collection<E> source) {
+    public SortedTreeCollection(final Comparator<? super E> comparator, final Collection<? extends E> source) {
         this.comparator = comparator;
         this.elementCardinality = source.getElementCardinality();
         this.elements = ArrayUtilities.quicksort(source.toArray(), comparator);
@@ -66,6 +66,28 @@ public final class SortedTreeCollection<E> implements SortedCollection<E> {
      */
     public SortedTreeCollection(final Comparator<? super E> comparator, final E... elements) {
         this(DUPLICATE_ELEMENTS, comparator, elements);
+    }
+
+    /**
+     * Constructs a new sorted tree collection cloned from a collection with the given elements and element cardinality
+     * for sorting.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param comparator         The comparator by which to sort the elements.
+     * @param source             The collection to create a new ordered collection from.
+     */
+    public SortedTreeCollection(final ElementCardinality elementCardinality, final Comparator<? super E> comparator,
+            final Collection<? extends E> source) {
+        this.comparator = comparator;
+        this.elementCardinality = elementCardinality;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            this.elements =
+                    ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(source.toArray()), comparator);
+        } else {
+            this.elements = ArrayUtilities.quicksort(source.toArray(), comparator);
+        }
+        sortedTree = SortedTree.fromSortedElementArray(comparator, elementCardinality, this.elements);
+        this.size = this.elements.length;
     }
 
     /**

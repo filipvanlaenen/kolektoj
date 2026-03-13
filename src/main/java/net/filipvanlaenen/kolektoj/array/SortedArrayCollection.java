@@ -34,7 +34,7 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
      * Constructs a new sorted array collection from another collection, with the elements sorted using the given
      * comparator.
      *
-     * @param source     The collection to create a new ordered collection from.
+     * @param source     The collection to create a new sorted array collection from.
      * @param comparator The comparator by which to sort the elements.
      */
     public SortedArrayCollection(final Comparator<? super E> comparator, final Collection<? extends E> source) {
@@ -54,6 +54,26 @@ public final class SortedArrayCollection<E> implements SortedCollection<E> {
         this.comparator = comparator;
         this.elementCardinality = DUPLICATE_ELEMENTS;
         this.elements = ArrayUtilities.quicksort(elements, comparator);
+    }
+
+    /**
+     * Constructs a new sorted array collection from another collection with the provided element cardinality and using
+     * the comparator for sorting.
+     *
+     * @param elementCardinality The element cardinality.
+     * @param comparator         The comparator by which to sort the elements.
+     * @param source             The collection to create a new sorted array collection from.
+     */
+    public SortedArrayCollection(final ElementCardinality elementCardinality, final Comparator<? super E> comparator,
+            final Collection<? extends E> source) {
+        this.comparator = comparator;
+        this.elementCardinality = elementCardinality;
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            this.elements =
+                    ArrayUtilities.quicksort(ArrayUtilities.cloneDistinctElements(source.toArray()), comparator);
+        } else {
+            this.elements = ArrayUtilities.quicksort(source.toArray(), comparator);
+        }
     }
 
     /**
