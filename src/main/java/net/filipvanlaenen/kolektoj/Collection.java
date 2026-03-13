@@ -39,6 +39,24 @@ public interface Collection<E> extends Cloneable, Iterable<E> {
     }
 
     /**
+     * Returns a new collection containing all the elements present in each of the provided collections.
+     *
+     * @param <F>         The element type.
+     * @param collections The collections from which to calculate the intersection.
+     * @return A new collection containing all the elements present in each of the provided collections.
+     */
+    static <F> Collection<F> intersectionOf(final Collection<? extends F>... collections) {
+        if (collections.length == 0) {
+            return empty();
+        }
+        ModifiableCollection<F> result = ModifiableCollection.of(collections[0]);
+        for (int i = 1; i < collections.length; i++) {
+            result.retainAll(collections[i]);
+        }
+        return new ArrayCollection<F>(result);
+    }
+
+    /**
      * Returns a new collection cloned from the provided collection.
      *
      * @param <F>        The element type.
