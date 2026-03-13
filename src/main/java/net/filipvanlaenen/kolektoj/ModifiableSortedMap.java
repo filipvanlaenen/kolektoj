@@ -163,6 +163,25 @@ public interface ModifiableSortedMap<K, V>
      * @return A new modifiable sorted map with the specified entries.
      */
     static <L, W> ModifiableSortedMap<L, W> of(final Comparator<? super L> comparator, final W defaultValue,
+            final Collection<? extends L> keys) {
+        ModifiableSortedMap<L, W> map = ModifiableSortedMap.<L, W>empty(comparator);
+        for (L key : keys) {
+            map.add(key, defaultValue);
+        }
+        return map;
+    }
+
+    /**
+     * Returns a new modifiable sorted map with the specified keys with a default value.
+     *
+     * @param <L>          The key type.
+     * @param <W>          The value type.
+     * @param comparator   The comparator by which to sort the keys.
+     * @param defaultValue The default value for the entries.
+     * @param keys         The keys for the new map.
+     * @return A new modifiable sorted map with the specified entries.
+     */
+    static <L, W> ModifiableSortedMap<L, W> of(final Comparator<? super L> comparator, final W defaultValue,
             final L... keys) {
         ModifiableSortedMap<L, W> map = ModifiableSortedMap.<L, W>empty(comparator);
         for (L key : keys) {
@@ -187,6 +206,21 @@ public interface ModifiableSortedMap<K, V>
     }
 
     /**
+     * Returns a new modifiable sorted map cloned from a map with the provided key and value cardinality.
+     *
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param comparator             The comparator by which to sort the keys.
+     * @param map                    The original map.
+     * @return A new modifiable sorted map with the specified entries.
+     */
+    static <L, W> ModifiableSortedMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<? super L> comparator, final Map<? extends L, ? extends W> map) {
+        return new ModifiableSortedTreeMap<L, W>(keyAndValueCardinality, comparator, map);
+    }
+
+    /**
      * Returns a new modifiable sorted map with the specified keys with a default value and key and value cardinality.
      *
      * @param <L>                    The key type.
@@ -199,6 +233,26 @@ public interface ModifiableSortedMap<K, V>
      */
     static <L, W> ModifiableSortedMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality,
             final Comparator<? super L> comparator, final W defaultValue, final L... keys) {
+        ModifiableSortedMap<L, W> map = ModifiableSortedMap.<L, W>of(keyAndValueCardinality, comparator);
+        for (L key : keys) {
+            map.add(key, defaultValue);
+        }
+        return map;
+    }
+
+    /**
+     * Returns a new modifiable sorted map with the specified keys with a default value and key and value cardinality.
+     *
+     * @param <L>                    The key type.
+     * @param <W>                    The value type.
+     * @param keyAndValueCardinality The key and value cardinality.
+     * @param comparator             The comparator by which to sort the keys.
+     * @param defaultValue           The default value for the entries.
+     * @param keys                   The keys for the new map.
+     * @return A new modifiable sorted map with the specified entries.
+     */
+    static <L, W> ModifiableSortedMap<L, W> of(final KeyAndValueCardinality keyAndValueCardinality,
+            final Comparator<? super L> comparator, final W defaultValue, final Collection<? extends L> keys) {
         ModifiableSortedMap<L, W> map = ModifiableSortedMap.<L, W>of(keyAndValueCardinality, comparator);
         for (L key : keys) {
             map.add(key, defaultValue);
