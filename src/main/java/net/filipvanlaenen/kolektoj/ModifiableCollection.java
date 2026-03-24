@@ -2,7 +2,6 @@ package net.filipvanlaenen.kolektoj;
 
 import java.util.function.Predicate;
 
-import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
 /**
@@ -28,7 +27,7 @@ public interface ModifiableCollection<E> extends Collection<E> {
      * @param collections The collections from which to calculate the intersection.
      * @return A new modifiable collection containing all the elements present in each of the provided collections.
      */
-    static <F> Collection<F> intersectionOf(final Collection<? extends F>... collections) {
+    static <F> ModifiableCollection<F> intersectionOf(final Collection<? extends F>... collections) {
         if (collections.length == 0) {
             return empty();
         }

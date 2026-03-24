@@ -3,8 +3,6 @@ package net.filipvanlaenen.kolektoj;
 import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
-import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
-import net.filipvanlaenen.kolektoj.hash.HashMap;
 import net.filipvanlaenen.kolektoj.hash.ModifiableHashMap;
 
 /**
@@ -248,7 +246,7 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, UpdatableM
      * @param <W>                    The value type.
      * @param keyAndValueCardinality The key and value cardinality.
      * @param maps                   The maps from which to copy all the entries.
-     * @return A new modifiablr map with the specified key and value cardinality containing all the entries from the
+     * @return A new modifiable map with the specified key and value cardinality containing all the entries from the
      *         provided maps.
      */
     static <L, W> ModifiableMap<L, W> unionOf(final KeyAndValueCardinality keyAndValueCardinality,
