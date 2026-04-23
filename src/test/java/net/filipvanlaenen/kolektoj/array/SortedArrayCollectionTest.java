@@ -30,4 +30,15 @@ public final class SortedArrayCollectionTest extends SortedCollectionTestBase<So
             final Integer... integers) {
         return new SortedArrayCollection<Integer>(comparator, integers);
     }
+
+    @Override
+    protected SortedArrayCollection<Integer> createCollection(SortedArrayCollection<Integer> collection) {
+        return createOrderedCollection(collection);
+    }
+
+    @Override
+    protected SortedArrayCollection<Integer> createCollection(ElementCardinality elementCardinality,
+            SortedArrayCollection<Integer> collection) {
+        return new SortedArrayCollection<Integer>(elementCardinality, COMPARATOR, collection);
+    }
 }

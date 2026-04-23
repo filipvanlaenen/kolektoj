@@ -67,4 +67,16 @@ final class HashUtilities {
             }
         }
     }
+
+    static Object[] createHashedMapFromElements(final Object[] elements, final int hashedElementsSize) {
+        Object[] hashedElements = new Object[hashedElementsSize];
+        for (Object element : elements) {
+            int i = HashUtilities.hash(element, hashedElementsSize);
+            while (hashedElements[i] != null) {
+                i = Math.floorMod(i + 1, hashedElementsSize);
+            }
+            hashedElements[i] = new Entry(element, element);
+        }
+        return hashedElements;
+    }
 }

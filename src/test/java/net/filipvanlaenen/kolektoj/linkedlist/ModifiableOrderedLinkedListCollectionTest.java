@@ -37,4 +37,16 @@ public final class ModifiableOrderedLinkedListCollectionTest
             final ModifiableOrderedLinkedListCollection<Integer> integers) {
         return new ModifiableOrderedLinkedListCollection<Integer>(elementCardinality, integers);
     }
+
+    @Override
+    protected ModifiableOrderedLinkedListCollection<Integer> createCollection(
+            ModifiableOrderedLinkedListCollection<Integer> collection) {
+        return new ModifiableOrderedLinkedListCollection<Integer>(collection);
+    }
+
+    @Override
+    protected ModifiableOrderedLinkedListCollection<Integer> createCollection(ElementCardinality elementCardinality,
+            ModifiableOrderedLinkedListCollection<Integer> collection) {
+        return new ModifiableOrderedLinkedListCollection<Integer>(elementCardinality, collection);
+    }
 }

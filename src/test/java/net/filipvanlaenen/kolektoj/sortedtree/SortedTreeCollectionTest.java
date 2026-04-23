@@ -30,4 +30,15 @@ public final class SortedTreeCollectionTest extends SortedCollectionTestBase<Sor
             final Integer... integers) {
         return new SortedTreeCollection<Integer>(comparator, integers);
     }
+
+    @Override
+    protected SortedTreeCollection<Integer> createCollection(SortedTreeCollection<Integer> collection) {
+        return createOrderedCollection(collection);
+    }
+
+    @Override
+    protected SortedTreeCollection<Integer> createCollection(ElementCardinality elementCardinality,
+            SortedTreeCollection<Integer> collection) {
+        return new SortedTreeCollection<Integer>(elementCardinality, COMPARATOR, collection);
+    }
 }

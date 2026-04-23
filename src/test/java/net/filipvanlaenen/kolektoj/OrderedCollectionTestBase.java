@@ -1,8 +1,10 @@
 package net.filipvanlaenen.kolektoj;
 
-import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Spliterator;
 import java.util.stream.Collectors;
@@ -16,7 +18,7 @@ import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
  *
  * @param <T> The subclass type to be tested.
  */
-public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Integer>> {
+public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Integer>> extends CollectionTestBase<T> {
     /**
      * The magic number three.
      */
@@ -37,10 +39,6 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
      * Ordered collection with the integers 1, 2 and 3.
      */
     private final T collection123 = createOrderedCollection(1, 2, 3);
-    /**
-     * Ordered collection with the integers 1, 2, 3 and null.
-     */
-    private final OrderedCollection<Integer> collection123Null = createOrderedCollection(1, 2, 3, null);
 
     /**
      * Creates an ordered collection containing the provided integers.
@@ -67,44 +65,14 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
      */
     protected abstract T createOrderedCollection(T orderedCollection);
 
-    /**
-     * Verifies that contains returns true for an element in the collection.
-     */
-    @Test
-    public void containsShouldReturnTrueForAnElementInTheCollection() {
-        assertTrue(collection123.contains(1));
+    @Override
+    protected T createCollection(Integer... integers) {
+        return createOrderedCollection(integers);
     }
 
-    /**
-     * Verifies that containsAll returns false is the other collection is larger.
-     */
-    @Test
-    public void containsAllShouldReturnFalseIfTheOtherCollectionIsLarger() {
-        assertFalse(collection123.containsAll(collection123Null));
-    }
-
-    /**
-     * Verifies that containsAll returns true if a collection is compared to itself.
-     */
-    @Test
-    public void containsAllShouldReturnTrueWhenComparedToItself() {
-        assertTrue(collection123.containsAll(collection123));
-    }
-
-    /**
-     * Verifies that contains returns false for an element not in the collection.
-     */
-    @Test
-    public void containsShouldReturnFalseForAnElementNotInTheCollection() {
-        assertFalse(collection123.contains(0));
-    }
-
-    /**
-     * Verifies that the correct length is returned for an ordered collection with three elements.
-     */
-    @Test
-    public void sizeShouldReturnThreeForACollectionOfThreeElements() {
-        assertEquals(THREE, collection123.size());
+    @Override
+    protected T createCollection(ElementCardinality elementCardinality, Integer... integers) {
+        return createOrderedCollection(elementCardinality, integers);
     }
 
     /**
@@ -113,25 +81,6 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
     @Test
     public void getAtShouldReturnCorrectElement() {
         assertEquals(2, collection123.getAt(1));
-    }
-
-    /**
-     * Verifies that when you get an element from a collection, the collection contains it.
-     */
-    @Test
-    public void getShouldReturnAnElementPresentInTheCollection() {
-        Integer element = collection123.get();
-        assertTrue(collection123.contains(element));
-    }
-
-    /**
-     * Verifies that trying to get an element from an empty collection throws IndexOutOfBoundsException.
-     */
-    @Test
-    public void getShouldThrowExceptionWhenCalledOnAnEmptyCollection() {
-        IndexOutOfBoundsException exception =
-                assertThrows(IndexOutOfBoundsException.class, () -> createOrderedCollection().get());
-        assertEquals("Cannot return an element from an empty collection.", exception.getMessage());
     }
 
     /**
@@ -160,34 +109,6 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
     @Test
     public void constructorUsingOrderedCollectionShouldProduceTheCorrectArray() {
         assertArrayEquals(ARRAY123, createOrderedCollection(collection123).toArray());
-    }
-
-    /**
-     * Verifies that duplicate elements are removed if a collection with distinct elements is constructed.
-     */
-    @Test
-    public void constructorShouldRemoveDuplicateElementsFromDistinctCollection() {
-        OrderedCollection<Integer> collection = createOrderedCollection(DISTINCT_ELEMENTS, 1, 2, 2, THREE, 2, THREE);
-        assertEquals(THREE, collection.size());
-        assertTrue(collection.contains(1));
-        assertTrue(collection.contains(2));
-        assertTrue(collection.contains(THREE));
-    }
-
-    /**
-     * Verifies that by default, a collection can contain duplicate elements.
-     */
-    @Test
-    public void constructorShouldSetElementCardinalityToDuplicateByDefault() {
-        assertEquals(DUPLICATE_ELEMENTS, createOrderedCollection().getElementCardinality());
-    }
-
-    /**
-     * Verifies that when distinct elements are requested, the element cardinality is set to distinct elements.
-     */
-    @Test
-    public void constructorShouldSetElementCardinalityToDistinctElementsWhenSpecified() {
-        assertEquals(DISTINCT_ELEMENTS, createOrderedCollection(DISTINCT_ELEMENTS, 1).getElementCardinality());
     }
 
     /**
@@ -297,24 +218,6 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
     @Test
     public void spliteratorShouldSetOrderedFlag() {
         assertTrue(collection123.spliterator().hasCharacteristics(Spliterator.ORDERED));
-    }
-
-    /**
-     * Verifies that the spliterator has the distinct flag not set for collections with duplicate elements.
-     */
-    @Test
-    public void spliteratorShouldNotSetDistinctFlagForCollectionWithDuplicateElements() {
-        assertFalse(
-                createOrderedCollection(DUPLICATE_ELEMENTS, 1).spliterator().hasCharacteristics(Spliterator.DISTINCT));
-    }
-
-    /**
-     * Verifies that the spliterator has the distinct flag set for collections with distinct elements.
-     */
-    @Test
-    public void spliteratorShouldSetDistinctFlagForCollectionWithDistinctElements() {
-        assertTrue(
-                createOrderedCollection(DISTINCT_ELEMENTS, 1).spliterator().hasCharacteristics(Spliterator.DISTINCT));
     }
 
     /**

@@ -35,4 +35,16 @@ public final class ModifiableOrderedArrayCollectionTest
             final ElementCardinality elementCardinality, final ModifiableOrderedArrayCollection<Integer> integers) {
         return new ModifiableOrderedArrayCollection<Integer>(elementCardinality, integers);
     }
+
+    @Override
+    protected ModifiableOrderedArrayCollection<Integer> createCollection(
+            ModifiableOrderedArrayCollection<Integer> collection) {
+        return new ModifiableOrderedArrayCollection<Integer>(collection);
+    }
+
+    @Override
+    protected ModifiableOrderedArrayCollection<Integer> createCollection(ElementCardinality elementCardinality,
+            ModifiableOrderedArrayCollection<Integer> collection) {
+        return new ModifiableOrderedArrayCollection<Integer>(elementCardinality, collection);
+    }
 }

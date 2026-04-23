@@ -24,4 +24,16 @@ public final class ModifiableLinkedListCollectionTest
     protected ModifiableLinkedListCollection<Integer> createModifiableCollection(final Integer... integers) {
         return new ModifiableLinkedListCollection<Integer>(integers);
     }
+
+    @Override
+    protected ModifiableLinkedListCollection<Integer> createCollection(
+            ModifiableLinkedListCollection<Integer> collection) {
+        return new ModifiableLinkedListCollection<Integer>(collection);
+    }
+
+    @Override
+    protected ModifiableLinkedListCollection<Integer> createCollection(ElementCardinality elementCardinality,
+            ModifiableLinkedListCollection<Integer> collection) {
+        return new ModifiableLinkedListCollection<Integer>(elementCardinality, collection);
+    }
 }

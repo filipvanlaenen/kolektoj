@@ -23,4 +23,15 @@ public final class OrderedArrayCollectionTest extends OrderedCollectionTestBase<
             final OrderedArrayCollection<Integer> collection) {
         return new OrderedArrayCollection<Integer>(collection);
     }
+
+    @Override
+    protected OrderedArrayCollection<Integer> createCollection(OrderedArrayCollection<Integer> collection) {
+        return new OrderedArrayCollection<Integer>(collection);
+    }
+
+    @Override
+    protected OrderedArrayCollection<Integer> createCollection(ElementCardinality elementCardinality,
+            OrderedArrayCollection<Integer> collection) {
+        return new OrderedArrayCollection<Integer>(elementCardinality, collection);
+    }
 }

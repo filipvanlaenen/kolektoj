@@ -9,6 +9,17 @@ import net.filipvanlaenen.kolektoj.ModifiableCollectionTestBase;
 public final class ModifiableArrayCollectionTest
         extends ModifiableCollectionTestBase<ModifiableArrayCollection<Integer>> {
     @Override
+    protected ModifiableArrayCollection<Integer> createCollection(ElementCardinality elementCardinality,
+            ModifiableArrayCollection<Integer> collection) {
+        return new ModifiableArrayCollection<Integer>(elementCardinality, collection);
+    }
+
+    @Override
+    protected ModifiableArrayCollection<Integer> createCollection(ModifiableArrayCollection<Integer> collection) {
+        return new ModifiableArrayCollection<Integer>(collection);
+    }
+
+    @Override
     protected ModifiableArrayCollection<Integer> createModifiableCollection(final ElementCardinality elementCardinality,
             final ModifiableArrayCollection<Integer> integers) {
         return new ModifiableArrayCollection<Integer>(elementCardinality, integers);
