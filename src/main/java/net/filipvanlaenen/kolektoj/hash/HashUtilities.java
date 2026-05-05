@@ -68,6 +68,13 @@ final class HashUtilities {
         }
     }
 
+    /**
+     * Creates a hashed array of the given size with entries containing the elements of the array.
+     *
+     * @param elements           The elements to be hashed in a new array.
+     * @param hashedElementsSize The size of the hashed array.
+     * @return A hashed array with entries containing the elements.
+     */
     static Object[] createHashedMapFromElements(final Object[] elements, final int hashedElementsSize) {
         Object[] hashedElements = new Object[hashedElementsSize];
         for (Object element : elements) {

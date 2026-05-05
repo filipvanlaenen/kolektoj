@@ -8,13 +8,16 @@ import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.kolektoj.CollectionTestBase.ElementWithCollidingHash;
+
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.SortedCollection} interface.
  *
- * @param <T> The subclass type to be tested.
+ * @param <T>  The subclass type to be tested.
+ * @param <TC> The subclass type to be tested, but with colliding hash values.
  */
-public abstract class SortedCollectionTestBase<T extends SortedCollection<Integer>>
-        extends OrderedCollectionTestBase<T> {
+public abstract class SortedCollectionTestBase<T extends SortedCollection<Integer>,
+        TC extends SortedCollection<ElementWithCollidingHash>> extends OrderedCollectionTestBase<T, TC> {
     /**
      * The magic number three.
      */
@@ -77,6 +80,7 @@ public abstract class SortedCollectionTestBase<T extends SortedCollection<Intege
             }
         }
     };
+
     /**
      * A comparator ordering integers in the natural order, but modulo five, and handling <code>null</code> as the
      * lowest value.
@@ -103,6 +107,28 @@ public abstract class SortedCollectionTestBase<T extends SortedCollection<Intege
             }
         }
     };
+
+    /**
+     * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
+     * value.
+     */
+    protected static final Comparator<ElementWithCollidingHash> COLLIDING_HASH_COMPARATOR =
+            new Comparator<ElementWithCollidingHash>() {
+                @Override
+                public int compare(final ElementWithCollidingHash i1, final ElementWithCollidingHash i2) {
+                    if (Objects.equals(i1, i2)) {
+                        return 0;
+                    } else if (i1 == null) {
+                        return -1;
+                    } else if (i2 == null) {
+                        return 1;
+                    } else if (i1.getValue() < i2.getValue()) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                }
+            };
 
     /**
      * Creates a sorted collection with the specified comparator containing the provided integers.

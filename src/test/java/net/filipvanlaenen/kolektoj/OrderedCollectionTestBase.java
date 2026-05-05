@@ -1,10 +1,7 @@
 package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Spliterator;
 import java.util.stream.Collectors;
@@ -12,13 +9,16 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
+import net.filipvanlaenen.kolektoj.CollectionTestBase.ElementWithCollidingHash;
 
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.OrderedCollection} interface.
  *
- * @param <T> The subclass type to be tested.
+ * @param <T>  The subclass type to be tested.
+ * @param <TC> The subclass type to be tested, but with colliding hash values.
  */
-public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Integer>> extends CollectionTestBase<T> {
+public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Integer>,
+        TC extends OrderedCollection<ElementWithCollidingHash>> extends CollectionTestBase<T, TC> {
     /**
      * The magic number three.
      */
@@ -65,13 +65,26 @@ public abstract class OrderedCollectionTestBase<T extends OrderedCollection<Inte
      */
     protected abstract T createOrderedCollection(T orderedCollection);
 
+    /**
+     * Creates a collection containing the provided integers.
+     *
+     * @param integers The integers to be included in the collection.
+     * @return A collection containing the provided integers.
+     */
     @Override
-    protected T createCollection(Integer... integers) {
+    protected T createCollection(final Integer... integers) {
         return createOrderedCollection(integers);
     }
 
+    /**
+     * Creates a collection containing the provided integers with a given element cardinality.
+     *
+     * @param elementCardinality The element cardinality for the collection.
+     * @param integers           The integers to be included in the collection.
+     * @return A collection containing the provided integers.
+     */
     @Override
-    protected T createCollection(ElementCardinality elementCardinality, Integer... integers) {
+    protected T createCollection(final ElementCardinality elementCardinality, final Integer... integers) {
         return createOrderedCollection(elementCardinality, integers);
     }
 

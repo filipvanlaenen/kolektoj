@@ -47,7 +47,7 @@ public final class HashCollection<E> implements Collection<E> {
     public HashCollection(final Collection<? extends E> source) throws IllegalArgumentException {
         this.elementCardinality = source.getElementCardinality();
         this.elements = source.toArray();
-        this.hashedElementsSize = elements.length * HASHING_RATIO;
+        this.hashedElementsSize = calculateHashedElementsSize(this.elements);
         this.hashedElements = HashUtilities.createHashedMapFromElements(this.elements, this.hashedElementsSize);
     }
 
@@ -60,7 +60,7 @@ public final class HashCollection<E> implements Collection<E> {
     public HashCollection(final E... elements) throws IllegalArgumentException {
         this.elementCardinality = DUPLICATE_ELEMENTS;
         this.elements = elements.clone();
-        hashedElementsSize = elements.length * HASHING_RATIO;
+        this.hashedElementsSize = calculateHashedElementsSize(this.elements);
         this.hashedElements = HashUtilities.createHashedMapFromElements(this.elements, this.hashedElementsSize);
     }
 
@@ -78,7 +78,7 @@ public final class HashCollection<E> implements Collection<E> {
         } else {
             this.elements = source.toArray();
         }
-        hashedElementsSize = elements.length * HASHING_RATIO;
+        this.hashedElementsSize = calculateHashedElementsSize(this.elements);
         this.hashedElements = HashUtilities.createHashedMapFromElements(this.elements, this.hashedElementsSize);
     }
 
@@ -96,8 +96,18 @@ public final class HashCollection<E> implements Collection<E> {
         } else {
             this.elements = elements.clone();
         }
-        hashedElementsSize = elements.length * HASHING_RATIO;
+        this.hashedElementsSize = calculateHashedElementsSize(this.elements);
         this.hashedElements = HashUtilities.createHashedMapFromElements(this.elements, this.hashedElementsSize);
+    }
+
+    /**
+     * Calculates the size of the array with the hashed elements for an array of elements.
+     *
+     * @param theElements The elements to be hashed.
+     * @return The size of the array with the hashed elements.
+     */
+    private int calculateHashedElementsSize(final Object[] theElements) {
+        return theElements.length * HASHING_RATIO;
     }
 
     @Override

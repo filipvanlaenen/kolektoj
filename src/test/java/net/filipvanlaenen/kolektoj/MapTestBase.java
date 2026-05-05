@@ -498,7 +498,7 @@ public abstract class MapTestBase<T extends Map<Integer, String>, TC extends Map
      * code for the keys collides.
      */
     @Test
-    public void containsReturnsCorrectResultForCollidingKeyHashCodes() {
+    public void containsShouldReturnCorrectResultForCollidingKeyHashCodes() {
         Entry<KeyWithCollidingHash, Integer>[] entries = new Entry[SIX];
         for (int i = 0; i < entries.length; i++) {
             entries[i] = new Entry<KeyWithCollidingHash, Integer>(new KeyWithCollidingHash(i), i);

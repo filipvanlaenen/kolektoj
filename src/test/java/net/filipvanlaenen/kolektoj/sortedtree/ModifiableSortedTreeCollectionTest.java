@@ -10,6 +10,7 @@ import java.util.Objects;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
+import net.filipvanlaenen.kolektoj.CollectionTestBase.ElementWithCollidingHash;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableCollectionTestBase;
@@ -18,8 +19,8 @@ import net.filipvanlaenen.kolektoj.ModifiableSortedCollection;
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection} class.
  */
-public final class ModifiableSortedTreeCollectionTest
-        extends ModifiableCollectionTestBase<ModifiableSortedTreeCollection<Integer>> {
+public final class ModifiableSortedTreeCollectionTest extends ModifiableCollectionTestBase<
+        ModifiableSortedTreeCollection<Integer>, ModifiableSortedTreeCollection<ElementWithCollidingHash>> {
     /**
      * The magic number three.
      */
@@ -61,6 +62,28 @@ public final class ModifiableSortedTreeCollectionTest
         }
     };
 
+    /**
+     * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
+     * value.
+     */
+    private static final Comparator<ElementWithCollidingHash> COLLIDING_HASH_COMPARATOR =
+            new Comparator<ElementWithCollidingHash>() {
+                @Override
+                public int compare(final ElementWithCollidingHash i1, final ElementWithCollidingHash i2) {
+                    if (Objects.equals(i1, i2)) {
+                        return 0;
+                    } else if (i1 == null) {
+                        return -1;
+                    } else if (i2 == null) {
+                        return 1;
+                    } else if (i1.getValue() < i2.getValue()) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                }
+            };
+
     @Override
     protected ModifiableSortedTreeCollection<Integer> createModifiableCollection(final Integer... integers) {
         return new ModifiableSortedTreeCollection<Integer>(COMPARATOR, integers);
@@ -80,13 +103,13 @@ public final class ModifiableSortedTreeCollectionTest
 
     @Override
     protected ModifiableSortedTreeCollection<Integer> createCollection(
-            ModifiableSortedTreeCollection<Integer> collection) {
+            final ModifiableSortedTreeCollection<Integer> collection) {
         return new ModifiableSortedTreeCollection<Integer>(COMPARATOR, collection);
     }
 
     @Override
-    protected ModifiableSortedTreeCollection<Integer> createCollection(ElementCardinality elementCardinality,
-            ModifiableSortedTreeCollection<Integer> collection) {
+    protected ModifiableSortedTreeCollection<Integer> createCollection(final ElementCardinality elementCardinality,
+            final ModifiableSortedTreeCollection<Integer> collection) {
         return new ModifiableSortedTreeCollection<Integer>(elementCardinality, COMPARATOR, collection);
     }
 
@@ -97,6 +120,12 @@ public final class ModifiableSortedTreeCollectionTest
      */
     private ModifiableSortedCollection<Integer> createCollection513() {
         return createModifiableCollection(FIVE, 1, THREE);
+    }
+
+    @Override
+    protected ModifiableSortedTreeCollection<ElementWithCollidingHash> createCollidingHashValuesCollection(
+            final ElementWithCollidingHash... elements) {
+        return new ModifiableSortedTreeCollection<ElementWithCollidingHash>(COLLIDING_HASH_COMPARATOR, elements);
     }
 
     /**

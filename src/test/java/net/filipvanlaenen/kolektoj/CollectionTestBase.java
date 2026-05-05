@@ -2,23 +2,23 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Spliterator;
 
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
+import net.filipvanlaenen.kolektoj.CollectionTestBase.ElementWithCollidingHash;
 
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.Collection} interface.
  *
- * @param <T> The subclass type to be tested.
+ * @param <T>  The subclass type to be tested.
+ * @param <TC> The subclass type to be tested, but with colliding hash values.
  */
-public abstract class CollectionTestBase<T extends Collection<Integer>> {
+public abstract class CollectionTestBase<T extends Collection<Integer>,
+        TC extends Collection<ElementWithCollidingHash>> {
     /**
      * The magic number three.
      */
@@ -41,9 +41,48 @@ public abstract class CollectionTestBase<T extends Collection<Integer>> {
     private final Collection<Integer> collection123Null = createCollection(1, 2, 3, null);
 
     /**
+     * Class with colliding hash codes.
+     */
+    public static final class ElementWithCollidingHash {
+        /**
+         * The value for the key.
+         */
+        private final int value;
+
+        /**
+         * Constructor taking the key value as its parameter.
+         *
+         * @param value The key value.
+         */
+        public ElementWithCollidingHash(final int value) {
+            this.value = value;
+        }
+
+        @Override
+        public boolean equals(final Object other) {
+            return other != null && getValue() == ((ElementWithCollidingHash) other).getValue();
+        }
+
+        /**
+         * Returns the key value.
+         *
+         * @return The key value.
+         */
+        public int getValue() {
+            return value;
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+    }
+
+    /**
      * Creates an ordered collection from another collection with a given element cardinality.
      *
-     * @param collection The collection to create a new collection from.
+     * @param elementCardinality The element cardinality for the collection.
+     * @param collection         The collection to create a new collection from.
      * @return An collection created from the provided collection with a given element cardinality.
      */
     protected abstract T createCollection(ElementCardinality elementCardinality, T collection);
@@ -66,12 +105,20 @@ public abstract class CollectionTestBase<T extends Collection<Integer>> {
     protected abstract T createCollection(Integer... integers);
 
     /**
-     * Creates an ordered collection from another collection.
+     * Creates a collection from another collection.
      *
      * @param collection The collection to create a new collection from.
      * @return An collection created from the provided collection.
      */
     protected abstract T createCollection(T collection);
+
+    /**
+     * Creates a collection with elements with colliding hash values.
+     *
+     * @param elements The elements to be included in the collection.
+     * @return A collection containing the provided elements.
+     */
+    protected abstract TC createCollidingHashValuesCollection(ElementWithCollidingHash... elements);
 
     /**
      * Verifies that containsAll returns false is the other collection is larger.
@@ -122,6 +169,14 @@ public abstract class CollectionTestBase<T extends Collection<Integer>> {
     }
 
     /**
+     * Verifies that contains returns false on an empty collection.
+     */
+    @Test
+    public void containsShouldReturnFalseOnAnEmptyCollection() {
+        assertFalse(createCollection().contains(0));
+    }
+
+    /**
      * Verifies that contains returns false for an element not in the collection.
      */
     @Test
@@ -135,6 +190,23 @@ public abstract class CollectionTestBase<T extends Collection<Integer>> {
     @Test
     public void containsShouldReturnTrueForNullIfInTheTheCollection() {
         assertTrue(collection123Null.contains(null));
+    }
+
+    /**
+     * Verifies that contains returns the correct result, both true for presence and false for absence, when the hash
+     * code for the elements collides.
+     */
+    @Test
+    public void containsShouldReturnCorrectResultForElementsWithCollidingHashCodes() {
+        ElementWithCollidingHash[] elements = new ElementWithCollidingHash[SIX];
+        for (int i = 0; i < elements.length; i++) {
+            elements[i] = new ElementWithCollidingHash(i);
+        }
+        TC collection = createCollidingHashValuesCollection(elements);
+        for (ElementWithCollidingHash element : elements) {
+            assertTrue(collection.contains(element));
+        }
+        assertFalse(collection.contains(new ElementWithCollidingHash(-1)));
     }
 
     /**

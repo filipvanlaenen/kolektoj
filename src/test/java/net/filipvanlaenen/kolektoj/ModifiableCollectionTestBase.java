@@ -2,21 +2,21 @@ package net.filipvanlaenen.kolektoj;
 
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
+import net.filipvanlaenen.kolektoj.CollectionTestBase.ElementWithCollidingHash;
 
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.ModifiableCollection} interface.
  *
- * @param <T> The subclass type to be tested.
+ * @param <T>  The subclass type to be tested.
+ * @param <TC> The subclass type to be tested, but with colliding hash values.
  */
-public abstract class ModifiableCollectionTestBase<T extends ModifiableCollection<Integer>>
-        extends CollectionTestBase<T> {
+public abstract class ModifiableCollectionTestBase<T extends ModifiableCollection<Integer>,
+        TC extends ModifiableCollection<ElementWithCollidingHash>> extends CollectionTestBase<T, TC> {
     /**
      * The magic number three.
      */
@@ -78,14 +78,27 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
      */
     protected abstract T createModifiableCollection(ElementCardinality elementCardinality, T integers);
 
+    /**
+     * Creates a collection containing the provided integers with a given element cardinality.
+     *
+     * @param elementCardinality The element cardinality for the collection.
+     * @param integers           The integers to be included in the collection.
+     * @return A collection containing the provided integers.
+     */
     @Override
-    protected T createCollection(Integer... integers) {
-        return createModifiableCollection(integers);
+    protected T createCollection(final ElementCardinality elementCardinality, final Integer... integers) {
+        return createModifiableCollection(elementCardinality, integers);
     }
 
+    /**
+     * Creates a collection containing the provided integers.
+     *
+     * @param integers The integers to be included in the collection.
+     * @return A collection containing the provided integers.
+     */
     @Override
-    protected T createCollection(ElementCardinality elementCardinality, Integer... integers) {
-        return createModifiableCollection(elementCardinality, integers);
+    protected T createCollection(final Integer... integers) {
+        return createModifiableCollection(integers);
     }
 
     /**

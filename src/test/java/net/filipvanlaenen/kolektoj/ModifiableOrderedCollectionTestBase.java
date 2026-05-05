@@ -9,14 +9,16 @@ import java.util.Spliterator;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
+import net.filipvanlaenen.kolektoj.CollectionTestBase.ElementWithCollidingHash;
 
 /**
  * Unit tests on implementations of the {@link net.filipvanlaenen.kolektoj.ModifiableOrderedCollection} interface.
  *
- * @param <T> The subclass type to be tested.
+ * @param <T>  The subclass type to be tested.
+ * @param <TC> The subclass type to be tested, but with colliding hash values.
  */
-public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOrderedCollection<Integer>>
-        extends ModifiableCollectionTestBase<T> {
+public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOrderedCollection<Integer>,
+        TC extends ModifiableOrderedCollection<ElementWithCollidingHash>> extends ModifiableCollectionTestBase<T, TC> {
     /**
      * The magic number three.
      */
