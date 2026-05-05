@@ -1,12 +1,15 @@
 package net.filipvanlaenen.kolektoj.hash;
 
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DUPLICATE_VALUES;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
+import net.filipvanlaenen.kolektoj.CollectionTestBase.ElementWithCollidingHash;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 
 /**
@@ -152,4 +155,32 @@ public class HashUtilitiesTest {
                 () -> new HashMap<Integer, String>(ENTRY1, null, ENTRY2, ENTRY3));
         assertEquals("Map entries can't be null.", exception.getMessage());
     }
+
+    /**
+     * Verifies that the elements are hashed correctly. The method is tested through the constructor and the
+     * <code>contains</code> method of <code>HashCollection</code>.
+     */
+    @Test
+    public void createHashedMapFromElementsShouldProduceCorrectHashedMap() {
+        Collection<Integer> collection = new HashCollection<Integer>(1, 2, THREE);
+        assertTrue(collection.contains(1));
+    }
+
+    /**
+     * Verifies that the elements are hashed correctly, also when the hashes collide. The method is tested through the
+     * constructor and the <code>contains</code> method of <code>HashCollection</code>.
+     */
+    @Test
+    public void containsShouldReturnCorrectResultForElementsWithCollidingHashCodes() {
+        ElementWithCollidingHash[] elements = new ElementWithCollidingHash[FIVE];
+        for (int i = 0; i < elements.length; i++) {
+            elements[i] = new ElementWithCollidingHash(i);
+        }
+        Collection<ElementWithCollidingHash> collection = new HashCollection<ElementWithCollidingHash>(elements);
+        for (ElementWithCollidingHash element : elements) {
+            assertTrue(collection.contains(element));
+        }
+        assertFalse(collection.contains(new ElementWithCollidingHash(-1)));
+    }
+
 }
