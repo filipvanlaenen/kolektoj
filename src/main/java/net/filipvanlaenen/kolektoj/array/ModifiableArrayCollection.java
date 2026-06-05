@@ -3,7 +3,6 @@ package net.filipvanlaenen.kolektoj.array;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
-import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
@@ -11,7 +10,6 @@ import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
-import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 
 /**
  * An array backed implementation of the {@link net.filipvanlaenen.kolektoj.ModifiableCollection} interface.
@@ -45,7 +43,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
     public ModifiableArrayCollection(final Collection<? extends E> source) {
         this.elementCardinality = source.getElementCardinality();
         this.elements = source.toArray();
-        size = this.elements.length;
+        this.size = this.elements.length;
     }
 
     /**
@@ -56,7 +54,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
     public ModifiableArrayCollection(final E... elements) {
         this.elementCardinality = DUPLICATE_ELEMENTS;
         this.elements = elements.clone();
-        size = this.elements.length;
+        this.size = this.elements.length;
     }
 
     /**
@@ -150,17 +148,6 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
         return ArrayUtilities.containsAll(elements, size, collection);
     }
 
-    /**
-     * Creates a new element type array with a given length.
-     *
-     * @param length The length of the array.
-     * @return An array of the given length with the element type.
-     */
-    private E[] createNewArray(final int length) {
-        Class<E[]> clazz = (Class<E[]>) elements.getClass();
-        return (E[]) Array.newInstance(clazz.getComponentType(), length);
-    }
-
     @Override
     public E get() throws IndexOutOfBoundsException {
         if (elements.length == 0) {
@@ -237,7 +224,7 @@ public final class ModifiableArrayCollection<E> implements ModifiableCollection<
      * @param newLength The new length for the array.
      */
     private void resizeTo(final int newLength) {
-        E[] newElements = createNewArray(newLength);
+        Object[] newElements = new Object[newLength];
         System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
     }

@@ -404,7 +404,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
             }
             hashedArray[j] = entry;
         }
-        this.hashedEntries = hashedArray;
+        hashedEntries = hashedArray;
     }
 
     @Override

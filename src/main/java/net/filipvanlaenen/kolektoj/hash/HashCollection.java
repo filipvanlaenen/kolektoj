@@ -128,7 +128,7 @@ public final class HashCollection<E> implements Collection<E> {
 
     @Override
     public boolean containsAll(final Collection<?> collection) {
-        return ArrayUtilities.containsAll(this.elements, elements.length, collection);
+        return ArrayUtilities.containsAll(elements, elements.length, collection);
     }
 
     @Override
