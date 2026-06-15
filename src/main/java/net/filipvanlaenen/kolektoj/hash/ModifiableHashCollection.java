@@ -253,37 +253,39 @@ public final class ModifiableHashCollection<E> implements ModifiableCollection<E
 
     @Override
     public boolean remove(E element) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, elements[i])) {
-                elements[i] = elements[size - 1];
-                size--;
-                // EQMU: Changing the conditional boundary below produces an equivalent mutant.
-                // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
-                // EQMU: Negating the conditional below produces an equivalent mutant.
-                if (size < elements.length - STRIDE) {
-                    // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
-                    resizeElementsTo(size);
-                }
-                // EQMU: Changing the conditional boundary below produces an equivalent mutant.
-                // EQMU: Negating the conditional below produces an equivalent mutant.
-                // EQMU: Replacing integer multiplication with division below produces an equivalent mutant.
-                if (size * MAXIMAL_HASHING_RATIO < hashedElementsSize) {
-                    resizeHashedEntriesTo(size);
-                    return true;
-                }
-                Entry entry = new Entry(element, element);
-                int index = HashUtilities.hash(element, hashedElementsSize);
-                while (hashedElements[index] != null) {
-                    if (hashedElements[index].equals(entry)) {
-                        hashedElements[index] = null;
-                        if (hashedElements[Math.floorMod(index + 1, hashedElementsSize)] != null) {
-                            resizeHashedEntriesTo(size);
-                        }
+        if (contains(element)) {
+            for (int i = 0; i < size; i++) {
+                if (Objects.equals(element, elements[i])) {
+                    elements[i] = elements[size - 1];
+                    size--;
+                    // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+                    // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
+                    // EQMU: Negating the conditional below produces an equivalent mutant.
+                    if (size < elements.length - STRIDE) {
+                        // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
+                        resizeElementsTo(size);
+                    }
+                    // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+                    // EQMU: Negating the conditional below produces an equivalent mutant.
+                    // EQMU: Replacing integer multiplication with division below produces an equivalent mutant.
+                    if (size * MAXIMAL_HASHING_RATIO < hashedElementsSize) {
+                        resizeHashedEntriesTo(size);
                         return true;
                     }
-                    index = Math.floorMod(index + 1, hashedElementsSize);
+                    Entry entry = new Entry(element, element);
+                    int index = HashUtilities.hash(element, hashedElementsSize);
+                    while (hashedElements[index] != null) {
+                        if (hashedElements[index].equals(entry)) {
+                            hashedElements[index] = null;
+                            if (hashedElements[Math.floorMod(index + 1, hashedElementsSize)] != null) {
+                                resizeHashedEntriesTo(size);
+                            }
+                            return true;
+                        }
+                        index = Math.floorMod(index + 1, hashedElementsSize);
+                    }
+                    return true;
                 }
-                return true;
             }
         }
         return false;
@@ -291,14 +293,24 @@ public final class ModifiableHashCollection<E> implements ModifiableCollection<E
 
     @Override
     public boolean removeAll(Collection<? extends E> collection) {
-        // TODO Auto-generated method stub
-        return false;
+        boolean result = false;
+        for (E element : collection) {
+            result = remove(element) || result;
+        }
+        return result;
     }
 
     @Override
     public boolean removeIf(Predicate<? super E> predicate) {
-        // TODO Auto-generated method stub
-        return false;
+        boolean result = false;
+        for (Object object : toArray()) {
+            E element = (E) object;
+            if (predicate.test(element)) {
+                remove(element);
+                result = true;
+            }
+        }
+        return result;
     }
 
     /**
@@ -335,8 +347,24 @@ public final class ModifiableHashCollection<E> implements ModifiableCollection<E
 
     @Override
     public boolean retainAll(Collection<? extends E> collection) {
-        // TODO Auto-generated method stub
-        return false;
+        boolean[] retain = new boolean[size];
+        for (E element : collection) {
+            for (int i = 0; i < size; i++) {
+                if (!retain[i] && Objects.equals(element, elements[i])) {
+                    retain[i] = true;
+                    break;
+                }
+            }
+        }
+        Object[] objects = toArray();
+        boolean result = false;
+        for (int i = 0; i < retain.length; i++) {
+            if (!retain[i]) {
+                remove((E) objects[i]);
+                result = true;
+            }
+        }
+        return result;
     }
 
     @Override
