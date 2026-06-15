@@ -4,13 +4,13 @@ import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT
 import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DUPLICATE_ELEMENTS;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Predicate;
 
 import net.filipvanlaenen.kolektoj.Collection;
-import net.filipvanlaenen.kolektoj.ModifiableCollection;
-import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayIterator;
 import net.filipvanlaenen.kolektoj.array.ArraySpliterator;
 import net.filipvanlaenen.kolektoj.array.ArrayUtilities;
@@ -147,6 +147,48 @@ public final class ModifiableHashCollection<E> implements ModifiableCollection<E
         return true;
     }
 
+    @Override
+    public boolean addAll(final Collection<? extends E> collection) {
+        if (collection.isEmpty()) {
+            return false;
+        }
+        int originalSize = size;
+        int numberOfNewElements = collection.size();
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        if (size + numberOfNewElements > elements.length) {
+            resizeElementsTo(size + numberOfNewElements + STRIDE);
+        }
+        if (elementCardinality == DISTINCT_ELEMENTS) {
+            for (E element : collection) {
+                if (!contains(element)) {
+                    elements[size++] = element;
+                }
+            }
+        } else {
+            System.arraycopy(collection.toArray(), 0, elements, size, numberOfNewElements);
+            size += numberOfNewElements;
+        }
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        if (size * MINIMAL_HASHING_RATIO > hashedElementsSize) {
+            resizeHashedEntriesTo(size);
+        } else {
+            for (E element : collection) {
+                int i = HashUtilities.hash(element, hashedElementsSize);
+                Entry entry = new Entry(element, element);
+                boolean contains = false;
+                while (hashedElements[i] != null) {
+                    contains = contains || hashedElements[i].equals(entry);
+                    i = Math.floorMod(i + 1, hashedElementsSize);
+                }
+                if (!contains || elementCardinality != DISTINCT_ELEMENTS) {
+                    hashedElements[i] = entry;
+                }
+            }
+        }
+
+        return size != originalSize;
+    }
+
     /**
      * Calculates the size of the array with the hashed elements for an array of elements.
      *
@@ -155,6 +197,18 @@ public final class ModifiableHashCollection<E> implements ModifiableCollection<E
      */
     private int calculateHashedElementsSize(final Object[] theElements) {
         return theElements.length * HASHING_RATIO;
+    }
+
+    @Override
+    public void clear() {
+        size = 0;
+        // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+        // EQMU: Negating the conditional below produces an equivalent mutant.
+        if (elements.length > STRIDE) {
+            // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
+            resizeElementsTo(STRIDE);
+        }
+        resizeHashedEntriesTo(size);
     }
 
     @Override
@@ -197,6 +251,56 @@ public final class ModifiableHashCollection<E> implements ModifiableCollection<E
         return new ArrayIterator<E>(toArray());
     }
 
+    @Override
+    public boolean remove(E element) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(element, elements[i])) {
+                elements[i] = elements[size - 1];
+                size--;
+                // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+                // EQMU: Replacing integer subtraction with addition below produces an equivalent mutant.
+                // EQMU: Negating the conditional below produces an equivalent mutant.
+                if (size < elements.length - STRIDE) {
+                    // EQMU: Removing the call to resizeTo below produces an equivalent mutant.
+                    resizeElementsTo(size);
+                }
+                // EQMU: Changing the conditional boundary below produces an equivalent mutant.
+                // EQMU: Negating the conditional below produces an equivalent mutant.
+                // EQMU: Replacing integer multiplication with division below produces an equivalent mutant.
+                if (size * MAXIMAL_HASHING_RATIO < hashedElementsSize) {
+                    resizeHashedEntriesTo(size);
+                    return true;
+                }
+                Entry entry = new Entry(element, element);
+                int index = HashUtilities.hash(element, hashedElementsSize);
+                while (hashedElements[index] != null) {
+                    if (hashedElements[index].equals(entry)) {
+                        hashedElements[index] = null;
+                        if (hashedElements[Math.floorMod(index + 1, hashedElementsSize)] != null) {
+                            resizeHashedEntriesTo(size);
+                        }
+                        return true;
+                    }
+                    index = Math.floorMod(index + 1, hashedElementsSize);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean removeAll(Collection<? extends E> collection) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean removeIf(Predicate<? super E> predicate) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
     /**
      * Resizes the array to the new length. It is assumed that the new length is not less than the current size.
      *
@@ -230,6 +334,12 @@ public final class ModifiableHashCollection<E> implements ModifiableCollection<E
     }
 
     @Override
+    public boolean retainAll(Collection<? extends E> collection) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
     public int size() {
         return size;
     }
@@ -244,41 +354,5 @@ public final class ModifiableHashCollection<E> implements ModifiableCollection<E
         Object[] result = new Object[size];
         System.arraycopy(elements, 0, result, 0, size);
         return result;
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends E> collection) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void clear() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public boolean remove(E element) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean removeAll(Collection<? extends E> collection) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean removeIf(Predicate<? super E> predicate) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean retainAll(Collection<? extends E> collection) {
-        // TODO Auto-generated method stub
-        return false;
     }
 }
