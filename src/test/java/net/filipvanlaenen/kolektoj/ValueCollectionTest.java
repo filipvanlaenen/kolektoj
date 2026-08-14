@@ -98,6 +98,15 @@ public class ValueCollectionTest {
     }
 
     /**
+     * Verifies that a value collection with a specific element cardinality receives that element cardinality.
+     */
+    @Test
+    public void ofWithElementCardinalityAndCollectionShouldReturnAValueCollectionWithTheElementCardinality() {
+        assertEquals(DISTINCT_ELEMENTS,
+                ValueCollection.of(DISTINCT_ELEMENTS, Collection.of(1)).getElementCardinality());
+    }
+
+    /**
      * Verifies that the of factory method using a collection clones a value collection that compares equal.
      */
     @Test

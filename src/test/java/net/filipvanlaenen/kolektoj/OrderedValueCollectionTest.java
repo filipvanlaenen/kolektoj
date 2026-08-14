@@ -161,6 +161,15 @@ public class OrderedValueCollectionTest {
     }
 
     /**
+     * Verifies that a value collection with a specific element cardinality receives that element cardinality.
+     */
+    @Test
+    public void ofWithElementCardinalityAndCollectionShouldReturnAValueCollectionWithTheElementCardinality() {
+        assertEquals(DISTINCT_ELEMENTS,
+                OrderedValueCollection.of(DISTINCT_ELEMENTS, OrderedCollection.of(1)).getElementCardinality());
+    }
+
+    /**
      * Verifies that the of factory method using a collection clones to a value collection that compares equal.
      */
     @Test
