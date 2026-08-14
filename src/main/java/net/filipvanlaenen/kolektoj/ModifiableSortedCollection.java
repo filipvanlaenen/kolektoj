@@ -174,6 +174,45 @@ public interface ModifiableSortedCollection<E> extends ModifiableCollection<E>, 
     }
 
     /**
+     * Returns a new modifiable sorted collection with the specified comparator containing all the elements from the
+     * provided collections.
+     *
+     * @param <F>         The element type.
+     * @param comparator  The comparator by which to sort the elements.
+     * @param collections The collections from which to copy all the elements.
+     * @return A new modifiable sorted collection with the specified comparator containing all the elements from the
+     *         provided collections.
+     */
+    static <F> ModifiableSortedCollection<F> unionOf(final Comparator<? super F> comparator,
+            final Collection<? extends F>... collections) {
+        ModifiableSortedCollection<F> result = ModifiableSortedCollection.of(comparator);
+        for (int i = 0; i < collections.length; i++) {
+            result.addAll(collections[i]);
+        }
+        return result;
+    }
+
+    /**
+     * Returns a new modifiable sorted collection containing all the elements from the provided collections, sorted the
+     * same way as the first collection.
+     *
+     * @param <F>              The element type.
+     * @param sortedCollection The sorted collection from which to copy the comparator, the element cardinality and all
+     *                         the elements.
+     * @param collections      The collections from which to copy all the elements.
+     * @return A new modifiable sorted collection containing all the elements from the provided collections, sorted the
+     *         same way as the first collection.
+     */
+    static <F> ModifiableSortedCollection<F> unionOf(final SortedCollection<F> sortedCollection,
+            final Collection<? extends F>... collections) {
+        ModifiableSortedCollection<F> result = ModifiableSortedCollection.of(sortedCollection);
+        for (int i = 0; i < collections.length; i++) {
+            result.addAll(collections[i]);
+        }
+        return result;
+    }
+
+    /**
      * Removes an element from the sorted collection at a given position.
      *
      * @param index The position of the element that should be removed.

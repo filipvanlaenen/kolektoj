@@ -169,6 +169,45 @@ public interface SortedCollection<E> extends OrderedCollection<E> {
     }
 
     /**
+     * Returns a new sorted collection with the specified comparator containing all the elements from the provided
+     * collections.
+     *
+     * @param <F>         The element type.
+     * @param comparator  The comparator by which to sort the elements.
+     * @param collections The collections from which to copy all the elements.
+     * @return A new sorted collection with the specified comparator containing all the elements from the provided
+     *         collections.
+     */
+    static <F> SortedCollection<F> unionOf(final Comparator<? super F> comparator,
+            final Collection<? extends F>... collections) {
+        ModifiableSortedCollection<F> result = ModifiableSortedCollection.of(comparator);
+        for (int i = 0; i < collections.length; i++) {
+            result.addAll(collections[i]);
+        }
+        return of(result);
+    }
+
+    /**
+     * Returns a new sorted collection containing all the elements from the provided collections, sorted the same way as
+     * the first collection.
+     *
+     * @param <F>              The element type.
+     * @param sortedCollection The sorted collection from which to copy the comparator, the element cardinality and all
+     *                         the elements.
+     * @param collections      The collections from which to copy all the elements.
+     * @return A new sorted collection containing all the elements from the provided collections, sorted the same way as
+     *         the first collection.
+     */
+    static <F> SortedCollection<F> unionOf(final SortedCollection<F> sortedCollection,
+            final Collection<? extends F>... collections) {
+        ModifiableSortedCollection<F> result = ModifiableSortedCollection.of(sortedCollection);
+        for (int i = 0; i < collections.length; i++) {
+            result.addAll(collections[i]);
+        }
+        return of(result);
+    }
+
+    /**
      * Returns the comparator sorting this collection.
      *
      * @return The comparator sorting this collection
