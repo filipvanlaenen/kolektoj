@@ -22,6 +22,47 @@ public interface ModifiableSortedCollection<E> extends ModifiableCollection<E>, 
     }
 
     /**
+     * Returns a new modifiable sorted collection containing all the elements present in each of the provided
+     * collections.
+     *
+     * @param <F>         The element type.
+     * @param comparator  The comparator by which to sort the elements.
+     * @param collections The collections from which to calculate the intersection.
+     * @return A new modifiable sorted collection containing all the elements present in each of the provided
+     *         collections.
+     */
+    static <F> ModifiableSortedCollection<F> intersectionOf(final Comparator<? super F> comparator,
+            final Collection<? extends F>... collections) {
+        if (collections.length == 0) {
+            return empty(comparator);
+        }
+        ModifiableSortedCollection<F> result = ModifiableSortedCollection.of(comparator, collections[0]);
+        for (int i = 1; i < collections.length; i++) {
+            result.retainAll(collections[i]);
+        }
+        return result;
+    }
+
+    /**
+     * Returns a new modifiable sorted collection containing all the elements present in each of the provided
+     * collections, sorted the same way as the first collection.
+     *
+     * @param <F>              The element type.
+     * @param sortedCollection The sorted collection from which to calculate the intersection.
+     * @param collections      The other collections from which to calculate the intersection.
+     * @return A new modifiable sorted collection containing all the elements present in each of the provided
+     *         collections, sorted the same way as the first collection.
+     */
+    static <F> ModifiableSortedCollection<F> intersectionOf(final SortedCollection<F> sortedCollection,
+            final Collection<? extends F>... collections) {
+        ModifiableSortedCollection<F> result = of(sortedCollection);
+        for (int i = 0; i < collections.length; i++) {
+            result.retainAll(collections[i]);
+        }
+        return result;
+    }
+
+    /**
      * Returns a new modifiable sorted collection cloned from the provided collection.
      *
      * @param <F>        The element type.

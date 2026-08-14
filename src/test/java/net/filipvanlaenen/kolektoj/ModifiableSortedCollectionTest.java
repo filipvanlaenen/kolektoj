@@ -25,6 +25,15 @@ public class ModifiableSortedCollectionTest {
      * The magic number five.
      */
     private static final int FIVE = 5;
+    /**
+     * Collection with the integer 1.
+     */
+    private final ModifiableSortedCollection<Integer> collection1 = ModifiableSortedCollection.of(COMPARATOR, 1);
+    /**
+     * Collection with the integers 1, 2 and 3.
+     */
+    private final ModifiableSortedCollection<Integer> collection123 =
+            ModifiableSortedCollection.of(COMPARATOR, 1, 2, THREE);
 
     /**
      * A comparator ordering integers in the natural order, but in addition handles <code>null</code> as the lowest
@@ -53,6 +62,48 @@ public class ModifiableSortedCollectionTest {
     @Test
     public void emptyShouldReturnAnEmptyCollection() {
         assertTrue(ModifiableSortedCollection.empty(COMPARATOR).isEmpty());
+    }
+
+    /**
+     * Verifies that the intersection of no collections is empty.
+     */
+    @Test
+    public void intersectionOfNoCollectionsShouldBeEmpty() {
+        assertTrue(ModifiableSortedCollection.intersectionOf(COMPARATOR).isEmpty());
+    }
+
+    /**
+     * Verifies that the intersection of one collection is that collection.
+     */
+    @Test
+    public void intersectionOfOneCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(ModifiableSortedCollection.intersectionOf(COMPARATOR, collection1)));
+    }
+
+    /**
+     * Verifies that the intersection of three collections only contains the common elements.
+     */
+    @Test
+    public void intersectionOfThreeCollectionsShouldOnlyContainTheCommonElements() {
+        assertTrue(collection1.containsSame(ModifiableSortedCollection.intersectionOf(COMPARATOR, collection123,
+                collection1, Collection.of(1, 2))));
+    }
+
+    /**
+     * Verifies that the intersection of one sorted collection is that collection.
+     */
+    @Test
+    public void intersectionOfOneSortedCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(ModifiableSortedCollection.intersectionOf(collection1)));
+    }
+
+    /**
+     * Verifies that the intersection of three collections only contains the common elements.
+     */
+    @Test
+    public void intersectionOfSortedCollectionAndTwoCollectionsShouldOnlyContainTheCommonElements() {
+        assertTrue(collection1.containsSame(
+                ModifiableSortedCollection.intersectionOf(collection123, collection1, Collection.of(1, 2))));
     }
 
     /**
@@ -86,9 +137,8 @@ public class ModifiableSortedCollectionTest {
      */
     @Test
     public void ofWithCollectionShoudlReturnAClone() {
-        Collection<Integer> collection = Collection.<Integer>of(1, 2, THREE);
-        ModifiableSortedCollection<Integer> clone = ModifiableSortedCollection.<Integer>of(COMPARATOR, collection);
-        assertArrayEquals(collection.toArray(), clone.toArray());
+        ModifiableSortedCollection<Integer> clone = ModifiableSortedCollection.<Integer>of(COMPARATOR, collection123);
+        assertArrayEquals(collection123.toArray(), clone.toArray());
     }
 
     /**
@@ -118,9 +168,8 @@ public class ModifiableSortedCollectionTest {
      */
     @Test
     public void ofWithSortedCollectionShoudlReturnAClone() {
-        SortedCollection<Integer> collection = SortedCollection.<Integer>of(COMPARATOR, 1, 2, THREE);
-        ModifiableSortedCollection<Integer> clone = ModifiableSortedCollection.<Integer>of(collection);
-        assertArrayEquals(collection.toArray(), clone.toArray());
+        ModifiableSortedCollection<Integer> clone = ModifiableSortedCollection.<Integer>of(collection123);
+        assertArrayEquals(collection123.toArray(), clone.toArray());
         assertEquals(COMPARATOR, clone.getComparator());
     }
 

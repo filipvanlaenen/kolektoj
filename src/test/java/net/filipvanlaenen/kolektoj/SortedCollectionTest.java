@@ -24,6 +24,14 @@ public class SortedCollectionTest {
      * The magic number five.
      */
     private static final int FIVE = 5;
+    /**
+     * Collection with the integer 1.
+     */
+    private final SortedCollection<Integer> collection1 = SortedCollection.of(COMPARATOR, 1);
+    /**
+     * Collection with the integers 1, 2 and 3.
+     */
+    private final SortedCollection<Integer> collection123 = SortedCollection.of(COMPARATOR, 1, 2, THREE);
 
     /**
      * A comparator ordering integers in the natural order, but in addition handling <code>null</code> as the lowest
@@ -47,6 +55,48 @@ public class SortedCollectionTest {
     };
 
     /**
+     * Verifies that the intersection of no collections is empty.
+     */
+    @Test
+    public void intersectionOfNoCollectionsShouldBeEmpty() {
+        assertTrue(SortedCollection.intersectionOf(COMPARATOR).isEmpty());
+    }
+
+    /**
+     * Verifies that the intersection of one collection is that collection.
+     */
+    @Test
+    public void intersectionOfOneCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(SortedCollection.intersectionOf(COMPARATOR, collection1)));
+    }
+
+    /**
+     * Verifies that the intersection of three collections only contains the common elements.
+     */
+    @Test
+    public void intersectionOfThreeCollectionsShouldOnlyContainTheCommonElements() {
+        assertTrue(collection1.containsSame(
+                SortedCollection.intersectionOf(COMPARATOR, collection123, collection1, Collection.of(1, 2))));
+    }
+
+    /**
+     * Verifies that the intersection of one sorted collection is that collection.
+     */
+    @Test
+    public void intersectionOfOneSortedCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(SortedCollection.intersectionOf(collection1)));
+    }
+
+    /**
+     * Verifies that the intersection of three collections only contains the common elements.
+     */
+    @Test
+    public void intersectionOfSortedCollectionAndTwoCollectionsShouldOnlyContainTheCommonElements() {
+        assertTrue(collection1
+                .containsSame(SortedCollection.intersectionOf(collection123, collection1, Collection.of(1, 2))));
+    }
+
+    /**
      * Verifies that an empty ordered collection is empty.
      */
     @Test
@@ -64,7 +114,7 @@ public class SortedCollectionTest {
      */
     @Test
     public void isEmptyShouldReturnFalseForACollectionContainingAnElement() {
-        assertFalse(SortedCollection.of(COMPARATOR, 1).isEmpty());
+        assertFalse(collection1.isEmpty());
     }
 
     /**
@@ -80,9 +130,8 @@ public class SortedCollectionTest {
      */
     @Test
     public void ofWithCollectionShoudlReturnAClone() {
-        Collection<Integer> collection = Collection.<Integer>of(1, 2, THREE);
-        SortedCollection<Integer> clone = SortedCollection.<Integer>of(COMPARATOR, collection);
-        assertArrayEquals(collection.toArray(), clone.toArray());
+        SortedCollection<Integer> clone = SortedCollection.<Integer>of(COMPARATOR, collection123);
+        assertArrayEquals(collection123.toArray(), clone.toArray());
     }
 
     /**
@@ -110,9 +159,8 @@ public class SortedCollectionTest {
      */
     @Test
     public void ofWithSortedCollectionShoudlReturnAClone() {
-        SortedCollection<Integer> collection = SortedCollection.<Integer>of(COMPARATOR, 1, 2, THREE);
-        SortedCollection<Integer> clone = SortedCollection.<Integer>of(collection);
-        assertArrayEquals(collection.toArray(), clone.toArray());
+        SortedCollection<Integer> clone = SortedCollection.<Integer>of(collection123);
+        assertArrayEquals(collection123.toArray(), clone.toArray());
         assertEquals(COMPARATOR, clone.getComparator());
     }
 
@@ -121,8 +169,7 @@ public class SortedCollectionTest {
      */
     @Test
     public void getGreatestReturnsGreatestElement() {
-        SortedCollection<Integer> collection = SortedCollection.<Integer>of(COMPARATOR, 1, 2, THREE);
-        assertEquals(THREE, collection.getGreatest());
+        assertEquals(THREE, collection123.getGreatest());
     }
 
     /**
@@ -130,7 +177,6 @@ public class SortedCollectionTest {
      */
     @Test
     public void getLeastReturnsLeastElement() {
-        SortedCollection<Integer> collection = SortedCollection.<Integer>of(COMPARATOR, 1, 2, THREE);
-        assertEquals(1, collection.getLeast());
+        assertEquals(1, collection123.getLeast());
     }
 }

@@ -19,6 +19,14 @@ public class CollectionTest {
      * The magic number six.
      */
     private static final int SIX = 6;
+    /**
+     * Collection with the integer 1.
+     */
+    private final Collection<Integer> collection1 = Collection.of(1);
+    /**
+     * Collection with the integers 1, 2 and 3.
+     */
+    private final Collection<Integer> collection123 = Collection.of(1, 2, THREE);
 
     /**
      * Verifies that an empty collection is empty.
@@ -33,7 +41,32 @@ public class CollectionTest {
      */
     @Test
     public void isEmptyShouldReturnFalseForACollectionContainingAnElement() {
-        assertFalse(Collection.of(1).isEmpty());
+        assertFalse(collection1.isEmpty());
+    }
+
+    /**
+     * Verifies that the intersection of no collections is empty.
+     */
+    @Test
+    public void intersectionOfNoCollectionsShouldBeEmpty() {
+        assertTrue(Collection.intersectionOf().isEmpty());
+    }
+
+    /**
+     * Verifies that the intersection of one collection is that collection.
+     */
+    @Test
+    public void intersectionOfOneCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(Collection.intersectionOf(collection1)));
+    }
+
+    /**
+     * Verifies that the intersection of three collections only contains the common elements.
+     */
+    @Test
+    public void intersectionOfThreeCollectionsShouldOnlyContainTheCommonElements() {
+        assertTrue(
+                collection1.containsSame(Collection.intersectionOf(collection123, collection1, Collection.of(1, 2))));
     }
 
     /**
@@ -49,9 +82,7 @@ public class CollectionTest {
      */
     @Test
     public void ofWithCollectionShoudlReturnAClone() {
-        Collection<Integer> collection = Collection.<Integer>of(1, 2, THREE);
-        Collection<Number> clone = Collection.<Number>of(collection);
-        assertTrue(clone.containsSame(collection));
+        assertTrue(collection123.containsSame(Collection.of(collection123)));
     }
 
     /**
@@ -63,7 +94,7 @@ public class CollectionTest {
         Collection<Integer> collection = Collection.<Integer>of(DUPLICATE_ELEMENTS, 1, 1, 2, THREE);
         Collection<Number> clone = Collection.<Number>of(DISTINCT_ELEMENTS, collection);
         assertEquals(DISTINCT_ELEMENTS, clone.getElementCardinality());
-        assertTrue(clone.containsSame(Collection.<Integer>of(1, 2, THREE)));
+        assertTrue(clone.containsSame(collection123));
     }
 
     /**
@@ -71,7 +102,7 @@ public class CollectionTest {
      */
     @Test
     public void streamShouldProduceAStreamThatReducesToTheCorrectSum() {
-        assertEquals(SIX, Collection.of(1, 2, THREE).stream().reduce(0, Integer::sum));
+        assertEquals(SIX, collection123.stream().reduce(0, Integer::sum));
     }
 
     /**
@@ -79,7 +110,6 @@ public class CollectionTest {
      */
     @Test
     public void containsSameReturnsFalseWhenTwoCollectionsHaveDifferentSizes() {
-        Collection<Integer> collection1 = Collection.of(1);
         Collection<Integer> collection2 = Collection.of(1, 2);
         assertFalse(collection1.containsSame(collection2));
         assertFalse(collection2.containsSame(collection1));
@@ -90,10 +120,10 @@ public class CollectionTest {
      */
     @Test
     public void containsSameReturnsFalseWhenTwoCollectionsHaveSameSizeButDifferentElements() {
-        Collection<Integer> collection1 = Collection.of(1, 2);
-        Collection<Integer> collection2 = Collection.of(2, THREE);
-        assertFalse(collection1.containsSame(collection2));
-        assertFalse(collection2.containsSame(collection1));
+        Collection<Integer> collection12 = Collection.of(1, 2);
+        Collection<Integer> collection23 = Collection.of(2, THREE);
+        assertFalse(collection12.containsSame(collection23));
+        assertFalse(collection23.containsSame(collection12));
     }
 
     /**
@@ -101,9 +131,9 @@ public class CollectionTest {
      */
     @Test
     public void containsSameReturnsTrueWhenTwoCollectionsHaveSameSizeAndElements() {
-        Collection<Integer> collection1 = Collection.of(1, 2);
-        Collection<Integer> collection2 = Collection.of(1, 2);
-        assertTrue(collection1.containsSame(collection2));
+        Collection<Integer> firstCollection = Collection.of(1, 2);
+        Collection<Integer> secondCollection = Collection.of(1, 2);
+        assertTrue(firstCollection.containsSame(secondCollection));
     }
 
     /**
@@ -111,8 +141,7 @@ public class CollectionTest {
      */
     @Test
     public void toArrayWithPrototypeShouldReturnANewArrayWithTheContentOfTheCollection() {
-        Collection<Integer> collection = Collection.of(1);
-        Integer[] actual = collection.toArray(EmptyArrays.INTEGERS);
+        Integer[] actual = collection1.toArray(EmptyArrays.INTEGERS);
         Integer[] expected = new Integer[] {1};
         assertArrayEquals(expected, actual);
     }
@@ -123,9 +152,8 @@ public class CollectionTest {
      */
     @Test
     public void toArrayWithPrototypeShouldFillTheArrayWithTheContentOfTheCollection() {
-        Collection<Integer> collection = Collection.of(1);
         Integer[] prototype = new Integer[] {0};
-        Integer[] actual = collection.toArray(prototype);
+        Integer[] actual = collection1.toArray(prototype);
         assertSame(prototype, actual);
         Integer[] expected = new Integer[] {1};
         assertArrayEquals(expected, actual);
@@ -137,9 +165,8 @@ public class CollectionTest {
      */
     @Test
     public void toArrayWithPrototypeShouldFillTheArrayWithTheContentOfTheCollectionAndNullTheRest() {
-        Collection<Integer> collection = Collection.of(1);
         Integer[] prototype = new Integer[] {0, 0};
-        Integer[] actual = collection.toArray(prototype);
+        Integer[] actual = collection1.toArray(prototype);
         assertSame(prototype, actual);
         Integer[] expected = new Integer[] {1, null};
         assertArrayEquals(expected, actual);

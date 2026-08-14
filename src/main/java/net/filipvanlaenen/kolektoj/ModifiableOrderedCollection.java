@@ -19,6 +19,25 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
     }
 
     /**
+     * Returns a new modifiable ordered collection containing all the elements present in each of the provided
+     * collections, with the elements in the order of the ordered collection.
+     *
+     * @param <F>               The element type.
+     * @param orderedCollection The ordered collection from which to calculate the intersection.
+     * @param collections       The other collections from which to calculate the intersection.
+     * @return A new modifiable ordered collection containing all the elements present in each of the provided
+     *         collections, with the elements in the order of the ordered collection.
+     */
+    static <F> ModifiableOrderedCollection<F> intersectionOf(final OrderedCollection<? extends F> orderedCollection,
+            final Collection<? extends F>... collections) {
+        ModifiableOrderedCollection<F> result = of(orderedCollection);
+        for (int i = 0; i < collections.length; i++) {
+            result.retainAll(collections[i]);
+        }
+        return result;
+    }
+
+    /**
      * Returns a new modifiable ordered collection with the elements of the provided ordered collection and the provided
      * element cardinality.
      *

@@ -119,6 +119,25 @@ public interface OrderedCollection<E> extends Collection<E> {
     }
 
     /**
+     * Returns a new ordered collection containing all the elements present in each of the provided collections, with
+     * the elements in the order of the ordered collection.
+     *
+     * @param <F>               The element type.
+     * @param orderedCollection The ordered collection from which to calculate the intersection.
+     * @param collections       The other collections from which to calculate the intersection.
+     * @return A new ordered collection containing all the elements present in each of the provided collections, with
+     *         the elements in the order of the ordered collection.
+     */
+    static <F> OrderedCollection<F> intersectionOf(final OrderedCollection<? extends F> orderedCollection,
+            final Collection<? extends F>... collections) {
+        ModifiableOrderedCollection<F> result = ModifiableOrderedCollection.of(orderedCollection);
+        for (int i = 0; i < collections.length; i++) {
+            result.retainAll(collections[i]);
+        }
+        return of(result);
+    }
+
+    /**
      * Returns a new ordered collection with the specified element cardinality and the elements.
      *
      * @param <F>                The element type.

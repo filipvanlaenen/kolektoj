@@ -21,6 +21,31 @@ public class ModifiableOrderedCollectionTest {
      * The magic number five.
      */
     private static final int FIVE = 5;
+    /**
+     * Collection with the integer 1.
+     */
+    private final ModifiableOrderedCollection<Integer> collection1 = ModifiableOrderedCollection.of(1);
+    /**
+     * Collection with the integers 1, 2 and 3.
+     */
+    private final ModifiableOrderedCollection<Integer> collection123 = ModifiableOrderedCollection.of(1, 2, THREE);
+
+    /**
+     * Verifies that the intersection of one collection is that collection.
+     */
+    @Test
+    public void intersectionOfOneCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(ModifiableOrderedCollection.intersectionOf(collection1)));
+    }
+
+    /**
+     * Verifies that the intersection of three collections only contains the common elements.
+     */
+    @Test
+    public void intersectionOfThreeCollectionsShouldOnlyContainTheCommonElements() {
+        assertTrue(collection1.containsSame(
+                ModifiableOrderedCollection.intersectionOf(collection123, collection1, Collection.of(1, 2))));
+    }
 
     /**
      * Verifies that an empty modifiable ordered collection is empty.
@@ -35,7 +60,7 @@ public class ModifiableOrderedCollectionTest {
      */
     @Test
     public void isEmptyShouldReturnFalseForACollectionContainingAnElement() {
-        assertFalse(ModifiableOrderedCollection.of(1).isEmpty());
+        assertFalse(collection1.isEmpty());
     }
 
     /**
@@ -64,9 +89,8 @@ public class ModifiableOrderedCollectionTest {
      */
     @Test
     public void ofWithCollectionShouldReturnAClone() {
-        OrderedCollection<Integer> collection = OrderedCollection.<Integer>of(1, 2, THREE);
-        ModifiableOrderedCollection<Number> clone = ModifiableOrderedCollection.<Number>of(collection);
-        assertArrayEquals(collection.toArray(), clone.toArray());
+        ModifiableOrderedCollection<Number> clone = ModifiableOrderedCollection.<Number>of(collection123);
+        assertArrayEquals(collection123.toArray(), clone.toArray());
     }
 
     /**

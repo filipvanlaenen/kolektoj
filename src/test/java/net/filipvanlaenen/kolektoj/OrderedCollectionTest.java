@@ -21,6 +21,31 @@ public class OrderedCollectionTest {
      * The magic number five.
      */
     private static final int FIVE = 5;
+    /**
+     * Collection with the integer 1.
+     */
+    private final OrderedCollection<Integer> collection1 = OrderedCollection.of(1);
+    /**
+     * Collection with the integers 1, 2 and 3.
+     */
+    private final OrderedCollection<Integer> collection123 = OrderedCollection.of(1, 2, THREE);
+
+    /**
+     * Verifies that the intersection of one collection is that collection.
+     */
+    @Test
+    public void intersectionOfOneCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(OrderedCollection.intersectionOf(collection1)));
+    }
+
+    /**
+     * Verifies that the intersection of three collections only contains the common elements.
+     */
+    @Test
+    public void intersectionOfThreeCollectionsShouldOnlyContainTheCommonElements() {
+        assertTrue(collection1
+                .containsSame(OrderedCollection.intersectionOf(collection123, collection1, Collection.of(1, 2))));
+    }
 
     /**
      * Verifies that an empty ordered collection is empty.
@@ -35,7 +60,7 @@ public class OrderedCollectionTest {
      */
     @Test
     public void isEmptyShouldReturnFalseForACollectionContainingAnElement() {
-        assertFalse(OrderedCollection.of(1).isEmpty());
+        assertFalse(collection1.isEmpty());
     }
 
     /**
@@ -51,9 +76,8 @@ public class OrderedCollectionTest {
      */
     @Test
     public void ofWithCollectionShouldReturnAClone() {
-        OrderedCollection<Integer> collection = OrderedCollection.<Integer>of(1, 2, THREE);
-        OrderedCollection<Number> clone = OrderedCollection.<Number>of(collection);
-        assertArrayEquals(collection.toArray(), clone.toArray());
+        OrderedCollection<Number> clone = OrderedCollection.<Number>of(collection123);
+        assertArrayEquals(collection123.toArray(), clone.toArray());
     }
 
     /**
@@ -109,9 +133,8 @@ public class OrderedCollectionTest {
      */
     @Test
     public void createSequenceShouldCreateSequenceWithOneIntegerFromFirstElement() {
-        OrderedCollection<Integer> expected = OrderedCollection.of(1);
         OrderedCollection<Integer> actual = OrderedCollection.createSequence(1, i -> i + 1, 1);
-        assertTrue(actual.containsSame(expected));
+        assertTrue(actual.containsSame(collection1));
     }
 
     /**
@@ -120,9 +143,8 @@ public class OrderedCollectionTest {
      */
     @Test
     public void createSequenceShouldCreateSequenceWithThreeIntegersFromFirstElement() {
-        OrderedCollection<Integer> expected = OrderedCollection.of(1, 2, THREE);
         OrderedCollection<Integer> actual = OrderedCollection.createSequence(1, i -> i + 1, THREE);
-        assertTrue(actual.containsSame(expected));
+        assertTrue(actual.containsSame(collection123));
     }
 
     /**
@@ -158,9 +180,8 @@ public class OrderedCollectionTest {
      */
     @Test
     public void createSequenceShouldCreateSequenceWithIntegersFromFirstElementUntilPredicateEvaluatesFalse() {
-        OrderedCollection<Integer> expected = OrderedCollection.of(1, 2, THREE);
         OrderedCollection<Integer> actual = OrderedCollection.createSequence(1, i -> i + 1, i -> i <= THREE);
-        assertTrue(actual.containsSame(expected));
+        assertTrue(actual.containsSame(collection123));
     }
 
     /**
@@ -168,7 +189,7 @@ public class OrderedCollectionTest {
      */
     @Test
     public void getFirstShouldReturnTheFirstElement() {
-        assertEquals(1, OrderedCollection.of(1, 2, THREE).getFirst());
+        assertEquals(1, collection123.getFirst());
     }
 
     /**
@@ -176,6 +197,6 @@ public class OrderedCollectionTest {
      */
     @Test
     public void getLastShouldReturnTheLastElement() {
-        assertEquals(THREE, OrderedCollection.of(1, 2, THREE).getLast());
+        assertEquals(THREE, collection123.getLast());
     }
 }
