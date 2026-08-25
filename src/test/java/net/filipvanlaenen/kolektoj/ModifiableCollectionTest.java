@@ -50,7 +50,7 @@ public class ModifiableCollectionTest {
      */
     @Test
     public void differenceOfThreeCollectionsShouldOnlyContainTheElementsFromTheFirstCollectionNotInTheOthers() {
-        assertTrue(Collection.of(3)
+        assertTrue(Collection.of(THREE)
                 .containsSame(ModifiableCollection.differenceOf(collection123, collection1, collection12)));
     }
 

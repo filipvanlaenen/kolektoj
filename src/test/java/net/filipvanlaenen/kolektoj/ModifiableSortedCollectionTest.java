@@ -82,7 +82,7 @@ public class ModifiableSortedCollectionTest {
      */
     @Test
     public void differenceOfThreeCollectionsShouldOnlyContainTheElementsFromTheFirstCollectionNotInTheOthers() {
-        assertTrue(Collection.of(3).containsSame(
+        assertTrue(Collection.of(THREE).containsSame(
                 ModifiableSortedCollection.differenceOf(COMPARATOR, collection123, collection1, collection12)));
     }
 
@@ -100,7 +100,7 @@ public class ModifiableSortedCollectionTest {
      */
     @Test
     public void differenceOfThreeCollectionsShouldOnlyContainTheElementsFromTheSortedCollectionNotInTheOthers() {
-        assertTrue(Collection.of(3)
+        assertTrue(Collection.of(THREE)
                 .containsSame(ModifiableSortedCollection.differenceOf(collection123, collection1, collection12)));
     }
 

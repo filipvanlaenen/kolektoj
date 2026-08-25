@@ -54,7 +54,8 @@ public class CollectionTest {
      */
     @Test
     public void differenceOfThreeCollectionsShouldOnlyContainTheElementsFromTheFirstCollectionNotInTheOthers() {
-        assertTrue(Collection.of(3).containsSame(Collection.differenceOf(collection123, collection1, collection12)));
+        assertTrue(
+                Collection.of(THREE).containsSame(Collection.differenceOf(collection123, collection1, collection12)));
     }
 
     /**
@@ -138,9 +139,8 @@ public class CollectionTest {
      */
     @Test
     public void containsSameReturnsFalseWhenTwoCollectionsHaveDifferentSizes() {
-        Collection<Integer> collection2 = Collection.of(1, 2);
-        assertFalse(collection1.containsSame(collection2));
-        assertFalse(collection2.containsSame(collection1));
+        assertFalse(collection1.containsSame(collection12));
+        assertFalse(collection12.containsSame(collection1));
     }
 
     /**
@@ -148,7 +148,6 @@ public class CollectionTest {
      */
     @Test
     public void containsSameReturnsFalseWhenTwoCollectionsHaveSameSizeButDifferentElements() {
-        Collection<Integer> collection12 = Collection.of(1, 2);
         Collection<Integer> collection23 = Collection.of(2, THREE);
         assertFalse(collection12.containsSame(collection23));
         assertFalse(collection23.containsSame(collection12));

@@ -48,7 +48,7 @@ public class ModifiableOrderedCollectionTest {
      */
     @Test
     public void differenceOfThreeCollectionsShouldOnlyContainTheElementsFromTheFirstCollectionNotInTheOthers() {
-        assertTrue(Collection.of(3)
+        assertTrue(Collection.of(THREE)
                 .containsSame(ModifiableOrderedCollection.differenceOf(collection123, collection1, collection12)));
     }
 

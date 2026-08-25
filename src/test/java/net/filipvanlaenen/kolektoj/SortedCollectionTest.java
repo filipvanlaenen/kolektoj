@@ -80,7 +80,7 @@ public class SortedCollectionTest {
      */
     @Test
     public void differenceOfThreeCollectionsShouldOnlyContainTheElementsFromTheFirstCollectionNotInTheOthers() {
-        assertTrue(Collection.of(3)
+        assertTrue(Collection.of(THREE)
                 .containsSame(SortedCollection.differenceOf(COMPARATOR, collection123, collection1, collection12)));
     }
 
@@ -98,8 +98,8 @@ public class SortedCollectionTest {
      */
     @Test
     public void differenceOfThreeCollectionsShouldOnlyContainTheElementsFromTheSortedCollectionNotInTheOthers() {
-        assertTrue(
-                Collection.of(3).containsSame(SortedCollection.differenceOf(collection123, collection1, collection12)));
+        assertTrue(Collection.of(THREE)
+                .containsSame(SortedCollection.differenceOf(collection123, collection1, collection12)));
     }
 
     /**
