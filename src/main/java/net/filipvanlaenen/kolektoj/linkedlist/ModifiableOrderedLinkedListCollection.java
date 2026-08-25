@@ -44,19 +44,19 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
     private ListNode<E> tail;
 
     /**
-     * Constructs a modifiable linked list collection with the given elements.
+     * Constructs a modifiable ordered linked list collection with the given elements.
      *
-     * @param elements The elements of the modifiable linked list collection.
+     * @param elements The elements of the modifiable ordered linked list collection.
      */
     public ModifiableOrderedLinkedListCollection(final E... elements) {
         this(DUPLICATE_ELEMENTS, elements);
     }
 
     /**
-     * Constructs a modifiable linked list collection with the given elements and element cardinality.
+     * Constructs a modifiable ordered linked list collection with the given elements and element cardinality.
      *
      * @param elementCardinality The element cardinality.
-     * @param elements           The elements of the modifiable linked list collection.
+     * @param elements           The elements of the modifiable ordered linked list collection.
      */
     public ModifiableOrderedLinkedListCollection(final ElementCardinality elementCardinality, final E... elements) {
         this.elementCardinality = elementCardinality;
@@ -81,7 +81,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
     }
 
     /**
-     * Constructs a modifiable linked list collection with the given elements.
+     * Constructs a modifiable ordered linked list collection with the given elements.
      *
      * @param source The ordered collection to create a new collection from.
      */

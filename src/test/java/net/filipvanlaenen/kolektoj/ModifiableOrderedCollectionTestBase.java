@@ -288,7 +288,23 @@ public abstract class ModifiableOrderedCollectionTestBase<T extends ModifiableOr
      */
     @Test
     public void getAtShouldReturnCorrectElement() {
-        assertEquals(2, collection123.getAt(1));
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        assertEquals(1, collection.getAt(0));
+        assertEquals(2, collection.getAt(1));
+        assertEquals(THREE, collection.getAt(2));
+    }
+
+    /**
+     * Verifies that when you get an element from a collection by its index, the correct element is returned, also after
+     * <code>toArray</code> has been invoked to fill any cache.
+     */
+    @Test
+    public void getAtShouldReturnCorrectElementAfterCaching() {
+        T collection = createModifiableOrderedCollection(1, 2, THREE);
+        collection.toArray();
+        assertEquals(1, collection.getAt(0));
+        assertEquals(2, collection.getAt(1));
+        assertEquals(THREE, collection.getAt(2));
     }
 
     /**
