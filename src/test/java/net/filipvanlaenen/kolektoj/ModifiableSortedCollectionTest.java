@@ -30,6 +30,10 @@ public class ModifiableSortedCollectionTest {
      */
     private final ModifiableSortedCollection<Integer> collection1 = ModifiableSortedCollection.of(COMPARATOR, 1);
     /**
+     * Collection with the integer 1 and 2.
+     */
+    private final ModifiableSortedCollection<Integer> collection12 = ModifiableSortedCollection.of(COMPARATOR, 1, 2);
+    /**
      * Collection with the integers 1, 2 and 3.
      */
     private final ModifiableSortedCollection<Integer> collection123 =
@@ -55,6 +59,50 @@ public class ModifiableSortedCollectionTest {
             }
         }
     };
+
+    /**
+     * Verifies that the difference of no collections is empty.
+     */
+    @Test
+    public void differenceOfNoCollectionsShouldBeEmpty() {
+        assertTrue(ModifiableSortedCollection.differenceOf(COMPARATOR).isEmpty());
+    }
+
+    /**
+     * Verifies that the difference of one collection is that collection.
+     */
+    @Test
+    public void differenceOfOneCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(ModifiableSortedCollection.differenceOf(COMPARATOR, collection1)));
+    }
+
+    /**
+     * Verifies that the difference of three collections only contains the elements of the first collection that aren't
+     * present in any of the other.
+     */
+    @Test
+    public void differenceOfThreeCollectionsShouldOnlyContainTheElementsFromTheFirstCollectionNotInTheOthers() {
+        assertTrue(Collection.of(3).containsSame(
+                ModifiableSortedCollection.differenceOf(COMPARATOR, collection123, collection1, collection12)));
+    }
+
+    /**
+     * Verifies that the difference of one collection is that collection.
+     */
+    @Test
+    public void differenceOfOneSortedCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(ModifiableSortedCollection.differenceOf(collection1)));
+    }
+
+    /**
+     * Verifies that the difference of three collections only contains the elements of the first collection that aren't
+     * present in any of the other.
+     */
+    @Test
+    public void differenceOfThreeCollectionsShouldOnlyContainTheElementsFromTheSortedCollectionNotInTheOthers() {
+        assertTrue(Collection.of(3)
+                .containsSame(ModifiableSortedCollection.differenceOf(collection123, collection1, collection12)));
+    }
 
     /**
      * Verifies that a modifiable sorted collection constructed with the empty factory method is empty.
@@ -85,8 +133,8 @@ public class ModifiableSortedCollectionTest {
      */
     @Test
     public void intersectionOfThreeCollectionsShouldOnlyContainTheCommonElements() {
-        assertTrue(collection1.containsSame(ModifiableSortedCollection.intersectionOf(COMPARATOR, collection123,
-                collection1, Collection.of(1, 2))));
+        assertTrue(collection1.containsSame(
+                ModifiableSortedCollection.intersectionOf(COMPARATOR, collection123, collection1, collection12)));
     }
 
     /**
@@ -130,6 +178,18 @@ public class ModifiableSortedCollectionTest {
         assertEquals(2, collection.size());
         assertTrue(collection.contains(1));
         assertTrue(collection.contains(2));
+    }
+
+    /**
+     * Verifies that a modifiable ordered collection with a specific element cardinality receives that element
+     * cardinality.
+     */
+    @Test
+    public void ofWithElementCardinalityAndCollectionShouldReturnACollectionWithTheElementCardinality() {
+        ModifiableSortedCollection<Integer> clone =
+                ModifiableSortedCollection.of(DISTINCT_ELEMENTS, COMPARATOR, Collection.of(1, 1));
+        assertEquals(DISTINCT_ELEMENTS, clone.getElementCardinality());
+        assertEquals(1, clone.size());
     }
 
     /**
@@ -193,5 +253,47 @@ public class ModifiableSortedCollectionTest {
                 ModifiableSortedCollection.<Integer>of(COMPARATOR, 1, 2, THREE);
         assertEquals(THREE, collection.removeGreatest());
         assertFalse(collection.contains(THREE));
+    }
+
+    /**
+     * Verifies that the union of no collections is empty.
+     */
+    @Test
+    public void unionOfNoCollectionsShouldBeEmpty() {
+        assertTrue(ModifiableSortedCollection.unionOf(COMPARATOR).isEmpty());
+    }
+
+    /**
+     * Verifies that the union of one collection is that collection.
+     */
+    @Test
+    public void unionOfOneCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(ModifiableSortedCollection.unionOf(COMPARATOR, collection1)));
+    }
+
+    /**
+     * Verifies that the union of three collections only all elements.
+     */
+    @Test
+    public void unionOfThreeCollectionsShouldContainAllElements() {
+        assertTrue(Collection.of(1, 2, THREE, 1, 1, 2).containsSame(
+                ModifiableSortedCollection.unionOf(COMPARATOR, collection123, collection1, collection12)));
+    }
+
+    /**
+     * Verifies that the union of one collection is that collection.
+     */
+    @Test
+    public void unionOfOneSortedCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(ModifiableSortedCollection.unionOf(collection1)));
+    }
+
+    /**
+     * Verifies that the union of three collections only all elements.
+     */
+    @Test
+    public void unionOfThreeSortedCollectionsShouldContainAllElements() {
+        assertTrue(Collection.of(1, 2, THREE, 1, 1, 2)
+                .containsSame(ModifiableSortedCollection.unionOf(collection123, collection1, collection12)));
     }
 }
