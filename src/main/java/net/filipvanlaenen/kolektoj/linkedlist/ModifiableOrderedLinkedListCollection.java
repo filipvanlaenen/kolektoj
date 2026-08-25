@@ -27,10 +27,6 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
      */
     private Object[] cachedArray;
     /**
-     * A boolean flag indicating whether the cachedArray field is dirty.
-     */
-    private boolean cachedArrayDirty;
-    /**
      * The element cardinality.
      */
     private final ElementCardinality elementCardinality;
@@ -67,8 +63,6 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         for (final E element : elements) {
             addLast(element);
         }
-        cachedArray = elements.clone();
-        cachedArrayDirty = cachedArray.length != size;
     }
 
     /**
@@ -84,8 +78,6 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         for (final E element : source) {
             addLast(element);
         }
-        cachedArray = source.toArray();
-        cachedArrayDirty = cachedArray.length != size;
     }
 
     /**
@@ -107,7 +99,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             tail = head;
         }
         size++;
-        cachedArrayDirty = true;
+        cachedArray = null;
         return true;
     }
 
@@ -171,7 +163,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             current.setNext(newListHead);
         }
         size += numberOfNewElements;
-        cachedArrayDirty = true;
+        cachedArray = null;
         return true;
     }
 
@@ -202,7 +194,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
                 current.setNext(newNode);
             }
             size++;
-            cachedArrayDirty = true;
+            cachedArray = null;
             return true;
         }
     }
@@ -212,7 +204,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         head = null;
         tail = null;
         size = 0;
-        cachedArrayDirty = cachedArray.length != 0;
+        cachedArray = new Object[0];
     }
 
     @Override
@@ -280,7 +272,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             throw new IndexOutOfBoundsException(
                     "Cannot return an element at a position beyond the size of the collection.");
         } else {
-            if (!cachedArrayDirty) {
+            if (cachedArray != null) {
                 return (E) cachedArray[index];
             } else {
                 if (index == 0) {
@@ -348,7 +340,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
                 if (size == 1) {
                     tail = head;
                 }
-                cachedArrayDirty = true;
+                cachedArray = null;
                 return original;
             } else {
                 ListNode<E> previous = head;
@@ -369,7 +361,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
                 if (tail == current) {
                     tail = newNode;
                 }
-                cachedArrayDirty = true;
+                cachedArray = null;
                 return original;
             }
         }
@@ -386,7 +378,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
                 tail = null;
             }
             size--;
-            cachedArrayDirty = true;
+            cachedArray = null;
             return true;
         }
         ListNode<E> current = head;
@@ -398,7 +390,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
                     tail = current;
                 }
                 size--;
-                cachedArrayDirty = true;
+                cachedArray = null;
                 return true;
             }
             current = next;
@@ -433,7 +425,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
                 }
             }
             size--;
-            cachedArrayDirty = true;
+            cachedArray = null;
             return element;
         }
     }
@@ -492,7 +484,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
         while (i < retain.length && !retain[i]) {
             head = head.getNext();
             size--;
-            cachedArrayDirty = true;
+            cachedArray = null;
             result = true;
             i++;
         }
@@ -509,7 +501,7 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
             } else {
                 tail.setNext(next.getNext());
                 size--;
-                cachedArrayDirty = true;
+                cachedArray = null;
                 result = true;
             }
             next = tail.getNext();
@@ -532,14 +524,13 @@ public final class ModifiableOrderedLinkedListCollection<E> implements Modifiabl
 
     @Override
     public Object[] toArray() {
-        if (cachedArrayDirty) {
+        if (cachedArray == null) {
             cachedArray = new Object[size];
             ListNode<E> current = head;
             for (int i = 0; i < size; i++) {
                 cachedArray[i] = current.getElement();
                 current = current.getNext();
             }
-            cachedArrayDirty = false;
         }
         return cachedArray.clone();
     }

@@ -24,10 +24,6 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
      */
     private Object[] cachedArray;
     /**
-     * A boolean flag indicating whether the cachedArray field is dirty.
-     */
-    private boolean cachedArrayDirty;
-    /**
      * The element cardinality.
      */
     private final ElementCardinality elementCardinality;
@@ -51,8 +47,6 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         for (final E element : source) {
             add(element);
         }
-        cachedArray = source.toArray();
-        cachedArrayDirty = false;
     }
 
     /**
@@ -77,8 +71,6 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         for (final E element : source) {
             add(element);
         }
-        cachedArray = source.toArray();
-        cachedArrayDirty = cachedArray.length != size;
     }
 
     /**
@@ -92,8 +84,6 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         for (final E element : elements) {
             add(element);
         }
-        cachedArray = elements.clone();
-        cachedArrayDirty = cachedArray.length != size;
     }
 
     @Override
@@ -103,7 +93,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         }
         head = new ListNode<E>(element, head);
         size++;
-        cachedArrayDirty = true;
+        cachedArray = null;
         return true;
     }
 
@@ -120,7 +110,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
     public void clear() {
         head = null;
         size = 0;
-        cachedArrayDirty = cachedArray.length != 0;
+        cachedArray = new Object[0];
     }
 
     @Override
@@ -186,7 +176,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         if (Objects.equals(head.getElement(), element)) {
             head = head.getNext();
             size--;
-            cachedArrayDirty = true;
+            cachedArray = null;
             return true;
         }
         ListNode<E> current = head;
@@ -195,7 +185,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
             if (Objects.equals(next.getElement(), element)) {
                 current.setNext(next.getNext());
                 size--;
-                cachedArrayDirty = true;
+                cachedArray = null;
                 return true;
             }
             current = next;
@@ -258,7 +248,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
         while (i < retain.length && !retain[i]) {
             head = head.getNext();
             size--;
-            cachedArrayDirty = true;
+            cachedArray = null;
             result = true;
             i++;
         }
@@ -274,7 +264,7 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
             } else {
                 current.setNext(next.getNext());
                 size--;
-                cachedArrayDirty = true;
+                cachedArray = null;
                 result = true;
             }
             next = current.getNext();
@@ -295,14 +285,13 @@ public final class ModifiableLinkedListCollection<E> implements ModifiableCollec
 
     @Override
     public Object[] toArray() {
-        if (cachedArrayDirty) {
+        if (cachedArray == null) {
             cachedArray = new Object[size];
             ListNode<E> current = head;
             for (int i = 0; i < size; i++) {
                 cachedArray[i] = current.getElement();
                 current = current.getNext();
             }
-            cachedArrayDirty = false;
         }
         return cachedArray.clone();
     }
