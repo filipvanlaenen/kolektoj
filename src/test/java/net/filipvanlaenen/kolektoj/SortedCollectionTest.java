@@ -29,6 +29,10 @@ public class SortedCollectionTest {
      */
     private final SortedCollection<Integer> collection1 = SortedCollection.of(COMPARATOR, 1);
     /**
+     * Collection with the integer 1 and 2.
+     */
+    private final SortedCollection<Integer> collection12 = SortedCollection.of(COMPARATOR, 1, 2);
+    /**
      * Collection with the integers 1, 2 and 3.
      */
     private final SortedCollection<Integer> collection123 = SortedCollection.of(COMPARATOR, 1, 2, THREE);
@@ -55,6 +59,50 @@ public class SortedCollectionTest {
     };
 
     /**
+     * Verifies that the difference of no collections is empty.
+     */
+    @Test
+    public void differenceOfNoCollectionsShouldBeEmpty() {
+        assertTrue(SortedCollection.differenceOf(COMPARATOR).isEmpty());
+    }
+
+    /**
+     * Verifies that the difference of one collection is that collection.
+     */
+    @Test
+    public void differenceOfOneCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(SortedCollection.differenceOf(COMPARATOR, collection1)));
+    }
+
+    /**
+     * Verifies that the difference of three collections only contains the elements of the first collection that aren't
+     * present in any of the other.
+     */
+    @Test
+    public void differenceOfThreeCollectionsShouldOnlyContainTheElementsFromTheFirstCollectionNotInTheOthers() {
+        assertTrue(Collection.of(3)
+                .containsSame(SortedCollection.differenceOf(COMPARATOR, collection123, collection1, collection12)));
+    }
+
+    /**
+     * Verifies that the difference of one collection is that collection.
+     */
+    @Test
+    public void differenceOfOneSortedCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(SortedCollection.differenceOf(collection1)));
+    }
+
+    /**
+     * Verifies that the difference of three collections only contains the elements of the first collection that aren't
+     * present in any of the other.
+     */
+    @Test
+    public void differenceOfThreeCollectionsShouldOnlyContainTheElementsFromTheSortedCollectionNotInTheOthers() {
+        assertTrue(
+                Collection.of(3).containsSame(SortedCollection.differenceOf(collection123, collection1, collection12)));
+    }
+
+    /**
      * Verifies that the intersection of no collections is empty.
      */
     @Test
@@ -75,8 +123,8 @@ public class SortedCollectionTest {
      */
     @Test
     public void intersectionOfThreeCollectionsShouldOnlyContainTheCommonElements() {
-        assertTrue(collection1.containsSame(
-                SortedCollection.intersectionOf(COMPARATOR, collection123, collection1, Collection.of(1, 2))));
+        assertTrue(collection1
+                .containsSame(SortedCollection.intersectionOf(COMPARATOR, collection123, collection1, collection12)));
     }
 
     /**
@@ -123,6 +171,17 @@ public class SortedCollectionTest {
     @Test
     public void ofWithElementCardinalityShouldReturnACollectionWithTheElementCardinality() {
         assertEquals(DISTINCT_ELEMENTS, SortedCollection.of(DISTINCT_ELEMENTS, COMPARATOR, 1).getElementCardinality());
+    }
+
+    /**
+     * Verifies that a modifiable ordered collection with a specific element cardinality receives that element
+     * cardinality.
+     */
+    @Test
+    public void ofWithElementCardinalityAndCollectionShouldReturnACollectionWithTheElementCardinality() {
+        SortedCollection<Integer> clone = SortedCollection.of(DISTINCT_ELEMENTS, COMPARATOR, Collection.of(1, 1));
+        assertEquals(DISTINCT_ELEMENTS, clone.getElementCardinality());
+        assertEquals(1, clone.size());
     }
 
     /**
@@ -178,5 +237,47 @@ public class SortedCollectionTest {
     @Test
     public void getLeastReturnsLeastElement() {
         assertEquals(1, collection123.getLeast());
+    }
+
+    /**
+     * Verifies that the union of no collections is empty.
+     */
+    @Test
+    public void unionOfNoCollectionsShouldBeEmpty() {
+        assertTrue(SortedCollection.unionOf(COMPARATOR).isEmpty());
+    }
+
+    /**
+     * Verifies that the union of one collection is that collection.
+     */
+    @Test
+    public void unionOfOneCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(SortedCollection.unionOf(COMPARATOR, collection1)));
+    }
+
+    /**
+     * Verifies that the union of three collections only all elements.
+     */
+    @Test
+    public void unionOfThreeCollectionsShouldContainAllElements() {
+        assertTrue(Collection.of(1, 2, THREE, 1, 1, 2)
+                .containsSame(SortedCollection.unionOf(COMPARATOR, collection123, collection1, collection12)));
+    }
+
+    /**
+     * Verifies that the union of one collection is that collection.
+     */
+    @Test
+    public void unionOfOneSortedCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(SortedCollection.unionOf(collection1)));
+    }
+
+    /**
+     * Verifies that the union of three collections only all elements.
+     */
+    @Test
+    public void unionOfThreeSortedCollectionsShouldContainAllElements() {
+        assertTrue(Collection.of(1, 2, THREE, 1, 1, 2)
+                .containsSame(SortedCollection.unionOf(collection123, collection1, collection12)));
     }
 }
