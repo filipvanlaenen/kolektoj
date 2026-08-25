@@ -252,7 +252,7 @@ public final class ModifiableHashCollection<E> implements ModifiableCollection<E
     }
 
     @Override
-    public boolean remove(E element) {
+    public boolean remove(final E element) {
         if (contains(element)) {
             for (int i = 0; i < size; i++) {
                 if (Objects.equals(element, elements[i])) {
@@ -292,7 +292,7 @@ public final class ModifiableHashCollection<E> implements ModifiableCollection<E
     }
 
     @Override
-    public boolean removeAll(Collection<? extends E> collection) {
+    public boolean removeAll(final Collection<? extends E> collection) {
         boolean result = false;
         for (E element : collection) {
             result = remove(element) || result;
@@ -301,7 +301,7 @@ public final class ModifiableHashCollection<E> implements ModifiableCollection<E
     }
 
     @Override
-    public boolean removeIf(Predicate<? super E> predicate) {
+    public boolean removeIf(final Predicate<? super E> predicate) {
         boolean result = false;
         for (Object object : toArray()) {
             E element = (E) object;
@@ -346,7 +346,7 @@ public final class ModifiableHashCollection<E> implements ModifiableCollection<E
     }
 
     @Override
-    public boolean retainAll(Collection<? extends E> collection) {
+    public boolean retainAll(final Collection<? extends E> collection) {
         boolean[] retain = new boolean[size];
         for (E element : collection) {
             for (int i = 0; i < size; i++) {
