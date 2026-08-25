@@ -26,69 +26,13 @@ public class OrderedCollectionTest {
      */
     private final OrderedCollection<Integer> collection1 = OrderedCollection.of(1);
     /**
+     * Collection with the integer 1 and 2.
+     */
+    private final OrderedCollection<Integer> collection12 = OrderedCollection.of(1, 2);
+    /**
      * Collection with the integers 1, 2 and 3.
      */
     private final OrderedCollection<Integer> collection123 = OrderedCollection.of(1, 2, THREE);
-
-    /**
-     * Verifies that the intersection of one collection is that collection.
-     */
-    @Test
-    public void intersectionOfOneCollectionShouldBeTheSameCollection() {
-        assertTrue(collection1.containsSame(OrderedCollection.intersectionOf(collection1)));
-    }
-
-    /**
-     * Verifies that the intersection of three collections only contains the common elements.
-     */
-    @Test
-    public void intersectionOfThreeCollectionsShouldOnlyContainTheCommonElements() {
-        assertTrue(collection1
-                .containsSame(OrderedCollection.intersectionOf(collection123, collection1, Collection.of(1, 2))));
-    }
-
-    /**
-     * Verifies that an empty ordered collection is empty.
-     */
-    @Test
-    public void isEmptyShouldReturnTrueForAnEmptyCollection() {
-        assertTrue(OrderedCollection.empty().isEmpty());
-    }
-
-    /**
-     * Verifies that a collection containing an element is not empty.
-     */
-    @Test
-    public void isEmptyShouldReturnFalseForACollectionContainingAnElement() {
-        assertFalse(collection1.isEmpty());
-    }
-
-    /**
-     * Verifies that an ordered collection with a specific element cardinality receives that element cardinality.
-     */
-    @Test
-    public void ofWithElementCardinalityShouldReturnACollectionWithTheElementCardinality() {
-        assertEquals(DISTINCT_ELEMENTS, OrderedCollection.of(DISTINCT_ELEMENTS, 1).getElementCardinality());
-    }
-
-    /**
-     * Verifies that the of factory method using a collection clones a collection.
-     */
-    @Test
-    public void ofWithCollectionShouldReturnAClone() {
-        OrderedCollection<Number> clone = OrderedCollection.<Number>of(collection123);
-        assertArrayEquals(collection123.toArray(), clone.toArray());
-    }
-
-    /**
-     * Verifies that the of factory method using a collection and from and to indices clones a collection.
-     */
-    @Test
-    public void ofWithCollectionAndIndicesShoudlReturnAClone() {
-        OrderedCollection<Integer> collection = OrderedCollection.<Integer>of(1, 2, THREE, FOUR, FIVE);
-        OrderedCollection<Number> slice = OrderedCollection.<Number>of(collection, 1, THREE);
-        assertTrue(slice.containsSame(Collection.of(2, THREE)));
-    }
 
     /**
      * Verifies that a sequence with zero integers is empty.
@@ -185,6 +129,24 @@ public class OrderedCollectionTest {
     }
 
     /**
+     * Verifies that the difference of one collection is that collection.
+     */
+    @Test
+    public void differenceOfOneCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(OrderedCollection.differenceOf(collection1)));
+    }
+
+    /**
+     * Verifies that the difference of three collections only contains the elements of the first collection that aren't
+     * present in any of the other.
+     */
+    @Test
+    public void differenceOfThreeCollectionsShouldOnlyContainTheElementsFromTheFirstCollectionNotInTheOthers() {
+        assertTrue(Collection.of(3)
+                .containsSame(OrderedCollection.differenceOf(collection123, collection1, collection12)));
+    }
+
+    /**
      * Verifies that getFirst returns the first element.
      */
     @Test
@@ -198,5 +160,115 @@ public class OrderedCollectionTest {
     @Test
     public void getLastShouldReturnTheLastElement() {
         assertEquals(THREE, collection123.getLast());
+    }
+
+    /**
+     * Verifies that the intersection of one collection is that collection.
+     */
+    @Test
+    public void intersectionOfOneCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(OrderedCollection.intersectionOf(collection1)));
+    }
+
+    /**
+     * Verifies that the intersection of three collections only contains the common elements.
+     */
+    @Test
+    public void intersectionOfThreeCollectionsShouldOnlyContainTheCommonElements() {
+        assertTrue(
+                collection1.containsSame(OrderedCollection.intersectionOf(collection123, collection1, collection12)));
+    }
+
+    /**
+     * Verifies that an empty ordered collection is empty.
+     */
+    @Test
+    public void isEmptyShouldReturnTrueForAnEmptyCollection() {
+        assertTrue(OrderedCollection.empty().isEmpty());
+    }
+
+    /**
+     * Verifies that a collection containing an element is not empty.
+     */
+    @Test
+    public void isEmptyShouldReturnFalseForACollectionContainingAnElement() {
+        assertFalse(collection1.isEmpty());
+    }
+
+    /**
+     * Verifies that an ordered collection with a specific element cardinality receives that element cardinality.
+     */
+    @Test
+    public void ofWithElementCardinalityShouldReturnACollectionWithTheElementCardinality() {
+        assertEquals(DISTINCT_ELEMENTS, OrderedCollection.of(DISTINCT_ELEMENTS, 1).getElementCardinality());
+    }
+
+    /**
+     * Verifies that the of factory method using a collection clones a collection.
+     */
+    @Test
+    public void ofWithCollectionShouldReturnAClone() {
+        OrderedCollection<Number> clone = OrderedCollection.<Number>of(collection123);
+        assertArrayEquals(collection123.toArray(), clone.toArray());
+    }
+
+    /**
+     * Verifies that the of factory method using a collection and from and to indices clones a collection.
+     */
+    @Test
+    public void ofWithCollectionAndIndicesShoudlReturnAClone() {
+        OrderedCollection<Integer> collection = OrderedCollection.<Integer>of(1, 2, THREE, FOUR, FIVE);
+        OrderedCollection<Number> slice = OrderedCollection.<Number>of(collection, 1, THREE);
+        assertTrue(slice.containsSame(Collection.of(2, THREE)));
+    }
+
+    /**
+     * Verifies that the union of no collections is empty.
+     */
+    @Test
+    public void unionOfNoCollectionsShouldBeEmpty() {
+        assertTrue(OrderedCollection.unionOf().isEmpty());
+    }
+
+    /**
+     * Verifies that the union of one collection is that collection.
+     */
+    @Test
+    public void unionOfOneCollectionShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(OrderedCollection.unionOf(collection1)));
+    }
+
+    /**
+     * Verifies that the union of three collections only all elements.
+     */
+    @Test
+    public void unionOfThreeCollectionsShouldContainAllElements() {
+        assertArrayEquals(Collection.of(1, 2, THREE, 1, 1, 2).toArray(),
+                OrderedCollection.unionOf(collection123, collection1, collection12).toArray());
+    }
+
+    /**
+     * Verifies that the union of no collections is empty.
+     */
+    @Test
+    public void unionOfNoCollectionsWithDistinctElementsShouldBeEmpty() {
+        assertTrue(OrderedCollection.unionOf(DISTINCT_ELEMENTS).isEmpty());
+    }
+
+    /**
+     * Verifies that the union of one collection is that collection.
+     */
+    @Test
+    public void unionOfOneCollectionWithDistinctElementsShouldBeTheSameCollection() {
+        assertTrue(collection1.containsSame(OrderedCollection.unionOf(DISTINCT_ELEMENTS, collection1)));
+    }
+
+    /**
+     * Verifies that the union of three collections only all elements.
+     */
+    @Test
+    public void unionOfThreeCollectionsWithDistinctElementsShouldContainAllDistinctElements() {
+        assertArrayEquals(collection123.toArray(),
+                OrderedCollection.unionOf(DISTINCT_ELEMENTS, collection123, collection1, collection12).toArray());
     }
 }
