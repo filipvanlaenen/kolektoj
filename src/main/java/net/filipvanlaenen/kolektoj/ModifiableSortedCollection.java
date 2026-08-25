@@ -11,6 +11,53 @@ import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeCollection;
  */
 public interface ModifiableSortedCollection<E> extends ModifiableCollection<E>, SortedCollection<E> {
     /**
+     * Returns a new modifiable sorted collection containing all the elements present in the first collection, but not
+     * in any of the other provided collections.
+     *
+     * This method corresponds to the difference (or relative complement) operation in set theory, denoted by the symbol
+     * ∖, with {1, 2, 3} ∖ {2, 3, 4} = {1}.
+     *
+     * @param <F>         The element type.
+     * @param comparator  The comparator by which to sort the elements.
+     * @param collections The collections for which to calculate the difference.
+     * @return A new modifiable sorted collection containing all the elements present in the first collection, but not
+     *         in any of the other provided collections.
+     */
+    static <F> Collection<F> differenceOf(final Comparator<? super F> comparator,
+            final Collection<? extends F>... collections) {
+        if (collections.length == 0) {
+            return empty(comparator);
+        }
+        ModifiableSortedCollection<F> result = ModifiableSortedCollection.of(comparator, collections[0]);
+        for (int i = 1; i < collections.length; i++) {
+            result.removeAll(collections[i]);
+        }
+        return result;
+    }
+
+    /**
+     * Returns a new modifiable sorted collection containing all the elements present in the first collection, but not
+     * in any of the other provided collections, sorted the same way as the first collection.
+     *
+     * This method corresponds to the difference (or relative complement) operation in set theory, denoted by the symbol
+     * ∖, with {1, 2, 3} ∖ {2, 3, 4} = {1}.
+     *
+     * @param <F>              The element type.
+     * @param sortedCollection The sorted collection from which to calculate the difference.
+     * @param collections      The collections for which to calculate the difference.
+     * @return A new modifiable sorted collection containing all the elements present in the first collection, but not
+     *         in any of the other provided collections, sorted the same way as the first collection.
+     */
+    static <F> Collection<F> differenceOf(final SortedCollection<F> sortedCollection,
+            final Collection<? extends F>... collections) {
+        ModifiableSortedCollection<F> result = ModifiableSortedCollection.of(sortedCollection);
+        for (int i = 0; i < collections.length; i++) {
+            result.removeAll(collections[i]);
+        }
+        return result;
+    }
+
+    /**
      * Returns a new empty modifiable sorted collection.
      *
      * @param <F>        The element type.
@@ -24,6 +71,9 @@ public interface ModifiableSortedCollection<E> extends ModifiableCollection<E>, 
     /**
      * Returns a new modifiable sorted collection containing all the elements present in each of the provided
      * collections.
+     *
+     * This method corresponds to the intersection operation in set theory, denoted by the symbol ∩, with {1, 2, 3} ∩
+     * {2, 3, 4} = {2, 3}.
      *
      * @param <F>         The element type.
      * @param comparator  The comparator by which to sort the elements.
@@ -46,6 +96,9 @@ public interface ModifiableSortedCollection<E> extends ModifiableCollection<E>, 
     /**
      * Returns a new modifiable sorted collection containing all the elements present in each of the provided
      * collections, sorted the same way as the first collection.
+     *
+     * This method corresponds to the intersection operation in set theory, denoted by the symbol ∩, with {1, 2, 3} ∩
+     * {2, 3, 4} = {2, 3}.
      *
      * @param <F>              The element type.
      * @param sortedCollection The sorted collection from which to calculate the intersection.
@@ -177,6 +230,9 @@ public interface ModifiableSortedCollection<E> extends ModifiableCollection<E>, 
      * Returns a new modifiable sorted collection with the specified comparator containing all the elements from the
      * provided collections.
      *
+     * This method corresponds to the union operation in set theory, denoted by the symbol ∪, with {1, 2, 3} ∪ {2, 3, 4}
+     * = {1, 2, 3, 4}. For multisets, allowing duplicate elements, {1, 2, 3} ∪ {2, 3, 4} = {1, 2, 2, 3, 3, 4}.
+     *
      * @param <F>         The element type.
      * @param comparator  The comparator by which to sort the elements.
      * @param collections The collections from which to copy all the elements.
@@ -195,6 +251,9 @@ public interface ModifiableSortedCollection<E> extends ModifiableCollection<E>, 
     /**
      * Returns a new modifiable sorted collection containing all the elements from the provided collections, sorted the
      * same way as the first collection.
+     *
+     * This method corresponds to the union operation in set theory, denoted by the symbol ∪, with {1, 2, 3} ∪ {2, 3, 4}
+     * = {1, 2, 3, 4}. For multisets, allowing duplicate elements, {1, 2, 3} ∪ {2, 3, 4} = {1, 2, 2, 3, 3, 4}.
      *
      * @param <F>              The element type.
      * @param sortedCollection The sorted collection from which to copy the comparator, the element cardinality and all

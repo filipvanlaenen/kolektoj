@@ -9,6 +9,28 @@ import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
  */
 public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>, OrderedCollection<E> {
     /**
+     * Returns a new modifiable ordered collection containing all the elements present in the first ordered collection,
+     * but not in any of the other provided collections.
+     *
+     * This method corresponds to the difference (or relative complement) operation in set theory, denoted by the symbol
+     * ∖. For sequences, (1, 2, 3, 4) ∖ (2, 4) = (1, 3).
+     *
+     * @param <F>               The element type.
+     * @param orderedCollection The ordered collection from which to calculate the difference.
+     * @param collections       The collections for which to calculate the difference.
+     * @return A new modifiable ordered collection containing all the elements present in the first collection, but not
+     *         in any of the other provided collections, and the elements in the order of the ordered collection.
+     */
+    static <F> Collection<F> differenceOf(final OrderedCollection<? extends F> orderedCollection,
+            final Collection<? extends F>... collections) {
+        ModifiableOrderedCollection<F> result = ModifiableOrderedCollection.of(orderedCollection);
+        for (int i = 0; i < collections.length; i++) {
+            result.removeAll(collections[i]);
+        }
+        return result;
+    }
+
+    /**
      * Returns a new empty modifiable ordered collection.
      *
      * @param <F> The element type.
@@ -21,6 +43,9 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
     /**
      * Returns a new modifiable ordered collection containing all the elements present in each of the provided
      * collections, with the elements in the order of the ordered collection.
+     *
+     * This method corresponds to the intersection operation in set theory, denoted by the symbol ∩. For sequences, (1,
+     * 2, 3) ∩ (2, 3, 4) = (2, 3).
      *
      * @param <F>               The element type.
      * @param orderedCollection The ordered collection from which to calculate the intersection.
@@ -109,6 +134,10 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
      * Returns a new modifiable ordered collection with the specified element cardinality containing all the elements
      * from the provided ordered collections.
      *
+     * This method corresponds to the union operation in set theory, denoted by the symbol ∪. For sequences, (1, 2, 3) ∪
+     * (2, 3, 4) = (1, 2, 3, 4), and for sequences allowing duplicate elements, (1, 2, 3) ∪ (2, 3, 4) = (1, 2, 3, 2, 3,
+     * 4).
+     *
      * @param <F>                The element type.
      * @param elementCardinality The element cardinality.
      * @param collections        The ordered collections from which to copy all the elements.
@@ -126,6 +155,10 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
 
     /**
      * Returns a new modifiable ordered collection containing all the elements from the provided ordered collections.
+     *
+     * This method corresponds to the union operation in set theory, denoted by the symbol ∪. For sequences, (1, 2, 3) ∪
+     * (2, 3, 4) = (1, 2, 3, 4), and for sequences allowing duplicate elements, (1, 2, 3) ∪ (2, 3, 4) = (1, 2, 3, 2, 3,
+     * 4).
      *
      * @param <F>         The element type.
      * @param collections The ordered collections from which to copy all the elements.

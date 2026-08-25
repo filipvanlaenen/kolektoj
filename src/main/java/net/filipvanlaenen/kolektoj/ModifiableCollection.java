@@ -11,6 +11,29 @@ import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
  */
 public interface ModifiableCollection<E> extends Collection<E> {
     /**
+     * Returns a new modifiable collection containing all the elements present in the first collection, but not in any
+     * of the other provided collections.
+     *
+     * This method corresponds to the difference (or relative complement) operation in set theory, denoted by the symbol
+     * ∖, with {1, 2, 3} ∖ {2, 3, 4} = {1}.
+     *
+     * @param <F>         The element type.
+     * @param collections The collections for which to calculate the difference.
+     * @return A new modifiable collection containing all the elements present in the first collection, but not in any
+     *         of the other provided collections.
+     */
+    static <F> Collection<F> differenceOf(final Collection<? extends F>... collections) {
+        if (collections.length == 0) {
+            return empty();
+        }
+        ModifiableCollection<F> result = ModifiableCollection.of(collections[0]);
+        for (int i = 1; i < collections.length; i++) {
+            result.removeAll(collections[i]);
+        }
+        return result;
+    }
+
+    /**
      * Returns a new empty modifiable collection.
      *
      * @param <F> The element type.
@@ -22,6 +45,9 @@ public interface ModifiableCollection<E> extends Collection<E> {
 
     /**
      * Returns a new modifiable collection containing all the elements present in each of the provided collections.
+     *
+     * This method corresponds to the intersection operation in set theory, denoted by the symbol ∩, with {1, 2, 3} ∩
+     * {2, 3, 4} = {2, 3}.
      *
      * @param <F>         The element type.
      * @param collections The collections from which to calculate the intersection.
@@ -89,6 +115,9 @@ public interface ModifiableCollection<E> extends Collection<E> {
     /**
      * Returns a new modifiable collection containing all the elements from the provided collections.
      *
+     * This method corresponds to the union operation in set theory, denoted by the symbol ∪, with {1, 2, 3} ∪ {2, 3, 4}
+     * = {1, 2, 3, 4}. For multisets, allowing duplicate elements, {1, 2, 3} ∪ {2, 3, 4} = {1, 2, 2, 3, 3, 4}.
+     *
      * @param <F>         The element type.
      * @param collections The collections from which to copy all the elements.
      * @return A new modifiable collection containing all the elements from the provided collections.
@@ -100,6 +129,9 @@ public interface ModifiableCollection<E> extends Collection<E> {
     /**
      * Returns a new modifiable collection with the specified element cardinality containing all the elements from the
      * provided collections.
+     *
+     * This method corresponds to the union operation in set theory, denoted by the symbol ∪, with {1, 2, 3} ∪ {2, 3, 4}
+     * = {1, 2, 3, 4}. For multisets, allowing duplicate elements, {1, 2, 3} ∪ {2, 3, 4} = {1, 2, 2, 3, 3, 4}.
      *
      * @param <F>                The element type.
      * @param elementCardinality The element cardinality.

@@ -28,7 +28,7 @@ public interface OrderedCollection<E> extends Collection<E> {
         for (int i = 1; i < numberOfElements; i++) {
             collection.add(generator.apply(i));
         }
-        return new OrderedArrayCollection<F>(collection);
+        return of(collection);
     }
 
     /**
@@ -54,7 +54,7 @@ public interface OrderedCollection<E> extends Collection<E> {
             collection.add(element);
             element = generator.apply(++index);
         }
-        return new OrderedArrayCollection<F>(collection);
+        return of(collection);
     }
 
     /**
@@ -79,7 +79,7 @@ public interface OrderedCollection<E> extends Collection<E> {
             element = generator.apply(element);
             collection.add(element);
         }
-        return new OrderedArrayCollection<F>(collection);
+        return of(collection);
     }
 
     /**
@@ -105,7 +105,29 @@ public interface OrderedCollection<E> extends Collection<E> {
             collection.add(element);
             element = generator.apply(element);
         }
-        return new OrderedArrayCollection<F>(collection);
+        return of(collection);
+    }
+
+    /**
+     * Returns a new ordered collection containing all the elements present in the first ordered collection, but not in
+     * any of the other provided collections.
+     *
+     * This method corresponds to the difference (or relative complement) operation in set theory, denoted by the symbol
+     * ∖. For sequences, (1, 2, 3, 4) ∖ (2, 4) = (1, 3).
+     *
+     * @param <F>               The element type.
+     * @param orderedCollection The ordered collection from which to calculate the difference.
+     * @param collections       The collections for which to calculate the difference.
+     * @return A new ordered collection containing all the elements present in the first collection, but not in any of
+     *         the other provided collections, and the elements in the order of the ordered collection.
+     */
+    static <F> Collection<F> differenceOf(final OrderedCollection<? extends F> orderedCollection,
+            final Collection<? extends F>... collections) {
+        ModifiableOrderedCollection<F> result = ModifiableOrderedCollection.of(orderedCollection);
+        for (int i = 0; i < collections.length; i++) {
+            result.removeAll(collections[i]);
+        }
+        return of(result);
     }
 
     /**
@@ -121,6 +143,9 @@ public interface OrderedCollection<E> extends Collection<E> {
     /**
      * Returns a new ordered collection containing all the elements present in each of the provided collections, with
      * the elements in the order of the ordered collection.
+     *
+     * This method corresponds to the intersection operation in set theory, denoted by the symbol ∩. For sequences, (1,
+     * 2, 3) ∩ (2, 3, 4) = (2, 3).
      *
      * @param <F>               The element type.
      * @param orderedCollection The ordered collection from which to calculate the intersection.
@@ -208,6 +233,10 @@ public interface OrderedCollection<E> extends Collection<E> {
      * Returns a new ordered collection with the specified element cardinality containing all the elements from the
      * provided ordered collections.
      *
+     * This method corresponds to the union operation in set theory, denoted by the symbol ∪. For sequences, (1, 2, 3) ∪
+     * (2, 3, 4) = (1, 2, 3, 4), and for sequences allowing duplicate elements, (1, 2, 3) ∪ (2, 3, 4) = (1, 2, 3, 2, 3,
+     * 4).
+     *
      * @param <F>                The element type.
      * @param elementCardinality The element cardinality.
      * @param collections        The ordered collections from which to copy all the elements.
@@ -220,11 +249,15 @@ public interface OrderedCollection<E> extends Collection<E> {
         for (OrderedCollection<? extends F> collection : collections) {
             result.addAllLast(collection);
         }
-        return new OrderedArrayCollection<F>(result);
+        return of(result);
     }
 
     /**
      * Returns a new ordered collection containing all the elements from the provided ordered collections.
+     *
+     * This method corresponds to the union operation in set theory, denoted by the symbol ∪. For sequences, (1, 2, 3) ∪
+     * (2, 3, 4) = (1, 2, 3, 4), and for sequences allowing duplicate elements, (1, 2, 3) ∪ (2, 3, 4) = (1, 2, 3, 2, 3,
+     * 4).
      *
      * @param <F>         The element type.
      * @param collections The ordered collections from which to copy all the elements.
