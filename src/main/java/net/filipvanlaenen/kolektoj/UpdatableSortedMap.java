@@ -298,4 +298,50 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
         }
         return new UpdatableSortedTreeMap<L, W>(map.getComparator(), slice);
     }
+
+    /**
+     * Returns a new updatable sorted map with the specified comparator containing all the entries from the provided
+     * maps.
+     *
+     * This method corresponds to the union operation in set theory, denoted by the symbol ∪, with {1, 2, 3} ∪ {2, 3, 4}
+     * = {1, 2, 3, 4}. For multisets, allowing duplicate elements, {1, 2, 3} ∪ {2, 3, 4} = {1, 2, 2, 3, 3, 4}.
+     *
+     * @param <L>        The key type.
+     * @param <W>        The value type.
+     * @param comparator The comparator by which to sort the keys.
+     * @param maps       The maps from which to copy all the entries.
+     * @return A new updatable sorted map with the specified key and value cardinality containing all the entries from
+     *         the provided maps.
+     */
+    static <L, W> UpdatableSortedMap<L, W> unionOf(final Comparator<? super L> comparator,
+            final Map<? extends L, ? extends W>... maps) {
+        ModifiableSortedMap<L, W> result = ModifiableSortedMap.of(comparator);
+        for (Map<? extends L, ? extends W> map : maps) {
+            result.addAll(map);
+        }
+        return of(result);
+    }
+
+    /**
+     * Returns a new updatable sorted map containing all the entries from the provided maps, sorted the same way as the
+     * first map.
+     *
+     * This method corresponds to the union operation in set theory, denoted by the symbol ∪, with {1, 2, 3} ∪ {2, 3, 4}
+     * = {1, 2, 3, 4}. For multisets, allowing duplicate elements, {1, 2, 3} ∪ {2, 3, 4} = {1, 2, 2, 3, 3, 4}.
+     *
+     * @param <L>       The key type.
+     * @param <W>       The value type.
+     * @param sortedMap The sorted map from which to copy all the entries.
+     * @param maps      The maps from which to copy all the entries.
+     * @return A new updatable sorted map containing all the entries from the provided maps, sorted the same way as the
+     *         first map.
+     */
+    static <L, W> UpdatableSortedMap<L, W> unionOf(final SortedMap<L, ? extends W> sortedMap,
+            final Map<? extends L, ? extends W>... maps) {
+        ModifiableSortedMap<L, W> result = ModifiableSortedMap.of(sortedMap);
+        for (Map<? extends L, ? extends W> map : maps) {
+            result.addAll(map);
+        }
+        return of(result);
+    }
 }

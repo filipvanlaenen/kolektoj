@@ -242,6 +242,9 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, UpdatableM
      * Returns a new modifiable map with the specified key and value cardinality containing all the entries from the
      * provided maps.
      *
+     * This method corresponds to the union operation in set theory, denoted by the symbol ∪, with {1, 2, 3} ∪ {2, 3, 4}
+     * = {1, 2, 3, 4}. For multisets, allowing duplicate elements, {1, 2, 3} ∪ {2, 3, 4} = {1, 2, 2, 3, 3, 4}.
+     *
      * @param <L>                    The key type.
      * @param <W>                    The value type.
      * @param keyAndValueCardinality The key and value cardinality.
@@ -260,6 +263,9 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, UpdatableM
 
     /**
      * Returns a new modifiable map containing all the entries from the provided maps.
+     *
+     * This method corresponds to the union operation in set theory, denoted by the symbol ∪, with {1, 2, 3} ∪ {2, 3, 4}
+     * = {1, 2, 3, 4}. For multisets, allowing duplicate elements, {1, 2, 3} ∪ {2, 3, 4} = {1, 2, 2, 3, 3, 4}.
      *
      * @param <L>  The key type.
      * @param <W>  The value type.
