@@ -204,6 +204,17 @@ public class OrderedCollectionTest {
     }
 
     /**
+     * Verifies that a modifiable ordered collection with a specific element cardinality receives that element
+     * cardinality.
+     */
+    @Test
+    public void ofWithElementCardinalityAndCollectionShouldReturnACollectionWithTheElementCardinality() {
+        OrderedCollection<Number> clone = OrderedCollection.of(DISTINCT_ELEMENTS, OrderedCollection.of(1, 1));
+        assertEquals(DISTINCT_ELEMENTS, clone.getElementCardinality());
+        assertEquals(1, clone.size());
+    }
+
+    /**
      * Verifies that the of factory method using a collection clones a collection.
      */
     @Test
