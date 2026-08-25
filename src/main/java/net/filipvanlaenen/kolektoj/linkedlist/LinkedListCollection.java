@@ -82,6 +82,11 @@ public final class LinkedListCollection<E> implements Collection<E> {
         }
     }
 
+    /**
+     * Adds an element to the linked list, unless only distinct elements are allowed and the element is already present.
+     *
+     * @param element The element to be added.
+     */
     private void add(final E element) {
         if (elementCardinality == DISTINCT_ELEMENTS && contains(element)) {
             return;

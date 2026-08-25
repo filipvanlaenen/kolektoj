@@ -249,6 +249,25 @@ public abstract class CollectionTestBase<T extends Collection<Integer>,
     }
 
     /**
+     * Verifies that the constructor passes the element cardinality through.
+     */
+    @Test
+    public void constructorShouldPassThroughTheElementCardinality() {
+        assertEquals(DISTINCT_ELEMENTS,
+                createCollection(createCollection(DISTINCT_ELEMENTS, 1, 2)).getElementCardinality());
+        assertEquals(DUPLICATE_ELEMENTS,
+                createCollection(createCollection(DUPLICATE_ELEMENTS, 1, 2)).getElementCardinality());
+    }
+
+    /**
+     * Verifies that the constructor passes the elements through.
+     */
+    @Test
+    public void constructorShouldPassThroughTheElements() {
+        assertTrue(Collection.of(1, 2).containsSame(createCollection(createCollection(1, 2))));
+    }
+
+    /**
      * Verifies that duplicate elements are removed if a collection with distinct elements is constructed.
      */
     @Test
