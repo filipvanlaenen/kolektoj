@@ -3,7 +3,6 @@ package net.filipvanlaenen.kolektoj;
 import java.util.Comparator;
 
 import net.filipvanlaenen.kolektoj.Map.Entry;
-import net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality;
 import net.filipvanlaenen.kolektoj.sortedtree.ModifiableSortedTreeMap;
 import net.filipvanlaenen.kolektoj.sortedtree.SortedTreeMap;
 
@@ -15,6 +14,32 @@ import net.filipvanlaenen.kolektoj.sortedtree.SortedTreeMap;
  */
 public interface SortedMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
     /**
+     * Returns a new sorted map containing all the entries present in the first map, but not in any of the other
+     * provided maps.
+     *
+     * This method corresponds to the difference (or relative complement) operation in set theory, denoted by the symbol
+     * ∖, with {1, 2, 3} ∖ {2, 3, 4} = {1}.
+     *
+     * @param <L>        The key type.
+     * @param <W>        The value type.
+     * @param comparator The comparator by which to sort the keys.
+     * @param maps       The maps from which to calculate the difference.
+     * @return A new sorted map containing all the entries present in the first map, but not in any of the other
+     *         provided maps.
+     */
+    static <L, W> SortedMap<L, W> differenceOf(final Comparator<? super L> comparator,
+            final Map<? extends L, ? extends W>... maps) {
+        if (maps.length == 0) {
+            return empty(comparator);
+        }
+        ModifiableSortedMap<L, W> result = ModifiableSortedMap.of(comparator, maps[0]);
+        for (int i = 1; i < maps.length; i++) {
+            result.removeAll(maps[i]);
+        }
+        return of(result);
+    }
+
+    /**
      * Returns a new empty sorted map.
      *
      * @param <L>        The key type.
@@ -24,6 +49,30 @@ public interface SortedMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
      */
     static <L, W> SortedMap<L, W> empty(final Comparator<? super L> comparator) {
         return new SortedTreeMap<L, W>(comparator);
+    }
+
+    /**
+     * Returns a new sorted map containing all the entries present in each of the provided maps.
+     *
+     * This method corresponds to the intersection operation in set theory, denoted by the symbol ∩, with {1, 2, 3} ∩
+     * {2, 3, 4} = {2, 3}.
+     *
+     * @param <L>        The key type.
+     * @param <W>        The value type.
+     * @param comparator The comparator by which to sort the keys.
+     * @param maps       The maps from which to calculate the intersection.
+     * @return A new sorted map containing all the entries present in each of the provided maps.
+     */
+    static <L, W> SortedMap<L, W> intersectionOf(final Comparator<? super L> comparator,
+            final Map<? extends L, ? extends W>... maps) {
+        if (maps.length == 0) {
+            return empty(comparator);
+        }
+        ModifiableSortedMap<L, W> result = ModifiableSortedMap.of(comparator, maps[0]);
+        for (int i = 1; i < maps.length; i++) {
+            result.retainAll(maps[i]);
+        }
+        return of(result);
     }
 
     /**
