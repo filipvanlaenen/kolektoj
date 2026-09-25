@@ -14,6 +14,17 @@ import net.filipvanlaenen.kolektoj.hash.HashMap;
  */
 public interface Map<K, V> extends Collection<Entry<K, V>> {
     /**
+     * An entry in a map.
+     *
+     * @param <K>   The key type.
+     * @param <V>   The value type.
+     * @param key   The key.
+     * @param value The value.
+     */
+    public record Entry<K, V>(K key, V value) {
+    }
+
+    /**
      * Enumeration listing the options for the key and value cardinality in maps.
      */
     enum KeyAndValueCardinality {
@@ -32,14 +43,25 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
     }
 
     /**
-     * An entry in a map.
+     * Returns a new map containing all the entries present in the first map, but not in any of the other provided maps.
      *
-     * @param <K>   The key type.
-     * @param <V>   The value type.
-     * @param key   The key.
-     * @param value The value.
+     * This method corresponds to the difference (or relative complement) operation in set theory, denoted by the symbol
+     * ∖, with {1, 2, 3} ∖ {2, 3, 4} = {1}.
+     *
+     * @param <L>  The key type.
+     * @param <W>  The value type.
+     * @param maps The maps from which to calculate the difference.
+     * @return A new map containing all the entries present in the first map, but not in any of the other provided maps.
      */
-    public record Entry<K, V>(K key, V value) {
+    static <L, W> Map<L, W> differenceOf(final Map<? extends L, ? extends W>... maps) {
+        if (maps.length == 0) {
+            return empty();
+        }
+        ModifiableMap<L, W> result = ModifiableMap.of(maps[0]);
+        for (int i = 1; i < maps.length; i++) {
+            result.removeAll(maps[i]);
+        }
+        return of(result);
     }
 
     /**
@@ -51,6 +73,28 @@ public interface Map<K, V> extends Collection<Entry<K, V>> {
      */
     static <L, W> Map<L, W> empty() {
         return new HashMap<L, W>();
+    }
+
+    /**
+     * Returns a new map containing all the entries present in each of the provided maps.
+     *
+     * This method corresponds to the intersection operation in set theory, denoted by the symbol ∩, with {1, 2, 3} ∩
+     * {2, 3, 4} = {2, 3}.
+     *
+     * @param <L>  The key type.
+     * @param <W>  The value type.
+     * @param maps The maps from which to calculate the intersection.
+     * @return A new map containing all the entries present in each of the provided maps.
+     */
+    static <L, W> Map<L, W> intersectionOf(final Map<? extends L, ? extends W>... maps) {
+        if (maps.length == 0) {
+            return empty();
+        }
+        ModifiableMap<L, W> result = ModifiableMap.of(maps[0]);
+        for (int i = 1; i < maps.length; i++) {
+            result.retainAll(maps[i]);
+        }
+        return of(result);
     }
 
     /**
