@@ -25,7 +25,7 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, UpdatableM
      * @return A new modifiable map containing all the entries present in the first map, but not in any of the other
      *         provided maps.
      */
-    static <L, W> Map<L, W> differenceOf(final Map<? extends L, ? extends W>... maps) {
+    static <L, W> ModifiableMap<L, W> differenceOf(final Map<? extends L, ? extends W>... maps) {
         if (maps.length == 0) {
             return empty();
         }
@@ -58,7 +58,7 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, UpdatableM
      * @param maps The maps from which to calculate the intersection.
      * @return A new modifiable map containing all the entries present in each of the provided maps.
      */
-    static <L, W> Map<L, W> intersectionOf(final Map<? extends L, ? extends W>... maps) {
+    static <L, W> ModifiableMap<L, W> intersectionOf(final Map<? extends L, ? extends W>... maps) {
         if (maps.length == 0) {
             return empty();
         }
