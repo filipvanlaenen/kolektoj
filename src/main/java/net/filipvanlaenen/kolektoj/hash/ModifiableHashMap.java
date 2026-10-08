@@ -355,7 +355,7 @@ public final class ModifiableHashMap<K, V> implements ModifiableMap<K, V> {
         for (Entry<? extends K, ? extends V> e : map) {
             int index = findFirstIndexForEntry(e);
             if (index == -1) {
-                break;
+                continue;
             }
             Entry<K, V> entry = (Entry<K, V>) hashedEntries[index];
             entries.remove(entry);
