@@ -21,9 +21,9 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
      * @return A new modifiable ordered collection containing all the elements present in the first collection, but not
      *         in any of the other provided collections, and the elements in the order of the ordered collection.
      */
-    static <F> Collection<F> differenceOf(final OrderedCollection<? extends F> orderedCollection,
+    static <F> ModifiableOrderedCollection<F> differenceOf(final OrderedCollection<? extends F> orderedCollection,
             final Collection<? extends F>... collections) {
-        ModifiableOrderedCollection<F> result = ModifiableOrderedCollection.of(orderedCollection);
+        ModifiableOrderedCollection<F> result = of(orderedCollection);
         for (int i = 0; i < collections.length; i++) {
             result.removeAll(collections[i]);
         }
@@ -146,7 +146,7 @@ public interface ModifiableOrderedCollection<E> extends ModifiableCollection<E>,
      */
     static <F> ModifiableOrderedCollection<F> unionOf(final ElementCardinality elementCardinality,
             final OrderedCollection<? extends F>... collections) {
-        ModifiableOrderedCollection<F> result = ModifiableOrderedCollection.of(elementCardinality);
+        ModifiableOrderedCollection<F> result = of(elementCardinality);
         for (OrderedCollection<? extends F> collection : collections) {
             result.addAllLast(collection);
         }
