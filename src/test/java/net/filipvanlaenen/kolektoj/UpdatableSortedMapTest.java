@@ -29,6 +29,30 @@ public class UpdatableSortedMapTest {
      */
     private static final int FIVE = 5;
     /**
+     * An entry with key 0 and value zero.
+     */
+    protected static final Entry<Integer, String> ENTRY0 = new Entry<Integer, String>(0, "zero");
+    /**
+     * An entry with key 1 and value one.
+     */
+    protected static final Entry<Integer, String> ENTRY1 = new Entry<Integer, String>(1, "one");
+    /**
+     * An entry with key 2 and value two.
+     */
+    protected static final Entry<Integer, String> ENTRY2 = new Entry<Integer, String>(2, "two");
+    /**
+     * An entry with key 3 and value three.
+     */
+    protected static final Entry<Integer, String> ENTRY3 = new Entry<Integer, String>(3, "three");
+    /**
+     * Map with the doubles 1 and 2.
+     */
+    private final SortedMap<Integer, String> map12 = SortedMap.<Integer, String>of(COMPARATOR, ENTRY1, ENTRY2);
+    /**
+     * Map with the doubles 1, 2 and 3.
+     */
+    private final SortedMap<Integer, String> map123 = SortedMap.of(COMPARATOR, ENTRY1, ENTRY2, ENTRY3);
+    /**
      * A comparator ordering integers in the natural order, but in addition handles <code>null</code> as the lowest
      * value.
      */
@@ -48,6 +72,49 @@ public class UpdatableSortedMapTest {
             }
         }
     };
+
+    /**
+     * Verifies that the difference of no maps is empty.
+     */
+    @Test
+    public void differenceOfNoMapsShouldBeEmpty() {
+        assertTrue(UpdatableSortedMap.differenceOf(COMPARATOR).isEmpty());
+    }
+
+    /**
+     * Verifies that the difference of one map is that map.
+     */
+    @Test
+    public void differenceOfOneMapShouldBeTheSameMap() {
+        assertTrue(map123.containsSame(UpdatableSortedMap.differenceOf(COMPARATOR, map123)));
+    }
+
+    /**
+     * Verifies that the difference of three maps only contains the entries of the first map that aren't present in any
+     * of the other.
+     */
+    @Test
+    public void differenceOfThreeMapsShouldOnlyContainTheEntriesFromTheFirstMapNotInTheOthers() {
+        assertTrue(Map.of(ENTRY3)
+                .containsSame(UpdatableSortedMap.differenceOf(COMPARATOR, map123, Map.of(ENTRY1), map12)));
+    }
+
+    /**
+     * Verifies that the difference of one map is that map.
+     */
+    @Test
+    public void differenceOfOneSortedMapShouldBeTheSameMap() {
+        assertTrue(map123.containsSame(UpdatableSortedMap.differenceOf(map123)));
+    }
+
+    /**
+     * Verifies that the difference of three maps only contains the entries of the first map that aren't present in any
+     * of the other.
+     */
+    @Test
+    public void differenceOfThreeMapsShouldOnlyContainTheEntriesFromTheSortedMapNotInTheOthers() {
+        assertTrue(Map.of(ENTRY3).containsSame(UpdatableSortedMap.differenceOf(map123, Map.of(ENTRY1), map12)));
+    }
 
     /**
      * Verifies that an updatable sorted map constructed with the empty factory method is empty.
