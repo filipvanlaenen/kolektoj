@@ -11,6 +11,7 @@ import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
+import net.filipvanlaenen.kolektoj.OrderedValueCollection;
 import net.filipvanlaenen.kolektoj.UpdatableMap;
 import net.filipvanlaenen.kolektoj.ValueCollection;
 
@@ -154,6 +155,27 @@ public class CollectorsTest {
         OrderedCollection<String> collection = OrderedCollection.of("one", "two", "three");
         OrderedCollection<String> result = collection.stream().parallel().collect(Collectors.toOrderedCollection());
         assertTrue(result.containsSame(collection));
+    }
+
+    /**
+     * Verifies that collecting a stream produces an ordered value collection correctly.
+     */
+    @Test
+    public void toOrderedValueCollectionShouldCollectCorrectly() {
+        OrderedValueCollection<String> collection = OrderedValueCollection.of("one", "two", "three");
+        OrderedValueCollection<String> result = collection.stream().collect(Collectors.toOrderedValueCollection());
+        assertEquals(collection, result);
+    }
+
+    /**
+     * Verifies that collecting a parallel stream produces an ordered value collection correctly.
+     */
+    @Test
+    public void toOrderedValueCollectionOnParallelStreamShouldCollectCorrectly() {
+        OrderedValueCollection<String> collection = OrderedValueCollection.of("one", "two", "three");
+        OrderedValueCollection<String> result =
+                collection.stream().parallel().collect(Collectors.toOrderedValueCollection());
+        assertEquals(collection, result);
     }
 
     /**
