@@ -40,6 +40,29 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
     }
 
     /**
+     * Returns a new updatable sorted map containing all the entries present in the first map, but not in any of the
+     * other provided maps.
+     *
+     * This method corresponds to the difference (or relative complement) operation in set theory, denoted by the symbol
+     * ∖, with {1, 2, 3} ∖ {2, 3, 4} = {1}.
+     *
+     * @param <L>       The key type.
+     * @param <W>       The value type.
+     * @param sortedMap The sorted map from which to calculate the difference.
+     * @param maps      The maps from which to calculate the difference.
+     * @return A new updatable sorted map containing all the entries present in the first map, but not in any of the
+     *         other provided maps.
+     */
+    static <L, W> UpdatableSortedMap<L, W> differenceOf(final SortedMap<L, ? extends W> sortedMap,
+            final Map<? extends L, ? extends W>... maps) {
+        ModifiableSortedMap<L, W> result = ModifiableSortedMap.of(sortedMap);
+        for (int i = 0; i < maps.length; i++) {
+            result.removeAll(maps[i]);
+        }
+        return of(result);
+    }
+
+    /**
      * Returns a new empty updatable sorted map.
      *
      * @param <L>        The key type.
@@ -69,6 +92,27 @@ public interface UpdatableSortedMap<K, V> extends Collection<Entry<K, V>>, Updat
             return empty(comparator);
         }
         ModifiableSortedMap<L, W> result = ModifiableSortedMap.of(comparator, maps[0]);
+        for (int i = 1; i < maps.length; i++) {
+            result.retainAll(maps[i]);
+        }
+        return of(result);
+    }
+
+    /**
+     * Returns a new updatable sorted map containing all the entries present in each of the provided maps.
+     *
+     * This method corresponds to the intersection operation in set theory, denoted by the symbol ∩, with {1, 2, 3} ∩
+     * {2, 3, 4} = {2, 3}.
+     *
+     * @param <L>       The key type.
+     * @param <W>       The value type.
+     * @param sortedMap The sorted map from which to calculate the intersection.
+     * @param maps      The maps from which to calculate the intersection.
+     * @return A new updatable sorted map containing all the entries present in each of the provided maps.
+     */
+    static <L, W> UpdatableSortedMap<L, W> intersectionOf(final SortedMap<L, ? extends W> sortedMap,
+            final Map<? extends L, ? extends W>... maps) {
+        ModifiableSortedMap<L, W> result = ModifiableSortedMap.of(sortedMap);
         for (int i = 1; i < maps.length; i++) {
             result.retainAll(maps[i]);
         }
