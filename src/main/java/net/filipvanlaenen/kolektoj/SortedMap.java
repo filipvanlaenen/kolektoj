@@ -113,7 +113,7 @@ public interface SortedMap<K, V> extends Collection<Entry<K, V>>, Map<K, V> {
     static <L, W> SortedMap<L, W> intersectionOf(final SortedMap<L, ? extends W> sortedMap,
             final Map<? extends L, ? extends W>... maps) {
         ModifiableSortedMap<L, W> result = ModifiableSortedMap.of(sortedMap);
-        for (int i = 1; i < maps.length; i++) {
+        for (int i = 0; i < maps.length; i++) {
             result.retainAll(maps[i]);
         }
         return of(result);

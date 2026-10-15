@@ -125,6 +125,47 @@ public class ModifiableSortedMapTest {
     }
 
     /**
+     * Verifies that the intersection of no maps is an empty map.
+     */
+    @Test
+    public void intersectionOfNoMapsShouldBeEmpty() {
+        assertTrue(ModifiableSortedMap.intersectionOf(COMPARATOR).isEmpty());
+    }
+
+    /**
+     * Verifies that the intersection of one map is the map itself.
+     */
+    @Test
+    public void intersectionOfOneMapShouldBeItself() {
+        assertTrue(map123.containsSame(ModifiableSortedMap.intersectionOf(COMPARATOR, map123)));
+    }
+
+    /**
+     * Verifies that the intersection of two maps is a maps with the common entries.
+     */
+    @Test
+    public void intersectionOfTwoMapsShouldContainCommonEntries() {
+        assertTrue(map12
+                .containsSame(ModifiableSortedMap.intersectionOf(COMPARATOR, Map.of(ENTRY0, ENTRY1, ENTRY2), map123)));
+    }
+
+    /**
+     * Verifies that the intersection of one map is the map itself.
+     */
+    @Test
+    public void intersectionOfOneSortedMapShouldBeItself() {
+        assertTrue(map123.containsSame(ModifiableSortedMap.intersectionOf(map123)));
+    }
+
+    /**
+     * Verifies that the intersection of two maps is a maps with the common entries.
+     */
+    @Test
+    public void intersectionOfSortedAndOtherMapShouldContainCommonEntries() {
+        assertTrue(map12.containsSame(ModifiableSortedMap.intersectionOf(map123, Map.of(ENTRY0, ENTRY1, ENTRY2))));
+    }
+
+    /**
      * Verifies that a modifiable sorted map constructed with one key and value contains an entry with the key and
      * value.
      */
