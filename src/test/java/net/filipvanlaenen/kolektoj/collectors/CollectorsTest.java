@@ -1,5 +1,6 @@
 package net.filipvanlaenen.kolektoj.collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.UpdatableMap;
+import net.filipvanlaenen.kolektoj.ValueCollection;
 
 /**
  * Unit tests on the {@link net.filipvanlaenen.kolektoj.collectors.Collectors} class.
@@ -176,5 +178,25 @@ public class CollectorsTest {
                 collection.stream().parallel().collect(Collectors.toUpdatableMap(s -> s.length(), s -> s));
         Map<Integer, String> expected = Map.of(THREE, "one", THREE, "two", FIVE, "three");
         assertTrue(result.containsSame(expected));
+    }
+
+    /**
+     * Verifies that collecting a stream produces a value collection correctly.
+     */
+    @Test
+    public void toValueCollectionShouldCollectCorrectly() {
+        ValueCollection<String> collection = ValueCollection.of("one", "two", "three");
+        ValueCollection<String> result = collection.stream().collect(Collectors.toValueCollection());
+        assertEquals(collection, result);
+    }
+
+    /**
+     * Verifies that collecting a parallel stream produces a value collection correctly.
+     */
+    @Test
+    public void toValueCollectionOnParallelStreamShouldCollectCorrectly() {
+        ValueCollection<String> collection = ValueCollection.of("one", "two", "three");
+        ValueCollection<String> result = collection.stream().parallel().collect(Collectors.toValueCollection());
+        assertEquals(collection, result);
     }
 }
