@@ -318,7 +318,7 @@ public interface ModifiableMap<K, V> extends Collection<Entry<K, V>>, UpdatableM
      * @param maps The maps from which to copy all the entries.
      * @return A new modifiable map containing all the entries from the provided maps.
      */
-    static <L, W> Map<L, W> unionOf(final Map<? extends L, ? extends W>... maps) {
+    static <L, W> ModifiableMap<L, W> unionOf(final Map<? extends L, ? extends W>... maps) {
         return unionOf(KeyAndValueCardinality.DISTINCT_KEYS, maps);
     }
 

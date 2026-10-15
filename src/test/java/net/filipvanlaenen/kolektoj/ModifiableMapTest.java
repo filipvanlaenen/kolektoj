@@ -25,6 +25,55 @@ public class ModifiableMapTest {
      * The magic number five.
      */
     private static final int FIVE = 5;
+    /**
+     * An entry with key 0 and value zero.
+     */
+    protected static final Entry<Integer, String> ENTRY0 = new Entry<Integer, String>(0, "zero");
+    /**
+     * An entry with key 1 and value one.
+     */
+    protected static final Entry<Integer, String> ENTRY1 = new Entry<Integer, String>(1, "one");
+    /**
+     * An entry with key 2 and value two.
+     */
+    protected static final Entry<Integer, String> ENTRY2 = new Entry<Integer, String>(2, "two");
+    /**
+     * An entry with key 3 and value three.
+     */
+    protected static final Entry<Integer, String> ENTRY3 = new Entry<Integer, String>(3, "three");
+    /**
+     * Map with the doubles 1 and 2.
+     */
+    private final Map<Integer, String> map12 = Map.<Integer, String>of(ENTRY1, ENTRY2);
+    /**
+     * Map with the doubles 1, 2 and 3.
+     */
+    private final Map<Integer, String> map123 = Map.of(ENTRY1, ENTRY2, ENTRY3);
+
+    /**
+     * Verifies that the difference of no maps is empty.
+     */
+    @Test
+    public void differenceOfNoMapsShouldBeEmpty() {
+        assertTrue(ModifiableMap.differenceOf().isEmpty());
+    }
+
+    /**
+     * Verifies that the difference of one map is that map.
+     */
+    @Test
+    public void differenceOfOneMapShouldBeTheSameMap() {
+        assertTrue(map123.containsSame(ModifiableMap.differenceOf(map123)));
+    }
+
+    /**
+     * Verifies that the difference of three maps only contains the entries of the first map that aren't present in any
+     * of the other.
+     */
+    @Test
+    public void differenceOfThreeMapsShouldOnlyContainTheEntriesFromTheFirstMapNotInTheOthers() {
+        assertTrue(Map.of(ENTRY3).containsSame(ModifiableMap.differenceOf(map123, Map.of(ENTRY1), map12)));
+    }
 
     /**
      * Verifies that an empty map is empty.
@@ -40,6 +89,30 @@ public class ModifiableMapTest {
     @Test
     public void isEmptyShouldReturnFalseForAMapContainingAnElement() {
         assertFalse(ModifiableMap.of(new Entry<Integer, Integer>(1, 1)).isEmpty());
+    }
+
+    /**
+     * Verifies that the intersection of no maps is an empty map.
+     */
+    @Test
+    public void intersectionOfNoMapsShouldBeEmpty() {
+        assertTrue(ModifiableMap.intersectionOf().isEmpty());
+    }
+
+    /**
+     * Verifies that the intersection of one map is the map itself.
+     */
+    @Test
+    public void intersectionOfOneMapShouldBeItself() {
+        assertTrue(map123.containsSame(ModifiableMap.intersectionOf(map123)));
+    }
+
+    /**
+     * Verifies that the intersection of two maps is a maps with the common entries.
+     */
+    @Test
+    public void intersectionOfTwoMapsShouldContainCommonEntries() {
+        assertTrue(map12.containsSame(ModifiableMap.intersectionOf(Map.of(ENTRY0, ENTRY1, ENTRY2), map123)));
     }
 
     /**
@@ -253,5 +326,27 @@ public class ModifiableMapTest {
         map.putAll(Map.of(1, "one", 2, "two"));
         assertTrue(map.contains(new Entry<Integer, String>(1, "one")));
         assertTrue(map.contains(new Entry<Integer, String>(2, "two")));
+    }
+
+    /**
+     * Verifies that the <code>unionOf</code> method returns the union of two maps.
+     */
+    @Test
+    public void unionOfShouldReturnUnionOfTwoMaps() {
+        Map<Integer, String> map23 = Map.<Integer, String>of(ENTRY2, ENTRY3);
+        ModifiableMap<Integer, String> actual = ModifiableMap.unionOf(map12, map23);
+        assertTrue(actual.containsSame(Map.of(ENTRY1, ENTRY2, ENTRY3)));
+    }
+
+    /**
+     * Verifies that the <code>unionOf</code> method with key value cardinality returns the union of two maps.
+     */
+    @Test
+    public void unionOfWithKeyValueCardinalityShouldReturnUnionOfTwoMaps() {
+        Map<Integer, String> map23 = Map.<Integer, String>of(ENTRY2, ENTRY3);
+        ModifiableMap<Integer, String> actual =
+                ModifiableMap.unionOf(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, map12, map23);
+        Map<Integer, String> expected = Map.of(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, ENTRY1, ENTRY2, ENTRY2, ENTRY3);
+        assertTrue(actual.containsSame(expected));
     }
 }
