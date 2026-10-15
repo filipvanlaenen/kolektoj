@@ -129,6 +129,17 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
     }
 
     /**
+     * Verifies that the cached arrays stays marked as dirty after adding a duplicate key.
+     */
+    @Test
+    public void addShouldKeepCachedArraysAsDirty() {
+        T map = createMap(DUPLICATE_KEYS_WITH_DISTINCT_VALUES, ENTRY1, ENTRY2);
+        map.remove(1);
+        map.add(2, "two");
+        assertEquals(1, map.toArray().length);
+    }
+
+    /**
      * Verifies that adding an empty map returns false.
      */
     @Test
@@ -258,6 +269,7 @@ public abstract class ModifiableSortedMapTestBase<T extends ModifiableSortedMap<
         T map = createMap123();
         map.clear();
         assertTrue(map.getValues().isEmpty());
+        assertFalse(map.containsValue("one"));
     }
 
     /**
