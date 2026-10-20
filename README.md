@@ -421,5 +421,6 @@ The following projects use Kolektoj:
 * [jCRK](https://github.com/filipvanlaenen/jcrk)
 * [Laconic Logging](https://github.com/filipvanlaenen/laconic)
 * [Nombraj Kolektoj](https://github.com/filipvanlaenen/nombrajkolektoj)
+* [Sharpen PITEST](https://github.com/filipvanlaenen/sharpen_pitest)
 * [SHecC](https://github.com/filipvanlaenen/shecc)
 * [TSVGJ](https://github.com/filipvanlaenen/tsvgj)
