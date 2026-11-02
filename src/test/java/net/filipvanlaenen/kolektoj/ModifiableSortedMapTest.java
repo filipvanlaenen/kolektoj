@@ -45,6 +45,15 @@ public class ModifiableSortedMapTest {
      */
     protected static final Entry<Integer, String> ENTRY3 = new Entry<Integer, String>(3, "three");
     /**
+     * Map with the doubles 0, 1 and 2.
+     */
+    private final SortedMap<Integer, String> map012 = SortedMap.<Integer, String>of(COMPARATOR, ENTRY0, ENTRY1, ENTRY2);
+    /**
+     * Map with the doubles 0, 1, 2 and 3.
+     */
+    private final SortedMap<Integer, String> map0123 =
+            SortedMap.<Integer, String>of(COMPARATOR, ENTRY0, ENTRY1, ENTRY2, ENTRY3);
+    /**
      * Map with the doubles 1 and 2.
      */
     private final SortedMap<Integer, String> map12 = SortedMap.<Integer, String>of(COMPARATOR, ENTRY1, ENTRY2);
@@ -320,5 +329,45 @@ public class ModifiableSortedMapTest {
         ModifiableSortedMap<Integer, String> actual = ModifiableSortedMap.of(COMPARATOR, prototype);
         assertTrue(actual.containsSame(prototype));
         assertEquals(COMPARATOR, actual.getComparator());
+    }
+
+    /**
+     * Verifies that the union of no maps is empty.
+     */
+    @Test
+    public void unionOfNoMapsShouldBeEmpty() {
+        assertTrue(ModifiableSortedMap.unionOf(COMPARATOR).isEmpty());
+    }
+
+    /**
+     * Verifies that the union of one map is that map.
+     */
+    @Test
+    public void unionOfOneMapShouldBeTheSameMap() {
+        assertTrue(map123.containsSame(ModifiableSortedMap.unionOf(COMPARATOR, map123)));
+    }
+
+    /**
+     * Verifies that the union of three maps contains all entries.
+     */
+    @Test
+    public void unionOfThreeMapsShouldContainAllEntries() {
+        assertTrue(map0123.containsSame(ModifiableSortedMap.unionOf(COMPARATOR, map012, map12, map123)));
+    }
+
+    /**
+     * Verifies that the union of one map is that map.
+     */
+    @Test
+    public void unionOfOneSortedMapShouldBeTheSameMap() {
+        assertTrue(map123.containsSame(ModifiableSortedMap.unionOf(map123)));
+    }
+
+    /**
+     * Verifies that the union of three maps contains all entries.
+     */
+    @Test
+    public void unionOfThreeSortedMapsShouldContainAllEntries() {
+        assertTrue(map0123.containsSame(ModifiableSortedMap.unionOf(map123, map12, map012)));
     }
 }
