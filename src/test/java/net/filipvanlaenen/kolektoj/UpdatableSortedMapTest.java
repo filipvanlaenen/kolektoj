@@ -297,6 +297,19 @@ public class UpdatableSortedMapTest {
     }
 
     /**
+     * Verifies that an updatable sorted map with a collection with three keys and a default values is constructed
+     * correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithADefaultValueAndCollectionOfKeysCorrectly() {
+        UpdatableSortedMap<Integer, String> actual = UpdatableSortedMap.of(COMPARATOR, "", Collection.of(1, 2, THREE));
+        assertEquals(THREE, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
+    }
+
+    /**
      * Verifies that an updatable sorted map with entries and key and value cardinality and a default values is
      * constructed correctly.
      */

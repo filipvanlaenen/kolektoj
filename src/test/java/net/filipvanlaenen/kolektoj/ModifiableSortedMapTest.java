@@ -282,6 +282,20 @@ public class ModifiableSortedMapTest {
     }
 
     /**
+     * Verifies that an modifiable sorted map with a collection with three keys and a default values is constructed
+     * correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithADefaultValueAndCollectionOfKeysCorrectly() {
+        ModifiableSortedMap<Integer, String> actual =
+                ModifiableSortedMap.of(COMPARATOR, "", Collection.of(1, 2, THREE));
+        assertEquals(THREE, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
+    }
+
+    /**
      * Verifies that a map constructed from another map but different key and value cardinality is constructed
      * correctly.
      */
