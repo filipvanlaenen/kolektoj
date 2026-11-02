@@ -256,6 +256,21 @@ public class UpdatableSortedMapTest {
     }
 
     /**
+     * Verifies that a map constructed from another map but different key and value cardinality is constructed
+     * correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapFromAnotherMapWithOtherKeyAndValueCardinalityCorrectly() {
+        Map<Integer,
+                String> prototype = Map.<Integer, String>of(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES,
+                        new Entry<Integer, String>(1, "one"), new Entry<Integer, String>(1, "one"),
+                        new Entry<Integer, String>(2, "two"), new Entry<Integer, String>(THREE, "three"));
+        UpdatableSortedMap<Integer, String> actual = UpdatableSortedMap.of(DISTINCT_KEYS, COMPARATOR, prototype);
+        assertEquals(DISTINCT_KEYS, actual.getKeyAndValueCardinality());
+        assertTrue(actual.containsSame(Map.of(1, "one", 2, "two", THREE, "three")));
+    }
+
+    /**
      * Verifies that an updatable sorted map constructed with entries and key and value cardinality is constructed
      * correctly.
      */
