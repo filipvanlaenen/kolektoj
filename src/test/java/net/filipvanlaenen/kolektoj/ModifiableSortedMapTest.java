@@ -297,6 +297,21 @@ public class ModifiableSortedMapTest {
     }
 
     /**
+     * Verifies that an modifiable sorted map with a collection of entries and value cardinality and a default values is
+     * constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithKeyAndValueCardinalityAndACollectionOfKeysAndADefaultValueCorrectly() {
+        ModifiableSortedMap<Integer, String> actual = ModifiableSortedMap.of(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES,
+                COMPARATOR, "", Collection.of(1, 1, 2, THREE));
+        assertEquals(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, actual.getKeyAndValueCardinality());
+        assertEquals(FOUR, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
+    }
+
+    /**
      * Verifies that a modifiable sorted map with entries and key and value cardinality and a default values is
      * constructed correctly.
      */

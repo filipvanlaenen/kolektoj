@@ -312,6 +312,21 @@ public class UpdatableSortedMapTest {
     }
 
     /**
+     * Verifies that an updatable sorted map with a collection of entries and value cardinality and a default values is
+     * constructed correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapWithKeyAndValueCardinalityAndACollectionOfKeysAndADefaultValueCorrectly() {
+        UpdatableSortedMap<Integer, String> actual = UpdatableSortedMap.of(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES,
+                COMPARATOR, "", Collection.of(1, 1, 2, THREE));
+        assertEquals(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES, actual.getKeyAndValueCardinality());
+        assertEquals(FOUR, actual.size());
+        assertTrue(actual.contains(new Entry<Integer, String>(1, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(2, "")));
+        assertTrue(actual.contains(new Entry<Integer, String>(THREE, "")));
+    }
+
+    /**
      * Verifies that a sorted map constructed from another sorted map is constructed correctly.
      */
     @Test
