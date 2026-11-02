@@ -1,7 +1,6 @@
 package net.filipvanlaenen.kolektoj;
 
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DISTINCT_KEYS;
-import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.DUPLICATE_KEYS_WITH_DISTINCT_VALUES;
+import static net.filipvanlaenen.kolektoj.Map.KeyAndValueCardinality.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -257,6 +256,21 @@ public class SortedMapTest {
         assertEquals(2, actual.size());
         assertTrue(actual.contains(new Entry<Integer, String>(1, "one")));
         assertTrue(actual.contains(new Entry<Integer, String>(2, "two")));
+    }
+
+    /**
+     * Verifies that a map constructed from another map but different key and value cardinality is constructed
+     * correctly.
+     */
+    @Test
+    public void ofShouldConstructAMapFromAnotherMapWithOtherKeyAndValueCardinalityCorrectly() {
+        Map<Integer,
+                String> prototype = Map.<Integer, String>of(DUPLICATE_KEYS_WITH_DUPLICATE_VALUES,
+                        new Entry<Integer, String>(1, "one"), new Entry<Integer, String>(1, "one"),
+                        new Entry<Integer, String>(2, "two"), new Entry<Integer, String>(THREE, "three"));
+        SortedMap<Integer, String> actual = SortedMap.of(DISTINCT_KEYS, COMPARATOR, prototype);
+        assertEquals(DISTINCT_KEYS, actual.getKeyAndValueCardinality());
+        assertTrue(actual.containsSame(Map.of(1, "one", 2, "two", THREE, "three")));
     }
 
     /**
