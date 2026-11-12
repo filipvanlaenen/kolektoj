@@ -194,6 +194,23 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
     }
 
     /**
+     * Verifies that add adds elements correctly, also when the hash code for the elements collides.
+     */
+    @Test
+    public void addShouldAddElementsWithCollidingHashCodes() {
+        TC collection = createCollidingHashValuesCollection(new ElementWithCollidingHash[0]);
+        ElementWithCollidingHash[] elements = new ElementWithCollidingHash[SIX];
+        for (int i = 0; i < elements.length; i++) {
+            ElementWithCollidingHash element = new ElementWithCollidingHash(i);
+            elements[i] = element;
+            collection.add(element);
+        }
+        for (ElementWithCollidingHash element : elements) {
+            assertTrue(collection.contains(element));
+        }
+    }
+
+    /**
      * Verifies that adding beyond the stride doesn't lead to an exception.
      */
     @Test
@@ -269,6 +286,27 @@ public abstract class ModifiableCollectionTestBase<T extends ModifiableCollectio
         ModifiableCollection<Integer> collection = createModifiableCollection(DISTINCT_ELEMENTS, 1, 2, THREE);
         collection.addAll(collection123null);
         assertEquals(FOUR, collection.size());
+    }
+
+    /**
+     * Verifies that addAll adds elements correctly, also when the hash code for the elements collides.
+     */
+    @Test
+    public void addAllShouldAddCollectionWithElementsWithCollidingHashCodes() {
+        ElementWithCollidingHash[] elements1 = new ElementWithCollidingHash[FIFTEEN];
+        ElementWithCollidingHash[] elements2 = new ElementWithCollidingHash[SIX];
+        for (int i = 0; i < elements1.length; i++) {
+            elements1[i] = new ElementWithCollidingHash(i);
+        }
+        for (int i = 0; i < elements2.length; i++) {
+            elements2[i] = new ElementWithCollidingHash(FIFTEEN + i);
+        }
+        TC collection1 = createCollidingHashValuesCollection(elements1);
+        TC collection2 = createCollidingHashValuesCollection(elements2);
+        collection1.addAll(collection2);
+        for (ElementWithCollidingHash element : elements2) {
+            assertTrue(collection1.contains(element));
+        }
     }
 
     /**
